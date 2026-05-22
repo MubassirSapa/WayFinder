@@ -6,7 +6,7 @@
 | ---------------------- | --------------------------------------------- | ----------------------------------- |
 | Mubassir Sapa          | [msapa@myseneca.ca](mailto:msapa@myseneca.ca) | Project Lead / Full Stack Developer |
 | Hasan                  | [hasan@myseneca.ca](mailto:hasan@myseneca.ca) | Full Stack Developer                |
-| Paschal Chidiutor Ibeh | [pibeh@myseneca.ca](mailto:pibeh@myseneca.ca) | Backend Developer                   |
+| Paschal Chidiutor Ibeh | [pibeh@myseneca.ca](mailto:pibeh@myseneca.ca) | Frontend Developer                   |
 
 ---
 
