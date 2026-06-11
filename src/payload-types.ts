@@ -69,6 +69,10 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    floors: Floor;
+    'map-objects': MapObject;
+    'map-nodes': MapNode;
+    'path-edges': PathEdge;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,13 +82,17 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    floors: FloorsSelect<false> | FloorsSelect<true>;
+    'map-objects': MapObjectsSelect<false> | MapObjectsSelect<true>;
+    'map-nodes': MapNodesSelect<false> | MapNodesSelect<true>;
+    'path-edges': PathEdgesSelect<false> | PathEdgesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: string;
+    defaultIDType: number;
   };
   fallbackLocale: null;
   globals: {};
@@ -122,7 +130,7 @@ export interface UserAuthOperations {
  * via the `definition` "users".
  */
 export interface User {
-  id: string;
+  id: number;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -147,7 +155,7 @@ export interface User {
  * via the `definition` "media".
  */
 export interface Media {
-  id: string;
+  id: number;
   alt: string;
   updatedAt: string;
   createdAt: string;
@@ -163,10 +171,105 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "floors".
+ */
+export interface Floor {
+  id: number;
+  buildingId: string;
+  name: string;
+  level: number;
+  width: number;
+  height: number;
+  backgroundImageUrl?: string | null;
+  status: 'draft' | 'published';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "map-objects".
+ */
+export interface MapObject {
+  id: number;
+  buildingId: string;
+  floor: number | Floor;
+  parentObject?: (number | null) | MapObject;
+  type:
+    | 'room'
+    | 'wall'
+    | 'door'
+    | 'hallway'
+    | 'stairs'
+    | 'elevator'
+    | 'washroom'
+    | 'exit'
+    | 'poi'
+    | 'aisle'
+    | 'shelf'
+    | 'section';
+  name: string;
+  label?: string | null;
+  x: number;
+  y: number;
+  width?: number | null;
+  height?: number | null;
+  rotation?: number | null;
+  isSearchable?: boolean | null;
+  isAccessible?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "map-nodes".
+ */
+export interface MapNode {
+  id: number;
+  buildingId: string;
+  floor: number | Floor;
+  object?: (number | null) | MapObject;
+  role: 'entrance' | 'exit' | 'hallway_point' | 'stairs_entry' | 'elevator_entry' | 'shelf_access';
+  label?: string | null;
+  x: number;
+  y: number;
+  width?: number | null;
+  height?: number | null;
+  rotation?: number | null;
+  geometryType: 'rectangle' | 'polygon' | 'line' | 'icon';
+  points?:
+    | {
+        x: number;
+        y: number;
+        id?: string | null;
+      }[]
+    | null;
+  isAccessible?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "path-edges".
+ */
+export interface PathEdge {
+  id: number;
+  buildingId: string;
+  floor: number | Floor;
+  fromNode: number | MapNode;
+  toNode: number | MapNode;
+  type: 'walkway' | 'stairs' | 'elevator' | 'ramp';
+  distanceMeters: number;
+  bidirectional?: boolean | null;
+  isAccessible?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: string;
+  id: number;
   key: string;
   data:
     | {
@@ -183,20 +286,36 @@ export interface PayloadKv {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: number;
   document?:
     | ({
         relationTo: 'users';
-        value: string | User;
+        value: number | User;
       } | null)
     | ({
         relationTo: 'media';
-        value: string | Media;
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'floors';
+        value: number | Floor;
+      } | null)
+    | ({
+        relationTo: 'map-objects';
+        value: number | MapObject;
+      } | null)
+    | ({
+        relationTo: 'map-nodes';
+        value: number | MapNode;
+      } | null)
+    | ({
+        relationTo: 'path-edges';
+        value: number | PathEdge;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -206,10 +325,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   key?: string | null;
   value?:
@@ -229,7 +348,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -274,6 +393,85 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "floors_select".
+ */
+export interface FloorsSelect<T extends boolean = true> {
+  buildingId?: T;
+  name?: T;
+  level?: T;
+  width?: T;
+  height?: T;
+  backgroundImageUrl?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "map-objects_select".
+ */
+export interface MapObjectsSelect<T extends boolean = true> {
+  buildingId?: T;
+  floor?: T;
+  parentObject?: T;
+  type?: T;
+  name?: T;
+  label?: T;
+  x?: T;
+  y?: T;
+  width?: T;
+  height?: T;
+  rotation?: T;
+  isSearchable?: T;
+  isAccessible?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "map-nodes_select".
+ */
+export interface MapNodesSelect<T extends boolean = true> {
+  buildingId?: T;
+  floor?: T;
+  object?: T;
+  role?: T;
+  label?: T;
+  x?: T;
+  y?: T;
+  width?: T;
+  height?: T;
+  rotation?: T;
+  geometryType?: T;
+  points?:
+    | T
+    | {
+        x?: T;
+        y?: T;
+        id?: T;
+      };
+  isAccessible?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "path-edges_select".
+ */
+export interface PathEdgesSelect<T extends boolean = true> {
+  buildingId?: T;
+  floor?: T;
+  fromNode?: T;
+  toNode?: T;
+  type?: T;
+  distanceMeters?: T;
+  bidirectional?: T;
+  isAccessible?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
