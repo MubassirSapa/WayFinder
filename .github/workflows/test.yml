@@ -1,4 +1,4 @@
-name: Lint
+name: Test
 
 on:
   push:
@@ -7,8 +7,8 @@ on:
     branches: [main, prev, dev]
 
 jobs:
-  lint:
-    name: Run ESLint
+  test:
+    name: Run Unit Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -24,5 +24,5 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run ESLint
-        run: npm run lint
+      - name: Run tests
+        run: npm test
