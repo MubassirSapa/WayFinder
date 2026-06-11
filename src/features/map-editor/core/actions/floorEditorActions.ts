@@ -1,7 +1,11 @@
 'use server';
 
 import config from "@payload-config";
-import type { MapNode as PayloadMapNode } from "@/payload-types";
+import type {
+  MapNode as PayloadMapNode,
+  MapObject as PayloadMapObject,
+  PathEdge as PayloadPathEdge,
+} from "@/payload-types";
 import { getPayload } from "payload";
 
 import {
@@ -18,6 +22,8 @@ import {
 } from "../types/map.types";
 
 type MapNodeData = Omit<PayloadMapNode, "id" | "createdAt" | "updatedAt">;
+type MapObjectData = Omit<PayloadMapObject, "id" | "createdAt" | "updatedAt">;
+type PathEdgeData = Omit<PayloadPathEdge, "id" | "createdAt" | "updatedAt">;
 
 export interface FloorEditorData {
   floor: EditorFloor;
@@ -111,9 +117,9 @@ export async function createMapObject(
       },
     });
     return normalizeMapObject(doc);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error creating map object:", error);
-    throw new Error(error?.message || "Failed to create map object");
+    throw new Error((error as Error)?.message || "Failed to create map object");
   }
 }
 
@@ -124,7 +130,7 @@ export async function updateMapObject(
   try {
     const payload = await getPayloadClient();
 
-    const updateData: any = {};
+    const updateData: Partial<MapObjectData> = {};
     if (data.buildingId !== undefined) updateData.buildingId = data.buildingId;
     if (data.floorId !== undefined) updateData.floor = Number(data.floorId);
     if (data.parentObjectId !== undefined) {
@@ -153,9 +159,9 @@ export async function updateMapObject(
       data: updateData,
     });
     return normalizeMapObject(doc);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error updating map object:", error);
-    throw new Error(error?.message || "Failed to update map object");
+    throw new Error((error as Error)?.message || "Failed to update map object");
   }
 }
 
@@ -167,9 +173,9 @@ export async function deleteMapObject(id: string) {
       id: Number(id),
     });
     return { success: true };
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error deleting map object:", error);
-    throw new Error(error?.message || "Failed to delete map object");
+    throw new Error((error as Error)?.message || "Failed to delete map object");
   }
 }
 
@@ -205,9 +211,9 @@ export async function createMapNode(
       data: createData,
     });
     return normalizeMapNode(doc);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error creating map node:", error);
-    throw new Error(error?.message || "Failed to create map node");
+    throw new Error((error as Error)?.message || "Failed to create map node");
   }
 }
 
@@ -247,9 +253,9 @@ export async function updateMapNode(id: string, data: Partial<EditorMapNode>) {
       data: updateData,
     });
     return normalizeMapNode(doc);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error updating map node:", error);
-    throw new Error(error?.message || "Failed to update map node");
+    throw new Error((error as Error)?.message || "Failed to update map node");
   }
 }
 
@@ -261,9 +267,9 @@ export async function deleteMapNode(id: string) {
       id: Number(id),
     });
     return { success: true };
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error deleting map node:", error);
-    throw new Error(error?.message || "Failed to delete map node");
+    throw new Error((error as Error)?.message || "Failed to delete map node");
   }
 }
 
@@ -286,9 +292,9 @@ export async function createPathEdge(
       },
     });
     return normalizePathEdge(doc);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error creating path edge:", error);
-    throw new Error(error?.message || "Failed to create path edge");
+    throw new Error((error as Error)?.message || "Failed to create path edge");
   }
 }
 
@@ -299,7 +305,7 @@ export async function updatePathEdge(
   try {
     const payload = await getPayloadClient();
 
-    const updateData: any = {};
+    const updateData: Partial<PathEdgeData> = {};
     if (data.buildingId !== undefined) updateData.buildingId = data.buildingId;
     if (data.floorId !== undefined) updateData.floor = Number(data.floorId);
     if (data.fromNodeId !== undefined) {
@@ -325,9 +331,9 @@ export async function updatePathEdge(
       data: updateData,
     });
     return normalizePathEdge(doc);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error updating path edge:", error);
-    throw new Error(error?.message || "Failed to update path edge");
+    throw new Error((error as Error)?.message || "Failed to update path edge");
   }
 }
 
@@ -339,8 +345,8 @@ export async function deletePathEdge(id: string) {
       id: Number(id),
     });
     return { success: true };
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error deleting path edge:", error);
-    throw new Error(error?.message || "Failed to delete path edge");
+    throw new Error((error as Error)?.message || "Failed to delete path edge");
   }
 }

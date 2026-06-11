@@ -28,7 +28,7 @@ export function canvasPointFromEvent(
       const transformed = svgPoint.matrixTransform(matrix);
       return { x: transformed.x, y: transformed.y };
     }
-  } catch (err) {
+  } catch {
     // Fallback if CTM is not available
   }
 

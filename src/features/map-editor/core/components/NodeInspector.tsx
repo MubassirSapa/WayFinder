@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useEditorStore } from "@/store";
 import { deleteMapNode } from "../actions/floorEditorActions";
 import { NODE_ROLE_OPTIONS } from '../lib/objectDefaults';
+import { EditorMapNode } from '../types/map.types';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -28,8 +29,8 @@ export function NodeInspector({ nodeId }: NodeInspectorProps) {
 
   if (!node) return null;
 
-  const handleFieldChange = (field: string, value: any) => {
-    updateNode(nodeId, { [field]: value });
+  const handleFieldChange = (field: string, value: unknown) => {
+    updateNode(nodeId, { [field]: value } as Partial<EditorMapNode>);
   };
 
   const handleDelete = async () => {

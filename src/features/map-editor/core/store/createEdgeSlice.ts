@@ -5,7 +5,7 @@ import type { EditorStore } from "@/store/types";
 import { EditorPathEdge } from "../types/map.types";
 import { EdgeSlice } from "./types";
 
-export const createEdgeSlice: StateCreator<EditorStore, [], [], EdgeSlice> = (set, get) => ({
+export const createEdgeSlice: StateCreator<EditorStore, [], [], EdgeSlice> = (set) => ({
   edges: {},
 
   setEdges: (edgesList) => {
@@ -39,7 +39,8 @@ export const createEdgeSlice: StateCreator<EditorStore, [], [], EdgeSlice> = (se
 
   removeEdge: (id) => {
     set((state) => {
-      const { [id]: _, ...remainingEdges } = state.edges;
+      const remainingEdges = { ...state.edges };
+      delete remainingEdges[id];
       const wasSelected = state.selectedEntity?.kind === 'edge' && state.selectedEntity.id === id;
       return {
         edges: remainingEdges,

@@ -4,6 +4,7 @@ import  { useState } from 'react';
 import { useEditorStore } from "@/store";
 import { deletePathEdge } from "../actions/floorEditorActions";
 import { EDGE_TYPE_OPTIONS } from '../lib/objectDefaults';
+import { EditorPathEdge } from '../types/map.types';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -30,8 +31,8 @@ export function EdgeInspector({ edgeId }: EdgeInspectorProps) {
   const fromNode = nodes[edge.fromNodeId];
   const toNode = nodes[edge.toNodeId];
 
-  const handleFieldChange = (field: string, value: any) => {
-    updateEdge(edgeId, { [field]: value });
+  const handleFieldChange = (field: string, value: unknown) => {
+    updateEdge(edgeId, { [field]: value } as Partial<EditorPathEdge>);
   };
 
   const handleDelete = async () => {
