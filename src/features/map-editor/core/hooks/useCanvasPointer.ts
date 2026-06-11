@@ -1,5 +1,5 @@
 import { RefObject } from 'react';
-import { useEditorStore } from '../store';
+import { useEditorStore } from "@/store";
 import { snapToGrid, canvasPointFromEvent } from '../lib/canvas';
 import { getDefaultDimensions } from '../lib/objectDefaults';
 import { pixelDistance, pixelsToMeters } from '../lib/distance';

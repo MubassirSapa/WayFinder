@@ -1,24 +1,33 @@
 'use server';
 
-import { getPayload } from 'payload';
-import config from '@payload-config';
-import type { MapNode as PayloadMapNode } from '@/payload-types';
-import { normalizeMapNode, normalizeMapObject, normalizePathEdge } from '../lib/normalizeEditorData';
-import { EditorMapObject, EditorMapNode, EditorPathEdge } from '../types/map.types';
+import config from "@payload-config";
+import type { MapNode as PayloadMapNode } from "@/payload-types";
+import { getPayload } from "payload";
 
-type MapNodeData = Omit<PayloadMapNode, 'id' | 'createdAt' | 'updatedAt'>;
+import {
+  normalizeMapNode,
+  normalizeMapObject,
+  normalizePathEdge,
+} from "../lib/normalizeEditorData";
+import {
+  EditorMapObject,
+  EditorMapNode,
+  EditorPathEdge,
+} from "../types/map.types";
 
-// Helper to initialize Payload Local API
+type MapNodeData = Omit<PayloadMapNode, "id" | "createdAt" | "updatedAt">;
+
 async function getPayloadClient() {
   return getPayload({ config });
 }
 
-// Action: Create Map Object
-export async function createMapObject(data: Omit<EditorMapObject, 'id' | '_clientId' | '_dirty'>) {
+export async function createMapObject(
+  data: Omit<EditorMapObject, "id" | "_clientId" | "_dirty">,
+) {
   try {
     const payload = await getPayloadClient();
     const doc = await payload.create({
-      collection: 'map-objects',
+      collection: "map-objects",
       data: {
         buildingId: data.buildingId,
         floor: Number(data.floorId),
@@ -37,22 +46,25 @@ export async function createMapObject(data: Omit<EditorMapObject, 'id' | '_clien
     });
     return normalizeMapObject(doc);
   } catch (error: any) {
-    console.error('Error creating map object:', error);
-    throw new Error(error?.message || 'Failed to create map object');
+    console.error("Error creating map object:", error);
+    throw new Error(error?.message || "Failed to create map object");
   }
 }
 
-// Action: Update Map Object
-export async function updateMapObject(id: string, data: Partial<EditorMapObject>) {
+export async function updateMapObject(
+  id: string,
+  data: Partial<EditorMapObject>,
+) {
   try {
     const payload = await getPayloadClient();
-    
-    // Prepare Payload-compatible update payload
+
     const updateData: any = {};
     if (data.buildingId !== undefined) updateData.buildingId = data.buildingId;
     if (data.floorId !== undefined) updateData.floor = Number(data.floorId);
     if (data.parentObjectId !== undefined) {
-      updateData.parentObject = data.parentObjectId ? Number(data.parentObjectId) : null;
+      updateData.parentObject = data.parentObjectId
+        ? Number(data.parentObjectId)
+        : null;
     }
     if (data.type !== undefined) updateData.type = data.type;
     if (data.name !== undefined) updateData.name = data.name;
@@ -62,38 +74,42 @@ export async function updateMapObject(id: string, data: Partial<EditorMapObject>
     if (data.width !== undefined) updateData.width = data.width;
     if (data.height !== undefined) updateData.height = data.height;
     if (data.rotation !== undefined) updateData.rotation = data.rotation;
-    if (data.isSearchable !== undefined) updateData.isSearchable = data.isSearchable;
-    if (data.isAccessible !== undefined) updateData.isAccessible = data.isAccessible;
+    if (data.isSearchable !== undefined) {
+      updateData.isSearchable = data.isSearchable;
+    }
+    if (data.isAccessible !== undefined) {
+      updateData.isAccessible = data.isAccessible;
+    }
 
     const doc = await payload.update({
-      collection: 'map-objects',
+      collection: "map-objects",
       id: Number(id),
       data: updateData,
     });
     return normalizeMapObject(doc);
   } catch (error: any) {
-    console.error('Error updating map object:', error);
-    throw new Error(error?.message || 'Failed to update map object');
+    console.error("Error updating map object:", error);
+    throw new Error(error?.message || "Failed to update map object");
   }
 }
 
-// Action: Delete Map Object
 export async function deleteMapObject(id: string) {
   try {
     const payload = await getPayloadClient();
     await payload.delete({
-      collection: 'map-objects',
+      collection: "map-objects",
       id: Number(id),
     });
     return { success: true };
   } catch (error: any) {
-    console.error('Error deleting map object:', error);
-    throw new Error(error?.message || 'Failed to delete map object');
+    console.error("Error deleting map object:", error);
+    throw new Error(error?.message || "Failed to delete map object");
   }
 }
 
-// Action: Create Map Node
-export async function createMapNode(data: Omit<EditorMapNode, 'id' | '_clientId' | '_dirty'>) {
+export async function createMapNode(
+  data: Omit<EditorMapNode, "id" | "_clientId" | "_dirty">,
+) {
   try {
     const payload = await getPayloadClient();
     const createData: MapNodeData = {
@@ -104,7 +120,7 @@ export async function createMapNode(data: Omit<EditorMapNode, 'id' | '_clientId'
       label: data.label,
       x: data.x,
       y: data.y,
-      geometryType: data.geometryType ?? 'icon',
+      geometryType: data.geometryType ?? "icon",
       isAccessible: data.isAccessible,
     };
 
@@ -112,21 +128,23 @@ export async function createMapNode(data: Omit<EditorMapNode, 'id' | '_clientId'
     if (data.height !== undefined) createData.height = data.height;
     if (data.rotation !== undefined) createData.rotation = data.rotation;
     if (Array.isArray(data.points)) {
-      createData.points = data.points.map((p) => ({ x: p.x, y: p.y }));
+      createData.points = data.points.map((point) => ({
+        x: point.x,
+        y: point.y,
+      }));
     }
 
     const doc = await payload.create({
-      collection: 'map-nodes',
+      collection: "map-nodes",
       data: createData,
     });
     return normalizeMapNode(doc);
   } catch (error: any) {
-    console.error('Error creating map node:', error);
-    throw new Error(error?.message || 'Failed to create map node');
+    console.error("Error creating map node:", error);
+    throw new Error(error?.message || "Failed to create map node");
   }
 }
 
-// Action: Update Map Node
 export async function updateMapNode(id: string, data: Partial<EditorMapNode>) {
   try {
     const payload = await getPayloadClient();
@@ -144,45 +162,52 @@ export async function updateMapNode(id: string, data: Partial<EditorMapNode>) {
     if (data.width !== undefined) updateData.width = data.width;
     if (data.height !== undefined) updateData.height = data.height;
     if (data.rotation !== undefined) updateData.rotation = data.rotation;
-    if (data.geometryType !== undefined) updateData.geometryType = data.geometryType;
-    if (Array.isArray(data.points)) {
-      updateData.points = data.points.map((p) => ({ x: p.x, y: p.y }));
+    if (data.geometryType !== undefined) {
+      updateData.geometryType = data.geometryType;
     }
-    if (data.isAccessible !== undefined) updateData.isAccessible = data.isAccessible;
+    if (Array.isArray(data.points)) {
+      updateData.points = data.points.map((point) => ({
+        x: point.x,
+        y: point.y,
+      }));
+    }
+    if (data.isAccessible !== undefined) {
+      updateData.isAccessible = data.isAccessible;
+    }
 
     const doc = await payload.update({
-      collection: 'map-nodes',
+      collection: "map-nodes",
       id: Number(id),
       data: updateData,
     });
     return normalizeMapNode(doc);
   } catch (error: any) {
-    console.error('Error updating map node:', error);
-    throw new Error(error?.message || 'Failed to update map node');
+    console.error("Error updating map node:", error);
+    throw new Error(error?.message || "Failed to update map node");
   }
 }
 
-// Action: Delete Map Node
 export async function deleteMapNode(id: string) {
   try {
     const payload = await getPayloadClient();
     await payload.delete({
-      collection: 'map-nodes',
+      collection: "map-nodes",
       id: Number(id),
     });
     return { success: true };
   } catch (error: any) {
-    console.error('Error deleting map node:', error);
-    throw new Error(error?.message || 'Failed to delete map node');
+    console.error("Error deleting map node:", error);
+    throw new Error(error?.message || "Failed to delete map node");
   }
 }
 
-// Action: Create Path Edge
-export async function createPathEdge(data: Omit<EditorPathEdge, 'id' | '_clientId' | '_dirty'>) {
+export async function createPathEdge(
+  data: Omit<EditorPathEdge, "id" | "_clientId" | "_dirty">,
+) {
   try {
     const payload = await getPayloadClient();
     const doc = await payload.create({
-      collection: 'path-edges',
+      collection: "path-edges",
       data: {
         buildingId: data.buildingId,
         floor: Number(data.floorId),
@@ -196,49 +221,60 @@ export async function createPathEdge(data: Omit<EditorPathEdge, 'id' | '_clientI
     });
     return normalizePathEdge(doc);
   } catch (error: any) {
-    console.error('Error creating path edge:', error);
-    throw new Error(error?.message || 'Failed to create path edge');
+    console.error("Error creating path edge:", error);
+    throw new Error(error?.message || "Failed to create path edge");
   }
 }
 
-// Action: Update Path Edge
-export async function updatePathEdge(id: string, data: Partial<EditorPathEdge>) {
+export async function updatePathEdge(
+  id: string,
+  data: Partial<EditorPathEdge>,
+) {
   try {
     const payload = await getPayloadClient();
 
     const updateData: any = {};
     if (data.buildingId !== undefined) updateData.buildingId = data.buildingId;
     if (data.floorId !== undefined) updateData.floor = Number(data.floorId);
-    if (data.fromNodeId !== undefined) updateData.fromNode = Number(data.fromNodeId);
-    if (data.toNodeId !== undefined) updateData.toNode = Number(data.toNodeId);
+    if (data.fromNodeId !== undefined) {
+      updateData.fromNode = Number(data.fromNodeId);
+    }
+    if (data.toNodeId !== undefined) {
+      updateData.toNode = Number(data.toNodeId);
+    }
     if (data.type !== undefined) updateData.type = data.type;
-    if (data.distanceMeters !== undefined) updateData.distanceMeters = data.distanceMeters;
-    if (data.bidirectional !== undefined) updateData.bidirectional = data.bidirectional;
-    if (data.isAccessible !== undefined) updateData.isAccessible = data.isAccessible;
+    if (data.distanceMeters !== undefined) {
+      updateData.distanceMeters = data.distanceMeters;
+    }
+    if (data.bidirectional !== undefined) {
+      updateData.bidirectional = data.bidirectional;
+    }
+    if (data.isAccessible !== undefined) {
+      updateData.isAccessible = data.isAccessible;
+    }
 
     const doc = await payload.update({
-      collection: 'path-edges',
+      collection: "path-edges",
       id: Number(id),
       data: updateData,
     });
     return normalizePathEdge(doc);
   } catch (error: any) {
-    console.error('Error updating path edge:', error);
-    throw new Error(error?.message || 'Failed to update path edge');
+    console.error("Error updating path edge:", error);
+    throw new Error(error?.message || "Failed to update path edge");
   }
 }
 
-// Action: Delete Path Edge
 export async function deletePathEdge(id: string) {
   try {
     const payload = await getPayloadClient();
     await payload.delete({
-      collection: 'path-edges',
+      collection: "path-edges",
       id: Number(id),
     });
     return { success: true };
   } catch (error: any) {
-    console.error('Error deleting path edge:', error);
-    throw new Error(error?.message || 'Failed to delete path edge');
+    console.error("Error deleting path edge:", error);
+    throw new Error(error?.message || "Failed to delete path edge");
   }
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
-import { useEditorStore } from '../store';
+import { useEditorStore } from "@/store";
 import { useCanvasPointer } from '../hooks/useCanvasPointer';
 import { MapGrid } from './MapGrid';
 import { MapNodeLayer } from './MapNodeLayer';

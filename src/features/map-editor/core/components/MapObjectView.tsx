@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useEditorStore } from '../store';
+import { useEditorStore } from "@/store";
 import { useObjectDrag } from '../hooks/useObjectDrag';
 import { getObjectColor } from '../lib/objectDefaults';
 import { EditorMapObject } from '../types/map.types';

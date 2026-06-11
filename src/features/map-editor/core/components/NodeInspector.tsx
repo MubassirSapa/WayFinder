@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useEditorStore } from '../store';
-import { deleteMapNode } from '../actions/floorEditorActions';
+import { useEditorStore } from "@/store";
+import { deleteMapNode } from "../actions/floorEditorActions";
 import { NODE_ROLE_OPTIONS } from '../lib/objectDefaults';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

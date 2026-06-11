@@ -1,6 +1,6 @@
 'use client';
 
-import { useEditorStore } from '../store';
+import { useEditorStore } from "@/store";
 import { useCanvasPointer } from '../hooks/useCanvasPointer';
 import { EditorMapNode } from '../types/map.types';
 

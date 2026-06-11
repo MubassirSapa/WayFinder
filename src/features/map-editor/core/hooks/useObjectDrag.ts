@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { useEditorStore } from '../store';
+import { useEditorStore } from "@/store";
 import { snapToGrid } from '../lib/canvas';
 
 export function useObjectDrag() {

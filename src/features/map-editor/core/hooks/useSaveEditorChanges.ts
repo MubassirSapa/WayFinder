@@ -7,8 +7,8 @@ import {
   updateMapNode,
   createPathEdge,
   updatePathEdge,
-} from '../actions/floorEditorActions';
-import { useEditorStore } from '../store';
+} from "../actions/floorEditorActions";
+import { useEditorStore } from "@/store";
 
 type LocalEditorEntity = {
   id: string;

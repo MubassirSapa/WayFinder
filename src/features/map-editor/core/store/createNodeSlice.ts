@@ -1,6 +1,9 @@
-import { StateCreator } from 'zustand';
-import { NodeSlice, EditorStore } from './types';
-import { EditorMapNode } from '../types/map.types';
+import { StateCreator } from "zustand";
+
+import type { EditorStore } from "@/store/types";
+
+import { EditorMapNode } from "../types/map.types";
+import { NodeSlice } from "./types";
 
 export const createNodeSlice: StateCreator<EditorStore, [], [], NodeSlice> = (set, get) => ({
   nodes: {},

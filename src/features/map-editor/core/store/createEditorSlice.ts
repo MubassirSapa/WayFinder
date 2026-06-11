@@ -1,5 +1,8 @@
-import { StateCreator } from 'zustand';
-import { EditorSlice, EditorStore } from './types';
+import { StateCreator } from "zustand";
+
+import type { EditorStore } from "@/store/types";
+
+import { EditorSlice } from "./types";
 
 export const createEditorSlice: StateCreator<EditorStore, [], [], EditorSlice> = (set, get) => ({
   mode: 'select',

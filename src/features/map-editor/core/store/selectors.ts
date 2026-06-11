@@ -1,5 +1,10 @@
-import { EditorStore } from './types';
-import { EditorMapObject, EditorMapNode, EditorPathEdge } from '../types/map.types';
+import type { EditorStore } from "@/store/types";
+
+import {
+  EditorMapObject,
+  EditorMapNode,
+  EditorPathEdge,
+} from "../types/map.types";
 
 export const selectObjectsList = (state: EditorStore): EditorMapObject[] =>
   Object.values(state.objects);

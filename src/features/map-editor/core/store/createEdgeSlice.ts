@@ -1,6 +1,9 @@
-import { StateCreator } from 'zustand';
-import { EdgeSlice, EditorStore } from './types';
-import { EditorPathEdge } from '../types/map.types';
+import { StateCreator } from "zustand";
+
+import type { EditorStore } from "@/store/types";
+
+import { EditorPathEdge } from "../types/map.types";
+import { EdgeSlice } from "./types";
 
 export const createEdgeSlice: StateCreator<EditorStore, [], [], EdgeSlice> = (set, get) => ({
   edges: {},

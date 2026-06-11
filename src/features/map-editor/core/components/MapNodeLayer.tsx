@@ -1,6 +1,6 @@
 'use client';
 
-import { useEditorStore } from "../store";
+import { useEditorStore } from "@/store";
 import { MapNodeView } from "./MapNodeView";
 
 export function MapNodeLayer() {

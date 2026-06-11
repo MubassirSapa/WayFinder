@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useEditorStore } from '../store';
+import { useEditorStore } from "@/store";
 import { OBJECT_CONFIGS } from '../lib/objectDefaults';
 import { ToolboxObjectType } from '../types/editor.types';
 import { ScrollArea } from '@/components/ui/scroll-area';

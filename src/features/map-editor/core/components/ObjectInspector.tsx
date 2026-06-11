@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useEditorStore } from '../store';
-import { deleteMapObject } from '../actions/floorEditorActions';
+import { useEditorStore } from "@/store";
+import { deleteMapObject } from "../actions/floorEditorActions";
 import { OBJECT_CONFIGS } from '../lib/objectDefaults';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

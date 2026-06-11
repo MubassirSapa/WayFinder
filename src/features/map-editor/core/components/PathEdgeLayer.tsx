@@ -1,7 +1,7 @@
 'use client';
 
 
-import { useEditorStore } from '../store';
+import { useEditorStore } from "@/store";
 
 export function PathEdgeLayer() {
   const edgesMap = useEditorStore((state) => state.edges);

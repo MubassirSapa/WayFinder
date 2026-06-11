@@ -12,7 +12,7 @@ import {
   normalizeMapObject,
   normalizePathEdge,
 } from "../lib/normalizeEditorData";
-import { useEditorStore } from "../store";
+import { useEditorStore } from "@/store";
 
 interface PayloadListResponse<T> {
   docs: T[];

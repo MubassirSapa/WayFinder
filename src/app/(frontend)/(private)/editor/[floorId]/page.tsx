@@ -1,4 +1,4 @@
-import { MapEditorShell } from "@/features/map-editor/components/MapEditorShell";
+import { MapEditorShell } from "@/features/map-editor/core/components/MapEditorShell";
 
 interface PageProps {
   params: Promise<{

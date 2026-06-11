@@ -1,6 +1,6 @@
 "use client";
 
-import { useEditorStore } from "../store";
+import { useEditorStore } from "@/store";
 import { EdgeInspector } from "./EdgeInspector";
 import { NodeInspector } from "./NodeInspector";
 import { ObjectInspector } from "./ObjectInspector";

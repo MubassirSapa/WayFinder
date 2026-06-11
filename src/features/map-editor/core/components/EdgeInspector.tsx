@@ -1,8 +1,8 @@
 'use client';
 
 import  { useState } from 'react';
-import { useEditorStore } from '../store';
-import { deletePathEdge } from '../actions/floorEditorActions';
+import { useEditorStore } from "@/store";
+import { deletePathEdge } from "../actions/floorEditorActions";
 import { EDGE_TYPE_OPTIONS } from '../lib/objectDefaults';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

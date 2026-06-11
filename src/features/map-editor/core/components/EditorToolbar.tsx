@@ -1,6 +1,6 @@
 'use client';
 
-import { useEditorStore } from '../store';
+import { useEditorStore } from "@/store";
 import { useSaveEditorChanges } from '../hooks/useSaveEditorChanges';
 import {
   MousePointer,

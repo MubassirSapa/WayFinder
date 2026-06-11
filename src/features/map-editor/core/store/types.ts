@@ -1,5 +1,10 @@
-import { EditorMode, SelectedEntity, ToolboxObjectType } from '../types/editor.types';
-import { EditorFloor, EditorMapObject, EditorMapNode, EditorPathEdge } from '../types/map.types';
+import { EditorMode, SelectedEntity, ToolboxObjectType } from "../types/editor.types";
+import {
+  EditorFloor,
+  EditorMapObject,
+  EditorMapNode,
+  EditorPathEdge,
+} from "../types/map.types";
 
 export interface EditorSlice {
   mode: EditorMode;
@@ -46,5 +51,3 @@ export interface EdgeSlice {
   updateEdge: (id: string, updates: Partial<EditorPathEdge>) => void;
   removeEdge: (id: string) => void;
 }
-
-export type EditorStore = EditorSlice & ObjectSlice & NodeSlice & EdgeSlice;
