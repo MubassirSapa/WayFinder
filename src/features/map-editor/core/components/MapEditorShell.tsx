@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { type ReactNode } from 'react';
+import type { FloorEditorData } from "../actions/floorEditorActions";
 import { useFloorEditorData } from '../hooks/useFloorEditorData';
 import { EditorToolbar } from './EditorToolbar';
 import { ObjectToolbox } from './ObjectToolbox';
@@ -10,11 +11,17 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { Loader2, AlertCircle } from 'lucide-react';
 
 interface MapEditorShellProps {
-  floorId: string;
+  initialData: FloorEditorData | null;
+  initialError: string | null;
+  leftSidebarFooter?: ReactNode;
 }
 
-export function MapEditorShell({ floorId }: MapEditorShellProps) {
-  const { isLoading, error } = useFloorEditorData(floorId);
+export function MapEditorShell({
+  initialData,
+  initialError,
+  leftSidebarFooter,
+}: MapEditorShellProps) {
+  const { isLoading, error } = useFloorEditorData(initialData, initialError);
 
   if (isLoading) {
     return (
@@ -52,7 +59,7 @@ export function MapEditorShell({ floorId }: MapEditorShellProps) {
         {/* Workspace body */}
         <div className="flex flex-1 overflow-hidden min-h-0">
           {/* Left Toolbox */}
-          <ObjectToolbox />
+          <ObjectToolbox footer={leftSidebarFooter} />
 
           {/* Map canvas */}
           <div className="flex-1 h-full min-w-0">

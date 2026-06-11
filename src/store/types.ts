@@ -4,7 +4,19 @@ import type {
   NodeSlice,
   ObjectSlice,
 } from "@/features/map-editor/core/store/types";
+import type { SmartBuilderSlice } from "@/features/map-editor/smart-builder/store/createSmartBuilderSlice";
 
-export type EditorStore = EditorSlice & ObjectSlice & NodeSlice & EdgeSlice;
+export type EditorStore =
+  & EditorSlice
+  & ObjectSlice
+  & NodeSlice
+  & EdgeSlice
+  & SmartBuilderSlice;
 
-export type { EdgeSlice, EditorSlice, NodeSlice, ObjectSlice };
+export type {
+  EdgeSlice,
+  EditorSlice,
+  NodeSlice,
+  ObjectSlice,
+  SmartBuilderSlice,
+};

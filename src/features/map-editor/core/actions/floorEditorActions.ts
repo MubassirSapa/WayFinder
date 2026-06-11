@@ -5,11 +5,13 @@ import type { MapNode as PayloadMapNode } from "@/payload-types";
 import { getPayload } from "payload";
 
 import {
+  normalizeFloor,
   normalizeMapNode,
   normalizeMapObject,
   normalizePathEdge,
 } from "../lib/normalizeEditorData";
 import {
+  EditorFloor,
   EditorMapObject,
   EditorMapNode,
   EditorPathEdge,
@@ -17,8 +19,72 @@ import {
 
 type MapNodeData = Omit<PayloadMapNode, "id" | "createdAt" | "updatedAt">;
 
+export interface FloorEditorData {
+  floor: EditorFloor;
+  objects: EditorMapObject[];
+  nodes: EditorMapNode[];
+  edges: EditorPathEdge[];
+}
+
 async function getPayloadClient() {
   return getPayload({ config });
+}
+
+export async function getFloorEditorData(floorId: string): Promise<FloorEditorData> {
+  try {
+    const payload = await getPayloadClient();
+    const [floorDoc, objectsResult, nodesResult, edgesResult] = await Promise.all([
+      payload.findByID({
+        collection: "floors",
+        id: Number(floorId),
+        depth: 0,
+        overrideAccess: true,
+      }),
+      payload.find({
+        collection: "map-objects",
+        depth: 0,
+        limit: 1000,
+        overrideAccess: true,
+        where: {
+          floor: {
+            equals: Number(floorId),
+          },
+        },
+      }),
+      payload.find({
+        collection: "map-nodes",
+        depth: 0,
+        limit: 1000,
+        overrideAccess: true,
+        where: {
+          floor: {
+            equals: Number(floorId),
+          },
+        },
+      }),
+      payload.find({
+        collection: "path-edges",
+        depth: 0,
+        limit: 1000,
+        overrideAccess: true,
+        where: {
+          floor: {
+            equals: Number(floorId),
+          },
+        },
+      }),
+    ]);
+
+    return {
+      floor: normalizeFloor(floorDoc),
+      objects: objectsResult.docs.map(normalizeMapObject),
+      nodes: nodesResult.docs.map(normalizeMapNode),
+      edges: edgesResult.docs.map(normalizePathEdge),
+    };
+  } catch (error: any) {
+    console.error("Error loading floor editor data:", error);
+    throw new Error(error?.message || "Failed to load floor editor data");
+  }
 }
 
 export async function createMapObject(

@@ -74,6 +74,7 @@ export function MapCanvas() {
           width={floor.width}
           height={floor.height}
           onClick={handleCanvasClick}
+          data-editor-canvas="true"
           className="absolute inset-0 select-none cursor-crosshair overflow-visible"
         >
           {/* Faded Background Image if configured */}

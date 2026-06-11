@@ -5,6 +5,7 @@ export interface EditorFloor {
   level: number;
   width: number;
   height: number;
+  metersPerPixel?: number | null;
   backgroundImageUrl?: string | null;
   status: 'draft' | 'published';
 }
