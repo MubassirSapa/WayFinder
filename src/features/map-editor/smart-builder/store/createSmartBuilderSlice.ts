@@ -2,9 +2,12 @@ import { StateCreator } from "zustand";
 
 import type { Point } from "@/features/map-editor/core/lib/distance";
 import { buildNearestHallwayConnection } from "@/features/map-editor/smart-builder/lib/autoConnect";
-import { buildSmartNodeForObject } from "@/features/map-editor/smart-builder/lib/nodePlacement";
 import { buildHallwayPath } from "@/features/map-editor/smart-builder/lib/pathBuilder";
 import { buildSmartObjectArtifacts } from "@/features/map-editor/smart-builder/lib/smartObjectBuilder";
+import type {
+  EditorMapNode,
+  EditorPathEdge,
+} from "@/features/map-editor/core/types/map.types";
 import type { EditorStore } from "@/store/types";
 
 export interface SmartBuilderSlice {
@@ -29,7 +32,7 @@ export const createSmartBuilderSlice: StateCreator<
   [],
   SmartBuilderSlice
 > = (set, get) => ({
-  isSmartBuilderEnabled: false,
+  isSmartBuilderEnabled: true,
   autoCreateNodes: true,
   autoConnectNodes: true,
   hallwayDrawingPoints: [],
@@ -53,21 +56,42 @@ export const createSmartBuilderSlice: StateCreator<
 
   generateMissingNodes: () => {
     const state = get();
-    const existingNodes = Object.values(state.nodes);
-    const generatedNodes = [];
+    const scale = state.floor?.metersPerPixel ?? 0.05;
+    const objects = Object.values(state.objects);
+    const workingNodes = Object.values(state.nodes);
+    const workingEdges = Object.values(state.edges);
+    const generatedNodes: EditorMapNode[] = [];
+    const generatedEdges: EditorPathEdge[] = [];
+    const allEdgesToRemove: string[] = [];
 
-    for (const object of Object.values(state.objects)) {
-      const generatedNode = buildSmartNodeForObject(object, [
-        ...existingNodes,
-        ...generatedNodes,
-      ]);
+    for (const object of objects) {
+      const artifacts = buildSmartObjectArtifacts({
+        object,
+        objects,
+        nodes: workingNodes,
+        edges: workingEdges,
+        autoCreateNodes: true,
+        autoConnectNodes: state.autoConnectNodes,
+        metersPerPixel: scale,
+      });
 
-      if (generatedNode) {
-        generatedNodes.push(generatedNode);
+      generatedNodes.push(...artifacts.nodes);
+      generatedEdges.push(...artifacts.edges);
+      workingNodes.push(...artifacts.nodes);
+      workingEdges.push(...artifacts.edges);
+
+      if (artifacts.edgesToRemove.length > 0) {
+        allEdgesToRemove.push(...artifacts.edgesToRemove);
+        for (const id of artifacts.edgesToRemove) {
+          const idx = workingEdges.findIndex((e) => e.id === id);
+          if (idx !== -1) workingEdges.splice(idx, 1);
+        }
       }
     }
 
+    allEdgesToRemove.forEach((id) => state.removeEdge(id));
     generatedNodes.forEach((node) => state.addNode(node));
+    generatedEdges.forEach((edge) => state.addEdge(edge));
     return generatedNodes.length;
   },
 
@@ -75,7 +99,9 @@ export const createSmartBuilderSlice: StateCreator<
     const state = get();
     const scale = state.floor?.metersPerPixel ?? 0.05;
     const nodes = Object.values(state.nodes);
-    const generatedEdges = [];
+    const generatedNodes: EditorMapNode[] = [];
+    const generatedEdges: EditorPathEdge[] = [];
+    const allEdgesToRemove: string[] = [];
     const workingEdges = Object.values(state.edges);
 
     for (const node of nodes) {
@@ -83,19 +109,35 @@ export const createSmartBuilderSlice: StateCreator<
         continue;
       }
 
-      const generatedEdge = buildNearestHallwayConnection(
+      const result = buildNearestHallwayConnection(
         node,
         nodes,
         workingEdges,
+        Object.values(state.objects),
         scale,
       );
 
-      if (generatedEdge) {
-        generatedEdges.push(generatedEdge);
-        workingEdges.push(generatedEdge);
+      if (result.nodes.length > 0) {
+        generatedNodes.push(...result.nodes);
+        nodes.push(...result.nodes);
+      }
+
+      if (result.edges.length > 0) {
+        generatedEdges.push(...result.edges);
+        workingEdges.push(...result.edges);
+      }
+
+      if (result.edgesToRemove.length > 0) {
+        allEdgesToRemove.push(...result.edgesToRemove);
+        for (const id of result.edgesToRemove) {
+          const idx = workingEdges.findIndex((e) => e.id === id);
+          if (idx !== -1) workingEdges.splice(idx, 1);
+        }
       }
     }
 
+    allEdgesToRemove.forEach((id) => state.removeEdge(id));
+    generatedNodes.forEach((node) => state.addNode(node));
     generatedEdges.forEach((edge) => state.addEdge(edge));
     return generatedEdges.length;
   },
@@ -112,6 +154,8 @@ export const createSmartBuilderSlice: StateCreator<
       floorId: state.floor.id,
       buildingId: state.floor.buildingId,
       metersPerPixel: state.floor.metersPerPixel,
+      existingNodes: Object.values(state.nodes),
+      existingEdges: Object.values(state.edges),
     });
 
     nodes.forEach((node) => state.addNode(node));
@@ -140,8 +184,9 @@ export const createSmartBuilderSlice: StateCreator<
       return { nodesAdded: 0, edgesAdded: 0 };
     }
 
-    const { nodes, edges } = buildSmartObjectArtifacts({
+    const { nodes, edges, edgesToRemove } = buildSmartObjectArtifacts({
       object,
+      objects: Object.values(state.objects),
       nodes: Object.values(state.nodes),
       edges: Object.values(state.edges),
       autoCreateNodes: state.autoCreateNodes,
@@ -149,6 +194,7 @@ export const createSmartBuilderSlice: StateCreator<
       metersPerPixel: state.floor.metersPerPixel,
     });
 
+    edgesToRemove.forEach((id) => state.removeEdge(id));
     nodes.forEach((node) => state.addNode(node));
     edges.forEach((edge) => state.addEdge(edge));
 

@@ -24,7 +24,7 @@ export function ObjectToolbox({ footer }: ObjectToolboxProps) {
       <div className="p-5 border-b border-zinc-800 bg-zinc-950/40">
         <h3 className="text-xs font-bold uppercase tracking-[0.22em] text-zinc-400">Object Toolbox</h3>
         <p className="text-[11px] text-zinc-500 mt-1.5 leading-relaxed">
-          Select an item, then click the grid to place it or drag an existing object to reposition it.
+          Select an item, then double-click the grid to place it or drag an existing object to reposition it.
         </p>
       </div>
 

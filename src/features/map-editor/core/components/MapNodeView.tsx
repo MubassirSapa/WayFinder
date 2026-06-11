@@ -2,6 +2,7 @@
 
 import { useEditorStore } from "@/store";
 import { useCanvasPointer } from '../hooks/useCanvasPointer';
+import { useNodeDrag } from '../hooks/useNodeDrag';
 import { EditorMapNode } from '../types/map.types';
 
 interface MapNodeViewProps {
@@ -11,9 +12,11 @@ interface MapNodeViewProps {
 export function MapNodeView({ node }: MapNodeViewProps) {
   const { selectedEntity, pendingPathNodeId, mode } = useEditorStore();
   const { handleNodeClick } = useCanvasPointer({ current: null });
+  const { handlePointerDown } = useNodeDrag();
 
   const isSelected = selectedEntity?.kind === 'node' && selectedEntity.id === node.id;
   const isPendingSource = pendingPathNodeId === node.id;
+  const canDragNode = mode === 'select' || mode === 'node' || mode === 'object';
 
   // Node color depending on role
   let fillColor = '#3b82f6'; // blue-500 for hallway_point
@@ -26,9 +29,21 @@ export function MapNodeView({ node }: MapNodeViewProps) {
   return (
     <g
       transform={`translate(${node.x}, ${node.y})`}
+      onPointerDown={(e) => {
+        if (canDragNode) {
+          handlePointerDown(node.id, node.x, node.y, e);
+        }
+      }}
       onClick={(e) => handleNodeClick(node.id, e)}
-      className="cursor-pointer group"
+      className={`${canDragNode ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'} group`}
+      style={{ touchAction: 'none' }}
     >
+      {/* Larger invisible hit target so nodes are easy to grab on mouse/touch. */}
+      <circle
+        r="22"
+        fill="transparent"
+      />
+
       {/* Outer focus rings for selection or path creation source */}
       {isPendingSource && (
         <circle

@@ -5,7 +5,7 @@ import type { EditorStore } from "@/store/types";
 import { EditorMapNode } from "../types/map.types";
 import { NodeSlice } from "./types";
 
-export const createNodeSlice: StateCreator<EditorStore, [], [], NodeSlice> = (set, get) => ({
+export const createNodeSlice: StateCreator<EditorStore, [], [], NodeSlice> = (set) => ({
   nodes: {},
   pendingPathNodeId: null,
 
@@ -40,7 +40,8 @@ export const createNodeSlice: StateCreator<EditorStore, [], [], NodeSlice> = (se
 
   removeNode: (id) => {
     set((state) => {
-      const { [id]: _, ...remainingNodes } = state.nodes;
+      const remainingNodes = { ...state.nodes };
+      delete remainingNodes[id];
       const wasSelected = state.selectedEntity?.kind === 'node' && state.selectedEntity.id === id;
 
       // Clean up any path edges connected to this node
@@ -60,6 +61,20 @@ export const createNodeSlice: StateCreator<EditorStore, [], [], NodeSlice> = (se
         pendingPathNodeId: state.pendingPathNodeId === id ? null : state.pendingPathNodeId,
         isDirty: true,
         ...(edgesChanged ? { edges: updatedEdges } : {}),
+      };
+    });
+  },
+
+  moveNode: (id, x, y) => {
+    set((state) => {
+      const existing = state.nodes[id];
+      if (!existing) return {};
+      return {
+        nodes: {
+          ...state.nodes,
+          [id]: { ...existing, x, y, _dirty: true },
+        },
+        isDirty: true,
       };
     });
   },

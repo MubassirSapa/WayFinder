@@ -32,6 +32,7 @@ export interface ObjectSlice {
   updateObject: (id: string, updates: Partial<EditorMapObject>) => void;
   removeObject: (id: string) => void;
   moveObject: (id: string, x: number, y: number) => void;
+  rotateObject: (id: string, rotation: number) => void;
 }
 
 export interface NodeSlice {
@@ -41,6 +42,7 @@ export interface NodeSlice {
   addNode: (node: EditorMapNode) => void;
   updateNode: (id: string, updates: Partial<EditorMapNode>) => void;
   removeNode: (id: string) => void;
+  moveNode: (id: string, x: number, y: number) => void;
   setPendingPathNode: (id: string | null) => void;
 }
 

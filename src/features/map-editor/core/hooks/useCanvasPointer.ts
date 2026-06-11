@@ -21,7 +21,7 @@ export function useCanvasPointer(canvasRef: RefObject<SVGSVGElement | null>) {
     clearSelection,
   } = useEditorStore();
 
-  const handleCanvasClick = (e: React.MouseEvent<SVGSVGElement>) => {
+  const isCanvasTarget = (e: React.MouseEvent<SVGSVGElement>) => {
     // The visible grid is rendered as a background rect inside the SVG, so treat
     // clicks on that rect as canvas clicks while ignoring interactive children.
     const clickedElement = e.target as EventTarget | null;
@@ -29,7 +29,45 @@ export function useCanvasPointer(canvasRef: RefObject<SVGSVGElement | null>) {
       clickedElement instanceof Element &&
       clickedElement.closest('[data-canvas-bg="true"]') !== null;
 
-    if (e.target !== e.currentTarget && !clickedCanvasBackground) return;
+    return e.target === e.currentTarget || clickedCanvasBackground;
+  };
+
+  const addSelectedObjectAtEvent = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (!floor) return;
+
+    const point = canvasPointFromEvent(e, canvasRef);
+    if (!point) return;
+
+    const snapX = snapToGrid(point.x);
+    const snapY = snapToGrid(point.y);
+    const tempId = `temp_obj_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const { width, height } = getDefaultDimensions(selectedToolboxType);
+
+    const newObject: EditorMapObject = {
+      id: tempId,
+      floorId: floor.id,
+      buildingId: floor.buildingId,
+      parentObjectId: null,
+      type: selectedToolboxType,
+      name: `New ${selectedToolboxType.charAt(0).toUpperCase() + selectedToolboxType.slice(1)}`,
+      label: '',
+      x: snapX,
+      y: snapY,
+      width,
+      height,
+      rotation: 0,
+      isSearchable: true,
+      isAccessible: true,
+      _clientId: tempId,
+      _dirty: true,
+    };
+
+    addObject(newObject);
+    selectEntity({ kind: 'object', id: tempId });
+  };
+
+  const handleCanvasClick = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (!isCanvasTarget(e)) return;
 
     if (!floor) return;
 
@@ -42,30 +80,7 @@ export function useCanvasPointer(canvasRef: RefObject<SVGSVGElement | null>) {
     if (mode === 'select') {
       clearSelection();
     } else if (mode === 'object') {
-      const tempId = `temp_obj_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      const { width, height } = getDefaultDimensions(selectedToolboxType);
-
-      const newObject: EditorMapObject = {
-        id: tempId,
-        floorId: floor.id,
-        buildingId: floor.buildingId,
-        parentObjectId: null,
-        type: selectedToolboxType,
-        name: `New ${selectedToolboxType.charAt(0).toUpperCase() + selectedToolboxType.slice(1)}`,
-        label: '',
-        x: snapX,
-        y: snapY,
-        width,
-        height,
-        rotation: 0,
-        isSearchable: true,
-        isAccessible: true,
-        _clientId: tempId,
-        _dirty: true,
-      };
-
-      addObject(newObject);
-      selectEntity({ kind: 'object', id: tempId });
+      return;
     } else if (mode === 'node') {
       const tempId = `temp_node_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       const nodeCount = Object.keys(nodes).length;
@@ -92,6 +107,14 @@ export function useCanvasPointer(canvasRef: RefObject<SVGSVGElement | null>) {
       setPendingPathNode(null);
       clearSelection();
     }
+  };
+
+  const handleCanvasDoubleClick = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (!isCanvasTarget(e)) return;
+    if (mode !== 'object') return;
+
+    e.preventDefault();
+    addSelectedObjectAtEvent(e);
   };
 
   const handleNodeClick = (nodeId: string, e: React.MouseEvent) => {
@@ -156,6 +179,7 @@ export function useCanvasPointer(canvasRef: RefObject<SVGSVGElement | null>) {
 
   return {
     handleCanvasClick,
+    handleCanvasDoubleClick,
     handleNodeClick,
   };
 }

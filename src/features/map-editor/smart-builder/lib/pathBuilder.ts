@@ -3,6 +3,10 @@ import type {
   EditorMapNode,
   EditorPathEdge,
 } from "@/features/map-editor/core/types/map.types";
+import {
+  edgeExistsBetweenNodes,
+  findReusableHallwayNodeAtPoint,
+} from "./autoConnect";
 
 function createTempNodeId() {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
@@ -25,6 +29,8 @@ interface BuildHallwayPathInput {
   floorId: string;
   buildingId: string;
   metersPerPixel?: number | null;
+  existingNodes?: EditorMapNode[];
+  existingEdges?: EditorPathEdge[];
 }
 
 interface BuildHallwayPathResult {
@@ -32,54 +38,101 @@ interface BuildHallwayPathResult {
   edges: EditorPathEdge[];
 }
 
+function expandOrthogonalPoints(points: Point[]): Point[] {
+  return points.reduce<Point[]>((expandedPoints, point, index) => {
+    if (index === 0) {
+      return [point];
+    }
+
+    const previousPoint = expandedPoints[expandedPoints.length - 1];
+
+    if (previousPoint.x !== point.x && previousPoint.y !== point.y) {
+      expandedPoints.push({
+        x: point.x,
+        y: previousPoint.y,
+      });
+    }
+
+    expandedPoints.push(point);
+    return expandedPoints;
+  }, []);
+}
+
 export function buildHallwayPath({
   points,
   floorId,
   buildingId,
   metersPerPixel,
+  existingNodes = [],
+  existingEdges = [],
 }: BuildHallwayPathInput): BuildHallwayPathResult {
   if (points.length < 2) {
     return { nodes: [], edges: [] };
   }
 
   const scale = metersPerPixel ?? 0.05;
-  const nodes = points.map((point, index) => {
-    const id = createTempNodeId();
+  const orthogonalPoints = expandOrthogonalPoints(points);
+  const newNodes: EditorMapNode[] = [];
+  const allNodes: EditorMapNode[] = [];
 
-    return {
-      id,
-      floorId,
-      buildingId,
-      objectId: null,
-      role: "hallway_point" as const,
-      label: `Hallway ${index + 1}`,
-      x: point.x,
-      y: point.y,
-      geometryType: "icon" as const,
-      isAccessible: true,
-      _clientId: id,
-      _dirty: true,
-    };
-  });
+  for (const point of orthogonalPoints) {
+    const reusable = findReusableHallwayNodeAtPoint(point, [
+      ...existingNodes,
+      ...newNodes,
+    ]);
 
-  const edges = nodes.slice(0, -1).map((node, index) => {
-    const nextNode = nodes[index + 1];
+    if (reusable) {
+      allNodes.push(reusable);
+    } else {
+      const id = createTempNodeId();
+      const node: EditorMapNode = {
+        id,
+        floorId,
+        buildingId,
+        objectId: null,
+        role: "hallway_point",
+        label: `Hallway ${allNodes.length + 1}`,
+        x: point.x,
+        y: point.y,
+        geometryType: "icon",
+        isAccessible: true,
+        _clientId: id,
+        _dirty: true,
+      };
+      allNodes.push(node);
+      newNodes.push(node);
+    }
+  }
+
+  const workingEdges = [...existingEdges];
+  const newEdges: EditorPathEdge[] = [];
+
+  for (let i = 0; i < allNodes.length - 1; i++) {
+    const fromNode = allNodes[i];
+    const toNode = allNodes[i + 1];
+
+    if (edgeExistsBetweenNodes(workingEdges, fromNode.id, toNode.id)) {
+      continue;
+    }
+
     const edgeId = createTempEdgeId();
-
-    return {
+    const edge: EditorPathEdge = {
       id: edgeId,
       floorId,
       buildingId,
-      fromNodeId: node.id,
-      toNodeId: nextNode.id,
-      type: "walkway" as const,
-      distanceMeters: pixelsToMeters(pixelDistance(node, nextNode), scale),
+      fromNodeId: fromNode.id,
+      toNodeId: toNode.id,
+      type: "walkway",
+      distanceMeters: pixelsToMeters(pixelDistance(fromNode, toNode), scale),
       bidirectional: true,
       isAccessible: true,
       _clientId: edgeId,
       _dirty: true,
     };
-  });
 
-  return { nodes, edges };
+    newEdges.push(edge);
+    workingEdges.push(edge);
+  }
+
+  return { nodes: newNodes, edges: newEdges };
 }
