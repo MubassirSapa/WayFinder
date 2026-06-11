@@ -1,0 +1,105 @@
+import type { CollectionConfig } from "payload";
+
+export const MapNodes: CollectionConfig = {
+  slug: "map-nodes",
+  admin: {
+    useAsTitle: "label",
+    group: "Indoor Map",
+  },
+  fields: [
+    {
+      name: "buildingId",
+      type: "text",
+      required: true,
+    },
+    {
+      name: "floor",
+      type: "relationship",
+      relationTo: "floors",
+      required: true,
+      index: true,
+    },
+    {
+      name: "object",
+      type: "relationship",
+      relationTo: "map-objects",
+      required: false,
+      index: true,
+    },
+    {
+      name: "role",
+      type: "select",
+      required: true,
+      options: [
+        { label: "Entrance", value: "entrance" },
+        { label: "Exit", value: "exit" },
+        { label: "Hallway Point", value: "hallway_point" },
+        { label: "Stairs Entry", value: "stairs_entry" },
+        { label: "Elevator Entry", value: "elevator_entry" },
+        { label: "Shelf Access", value: "shelf_access" },
+      ],
+    },
+    {
+      name: "label",
+      type: "text",
+    },
+    {
+      name: "x",
+      type: "number",
+      required: true,
+      defaultValue: 0,
+    },
+    {
+      name: "y",
+      type: "number",
+      required: true,
+      defaultValue: 0,
+    },
+    {
+      name: "width",
+      type: "number",
+    },
+    {
+      name: "height",
+      type: "number",
+    },
+    {
+      name: "rotation",
+      type: "number",
+      defaultValue: 0,
+    },
+    {
+      name: "geometryType",
+      type: "select",
+      required: true,
+      defaultValue: "rectangle",
+      options: [
+        { label: "Rectangle", value: "rectangle" },
+        { label: "Polygon", value: "polygon" },
+        { label: "Line", value: "line" },
+        { label: "Icon", value: "icon" },
+      ],
+    },
+    {
+      name: "points",
+      type: "array",
+      fields: [
+        {
+          name: "x",
+          type: "number",
+          required: true,
+        },
+        {
+          name: "y",
+          type: "number",
+          required: true,
+        },
+      ],
+    },
+    {
+      name: "isAccessible",
+      type: "checkbox",
+      defaultValue: true,
+    },
+  ],
+};
