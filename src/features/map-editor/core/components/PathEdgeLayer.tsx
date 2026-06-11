@@ -5,7 +5,7 @@ import { useEditorStore } from "@/store";
 
 export function PathEdgeLayer() {
   const edgesMap = useEditorStore((state) => state.edges);
-  const { nodes, selectedEntity, selectEntity, mode } = useEditorStore();
+  const { nodes, selectedEntity, selectEntity } = useEditorStore();
 
   const edgesList = Object.values(edgesMap);
 

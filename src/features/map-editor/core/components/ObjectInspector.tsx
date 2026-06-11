@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ToolboxObjectType } from '../types/editor.types';
+import { EditorMapObject } from '../types/map.types';
 
 interface ObjectInspectorProps {
   objectId: string;
@@ -28,8 +29,8 @@ export function ObjectInspector({ objectId }: ObjectInspectorProps) {
 
   if (!object) return null;
 
-  const handleFieldChange = (field: string, value: any) => {
-    updateObject(objectId, { [field]: value });
+  const handleFieldChange = (field: string, value: unknown) => {
+    updateObject(objectId, { [field]: value } as Partial<EditorMapObject>);
   };
 
   const handleDelete = async () => {

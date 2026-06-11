@@ -5,7 +5,7 @@ import type { EditorStore } from "@/store/types";
 import { EditorMapObject } from "../types/map.types";
 import { ObjectSlice } from "./types";
 
-export const createObjectSlice: StateCreator<EditorStore, [], [], ObjectSlice> = (set, get) => ({
+export const createObjectSlice: StateCreator<EditorStore, [], [], ObjectSlice> = (set) => ({
   objects: {},
 
   setObjects: (objectsList) => {
@@ -39,7 +39,8 @@ export const createObjectSlice: StateCreator<EditorStore, [], [], ObjectSlice> =
 
   removeObject: (id) => {
     set((state) => {
-      const { [id]: _, ...remainingObjects } = state.objects;
+      const remainingObjects = { ...state.objects };
+      delete remainingObjects[id];
       const wasSelected = state.selectedEntity?.kind === 'object' && state.selectedEntity.id === id;
       
       // Also remove any nodes associated with this object!

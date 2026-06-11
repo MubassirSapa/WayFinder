@@ -9,7 +9,7 @@ interface MapNodeViewProps {
 }
 
 export function MapNodeView({ node }: MapNodeViewProps) {
-  const { selectedEntity, pendingPathNodeId, mode } = useEditorStore();
+  const { selectedEntity, pendingPathNodeId } = useEditorStore();
   const { handleNodeClick } = useCanvasPointer({ current: null });
 
   const isSelected = selectedEntity?.kind === 'node' && selectedEntity.id === node.id;
