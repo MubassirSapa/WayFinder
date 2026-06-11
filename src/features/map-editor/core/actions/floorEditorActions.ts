@@ -87,9 +87,11 @@ export async function getFloorEditorData(floorId: string): Promise<FloorEditorDa
       nodes: nodesResult.docs.map(normalizeMapNode),
       edges: edgesResult.docs.map(normalizePathEdge),
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error loading floor editor data:", error);
-    throw new Error(error?.message || "Failed to load floor editor data");
+    throw new Error(
+      error instanceof Error ? error.message : "Failed to load floor editor data",
+    );
   }
 }
 
