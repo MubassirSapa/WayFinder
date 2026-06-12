@@ -2,15 +2,61 @@ import React, { useRef } from 'react';
 import { useEditorStore } from "@/store";
 import { snapToGrid } from '../lib/canvas';
 
+const MIN_OBJECT_SIZE = 20;
+
+function normalizeRotation(rotation: number): number {
+  const normalized = rotation % 360;
+  return normalized < 0 ? normalized + 360 : normalized;
+}
+
+function clientPointToSvg(
+  clientX: number,
+  clientY: number,
+  svg: SVGSVGElement,
+): { x: number; y: number } | null {
+  const svgPoint = svg.createSVGPoint();
+  svgPoint.x = clientX;
+  svgPoint.y = clientY;
+
+  try {
+    const matrix = svg.getScreenCTM()?.inverse();
+    if (matrix) {
+      const transformed = svgPoint.matrixTransform(matrix);
+      return { x: transformed.x, y: transformed.y };
+    }
+  } catch {}
+
+  return null;
+}
+
 export function useObjectDrag() {
-  const { mode, selectEntity, moveObject } = useEditorStore();
-  const dragInfo = useRef<{
-    objectId: string;
-    startX: number;
-    startY: number;
-    startClientX: number;
-    startClientY: number;
-  } | null>(null);
+  const { mode, selectEntity, moveObject, rotateObject, updateObject } = useEditorStore();
+  const dragInfo = useRef<
+    | {
+        type: 'move';
+        objectId: string;
+        startX: number;
+        startY: number;
+        startClientX: number;
+        startClientY: number;
+      }
+    | {
+        type: 'rotate';
+        objectId: string;
+        centerX: number;
+        centerY: number;
+        svg: SVGSVGElement;
+      }
+    | {
+        type: 'resize';
+        objectId: string;
+        startWidth: number;
+        startHeight: number;
+        startClientX: number;
+        startClientY: number;
+      }
+    | null
+  >(null);
 
   const handleMouseDown = (objectId: string, initialX: number, initialY: number, e: React.MouseEvent) => {
     // Support moving objects from both select and object placement modes.
@@ -23,6 +69,7 @@ export function useObjectDrag() {
     selectEntity({ kind: 'object', id: objectId });
 
     dragInfo.current = {
+      type: 'move',
       objectId,
       startX: initialX,
       startY: initialY,
@@ -34,19 +81,104 @@ export function useObjectDrag() {
     document.addEventListener('mouseup', handleMouseUp);
   };
 
+  const handleResizeStart = (
+    objectId: string,
+    width: number,
+    height: number,
+    e: React.MouseEvent<SVGRectElement>,
+  ) => {
+    if ((mode !== 'select' && mode !== 'object') || e.button !== 0) return;
+
+    e.stopPropagation();
+    e.preventDefault();
+
+    selectEntity({ kind: 'object', id: objectId });
+
+    dragInfo.current = {
+      type: 'resize',
+      objectId,
+      startWidth: width,
+      startHeight: height,
+      startClientX: e.clientX,
+      startClientY: e.clientY,
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+
+  const handleRotateStart = (
+    objectId: string,
+    objectX: number,
+    objectY: number,
+    width: number,
+    height: number,
+    e: React.MouseEvent<SVGCircleElement>,
+  ) => {
+    if ((mode !== 'select' && mode !== 'object') || e.button !== 0) return;
+
+    const svg = e.currentTarget.ownerSVGElement;
+    if (!svg) return;
+
+    e.stopPropagation();
+    e.preventDefault();
+
+    selectEntity({ kind: 'object', id: objectId });
+
+    dragInfo.current = {
+      type: 'rotate',
+      objectId,
+      centerX: objectX + width / 2,
+      centerY: objectY + height / 2,
+      svg,
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+
   const handleMouseMove = (e: MouseEvent) => {
     if (!dragInfo.current) return;
 
-    const { objectId, startX, startY, startClientX, startClientY } = dragInfo.current;
+    if (dragInfo.current.type === 'move') {
+      const { objectId, startX, startY, startClientX, startClientY } = dragInfo.current;
 
-    const dx = e.clientX - startClientX;
-    const dy = e.clientY - startClientY;
+      const dx = e.clientX - startClientX;
+      const dy = e.clientY - startClientY;
 
-    // Apply live snapping for high-fidelity interactive feel
-    const newX = snapToGrid(startX + dx);
-    const newY = snapToGrid(startY + dy);
+      const newX = snapToGrid(startX + dx);
+      const newY = snapToGrid(startY + dy);
 
-    moveObject(objectId, newX, newY);
+      moveObject(objectId, newX, newY);
+      return;
+    }
+
+    if (dragInfo.current.type === 'resize') {
+      const {
+        objectId,
+        startWidth,
+        startHeight,
+        startClientX,
+        startClientY,
+      } = dragInfo.current;
+
+      const dx = e.clientX - startClientX;
+      const dy = e.clientY - startClientY;
+
+      const width = Math.max(MIN_OBJECT_SIZE, snapToGrid(startWidth + dx));
+      const height = Math.max(MIN_OBJECT_SIZE, snapToGrid(startHeight + dy));
+
+      updateObject(objectId, { width, height });
+      return;
+    }
+
+    const { objectId, centerX, centerY, svg } = dragInfo.current;
+    const point = clientPointToSvg(e.clientX, e.clientY, svg);
+    if (!point) return;
+
+    const angle = Math.atan2(point.y - centerY, point.x - centerX);
+    const degrees = normalizeRotation((angle * 180) / Math.PI + 90);
+    rotateObject(objectId, Math.round(degrees));
   };
 
   const handleMouseUp = () => {
@@ -57,5 +189,7 @@ export function useObjectDrag() {
 
   return {
     handleMouseDown,
+    handleResizeStart,
+    handleRotateStart,
   };
 }

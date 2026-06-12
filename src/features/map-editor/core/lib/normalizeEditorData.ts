@@ -29,6 +29,8 @@ function getRequiredRelationId(relation: Exclude<RelationValue, null | undefined
 }
 
 export function normalizeFloor(doc: Floor): EditorFloor {
+  const floorDoc = doc as Floor & { metersPerPixel?: number | null };
+
   return {
     id: String(doc.id),
     buildingId: doc.buildingId,
@@ -36,6 +38,7 @@ export function normalizeFloor(doc: Floor): EditorFloor {
     level: doc.level ?? 0,
     width: doc.width ?? 1200,
     height: doc.height ?? 800,
+    metersPerPixel: floorDoc.metersPerPixel ?? null,
     backgroundImageUrl: doc.backgroundImageUrl,
     status: doc.status ?? 'draft',
   };

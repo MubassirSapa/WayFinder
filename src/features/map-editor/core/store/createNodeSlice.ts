@@ -65,5 +65,19 @@ export const createNodeSlice: StateCreator<EditorStore, [], [], NodeSlice> = (se
     });
   },
 
+  moveNode: (id, x, y) => {
+    set((state) => {
+      const existing = state.nodes[id];
+      if (!existing) return {};
+      return {
+        nodes: {
+          ...state.nodes,
+          [id]: { ...existing, x, y, _dirty: true },
+        },
+        isDirty: true,
+      };
+    });
+  },
+
   setPendingPathNode: (pendingPathNodeId) => set({ pendingPathNodeId }),
 });

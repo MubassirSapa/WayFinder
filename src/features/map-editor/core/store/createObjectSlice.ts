@@ -2,8 +2,53 @@ import { StateCreator } from "zustand";
 
 import type { EditorStore } from "@/store/types";
 
-import { EditorMapObject } from "../types/map.types";
+import { EditorMapNode, EditorMapObject } from "../types/map.types";
 import { ObjectSlice } from "./types";
+
+function moveLinkedNode(
+  node: EditorMapNode,
+  deltaX: number,
+  deltaY: number,
+): EditorMapNode {
+  return {
+    ...node,
+    x: node.x + deltaX,
+    y: node.y + deltaY,
+    points: node.points?.map((point) => ({
+      ...point,
+      x: point.x + deltaX,
+      y: point.y + deltaY,
+    })) ?? node.points,
+    _dirty: true,
+  };
+}
+
+function updateLinkedNodesForObjectMove(
+  state: EditorStore,
+  objectId: string,
+  deltaX: number,
+  deltaY: number,
+) {
+  if (deltaX === 0 && deltaY === 0) {
+    return null;
+  }
+
+  let nodesChanged = false;
+  const updatedNodes = { ...state.nodes };
+
+  Object.keys(updatedNodes).forEach((nodeId) => {
+    const node = updatedNodes[nodeId];
+
+    if (node.objectId !== objectId) {
+      return;
+    }
+
+    updatedNodes[nodeId] = moveLinkedNode(node, deltaX, deltaY);
+    nodesChanged = true;
+  });
+
+  return nodesChanged ? updatedNodes : null;
+}
 
 export const createObjectSlice: StateCreator<EditorStore, [], [], ObjectSlice> = (set) => ({
   objects: {},
@@ -27,11 +72,24 @@ export const createObjectSlice: StateCreator<EditorStore, [], [], ObjectSlice> =
     set((state) => {
       const existing = state.objects[id];
       if (!existing) return {};
+
+      const nextX = updates.x ?? existing.x;
+      const nextY = updates.y ?? existing.y;
+      const deltaX = nextX - existing.x;
+      const deltaY = nextY - existing.y;
+      const updatedNodes = updateLinkedNodesForObjectMove(
+        state,
+        id,
+        deltaX,
+        deltaY,
+      );
+
       return {
         objects: {
           ...state.objects,
           [id]: { ...existing, ...updates, _dirty: true },
         },
+        ...(updatedNodes ? { nodes: updatedNodes } : {}),
         isDirty: true,
       };
     });
@@ -67,10 +125,35 @@ export const createObjectSlice: StateCreator<EditorStore, [], [], ObjectSlice> =
     set((state) => {
       const existing = state.objects[id];
       if (!existing) return {};
+
+      const deltaX = x - existing.x;
+      const deltaY = y - existing.y;
+      const updatedNodes = updateLinkedNodesForObjectMove(
+        state,
+        id,
+        deltaX,
+        deltaY,
+      );
+
       return {
         objects: {
           ...state.objects,
           [id]: { ...existing, x, y, _dirty: true },
+        },
+        ...(updatedNodes ? { nodes: updatedNodes } : {}),
+        isDirty: true,
+      };
+    });
+  },
+
+  rotateObject: (id, rotation) => {
+    set((state) => {
+      const existing = state.objects[id];
+      if (!existing) return {};
+      return {
+        objects: {
+          ...state.objects,
+          [id]: { ...existing, rotation, _dirty: true },
         },
         isDirty: true,
       };

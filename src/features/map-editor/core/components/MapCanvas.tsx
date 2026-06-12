@@ -12,7 +12,7 @@ import { PathEdgeLayer } from './PathEdgeLayer';
 export function MapCanvas() {
   const canvasRef = useRef<SVGSVGElement | null>(null);
   const { floor, mode, pendingPathNodeId, nodes } = useEditorStore();
-  const { handleCanvasClick } = useCanvasPointer(canvasRef);
+  const { handleCanvasClick, handleCanvasDoubleClick } = useCanvasPointer(canvasRef);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   // Track cursor position in path mode to render temporary edge preview
@@ -74,6 +74,8 @@ export function MapCanvas() {
           width={floor.width}
           height={floor.height}
           onClick={handleCanvasClick}
+          onDoubleClick={handleCanvasDoubleClick}
+          data-editor-canvas="true"
           className="absolute inset-0 select-none cursor-crosshair overflow-visible"
         >
           {/* Faded Background Image if configured */}
