@@ -15,8 +15,8 @@ const fontHeading = IBM_Plex_Sans({
 });
 
 export const metadata = {
-  description: "A blank template using Payload in a Next.js app.",
-  title: "Payload Blank Template",
+  description: "Indoor maps and wayfinding for public venues and facilities.",
+  title: "Wayfinder",
 };
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
