@@ -1,4 +1,4 @@
-import AuthFrame from "@/components/auth/_shared/AuthFrame";
+import AuthFrame from "@/features/auth/_shared/AuthFrame";
 
 export default function AuthLayout({ children }: TProps) {
   return <AuthFrame>{children}</AuthFrame>;

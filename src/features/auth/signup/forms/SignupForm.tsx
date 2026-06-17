@@ -18,7 +18,7 @@ import { Field, FieldGroup } from "@/components/ui/field";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
-import { useSignupFlowStore } from "@/components/auth/_store/useSignupFlowStore";
+import { useSignupFlowStore } from "@/features/auth/_store/useSignupFlowStore";
 import { signupAction } from "@/server-actions/auth/signup";
 import { SignupSchema } from "@/validations/auth/signup";
 import { SIGNUP_CLIENT as CLIENT } from "@/constants/auth/signup";

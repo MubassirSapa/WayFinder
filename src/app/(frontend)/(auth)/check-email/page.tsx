@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import CheckEmailSection from "@/components/auth/check-email/sections/CheckEmailSection";
+import CheckEmailSection from "@/features/auth/check-email/sections/CheckEmailSection";
 import { BRAND } from "@/constants/brand";
 
 export const metadata: Metadata = {

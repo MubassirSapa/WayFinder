@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import VerifyEmailSection from "@/components/auth/verify-email/sections/VerifyEmailSection";
+import VerifyEmailSection from "@/features/auth/verify-email/sections/VerifyEmailSection";
 import { verifyEmailAction } from "@/server-actions/auth/verify-email";
 import { BRAND } from "@/constants/brand";
 

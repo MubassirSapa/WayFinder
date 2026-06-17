@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import RegisterOrganizationSection from "@/components/auth/register-organization/sections/RegisterOrganizationSection";
+import RegisterOrganizationSection from "@/features/auth/register-organization/sections/RegisterOrganizationSection";
 import { BRAND } from "@/constants/brand";
 
 export const metadata: Metadata = {

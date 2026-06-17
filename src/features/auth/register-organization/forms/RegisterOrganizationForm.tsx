@@ -11,7 +11,7 @@ import TextField from "@/components/shared/form/fields/TextField";
 import SelectField from "@/components/shared/form/fields/SelectField";
 import { FieldGroup } from "@/components/ui/field";
 
-import { useSignupFlowStore } from "@/components/auth/_store/useSignupFlowStore";
+import { useSignupFlowStore } from "@/features/auth/_store/useSignupFlowStore";
 import { OrganizationSchema } from "@/validations/auth/organization";
 import {
   ORGANIZATION_TYPES,

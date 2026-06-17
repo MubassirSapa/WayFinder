@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import ForgotPasswordSection from "@/components/auth/forgot-password/sections/ForgotPasswordSection";
+import ForgotPasswordSection from "@/features/auth/forgot-password/sections/ForgotPasswordSection";
 import { BRAND } from "@/constants/brand";
 
 export const metadata: Metadata = {
