@@ -180,6 +180,8 @@ export interface Floor {
   level: number;
   width: number;
   height: number;
+  metersPerPixel?: number | null;
+  backgroundImage?: (number | null) | Media;
   backgroundImageUrl?: string | null;
   status: 'draft' | 'published';
   updatedAt: string;
@@ -404,6 +406,8 @@ export interface FloorsSelect<T extends boolean = true> {
   level?: T;
   width?: T;
   height?: T;
+  metersPerPixel?: T;
+  backgroundImage?: T;
   backgroundImageUrl?: T;
   status?: T;
   updatedAt?: T;

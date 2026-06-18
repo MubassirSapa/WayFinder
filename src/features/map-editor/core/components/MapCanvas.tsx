@@ -63,7 +63,7 @@ export function MapCanvas() {
   return (
     <div className="relative h-full w-full overflow-auto bg-zinc-950 p-6 flex items-start justify-start select-none">
       <div
-        className="rounded-xl border border-zinc-800 bg-zinc-900 shadow-2xl relative"
+        className="relative overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900 shadow-2xl"
         style={{
           width: floor.width,
           height: floor.height,
@@ -76,7 +76,7 @@ export function MapCanvas() {
           onClick={handleCanvasClick}
           onDoubleClick={handleCanvasDoubleClick}
           data-editor-canvas="true"
-          className="absolute inset-0 select-none cursor-crosshair overflow-visible"
+          className="absolute inset-0 select-none cursor-crosshair overflow-hidden"
         >
           {/* Faded Background Image if configured */}
           {floor.backgroundImageUrl && (

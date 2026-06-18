@@ -37,6 +37,16 @@ export const Floors: CollectionConfig = {
       defaultValue: 800,
     },
     {
+      name: "metersPerPixel",
+      type: "number",
+      defaultValue: 0.05,
+    },
+    {
+      name: "backgroundImage",
+      type: "relationship",
+      relationTo: "media",
+    },
+    {
       name: "backgroundImageUrl",
       type: "text",
     },

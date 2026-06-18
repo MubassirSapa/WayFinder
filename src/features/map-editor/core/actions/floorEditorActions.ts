@@ -2,6 +2,8 @@
 
 import config from "@payload-config";
 import type {
+  Floor as PayloadFloor,
+  Media as PayloadMedia,
   MapNode as PayloadMapNode,
   MapObject as PayloadMapObject,
   PathEdge as PayloadPathEdge,
@@ -21,6 +23,7 @@ import {
   EditorPathEdge,
 } from "../types/map.types";
 
+type FloorData = Omit<PayloadFloor, "id" | "createdAt" | "updatedAt">;
 type MapNodeData = Omit<PayloadMapNode, "id" | "createdAt" | "updatedAt">;
 type MapObjectData = Omit<PayloadMapObject, "id" | "createdAt" | "updatedAt">;
 type PathEdgeData = Omit<PayloadPathEdge, "id" | "createdAt" | "updatedAt">;
@@ -30,6 +33,13 @@ export interface FloorEditorData {
   objects: EditorMapObject[];
   nodes: EditorMapNode[];
   edges: EditorPathEdge[];
+}
+
+export interface UploadedReferenceImage {
+  alt: string;
+  filename: string | null;
+  id: string;
+  url: string | null;
 }
 
 async function getPayloadClient() {
@@ -43,7 +53,7 @@ export async function getFloorEditorData(floorId: string): Promise<FloorEditorDa
       payload.findByID({
         collection: "floors",
         id: Number(floorId),
-        depth: 0,
+        depth: 1,
         overrideAccess: true,
       }),
       payload.find({
@@ -91,6 +101,98 @@ export async function getFloorEditorData(floorId: string): Promise<FloorEditorDa
     console.error("Error loading floor editor data:", error);
     throw new Error(
       error instanceof Error ? error.message : "Failed to load floor editor data",
+    );
+  }
+}
+
+export async function updateFloor(
+  id: string,
+  data: Partial<EditorFloor>,
+) {
+  try {
+    const payload = await getPayloadClient();
+
+    const updateData: Partial<FloorData> & {
+      backgroundImage?: null | number;
+      metersPerPixel?: null | number;
+    } = {};
+
+    if (data.buildingId !== undefined) updateData.buildingId = data.buildingId;
+    if (data.name !== undefined) updateData.name = data.name;
+    if (data.level !== undefined) updateData.level = data.level;
+    if (data.width !== undefined) updateData.width = data.width;
+    if (data.height !== undefined) updateData.height = data.height;
+    if (data.metersPerPixel !== undefined) {
+      updateData.metersPerPixel = data.metersPerPixel ?? null;
+    }
+    if (data.backgroundImageId !== undefined) {
+      updateData.backgroundImage = data.backgroundImageId
+        ? Number(data.backgroundImageId)
+        : null;
+      updateData.backgroundImageUrl = null;
+    } else if (data.backgroundImageUrl !== undefined) {
+      updateData.backgroundImageUrl = data.backgroundImageUrl;
+    }
+    if (data.status !== undefined) updateData.status = data.status;
+
+    const doc = await payload.update({
+      collection: "floors",
+      id: Number(id),
+      depth: 1,
+      data: updateData,
+      overrideAccess: true,
+    });
+
+    return normalizeFloor(doc);
+  } catch (error) {
+    console.error("Error updating floor:", error);
+    throw new Error((error as Error)?.message || "Failed to update floor");
+  }
+}
+
+export async function uploadFloorReferenceImage(
+  formData: FormData,
+): Promise<UploadedReferenceImage> {
+  const fileEntry = formData.get("file");
+  const altEntry = formData.get("alt");
+
+  if (!(fileEntry instanceof File) || fileEntry.size === 0) {
+    throw new Error("A reference image file is required.");
+  }
+
+  const alt =
+    typeof altEntry === "string" && altEntry.trim().length > 0
+      ? altEntry.trim()
+      : "Floor reference image";
+
+  try {
+    const payload = await getPayloadClient();
+    const buffer = Buffer.from(await fileEntry.arrayBuffer());
+
+    const doc = await payload.create({
+      collection: "media",
+      data: {
+        alt,
+      },
+      file: {
+        data: buffer,
+        mimetype: fileEntry.type || "application/octet-stream",
+        name: fileEntry.name,
+        size: fileEntry.size,
+      },
+      overrideAccess: true,
+    } as never) as PayloadMedia;
+
+    return {
+      alt: doc.alt,
+      filename: doc.filename ?? null,
+      id: String(doc.id),
+      url: doc.url ?? null,
+    };
+  } catch (error) {
+    console.error("Error uploading floor reference image:", error);
+    throw new Error(
+      (error as Error)?.message || "Failed to upload floor reference image",
     );
   }
 }
@@ -264,6 +366,35 @@ export async function updateMapNode(id: string, data: Partial<EditorMapNode>) {
 export async function deleteMapNode(id: string) {
   try {
     const payload = await getPayloadClient();
+
+    const linkedEdges = await payload.find({
+      collection: "path-edges",
+      depth: 0,
+      limit: 1000,
+      overrideAccess: true,
+      where: {
+        or: [
+          {
+            fromNode: {
+              equals: Number(id),
+            },
+          },
+          {
+            toNode: {
+              equals: Number(id),
+            },
+          },
+        ],
+      },
+    });
+
+    for (const edge of linkedEdges.docs) {
+      await payload.delete({
+        collection: "path-edges",
+        id: Number(edge.id),
+      });
+    }
+
     await payload.delete({
       collection: "map-nodes",
       id: Number(id),

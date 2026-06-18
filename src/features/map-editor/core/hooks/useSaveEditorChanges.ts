@@ -7,6 +7,7 @@ import {
   updateMapNode,
   createPathEdge,
   updatePathEdge,
+  updateFloor,
 } from "../actions/floorEditorActions";
 import { useEditorStore } from "@/store";
 
@@ -33,10 +34,12 @@ function isTempId(id: string): boolean {
 export function useSaveEditorChanges() {
   const {
     isSaving,
+    floor,
     objects,
     nodes,
     edges,
     selectedEntity,
+    setFloor,
     setObjects,
     setNodes,
     setEdges,
@@ -51,6 +54,7 @@ export function useSaveEditorChanges() {
     try {
       setSaving(true);
 
+      let localFloor = floor ? { ...floor } : null;
       const localObjects = { ...objects };
       const localNodes = { ...nodes };
       const localEdges = { ...edges };
@@ -58,6 +62,11 @@ export function useSaveEditorChanges() {
       const objectIdMap: Record<string, string> = {};
       const nodeIdMap: Record<string, string> = {};
       const edgeIdMap: Record<string, string> = {};
+
+      if (localFloor?._dirty) {
+        const savedFloor = await updateFloor(localFloor.id, localFloor);
+        localFloor = { ...savedFloor, _dirty: false };
+      }
 
       for (const obj of Object.values(localObjects)) {
         const payloadData = stripLocalFields(obj);
@@ -116,6 +125,9 @@ export function useSaveEditorChanges() {
         }
       }
 
+      if (localFloor) {
+        setFloor(localFloor);
+      }
       setObjects(Object.values(localObjects));
       setNodes(Object.values(localNodes));
       setEdges(Object.values(localEdges));
