@@ -6,8 +6,12 @@ export interface EditorFloor {
   width: number;
   height: number;
   metersPerPixel?: number | null;
+  backgroundImageId?: string | null;
+  backgroundImageName?: string | null;
+  backgroundImageAlt?: string | null;
   backgroundImageUrl?: string | null;
   status: 'draft' | 'published';
+  _dirty?: boolean;
 }
 
 export interface EditorMapObject {
