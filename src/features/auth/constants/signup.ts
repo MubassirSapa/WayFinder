@@ -32,6 +32,6 @@ export const SIGNUP_CLIENT = {
 
   MISSING_ORGANIZATION:
     "Please register your organization first.",
-  EMAIL_TAKEN: "An account with this email already exists.",
+  EMAIL_TAKEN: "An account with this email already exists. Please log in instead.",
   FALLBACK_SERVER_ERROR: "Could not create your account. Please try again.",
 } as const;

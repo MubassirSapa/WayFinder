@@ -20,7 +20,7 @@ const SelectField = (props: TProps) => {
         <SelectTrigger
           id={name}
           aria-invalid={ariaInvalid}
-          className="h-11 w-full rounded-md border-border bg-background text-sm shadow-none focus-visible:border-primary focus-visible:ring-primary/20"
+          className="h-11 w-full rounded-md border-border bg-background text-sm shadow-none data-[size=default]:h-11 focus-visible:border-primary focus-visible:ring-primary/20"
         >
           <SelectValue>
             {(val: string | null) =>

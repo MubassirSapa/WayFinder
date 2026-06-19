@@ -25,7 +25,7 @@ const VerifyEmailSection = ({ isVerified }: TProps) => {
           nativeButton={false}
           render={<Link href={isVerified ? PUBLIC_ROUTES.SIGNIN : PUBLIC_ROUTES.HOME} />}
           size="lg"
-          className="h-11 w-full rounded-lg text-sm font-semibold"
+          className="h-10 w-full rounded-lg text-sm font-semibold"
         >
           {isVerified ? CLIENT.SIGNIN_CTA : CLIENT.HOME_CTA}
         </Button>

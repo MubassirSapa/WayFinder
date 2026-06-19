@@ -61,7 +61,7 @@ const FormCard = ({
       )}
 
       {footer && (
-        <CardFooter className="flex-col gap-4 border-t border-border bg-muted px-5 py-5 sm:px-6">
+        <CardFooter className="flex-col gap-4 px-5 pb-5 pt-3 sm:px-6 sm:pb-6">
           {footer}
         </CardFooter>
       )}

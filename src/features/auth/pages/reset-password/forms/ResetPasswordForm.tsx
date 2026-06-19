@@ -67,7 +67,7 @@ const ResetPasswordForm = ({ token }: TProps) => {
             nativeButton={false}
             render={<Link href={CLIENT.SIGNIN_HREF} />}
             size="lg"
-            className="h-11 w-full rounded-md text-sm font-semibold"
+            className="h-10 w-full rounded-md text-sm font-semibold"
           >
             {CLIENT.SIGNIN_CTA}
           </Button>
@@ -89,7 +89,7 @@ const ResetPasswordForm = ({ token }: TProps) => {
             nativeButton={false}
             render={<Link href={CLIENT.SIGNIN_HREF} />}
             size="lg"
-            className="h-11 w-full rounded-md text-sm font-semibold"
+            className="h-10 w-full rounded-md text-sm font-semibold"
           >
             {CLIENT.SIGNIN_CTA}
           </Button>

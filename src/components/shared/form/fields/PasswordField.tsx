@@ -40,7 +40,7 @@ const PasswordField = (props: TProps) => {
           placeholder={placeholder ?? "Enter your password"}
           autoComplete={autoComplete}
           required={required ?? false}
-          className="pr-10"
+          className="pr-10 [&::-ms-clear]:hidden [&::-ms-reveal]:hidden"
           {...rest}
         />
         <Button

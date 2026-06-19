@@ -19,7 +19,7 @@ const FormSubmitButton = ({
       form={formId}
       disabled={isSubmitting}
       size="lg"
-      className={cn("h-11 w-full rounded-md text-sm font-semibold", className)}
+      className={cn("h-10 w-full rounded-md text-sm font-semibold", className)}
       {...rest}
     >
       {isSubmitting ? (
