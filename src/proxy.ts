@@ -8,6 +8,7 @@ const authRoutes = new Set<string>([
   PUBLIC_ROUTES.REGISTER_ORGANIZATION,
   PUBLIC_ROUTES.FORGOT_PASSWORD,
   PUBLIC_ROUTES.RESET_PASSWORD,
+  
 ]);
 
 export default async function proxy(request: NextRequest) {
