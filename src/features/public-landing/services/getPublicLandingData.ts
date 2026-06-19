@@ -54,7 +54,10 @@ export async function getPublicLandingData(): Promise<PublicLandingData> {
     ]);
 
     const floors = floorsResult.docs as Floor[];
-    const searchableObjects = objectsResult.docs as MapObject[];
+    const publishedFloorIds = new Set(floors.map((floor) => String(floor.id)));
+    const searchableObjects = (objectsResult.docs as MapObject[]).filter((item) =>
+      publishedFloorIds.has(getRelationId(item.floor)),
+    );
     const groups = new Map<string, VenueGroup>();
 
     for (const floor of floors) {
@@ -138,7 +141,7 @@ function toLandingVenue(group: VenueGroup): LandingVenue {
       level: floor.level,
       backgroundImageUrl: floor.backgroundImageUrl ?? null,
       updatedAt: floor.updatedAt,
-      href: `/editor/${floor.id}`,
+      href: `/map/${floor.id}`,
     })),
   };
 }
@@ -153,6 +156,14 @@ function toLandingDestination(item: MapObject): LandingDestination {
     venueName: formatBuildingName(item.buildingId),
     floorName: floor?.name ?? "Floor pending",
     isAccessible: Boolean(item.isAccessible),
-    href: floor ? `/editor/${floor.id}` : null,
+    href: floor ? `/map/${floor.id}` : null,
   };
+}
+
+function getRelationId(relation: MapObject["floor"]) {
+  if (typeof relation === "object" && relation !== null) {
+    return String(relation.id);
+  }
+
+  return String(relation);
 }

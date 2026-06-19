@@ -15,5 +15,5 @@ export async function signinAction(data: TSigninSchema) {
   const res = await signIn(validation.data);
   if (!res.isSuccess) return errorResponse([], SIGNIN_CLIENT.WRONG_CREDENTIALS);
 
-  redirect(PRIVATE_ROUTES.EDITOR);
+  redirect(PRIVATE_ROUTES.DASHBOARD);
 }

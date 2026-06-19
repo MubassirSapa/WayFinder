@@ -14,6 +14,7 @@ const PUBLIC_ROUTES = {
 } as const;
 
 const PRIVATE_ROUTES = {
+  DASHBOARD: "/dashboard",
   EDITOR: "/editor",
 } as const;
 

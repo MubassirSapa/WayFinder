@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Compass, LogIn } from "lucide-react";
+import { LogIn } from "lucide-react";
 
+import { WayfinderBrand } from "@/components/shared/brand/WayfinderBrand";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -8,16 +9,11 @@ type PublicSiteHeaderProps = {
   activePage?: "discover" | "about";
 };
 
-export function PublicSiteHeader({ activePage = "discover" }: PublicSiteHeaderProps) {
+export function PublicSiteHeader({ activePage }: PublicSiteHeaderProps) {
   return (
     <header className="sticky top-0 z-20 border-b border-border bg-background/90 backdrop-blur">
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-5">
-        <Link className="flex items-center gap-2 font-semibold text-primary" href="/">
-          <span className="flex size-8 items-center justify-center rounded-md bg-primary/10 text-primary">
-            <Compass className="size-4" aria-hidden />
-          </span>
-          <span>Wayfinder</span>
-        </Link>
+        <WayfinderBrand href="/" />
 
         <div className="hidden items-center gap-6 text-sm font-medium text-muted-foreground sm:flex">
           <Link

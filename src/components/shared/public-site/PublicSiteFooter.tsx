@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Compass } from "lucide-react";
+
+import { WayfinderBrand } from "@/components/shared/brand/WayfinderBrand";
 
 const footerGroups = [
   {
@@ -35,12 +36,7 @@ export function PublicSiteFooter() {
 
       <div className="relative mx-auto grid max-w-6xl gap-9 px-5 py-10 sm:px-6 md:grid-cols-[1.2fr_1.8fr] lg:py-12">
         <div>
-          <Link className="inline-flex items-center gap-2 font-semibold text-primary" href="/">
-            <span className="flex size-8 items-center justify-center rounded-md bg-primary/10 text-primary">
-              <Compass className="size-4" aria-hidden />
-            </span>
-            <span>Wayfinder</span>
-          </Link>
+          <WayfinderBrand href="/" />
           <p className="mt-4 max-w-sm text-sm leading-6 text-muted-foreground">
             Indoor maps and wayfinding for public venues. Search any building, choose the right
             floor, and route to the right door.

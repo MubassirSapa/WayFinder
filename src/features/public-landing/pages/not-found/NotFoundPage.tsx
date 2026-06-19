@@ -1,5 +1,4 @@
-import { Compass } from "lucide-react";
-
+import { WayfinderBrand } from "@/components/shared/brand/WayfinderBrand";
 import { NotFoundActions } from "./NotFoundActions";
 
 export function NotFoundPage() {
@@ -10,12 +9,7 @@ export function NotFoundPage() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_70%_at_50%_50%,transparent_40%,#040706_100%)]" />
 
       <header className="relative z-10 flex items-center justify-between px-5 py-6 sm:px-10 lg:px-14 lg:py-9">
-        <div className="flex items-center gap-3">
-          <span className="flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-[0_0_22px_color-mix(in_oklch,var(--primary),transparent_60%)]">
-            <Compass className="size-4" aria-hidden />
-          </span>
-          <span className="text-lg font-semibold tracking-normal text-[#f1f5f2]">Wayfinder</span>
-        </div>
+        <WayfinderBrand href="/" textClassName="text-[#f1f5f2]" />
         <div className="hidden font-mono text-xs uppercase tracking-[0.18em] text-[#5a7570] sm:block">
           Status - <span className="text-[#ef7a6b]">No fix</span>
         </div>
