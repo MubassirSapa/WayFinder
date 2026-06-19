@@ -71,6 +71,7 @@ export const EDITOR_UI_TEXT = {
     title: "Automation",
   },
   toolbar: {
+    backToDashboard: "Back to dashboard",
     floorPrefix: "Floor",
     modes: {
       node: "Add Path Nodes",
