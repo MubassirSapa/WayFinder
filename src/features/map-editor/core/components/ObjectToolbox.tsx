@@ -2,6 +2,7 @@
 
 import React, { type ReactNode } from 'react';
 import { useEditorStore } from "@/store";
+import { EDITOR_UI_TEXT } from '../../constants/editorUi.constants';
 import { OBJECT_CONFIGS } from '../lib/objectDefaults';
 import { ToolboxObjectType } from '../types/editor.types';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -20,11 +21,11 @@ export function ObjectToolbox({ footer }: ObjectToolboxProps) {
   };
 
   return (
-    <div className="w-72 h-full min-h-0 border-r border-zinc-800 bg-zinc-900/60 flex flex-col backdrop-blur-md">
+    <div className="h-full min-h-0 w-80 shrink-0 border-r border-zinc-800 bg-zinc-900/60 flex flex-col backdrop-blur-md">
       <div className="p-5 border-b border-zinc-800 bg-zinc-950/40">
-        <h3 className="text-xs font-bold uppercase tracking-[0.22em] text-zinc-400">Object Toolbox</h3>
+        <h3 className="text-xs font-bold uppercase tracking-[0.22em] text-zinc-400">{EDITOR_UI_TEXT.objectToolbox.title}</h3>
         <p className="text-[11px] text-zinc-500 mt-1.5 leading-relaxed">
-          Select an item, then double-click the grid to place it or drag an existing object to reposition it.
+          {EDITOR_UI_TEXT.objectToolbox.description}
         </p>
       </div>
 

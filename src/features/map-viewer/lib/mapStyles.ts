@@ -8,76 +8,76 @@ export function getViewerObjectPalette(type: ViewerMapObject["type"]) {
   switch (type) {
     case "wall":
       return {
-        fill: "color-mix(in oklch, var(--foreground) 18%, var(--muted) 82%)",
-        label: "var(--foreground)",
-        stroke: "color-mix(in oklch, var(--foreground) 30%, var(--border) 70%)",
+        fill: "var(--map-viewer-wall-fill)",
+        label: "var(--map-viewer-label)",
+        stroke: "var(--map-viewer-wall-stroke)",
       };
     case "hallway":
       return {
-        fill: "color-mix(in oklch, var(--background) 40%, var(--muted) 60%)",
-        label: "var(--muted-foreground)",
-        stroke: "color-mix(in oklch, var(--border) 72%, var(--foreground) 28%)",
+        fill: "var(--map-viewer-hallway-fill)",
+        label: "var(--map-viewer-label-muted)",
+        stroke: "var(--map-viewer-hallway-stroke)",
       };
     case "door":
       return {
-        fill: "color-mix(in oklch, var(--chart-5) 22%, transparent)",
-        label: "var(--foreground)",
-        stroke: "var(--chart-5)",
+        fill: "var(--map-viewer-door-fill)",
+        label: "var(--map-viewer-label)",
+        stroke: "var(--map-viewer-door-stroke)",
       };
     case "stairs":
       return {
-        fill: "color-mix(in oklch, var(--chart-2) 18%, var(--card) 82%)",
-        label: "var(--foreground)",
-        stroke: "var(--chart-2)",
+        fill: "var(--map-viewer-stairs-fill)",
+        label: "var(--map-viewer-label)",
+        stroke: "var(--map-viewer-stairs-stroke)",
       };
     case "elevator":
       return {
-        fill: "color-mix(in oklch, var(--chart-4) 18%, var(--card) 82%)",
-        label: "var(--foreground)",
-        stroke: "var(--chart-4)",
+        fill: "var(--map-viewer-elevator-fill)",
+        label: "var(--map-viewer-label)",
+        stroke: "var(--map-viewer-elevator-stroke)",
       };
     case "washroom":
       return {
-        fill: "color-mix(in oklch, var(--chart-1) 18%, var(--card) 82%)",
-        label: "var(--foreground)",
-        stroke: "var(--chart-1)",
+        fill: "var(--map-viewer-washroom-fill)",
+        label: "var(--map-viewer-label)",
+        stroke: "var(--map-viewer-washroom-stroke)",
       };
     case "exit":
       return {
-        fill: "color-mix(in oklch, var(--destructive) 18%, var(--card) 82%)",
-        label: "var(--foreground)",
-        stroke: "var(--destructive)",
+        fill: "var(--map-viewer-exit-fill)",
+        label: "var(--map-viewer-label)",
+        stroke: "var(--map-viewer-exit-stroke)",
       };
     case "poi":
       return {
-        fill: "color-mix(in oklch, var(--primary) 20%, var(--card) 80%)",
-        label: "var(--foreground)",
-        stroke: "var(--primary)",
+        fill: "var(--map-viewer-poi-fill)",
+        label: "var(--map-viewer-label)",
+        stroke: "var(--map-viewer-poi-stroke)",
       };
     case "aisle":
       return {
-        fill: "color-mix(in oklch, var(--chart-3) 14%, var(--card) 86%)",
-        label: "var(--foreground)",
-        stroke: "var(--chart-3)",
+        fill: "var(--map-viewer-aisle-fill)",
+        label: "var(--map-viewer-label)",
+        stroke: "var(--map-viewer-aisle-stroke)",
       };
     case "shelf":
       return {
-        fill: "color-mix(in oklch, var(--chart-2) 14%, var(--muted) 86%)",
-        label: "var(--foreground)",
-        stroke: "color-mix(in oklch, var(--chart-2) 45%, var(--border) 55%)",
+        fill: "var(--map-viewer-shelf-fill)",
+        label: "var(--map-viewer-label)",
+        stroke: "var(--map-viewer-shelf-stroke)",
       };
     case "section":
       return {
-        fill: "color-mix(in oklch, var(--primary) 12%, var(--muted) 88%)",
-        label: "var(--foreground)",
-        stroke: "color-mix(in oklch, var(--primary) 36%, var(--border) 64%)",
+        fill: "var(--map-viewer-section-fill)",
+        label: "var(--map-viewer-label)",
+        stroke: "var(--map-viewer-section-stroke)",
       };
     case "room":
     default:
       return {
-        fill: "color-mix(in oklch, var(--card) 88%, var(--primary) 12%)",
-        label: "var(--foreground)",
-        stroke: "color-mix(in oklch, var(--primary) 28%, var(--border) 72%)",
+        fill: "var(--map-viewer-room-fill)",
+        label: "var(--map-viewer-label)",
+        stroke: "var(--map-viewer-room-stroke)",
       };
   }
 }
@@ -86,34 +86,34 @@ export function getViewerNodePalette(role: ViewerMapNode["role"]) {
   switch (role) {
     case "entrance":
       return {
-        fill: "var(--chart-3)",
-        ring: "color-mix(in oklch, var(--chart-3) 46%, transparent)",
+        fill: "var(--map-viewer-marker-entrance)",
+        ring: "var(--map-viewer-marker-entrance-ring)",
       };
     case "exit":
       return {
-        fill: "var(--destructive)",
-        ring: "color-mix(in oklch, var(--destructive) 40%, transparent)",
+        fill: "var(--map-viewer-marker-exit)",
+        ring: "var(--map-viewer-marker-exit-ring)",
       };
     case "stairs_entry":
       return {
-        fill: "var(--chart-2)",
-        ring: "color-mix(in oklch, var(--chart-2) 40%, transparent)",
+        fill: "var(--map-viewer-marker-stairs)",
+        ring: "var(--map-viewer-marker-stairs-ring)",
       };
     case "elevator_entry":
       return {
-        fill: "var(--chart-4)",
-        ring: "color-mix(in oklch, var(--chart-4) 40%, transparent)",
+        fill: "var(--map-viewer-marker-elevator)",
+        ring: "var(--map-viewer-marker-elevator-ring)",
       };
     case "shelf_access":
       return {
-        fill: "var(--chart-1)",
-        ring: "color-mix(in oklch, var(--chart-1) 40%, transparent)",
+        fill: "var(--map-viewer-marker-shelf)",
+        ring: "var(--map-viewer-marker-shelf-ring)",
       };
     case "hallway_point":
     default:
       return {
-        fill: "var(--muted-foreground)",
-        ring: "color-mix(in oklch, var(--muted-foreground) 28%, transparent)",
+        fill: "var(--map-viewer-marker-neutral)",
+        ring: "var(--map-viewer-marker-neutral-ring)",
       };
   }
 }
@@ -122,20 +122,20 @@ export function getViewerEdgePalette(type: ViewerPathEdge["type"]) {
   switch (type) {
     case "stairs":
       return {
-        stroke: "color-mix(in oklch, var(--chart-2) 72%, var(--border) 28%)",
+        stroke: "var(--map-viewer-path-stairs)",
       };
     case "elevator":
       return {
-        stroke: "color-mix(in oklch, var(--chart-4) 68%, var(--border) 32%)",
+        stroke: "var(--map-viewer-path-elevator)",
       };
     case "ramp":
       return {
-        stroke: "color-mix(in oklch, var(--chart-3) 70%, var(--border) 30%)",
+        stroke: "var(--map-viewer-path-ramp)",
       };
     case "walkway":
     default:
       return {
-        stroke: "color-mix(in oklch, var(--muted-foreground) 62%, var(--border) 38%)",
+        stroke: "var(--map-viewer-path-walkway)",
       };
   }
 }
