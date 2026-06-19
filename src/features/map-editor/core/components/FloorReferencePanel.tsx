@@ -2,12 +2,13 @@
 
 import Image from 'next/image';
 import React, { useRef, useState, useTransition } from 'react';
-import { ImagePlus, ImageUp, Loader2, Trash2 } from 'lucide-react';
+import { ImageIcon, ImageUp, Loader2, Trash2 } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { EDITOR_UI_TEXT } from '../../constants/editorUi.constants';
 import { uploadFloorReferenceImage } from '../actions/floorEditorActions';
 import { useEditorStore } from '@/store';
 
@@ -34,7 +35,7 @@ export function FloorReferencePanel() {
           'alt',
           altText.trim()
             || floor.backgroundImageAlt
-            || `${floor.name} reference image`,
+            || EDITOR_UI_TEXT.referencePanel.defaultAlt(floor.name),
         );
 
         const uploadedImage = await uploadFloorReferenceImage(formData);
@@ -54,7 +55,7 @@ export function FloorReferencePanel() {
         setError(
           uploadError instanceof Error
             ? uploadError.message
-            : 'Failed to upload reference image.',
+            : EDITOR_UI_TEXT.referencePanel.error,
         );
       }
     });
@@ -78,39 +79,47 @@ export function FloorReferencePanel() {
   return (
     <div className="p-4 space-y-4">
       <div className="space-y-1.5">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 text-zinc-100">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex min-w-0 items-center gap-2 text-zinc-100">
             <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-sky-500/20 bg-sky-500/10">
-              <ImagePlus className="h-4 w-4 text-sky-400" />
+              <ImageIcon className="h-4 w-4 text-sky-400" />
             </div>
-            <div>
-              <h3 className="text-xs font-bold uppercase tracking-[0.22em]">
-                Reference Image
+            <div className="min-w-0">
+              <h3 className="text-xs font-bold uppercase tracking-[0.22em] text-zinc-100">
+                {EDITOR_UI_TEXT.referencePanel.title}
               </h3>
-              <p className="text-[10px] text-zinc-500 mt-0.5">
-                Builder overlay
+              <p className="mt-0.5 text-[10px] text-zinc-500">
+                {EDITOR_UI_TEXT.referencePanel.imageTypeLabel}
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Badge variant="outline" className="border-zinc-700 bg-zinc-950/60 text-zinc-300">
-              {floor?.backgroundImageUrl ? 'Attached' : 'Empty'}
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge
+              variant="outline"
+              className="border-zinc-700 bg-zinc-950/60 text-zinc-300"
+            >
+              {floor?.backgroundImageUrl
+                ? EDITOR_UI_TEXT.referencePanel.attachedStatus
+                : EDITOR_UI_TEXT.referencePanel.emptyStatus}
             </Badge>
             {floor?._dirty ? (
-              <Badge variant="outline" className="border-amber-500/30 bg-amber-500/10 text-amber-300">
+              <Badge
+                variant="outline"
+                className="border-amber-500/30 bg-amber-500/10 text-amber-300"
+              >
                 Unsaved
               </Badge>
             ) : null}
           </div>
         </div>
         <p className="text-[11px] leading-relaxed text-zinc-500">
-          Upload a floor plan or sketch to trace against the canvas, then save the floor.
+          {EDITOR_UI_TEXT.referencePanel.description}
         </p>
       </div>
 
       {floor?.backgroundImageUrl ? (
         <div className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950/70">
-          <div className="relative aspect-[4/3] w-full bg-zinc-900">
+          <div className="relative aspect-4/3 w-full bg-zinc-900">
             <Image
               alt={floor.backgroundImageAlt ?? `${floor.name} reference image`}
               className="object-cover"
@@ -119,24 +128,24 @@ export function FloorReferencePanel() {
               src={floor.backgroundImageUrl}
             />
           </div>
-          <div className="flex items-center justify-between gap-3 border-t border-zinc-800 px-3 py-2.5">
+          <div className="flex flex-col gap-3 border-t border-zinc-800 px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0">
               <p className="truncate text-[11px] font-medium text-zinc-200">
-                {floor.backgroundImageName ?? 'Current reference image'}
+                {floor.backgroundImageName ?? EDITOR_UI_TEXT.referencePanel.currentImageFallback}
               </p>
               <p className="truncate text-[10px] text-zinc-500">
-                {floor.backgroundImageAlt ?? 'No alt text provided'}
+                {floor.backgroundImageAlt ?? EDITOR_UI_TEXT.referencePanel.noAltFallback}
               </p>
             </div>
             <Button
               type="button"
               variant="ghost"
               size="sm"
-              className="text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100"
+              className="self-start text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100 sm:self-auto"
               onClick={handleRemove}
             >
               <Trash2 className="h-3 w-3" />
-              Remove
+              {EDITOR_UI_TEXT.referencePanel.remove}
             </Button>
           </div>
         </div>
@@ -145,7 +154,7 @@ export function FloorReferencePanel() {
       <div className="space-y-3 rounded-2xl border border-zinc-800 bg-zinc-900/45 p-3">
         <div className="space-y-1.5">
           <Label htmlFor="floor-reference-file" className="text-[11px] text-zinc-300">
-            Image File
+            {EDITOR_UI_TEXT.referencePanel.fileFieldLabel}
           </Label>
           <input
             ref={fileInputRef}
@@ -157,19 +166,24 @@ export function FloorReferencePanel() {
             onChange={(event) => {
               setSelectedFile(event.target.files?.[0] ?? null);
               if (!altText.trim() && floor) {
-                setAltText(floor.backgroundImageAlt ?? `${floor.name} reference image`);
+                setAltText(
+                  floor.backgroundImageAlt
+                  ?? EDITOR_UI_TEXT.referencePanel.defaultAlt(floor.name),
+                );
               }
               setError(null);
             }}
           />
           <p className="text-[10px] text-zinc-500">
-            {selectedFile ? `Ready to upload: ${selectedFile.name}` : 'Choose a PNG, JPG, or similar floor reference image.'}
+            {selectedFile
+              ? `${EDITOR_UI_TEXT.referencePanel.readyToUploadPrefix} ${selectedFile.name}`
+              : EDITOR_UI_TEXT.referencePanel.fileHint}
           </p>
         </div>
 
         <div className="space-y-1.5">
           <Label htmlFor="floor-reference-alt" className="text-[11px] text-zinc-300">
-            Alt Text
+            {EDITOR_UI_TEXT.referencePanel.altFieldLabel}
           </Label>
           <Input
             id="floor-reference-alt"
@@ -177,7 +191,12 @@ export function FloorReferencePanel() {
             value={altText}
             disabled={!floor || isUploading}
             onChange={(event) => setAltText(event.target.value)}
-            placeholder={floor?.backgroundImageAlt ?? `${floor?.name ?? 'Floor'} reference image`}
+            placeholder={
+              floor?.backgroundImageAlt
+              ?? EDITOR_UI_TEXT.referencePanel.defaultAlt(
+                floor?.name ?? EDITOR_UI_TEXT.toolbar.floorPrefix,
+              )
+            }
           />
         </div>
 
@@ -198,12 +217,14 @@ export function FloorReferencePanel() {
           {isUploading ? (
             <>
               <Loader2 className="h-3 w-3 animate-spin" />
-              Uploading Reference
+              {EDITOR_UI_TEXT.referencePanel.uploading}
             </>
           ) : (
             <>
               <ImageUp className="h-3 w-3" />
-              {floor?.backgroundImageUrl ? 'Replace Reference Image' : 'Upload Reference Image'}
+              {floor?.backgroundImageUrl
+                ? EDITOR_UI_TEXT.referencePanel.replaceAction
+                : EDITOR_UI_TEXT.referencePanel.uploadAction}
             </>
           )}
         </Button>

@@ -17,11 +17,11 @@ export default function HomePage() {
           </div>
           <Button
             nativeButton={false}
-            render={<Link href="/admin" />}
+            render={<Link href="/map" />}
             size="lg"
             variant="outline"
           >
-            Open admin
+            Open map
           </Button>
         </header>
 
@@ -80,8 +80,16 @@ export default function HomePage() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Button
                 nativeButton={false}
+                render={<Link href="/map" />}
+                size="lg"
+              >
+                Public viewer
+              </Button>
+              <Button
+                nativeButton={false}
                 render={<Link href="/admin" />}
                 size="lg"
+                variant="secondary"
               >
                 Admin panel
               </Button>
@@ -95,7 +103,7 @@ export default function HomePage() {
                   />
                 }
                 size="lg"
-                variant="secondary"
+                variant="outline"
               >
                 Payload docs
               </Button>
