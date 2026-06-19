@@ -1,4 +1,4 @@
-import { PublicSiteFooter } from "@/features/public-landing/components/PublicSiteFooter";
+import { PublicSiteFooter } from "@/components/shared/public-site/PublicSiteFooter";
 import { PublicSiteHeader } from "@/features/public-landing/components/PublicSiteHeader";
 import { getPublicLandingData } from "@/features/public-landing/services/getPublicLandingData";
 import { LandingExplorer } from "./LandingExplorer";

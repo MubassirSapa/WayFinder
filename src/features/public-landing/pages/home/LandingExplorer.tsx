@@ -1,9 +1,10 @@
 "use client";
 
-import { MapPinned, Mic, Search } from "lucide-react";
+import { ChevronDown, ChevronUp, MapPinned, Mic, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { EmptyDirectoryCard } from "@/features/public-landing/components/EmptyDirectoryCard";
 import { RecentPlaces } from "@/features/public-landing/components/RecentPlaces";
@@ -16,19 +17,12 @@ type LandingExplorerProps = {
   data: PublicLandingData;
 };
 
-type FilterKey = "all" | "accessible" | "multi-floor" | "searchable";
-
-const filters: Array<{ key: FilterKey; label: string }> = [
-  { key: "all", label: "All venues" },
-  { key: "accessible", label: "Step-free" },
-  { key: "multi-floor", label: "Multi-floor" },
-  { key: "searchable", label: "Searchable" },
-];
+const VISIBLE_VENUE_LIMIT = 3;
 
 export function LandingExplorer({ data }: LandingExplorerProps) {
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState<FilterKey>("all");
   const [openVenueId, setOpenVenueId] = useState<string | null>(null);
+  const [showAllVenues, setShowAllVenues] = useState(false);
 
   const normalizedQuery = query.trim().toLowerCase();
 
@@ -43,15 +37,9 @@ export function LandingExplorer({ data }: LandingExplorerProps) {
             .toLowerCase()
             .includes(normalizedQuery);
 
-        const matchesFilter =
-          filter === "all" ||
-          (filter === "accessible" && venue.accessibleCount > 0) ||
-          (filter === "multi-floor" && venue.floorCount > 1) ||
-          (filter === "searchable" && venue.searchableCount > 0);
-
-        return matchesQuery && matchesFilter;
+        return matchesQuery;
       }),
-    [data.venues, filter, normalizedQuery],
+    [data.venues, normalizedQuery],
   );
 
   const recentDestinations = useMemo(
@@ -67,6 +55,9 @@ export function LandingExplorer({ data }: LandingExplorerProps) {
     [data.recentDestinations, normalizedQuery],
   );
 
+  const visibleVenues = showAllVenues ? venues : venues.slice(0, VISIBLE_VENUE_LIMIT);
+  const hasHiddenVenues = venues.length > VISIBLE_VENUE_LIMIT;
+
   return (
     <>
       <section className="mx-auto flex w-full max-w-5xl flex-col items-center px-5 pb-12 pt-14 text-center sm:pb-16 sm:pt-20">
@@ -78,7 +69,7 @@ export function LandingExplorer({ data }: LandingExplorerProps) {
           Where to?
         </h1>
         <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
-          Search published indoor maps for any venue, room, or point of interest.
+          Search indoor maps for any venue, room, or point of interest.
         </p>
 
         <div className="mt-7 w-full max-w-3xl rounded-[15px] border border-border bg-card px-5 shadow-sm transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15">
@@ -96,23 +87,6 @@ export function LandingExplorer({ data }: LandingExplorerProps) {
           </div>
         </div>
 
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
-          {filters.map((item) => (
-            <button
-              className={cn(
-                "inline-flex h-8 items-center rounded-full border px-4 text-xs font-medium transition",
-                filter === item.key
-                  ? "border-primary bg-primary/10 text-primary"
-                  : "border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground",
-              )}
-              key={item.key}
-              type="button"
-              onClick={() => setFilter(item.key)}
-            >
-              {item.label}
-            </button>
-          ))}
-        </div>
       </section>
 
       <section
@@ -126,7 +100,7 @@ export function LandingExplorer({ data }: LandingExplorerProps) {
                 Explore venues
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Live from published floors in the map system.
+                Browse buildings that are available in Wayfinder.
               </p>
             </div>
             <Badge className="hidden border-primary/20 bg-primary/10 text-primary sm:inline-flex">
@@ -137,17 +111,40 @@ export function LandingExplorer({ data }: LandingExplorerProps) {
           {data.venues.length === 0 ? (
             <EmptyDirectoryCard isAvailable={data.isAvailable} />
           ) : venues.length > 0 ? (
-            <div className="grid gap-5 sm:grid-cols-2">
-              {venues.map((venue, index) => (
-                <VenueCard
-                  isOpen={openVenueId === venue.id}
-                  isWide={index >= 2}
-                  key={venue.id}
-                  venue={venue}
-                  onToggle={() => setOpenVenueId(openVenueId === venue.id ? null : venue.id)}
-                />
-              ))}
-            </div>
+            <>
+              <div className="grid gap-5 sm:grid-cols-2">
+                {visibleVenues.map((venue, index) => (
+                  <VenueCard
+                    isOpen={openVenueId === venue.id}
+                    isWide={index >= 2}
+                    key={venue.id}
+                    venue={venue}
+                    onToggle={() => setOpenVenueId(openVenueId === venue.id ? null : venue.id)}
+                  />
+                ))}
+              </div>
+              {hasHiddenVenues ? (
+                <div className="mt-6 flex justify-center">
+                  <button
+                    className={cn(buttonVariants({ variant: "outline", size: "lg" }), "h-10")}
+                    type="button"
+                    onClick={() => setShowAllVenues((current) => !current)}
+                  >
+                    {showAllVenues ? (
+                      <>
+                        Show fewer
+                        <ChevronUp className="size-4" aria-hidden />
+                      </>
+                    ) : (
+                      <>
+                        View all {venues.length} venues
+                        <ChevronDown className="size-4" aria-hidden />
+                      </>
+                    )}
+                  </button>
+                </div>
+              ) : null}
+            </>
           ) : (
             <NoMatchesCard />
           )}
@@ -180,7 +177,7 @@ function NoMatchesCard() {
     <div className="rounded-[18px] border border-border bg-card p-6 shadow-sm">
       <p className="text-base font-semibold text-card-foreground">No matching venues</p>
       <p className="mt-2 text-sm leading-6 text-muted-foreground">
-        Try a different search term or switch back to all venues.
+        Try a different building, room, or floor name.
       </p>
     </div>
   );
@@ -191,8 +188,7 @@ function RecentSkeletonCard() {
     <div className="space-y-3 rounded-[18px] border border-border bg-card p-5 shadow-sm">
       <p className="text-base font-semibold text-card-foreground">No recent places</p>
       <p className="text-sm leading-6 text-muted-foreground">
-        Searchable rooms, aisles, and points of interest will appear here after floors are
-        published.
+        Searchable rooms, aisles, and points of interest will appear here after buildings are added.
       </p>
       <div className="space-y-3 pt-2" aria-hidden>
         <span className="block h-10 rounded-md bg-muted/70" />
