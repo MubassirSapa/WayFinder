@@ -1,9 +1,11 @@
 'use client';
 
+import Link from 'next/link';
 import { useEditorStore } from "@/store";
 import { EDITOR_UI_TEXT } from '../../constants/editorUi.constants';
 import { useSaveEditorChanges } from '../hooks/useSaveEditorChanges';
 import {
+  ArrowLeft,
   MousePointer,
   Box,
   MapPin,
@@ -33,6 +35,16 @@ export function EditorToolbar() {
     <div className="h-16 w-full border-b border-zinc-800 bg-zinc-900 px-6 flex items-center justify-between z-10 select-none">
       {/* Floor Info */}
       <div className="flex items-center gap-3">
+        <Button
+          nativeButton={false}
+          render={<Link href="/dashboard" />}
+          size="sm"
+          variant="outline"
+          className="h-9 gap-2 border-zinc-700 bg-zinc-950 px-3 text-zinc-200 hover:bg-zinc-800 hover:text-zinc-100"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          <span>{EDITOR_UI_TEXT.toolbar.backToDashboard}</span>
+        </Button>
         <div className="bg-zinc-800 p-2 rounded-lg border border-zinc-700">
           <LayoutGrid className="h-5 w-5 text-blue-400" />
         </div>
