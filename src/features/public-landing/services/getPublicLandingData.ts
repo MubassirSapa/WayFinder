@@ -4,8 +4,12 @@ import config from "@payload-config";
 import type { Floor, MapObject } from "@/payload-types";
 import { getPayload } from "payload";
 
-import type { LandingDestination, LandingVenue, PublicLandingData } from "../types";
-import { formatBuildingName } from "../lib/format";
+import { formatBuildingName } from "@/features/public-landing/lib/format";
+import type {
+  LandingDestination,
+  LandingVenue,
+  PublicLandingData,
+} from "@/features/public-landing/types";
 
 type VenueGroup = {
   buildingId: string;

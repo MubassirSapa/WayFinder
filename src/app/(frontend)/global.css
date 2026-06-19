@@ -136,3 +136,62 @@
     @apply font-heading;
   }
 }
+
+@keyframes wf-sweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes wf-pulse {
+  0%,
+  100% {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0;
+    transform: scale(1.9);
+  }
+}
+
+@keyframes wf-drift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(6px, -5px);
+  }
+}
+
+@keyframes wf-flicker {
+  0%,
+  97%,
+  100% {
+    opacity: 1;
+  }
+  98% {
+    opacity: 0.45;
+  }
+}
+
+@keyframes wf-needle {
+  0% {
+    transform: rotate(-14deg);
+  }
+  50% {
+    transform: rotate(18deg);
+  }
+  100% {
+    transform: rotate(-14deg);
+  }
+}
+
+@keyframes wf-grid {
+  to {
+    background-position:
+      60px 60px,
+      60px 60px;
+  }
+}

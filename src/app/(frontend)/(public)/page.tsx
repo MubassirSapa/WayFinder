@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { PublicLandingPage } from "@/features/public-landing/components/PublicLandingPage";
+import { PublicLandingPage } from "@/features/public-landing/pages/home/PublicLandingPage";
 
 export const dynamic = "force-dynamic";
 
