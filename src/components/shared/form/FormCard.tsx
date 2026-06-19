@@ -1,5 +1,5 @@
-import BackButton from "@/features/auth/_shared/BackButton";
-import BrandHeader from "@/features/auth/_shared/BrandHeader";
+import BackButton from "./BackButton";
+import BrandHeader from "./BrandHeader";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
@@ -16,7 +16,7 @@ const FormCard = ({
   eyebrow,
 }: TProps) => {
   return (
-    <Card className="w-full gap-0 overflow-hidden rounded-lg border border-border bg-white py-0 shadow-sm">
+    <Card className="w-full gap-0 overflow-hidden rounded-lg border border-border bg-card py-0 text-card-foreground shadow-sm">
       <div className="px-5 pt-5 sm:px-6 sm:pt-6">
         <div className="mb-7 flex items-center gap-3">
           {showBack && <BackButton href={backHref} showLabel={false} className="size-8 shrink-0 px-0" />}
@@ -61,7 +61,7 @@ const FormCard = ({
       )}
 
       {footer && (
-        <CardFooter className="flex-col gap-4 border-t border-border bg-slate-50 px-5 py-5 sm:px-6">
+        <CardFooter className="flex-col gap-4 border-t border-border bg-muted px-5 py-5 sm:px-6">
           {footer}
         </CardFooter>
       )}

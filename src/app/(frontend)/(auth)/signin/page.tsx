@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import SigninSection from "@/features/auth/signin/sections/SigninSection";
+import SigninSection from "@/features/auth/pages/signin/sections/SigninSection";
 import { BRAND } from "@/constants/brand";
 
 export const metadata: Metadata = {

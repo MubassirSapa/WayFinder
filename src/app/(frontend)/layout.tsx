@@ -24,7 +24,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
 
   return (
     <html lang="en">
-      <body className={`${fontSans.variable} ${fontHeading.variable} antialiased`}>
+      <body className={`${fontSans.variable} ${fontHeading.variable} antialiased `}>
         <main>{children}</main>
       </body>
     </html>

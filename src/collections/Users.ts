@@ -3,8 +3,8 @@ import { createElement } from "react";
 import { render } from "react-email";
 
 import { BRAND } from "@/constants/brand";
-import { ResetPasswordEmailTemplate } from "@/emails/templates/ResetPasswordEmail";
-import { VerifyEmailTemplate } from "@/emails/templates/VerifyEmail";
+import { ResetPasswordEmailTemplate } from "@/features/email/templates/ResetPasswordEmail";
+import { VerifyEmailTemplate } from "@/features/email/templates/VerifyEmail";
 import { ROLES, ROLE_OPTIONS } from "./constants/roles";
 import { access } from "./access";
 

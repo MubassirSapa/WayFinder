@@ -1,6 +1,6 @@
 import type { CollectionConfig } from "payload";
 
-import { ORGANIZATION_TYPES } from "@/constants/auth/register-organization";
+import { ORGANIZATION_TYPES } from "@/features/auth/constants/register-organization";
 import { access } from "./access";
 
 export const Organizations: CollectionConfig = {
