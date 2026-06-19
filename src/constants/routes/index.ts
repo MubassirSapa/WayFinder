@@ -1,6 +1,8 @@
 const PUBLIC_ROUTES = {
   HOME: "/",
 
+  MAP: "/map",
+
   SIGNIN: "/signin",
   SIGNUP: "/signup",
   REGISTER_ORGANIZATION: "/register-organization",
@@ -14,6 +16,7 @@ const PUBLIC_ROUTES = {
 } as const;
 
 const PRIVATE_ROUTES = {
+  DASHBOARD: "/dashboard",
   EDITOR: "/editor",
 } as const;
 

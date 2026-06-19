@@ -5,10 +5,10 @@ import { BRAND } from "@/constants/brand";
 import { PUBLIC_ROUTES } from "@/constants/routes";
 import { cn } from "@/lib/utils";
 
-const BrandHeader = ({ className }: TProps) => {
+const BrandHeader = ({ className, href = PUBLIC_ROUTES.HOME }: TProps) => {
   return (
     <Link
-      href={PUBLIC_ROUTES.HOME}
+      href={href}
       className={cn(
         "inline-flex items-center gap-2.5 text-foreground transition-opacity hover:opacity-80",
         className,
@@ -26,4 +26,5 @@ export default BrandHeader;
 
 type TProps = {
   className?: string;
+  href?: string;
 };
