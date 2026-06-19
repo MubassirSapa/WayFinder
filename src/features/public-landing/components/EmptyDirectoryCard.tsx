@@ -12,7 +12,7 @@ export function EmptyDirectoryCard({ isAvailable }: EmptyDirectoryCardProps) {
   return (
     <div className="relative min-h-[260px] overflow-hidden rounded-[18px] border border-dashed border-border bg-card p-6 shadow-sm">
       <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[length:44px_44px] opacity-20" />
-      <div className="absolute right-8 top-8 hidden size-32 rounded-full border border-primary/15 sm:block">
+      <div className="pointer-events-none absolute right-5 top-5 size-24 rounded-full border border-primary/15 opacity-60 sm:right-8 sm:top-8 sm:size-32 sm:opacity-100">
         <span className="absolute inset-4 rounded-full border border-primary/15" />
         <span className="absolute inset-8 rounded-full border border-primary/15" />
         <span className="absolute inset-y-0 left-1/2 w-px bg-primary/10" />
@@ -23,7 +23,7 @@ export function EmptyDirectoryCard({ isAvailable }: EmptyDirectoryCardProps) {
           <span className="relative z-10 block size-1.5 rounded-full bg-destructive" />
         </span>
       </div>
-      <div className="relative max-w-2xl">
+      <div className="relative z-10 max-w-2xl">
         <span className="relative flex size-14 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary">
           <span className="absolute inset-0 rounded-2xl bg-primary/10 animate-pulse" />
           <Radar className="relative size-7" aria-hidden />
