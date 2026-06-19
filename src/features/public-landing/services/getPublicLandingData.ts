@@ -132,6 +132,14 @@ function toLandingVenue(group: VenueGroup): LandingVenue {
     primaryFloorName: primaryFloor.name,
     backgroundImageUrl: primaryFloor.backgroundImageUrl ?? null,
     updatedAt: primaryFloor.updatedAt,
+    floors: sortedFloors.map((floor) => ({
+      id: String(floor.id),
+      name: floor.name,
+      level: floor.level,
+      backgroundImageUrl: floor.backgroundImageUrl ?? null,
+      updatedAt: floor.updatedAt,
+      href: `/editor/${floor.id}`,
+    })),
   };
 }
 
@@ -145,5 +153,6 @@ function toLandingDestination(item: MapObject): LandingDestination {
     venueName: formatBuildingName(item.buildingId),
     floorName: floor?.name ?? "Floor pending",
     isAccessible: Boolean(item.isAccessible),
+    href: floor ? `/editor/${floor.id}` : null,
   };
 }

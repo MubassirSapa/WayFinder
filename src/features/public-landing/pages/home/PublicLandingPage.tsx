@@ -10,7 +10,7 @@ export async function PublicLandingPage() {
     <div className="min-h-screen bg-background text-foreground">
       <PublicSiteHeader activePage="discover" />
 
-      <main id="venues">
+      <main>
         <LandingExplorer data={data} />
       </main>
 
