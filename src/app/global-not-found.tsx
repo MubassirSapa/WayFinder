@@ -1,7 +1,7 @@
 import { IBM_Plex_Sans, Montserrat } from "next/font/google";
-import React from "react";
 
-import "./global.css";
+import { NotFoundPage } from "@/features/public-landing/pages/not-found/NotFoundPage";
+import "./(frontend)/global.css";
 
 const fontSans = Montserrat({
   subsets: ["latin"],
@@ -15,17 +15,15 @@ const fontHeading = IBM_Plex_Sans({
 });
 
 export const metadata = {
-  description: "Indoor maps and wayfinding for public venues and facilities.",
-  title: "Wayfinder",
+  title: "404 | Wayfinder",
+  description: "The Wayfinder page you are looking for does not exist.",
 };
 
-export default async function RootLayout(props: { children: React.ReactNode }) {
-  const { children } = props;
-
+export default function GlobalNotFound() {
   return (
     <html lang="en">
       <body className={`${fontSans.variable} ${fontHeading.variable} antialiased dark`}>
-        <main>{children}</main>
+        <NotFoundPage />
       </body>
     </html>
   );
