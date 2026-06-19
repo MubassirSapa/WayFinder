@@ -1,11 +1,12 @@
 'use client';
 
-import { WandSparkles, Route, Sparkles, Link2, Trash2 } from "lucide-react";
+import { Boxes, Link2, Route, Settings2, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { useEditorStore } from "@/store";
+import { EDITOR_UI_TEXT } from "../../constants/editorUi.constants";
 
 export function SmartBuilderPanel() {
   const {
@@ -29,14 +30,14 @@ export function SmartBuilderPanel() {
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 text-zinc-100">
             <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-emerald-500/20 bg-emerald-500/10">
-              <WandSparkles className="h-4 w-4 text-emerald-400" />
+              <Settings2 className="h-4 w-4 text-emerald-400" />
             </div>
             <div>
               <h3 className="text-xs font-bold uppercase tracking-[0.22em]">
-                Smart Builder
+                {EDITOR_UI_TEXT.smartBuilder.title}
               </h3>
               <p className="text-[10px] text-zinc-500 mt-0.5">
-                Optional automation layer
+                {EDITOR_UI_TEXT.smartBuilder.subtitle}
               </p>
             </div>
           </div>
@@ -47,18 +48,18 @@ export function SmartBuilderPanel() {
                 : "rounded-full border border-zinc-700 bg-zinc-900 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.16em] text-zinc-500"
             }
           >
-            {isSmartBuilderEnabled ? "Active" : "Off"}
+            {isSmartBuilderEnabled ? EDITOR_UI_TEXT.smartBuilder.on : EDITOR_UI_TEXT.smartBuilder.off}
           </span>
         </div>
         <p className="text-[11px] leading-relaxed text-zinc-500">
-          Optional automation for nodes, connections, and hallway path drawing.
+          {EDITOR_UI_TEXT.smartBuilder.summary}
         </p>
       </div>
 
       <label className="flex items-start justify-between gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/70 px-4 py-3">
         <div className="space-y-1">
-          <p className="text-xs font-semibold text-zinc-100">Enable Smart Builder</p>
-          <p className="text-[10px] leading-relaxed text-zinc-500">Keeps the manual editor intact and only adds automation tools.</p>
+          <p className="text-xs font-semibold text-zinc-100">{EDITOR_UI_TEXT.smartBuilder.enabledLabel}</p>
+          <p className="text-[10px] leading-relaxed text-zinc-500">{EDITOR_UI_TEXT.smartBuilder.enabledDescription}</p>
         </div>
         <Checkbox
           checked={isSmartBuilderEnabled}
@@ -69,14 +70,14 @@ export function SmartBuilderPanel() {
       <div className="rounded-2xl border border-zinc-800 bg-zinc-900/45 p-3 space-y-3">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-500">
-            Automation Toggles
+            {EDITOR_UI_TEXT.smartBuilder.options}
           </p>
         </div>
         <label className="flex items-start justify-between gap-3 rounded-xl border border-zinc-800/80 bg-zinc-950/40 px-3 py-3">
           <div className="space-y-1">
-            <p className="text-xs font-medium text-zinc-100">Auto Nodes</p>
+            <p className="text-xs font-medium text-zinc-100">{EDITOR_UI_TEXT.smartBuilder.autoNodes.label}</p>
             <p className="text-[10px] text-zinc-500">
-              Create default object nodes for eligible objects.
+              {EDITOR_UI_TEXT.smartBuilder.autoNodes.description}
             </p>
           </div>
           <Checkbox
@@ -88,9 +89,9 @@ export function SmartBuilderPanel() {
 
         <label className="flex items-start justify-between gap-3 rounded-xl border border-zinc-800/80 bg-zinc-950/40 px-3 py-3">
           <div className="space-y-1">
-            <p className="text-xs font-medium text-zinc-100">Auto Connect</p>
+            <p className="text-xs font-medium text-zinc-100">{EDITOR_UI_TEXT.smartBuilder.autoConnect.label}</p>
             <p className="text-[10px] text-zinc-500">
-              Link object nodes to the nearest hallway point.
+              {EDITOR_UI_TEXT.smartBuilder.autoConnect.description}
             </p>
           </div>
           <Checkbox
@@ -105,7 +106,7 @@ export function SmartBuilderPanel() {
 
       <div className="space-y-2">
         <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-500">
-          Actions
+          {EDITOR_UI_TEXT.smartBuilder.actions}
         </p>
       </div>
 
@@ -117,8 +118,8 @@ export function SmartBuilderPanel() {
           disabled={!floor || !isSmartBuilderEnabled}
           onClick={generateMissingNodes}
         >
-          <Sparkles className="h-3 w-3" />
-          Generate Nodes
+          <Boxes className="h-3 w-3" />
+          {EDITOR_UI_TEXT.smartBuilder.generateNodes}
         </Button>
         <Button
           variant="outline"
@@ -128,7 +129,7 @@ export function SmartBuilderPanel() {
           onClick={autoConnectExistingNodes}
         >
           <Link2 className="h-3 w-3" />
-          Auto Connect
+          {EDITOR_UI_TEXT.smartBuilder.autoConnect.label}
         </Button>
         <Button
           variant="outline"
@@ -138,7 +139,7 @@ export function SmartBuilderPanel() {
           onClick={finishHallwayPath}
         >
           <Route className="h-3 w-3" />
-          Finish Hallway Path
+          {EDITOR_UI_TEXT.smartBuilder.finishHallwayPath}
         </Button>
         <Button
           variant="ghost"
@@ -148,14 +149,14 @@ export function SmartBuilderPanel() {
           onClick={clearHallwayDrawingPoints}
         >
           <Trash2 className="h-3 w-3" />
-          Clear Path
+          {EDITOR_UI_TEXT.smartBuilder.clearPath}
         </Button>
       </div>
 
       <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 px-3.5 py-3 text-[10px] leading-relaxed text-zinc-500">
         {hallwayDrawingPoints.length > 0
-          ? `${hallwayDrawingPoints.length} hallway point${hallwayDrawingPoints.length === 1 ? "" : "s"} queued. In path mode, click empty canvas to add more points, then finish the path.`
-          : "In path mode, click empty canvas to queue hallway points while Smart Builder is enabled."}
+          ? EDITOR_UI_TEXT.smartBuilder.queuedPoints(hallwayDrawingPoints.length)
+          : EDITOR_UI_TEXT.smartBuilder.queuedPointsEmpty}
       </div>
     </div>
   );

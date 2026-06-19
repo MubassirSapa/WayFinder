@@ -1,4 +1,5 @@
 import { MapEditorShell } from "@/features/map-editor/core/components/MapEditorShell";
+import { FloorReferencePanel } from "@/features/map-editor/core/components/FloorReferencePanel";
 import { getFloorEditorData } from "@/features/map-editor/core/actions/floorEditorActions";
 import { SmartBuilderBridge } from "@/features/map-editor/smart-builder/components/SmartBuilderBridge";
 import { SmartBuilderPanel } from "@/features/map-editor/smart-builder/components/SmartBuilderPanel";
@@ -26,7 +27,12 @@ export default async function EditorPage({ params }: PageProps) {
       <MapEditorShell
         initialData={initialData}
         initialError={initialError}
-        leftSidebarFooter={<SmartBuilderPanel />}
+        leftSidebarFooter={
+          <div className="divide-y divide-zinc-800/80">
+            <FloorReferencePanel />
+            <SmartBuilderPanel />
+          </div>
+        }
       />
       {initialData ? <SmartBuilderBridge /> : null}
     </>

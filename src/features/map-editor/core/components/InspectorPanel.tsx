@@ -1,6 +1,7 @@
 "use client";
 
 import { useEditorStore } from "@/store";
+import { EDITOR_UI_TEXT } from '../../constants/editorUi.constants';
 import { EdgeInspector } from "./EdgeInspector";
 import { NodeInspector } from "./NodeInspector";
 import { ObjectInspector } from "./ObjectInspector";
@@ -12,10 +13,10 @@ export function InspectorPanel() {
     <div className="w-72 h-full border-l border-zinc-800 bg-zinc-900/50 flex flex-col backdrop-blur-md">
       <div className="p-4 border-b border-zinc-800">
         <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400">
-          Inspector Panel
+          {EDITOR_UI_TEXT.inspector.title}
         </h3>
         <p className="text-[11px] text-zinc-500 mt-1">
-          View and edit attributes of selected map features.
+          {EDITOR_UI_TEXT.inspector.description}
         </p>
       </div>
 
@@ -35,10 +36,9 @@ export function InspectorPanel() {
                 d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"
               />
             </svg>
-            <p className="text-xs">No element selected</p>
+            <p className="text-xs">{EDITOR_UI_TEXT.inspector.emptyTitle}</p>
             <p className="text-[10px] text-zinc-600 mt-1 max-w-[180px] leading-relaxed">
-              Click on an object, node, or path edge on the canvas to inspect
-              it.
+              {EDITOR_UI_TEXT.inspector.emptyDescription}
             </p>
           </div>
         ) : selectedEntity.kind === "object" ? (

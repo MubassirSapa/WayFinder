@@ -68,6 +68,7 @@ export interface Config {
   blocks: {};
   collections: {
     users: User;
+    organizations: Organization;
     media: Media;
     floors: Floor;
     'map-objects': MapObject;
@@ -81,6 +82,7 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
+    organizations: OrganizationsSelect<false> | OrganizationsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     floors: FloorsSelect<false> | FloorsSelect<true>;
     'map-objects': MapObjectsSelect<false> | MapObjectsSelect<true>;
@@ -131,6 +133,9 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: number;
+  name: string;
+  role?: ('admin' | 'user') | null;
+  organization?: (number | null) | Organization;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -138,6 +143,8 @@ export interface User {
   resetPasswordExpiration?: string | null;
   salt?: string | null;
   hash?: string | null;
+  _verified?: boolean | null;
+  _verificationToken?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
   sessions?:
@@ -149,6 +156,17 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "organizations".
+ */
+export interface Organization {
+  id: number;
+  name: string;
+  type: 'hospital' | 'university' | 'mall' | 'office' | 'airport' | 'library' | 'other';
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -180,6 +198,8 @@ export interface Floor {
   level: number;
   width: number;
   height: number;
+  metersPerPixel?: number | null;
+  backgroundImage?: (number | null) | Media;
   backgroundImageUrl?: string | null;
   status: 'draft' | 'published';
   updatedAt: string;
@@ -293,6 +313,10 @@ export interface PayloadLockedDocument {
         value: number | User;
       } | null)
     | ({
+        relationTo: 'organizations';
+        value: number | Organization;
+      } | null)
+    | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
@@ -359,6 +383,9 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  organization?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -366,6 +393,8 @@ export interface UsersSelect<T extends boolean = true> {
   resetPasswordExpiration?: T;
   salt?: T;
   hash?: T;
+  _verified?: T;
+  _verificationToken?: T;
   loginAttempts?: T;
   lockUntil?: T;
   sessions?:
@@ -375,6 +404,16 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "organizations_select".
+ */
+export interface OrganizationsSelect<T extends boolean = true> {
+  name?: T;
+  type?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -404,6 +443,8 @@ export interface FloorsSelect<T extends boolean = true> {
   level?: T;
   width?: T;
   height?: T;
+  metersPerPixel?: T;
+  backgroundImage?: T;
   backgroundImageUrl?: T;
   status?: T;
   updatedAt?: T;
