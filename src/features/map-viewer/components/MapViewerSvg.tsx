@@ -20,6 +20,7 @@ interface MapViewerSvgProps {
   edges: ViewerPathEdge[];
   nodes: ViewerMapNode[];
   objects: ViewerMapObject[];
+  routePoints?: { x: number; y: number }[];
   selectedObjectId: string | null;
   showGrid: boolean;
   onBackgroundClick: () => void;
@@ -34,6 +35,7 @@ export function MapViewerSvg({
   edges,
   nodes,
   objects,
+  routePoints,
   selectedObjectId,
   showGrid,
   onBackgroundClick,
@@ -147,8 +149,31 @@ export function MapViewerSvg({
           selectedObjectId={selectedObjectId}
         />
         <ViewerNodes nodes={nodes} />
+        {routePoints && routePoints.length > 1 ? <RoutePolyline points={routePoints} /> : null}
       </g>
     </svg>
+  );
+}
+
+function RoutePolyline({ points }: { points: { x: number; y: number }[] }) {
+  const origin = points[0];
+  const destination = points[points.length - 1];
+
+  return (
+    <g>
+      <polyline
+        fill="none"
+        points={points.map((point) => `${point.x},${point.y}`).join(" ")}
+        stroke="var(--map-viewer-route-line)"
+        strokeDasharray="10 6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={4}
+        vectorEffect="non-scaling-stroke"
+      />
+      <circle cx={origin.x} cy={origin.y} fill="var(--map-viewer-route-origin)" r="7" stroke="var(--background)" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+      <circle cx={destination.x} cy={destination.y} fill="var(--map-viewer-route-destination)" r="7" stroke="var(--background)" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+    </g>
   );
 }
 

@@ -7,8 +7,10 @@ import {
   clampZoom,
   getDefaultViewState,
   getDistance,
+  getFitBoundsView,
   getMidpoint,
   type Point,
+  type WorldBounds,
 } from "../lib/mapViewerViewport";
 import type { ViewerFloor } from "../types/map-viewer.types";
 
@@ -35,6 +37,7 @@ export function useMapViewerViewport({
   const [pan, setPan] = useState<Point>({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const initializedFloorIdRef = useRef<string | null>(null);
+  const pendingFocusRef = useRef(false);
   const suppressClickRef = useRef(false);
   const dragSurfaceRef = useRef<SVGSVGElement | null>(null);
   const activePointersRef = useRef<Map<number, Point>>(new Map());
@@ -69,6 +72,16 @@ export function useMapViewerViewport({
 
       if (initializedFloorIdRef.current !== floor.id) {
         initializedFloorIdRef.current = floor.id;
+
+        // A route floor-hop already set an explicit pan/zoom via
+        // focusWorldBounds just before this floor change — keep it instead
+        // of overriding it with the floor's default fit-to-view.
+        if (pendingFocusRef.current) {
+          pendingFocusRef.current = false;
+          setPan((currentPan) => clampPanToViewport(currentPan, floor, nextViewport, zoom));
+          return;
+        }
+
         const defaultView = getDefaultViewState(floor, nextViewport);
         setZoom(defaultView.zoom);
         setPan(defaultView.pan);
@@ -155,6 +168,17 @@ export function useMapViewerViewport({
     };
 
     setPan(clampPanToViewport(nextPan, activeFloor, viewportSize, zoom));
+  };
+
+  const focusWorldBounds = (bounds: WorldBounds) => {
+    if (viewportSize.x === 0 || viewportSize.y === 0) {
+      return;
+    }
+
+    pendingFocusRef.current = true;
+    const fitView = getFitBoundsView(bounds, viewportSize);
+    setZoom(fitView.zoom);
+    setPan(fitView.pan);
   };
 
   const consumeSuppressedClick = () => {
@@ -373,6 +397,7 @@ export function useMapViewerViewport({
   return {
     changeZoom,
     consumeSuppressedClick,
+    focusWorldBounds,
     focusWorldPoint,
     isDragging,
     pan,

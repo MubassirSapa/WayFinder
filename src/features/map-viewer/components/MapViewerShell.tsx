@@ -2,6 +2,14 @@
 
 import { useDeferredValue, useState } from "react";
 
+import { FloorHopIndicator } from "@/features/navigation/components/FloorHopIndicator";
+import { RouteOriginTrigger } from "@/features/navigation/components/RouteOriginTrigger";
+import { RoutePanel } from "@/features/navigation/components/RoutePanel";
+import { useRoute } from "@/features/navigation/hooks/useRoute";
+import { getRouteSegmentBounds } from "@/features/navigation/lib/routeBounds";
+import { findNodeIdForObject } from "@/features/navigation/lib/findNodeForObject";
+import { useNavigationStore } from "@/features/navigation/store/useNavigationStore";
+
 import { MAP_VIEWER_FLOOR_CONTENT_PADDING } from "../constants/mapViewer.constants";
 import { MAP_VIEWER_THEME_CLASSNAMES } from "../constants/mapViewerTheme.constants";
 import { useMapViewerViewport } from "../hooks/useMapViewerViewport";
@@ -19,7 +27,7 @@ interface MapViewerShellProps {
 }
 
 export function MapViewerShell({ data }: MapViewerShellProps) {
-  const activeFloorId = data.initialFloorId;
+  const [activeFloorId, setActiveFloorId] = useState(data.initialFloorId);
   const [selectedObjectId, setSelectedObjectId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const deferredSearch = useDeferredValue(search);
@@ -32,6 +40,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
   const {
     changeZoom,
     consumeSuppressedClick,
+    focusWorldBounds,
     focusWorldPoint,
     isDragging,
     pan,
@@ -50,6 +59,47 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
     activeFloorId,
     floors,
   });
+
+  const {
+    activeSegment,
+    activeSegmentIndex,
+    allNodes,
+    effectiveOriginId,
+    nodesById,
+    route,
+    routePoints,
+    segments,
+  } = useRoute(data);
+  const setActiveSegmentIndex = useNavigationStore((state) => state.setActiveSegmentIndex);
+  const routePointsForActiveFloor = activeSegment?.floorId === activeFloorId ? routePoints : undefined;
+  const nextSegment = segments[activeSegmentIndex + 1] ?? null;
+  const nextFloor = nextSegment ? floors.find((floor) => floor.id === nextSegment.floorId) ?? null : null;
+  // Directions search spans the whole building — a destination on another
+  // floor is exactly the case multi-floor routing exists for.
+  const allSearchableObjects = Object.values(data.objectsByFloorId)
+    .flat()
+    .filter((object) => object.isSearchable);
+
+  const handleFloorChange = (floorId: string) => {
+    setActiveFloorId(floorId);
+    setSelectedObjectId(null);
+    setSearch("");
+  };
+
+  const handleJumpToSegment = (index: number) => {
+    const segment = segments[index];
+    if (!segment) {
+      return;
+    }
+
+    setActiveSegmentIndex(index);
+    setActiveFloorId(segment.floorId);
+
+    const bounds = getRouteSegmentBounds(segment, nodesById);
+    if (bounds) {
+      focusWorldBounds(bounds);
+    }
+  };
 
   const selectedObject = objects.find((object) => object.id === selectedObjectId) ?? null;
   const searchableObjects = objects
@@ -104,16 +154,31 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
             activeFloor={activeFloor}
             activeFloorId={activeFloorId}
             floors={floors}
-            onFloorChange={() => {
-              setSelectedObjectId(null);
-              setSearch("");
-            }}
+            onFloorChange={handleFloorChange}
             onFocusObject={focusObject}
             onSearchChange={setSearch}
+            routePanelSlot={(
+              <RoutePanel
+                activeSegmentIndex={activeSegmentIndex}
+                effectiveOriginId={effectiveOriginId}
+                floors={floors}
+                nodes={allNodes}
+                onJumpToSegment={handleJumpToSegment}
+                route={route}
+                searchableObjects={allSearchableObjects}
+                segments={segments}
+              />
+            )}
             search={search}
             searchableObjects={searchableObjects}
             selectedObject={selectedObject}
             selectedObjectId={selectedObjectId}
+            selectionActionsSlot={selectedObject ? (
+              <RouteOriginTrigger
+                label={selectedObject.label || selectedObject.name}
+                nodeId={findNodeIdForObject(selectedObject.id, nodes)}
+              />
+            ) : null}
           />
 
           <main className="order-1 relative h-[calc(100dvh-7.5rem)] min-h-[calc(100dvh-7.5rem)] overflow-hidden border-x-0 border-t-0 border-b border-border bg-[var(--map-viewer-canvas)] shadow-sm sm:h-[calc(100dvh-8.5rem)] sm:min-h-[calc(100dvh-8.5rem)] sm:rounded-3xl sm:border lg:order-none lg:h-auto lg:min-h-[680px] lg:rounded-4xl">
@@ -141,11 +206,19 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
               onSvgPointerUp={handleSvgPointerUp}
               onWheel={handleViewportWheel}
               pan={pan}
+              routePoints={routePointsForActiveFloor}
               selectedObjectId={selectedObjectId}
               showGrid={showGrid}
               viewportRef={viewportRef}
               zoom={zoom}
             />
+            {nextSegment && nextFloor ? (
+              <FloorHopIndicator
+                edgeType={nextSegment.enterViaEdgeType}
+                floorName={nextFloor.name}
+                onAdvance={() => handleJumpToSegment(activeSegmentIndex + 1)}
+              />
+            ) : null}
           </main>
         </div>
       </div>

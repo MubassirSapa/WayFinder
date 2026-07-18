@@ -1,4 +1,4 @@
-import Link from "next/link";
+import type { ReactNode } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -13,12 +13,14 @@ interface MapViewerSidebarProps {
   activeFloor: ViewerFloor | null;
   activeFloorId: string | null;
   floors: ViewerFloor[];
+  routePanelSlot?: ReactNode;
   search: string;
   searchableObjects: ViewerMapObject[];
   selectedObject: ViewerMapObject | null;
   selectedObjectId: string | null;
+  selectionActionsSlot?: ReactNode;
   onFocusObject: (object: ViewerMapObject) => void;
-  onFloorChange: () => void;
+  onFloorChange: (floorId: string) => void;
   onSearchChange: (value: string) => void;
 }
 
@@ -26,10 +28,12 @@ export function MapViewerSidebar({
   activeFloor,
   activeFloorId,
   floors,
+  routePanelSlot,
   search,
   searchableObjects,
   selectedObject,
   selectedObjectId,
+  selectionActionsSlot,
   onFocusObject,
   onFloorChange,
   onSearchChange,
@@ -41,6 +45,13 @@ export function MapViewerSidebar({
       </div>
 
       <div className="space-y-5 p-5">
+        {routePanelSlot ? (
+          <>
+            {routePanelSlot}
+            <Separator />
+          </>
+        ) : null}
+
         <div className="relative">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -60,7 +71,7 @@ export function MapViewerSidebar({
               const isActive = floor.id === activeFloorId;
 
               return (
-                <Link
+                <button
                   key={floor.id}
                   className={[
                     "block rounded-2xl border px-4 py-3 text-left transition-colors",
@@ -68,8 +79,8 @@ export function MapViewerSidebar({
                       ? "border-primary/40 bg-primary/10 text-foreground"
                       : "border-border bg-background hover:bg-muted/60",
                   ].join(" ")}
-                  href={`/map/${floor.id}`}
-                  onClick={onFloorChange}
+                  onClick={() => onFloorChange(floor.id)}
+                  type="button"
                 >
                   <div>
                     <p className="text-sm font-semibold">{floor.name}</p>
@@ -77,7 +88,7 @@ export function MapViewerSidebar({
                       {formatFloorLabel(floor)}
                     </p>
                   </div>
-                </Link>
+                </button>
               );
             })}
           </div>
@@ -153,6 +164,7 @@ export function MapViewerSidebar({
                   {Math.round(selectedObject.width)} x {Math.round(selectedObject.height)}
                 </Badge>
               </div>
+              {selectionActionsSlot}
             </div>
           ) : (
             <p className="mt-3 text-sm leading-6 text-muted-foreground">

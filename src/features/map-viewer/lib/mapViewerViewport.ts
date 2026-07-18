@@ -19,6 +19,13 @@ export interface Point {
   y: number;
 }
 
+export interface WorldBounds {
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+}
+
 export function formatOrganizationName(value: string) {
   return value
     .replace(/[_-]+/g, " ")
@@ -68,6 +75,34 @@ export function getFitZoom(floor: ViewerFloor, viewport: Point) {
     ),
     viewport.x,
   );
+}
+
+export function getFitBoundsView(
+  bounds: WorldBounds,
+  viewport: Point,
+  padding: number = MAP_VIEWER_FIT_VIEW_PADDING,
+) {
+  const boundsWidth = Math.max(bounds.maxX - bounds.minX, 1);
+  const boundsHeight = Math.max(bounds.maxY - bounds.minY, 1);
+
+  const zoom = clampZoom(
+    Math.min(
+      (viewport.x - padding) / boundsWidth,
+      (viewport.y - padding) / boundsHeight,
+    ),
+    viewport.x,
+  );
+
+  const centerX = (bounds.minX + bounds.maxX) / 2;
+  const centerY = (bounds.minY + bounds.maxY) / 2;
+
+  return {
+    pan: {
+      x: viewport.x / 2 - centerX * zoom,
+      y: viewport.y / 2 - centerY * zoom,
+    },
+    zoom,
+  };
 }
 
 export function clampPanToViewport(

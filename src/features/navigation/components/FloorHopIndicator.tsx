@@ -1,0 +1,28 @@
+"use client";
+
+import { ArrowUpRight } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+
+interface FloorHopIndicatorProps {
+  edgeType?: "stairs" | "elevator" | "walkway" | "ramp";
+  floorName: string;
+  onAdvance: () => void;
+}
+
+export function FloorHopIndicator({ edgeType, floorName, onAdvance }: FloorHopIndicatorProps) {
+  const via = edgeType === "elevator" ? "elevator" : "stairs";
+
+  return (
+    <div className="pointer-events-none absolute inset-x-0 bottom-4 z-10 flex justify-center px-4">
+      <Button
+        className="pointer-events-auto shadow-lg"
+        onClick={onAdvance}
+        size="sm"
+      >
+        <ArrowUpRight className="h-3.5 w-3.5" />
+        {`Continue via ${via} to ${floorName}`}
+      </Button>
+    </div>
+  );
+}

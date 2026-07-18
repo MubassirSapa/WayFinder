@@ -21,6 +21,7 @@ interface MapViewerCanvasProps {
   nodes: ViewerMapNode[];
   objects: ViewerMapObject[];
   pan: { x: number; y: number };
+  routePoints?: { x: number; y: number }[];
   selectedObjectId: string | null;
   showGrid: boolean;
   viewportRef: RefObject<HTMLDivElement | null>;
@@ -43,6 +44,7 @@ export function MapViewerCanvas({
   nodes,
   objects,
   pan,
+  routePoints,
   selectedObjectId,
   showGrid,
   viewportRef,
@@ -103,6 +105,7 @@ export function MapViewerCanvas({
               onPointerDown={onSvgPointerDown}
               onPointerMove={onSvgPointerMove}
               onPointerUp={onSvgPointerUp}
+              routePoints={routePoints}
               selectedObjectId={selectedObjectId}
               showGrid={showGrid}
             />

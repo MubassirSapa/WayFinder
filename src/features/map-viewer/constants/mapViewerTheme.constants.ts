@@ -47,6 +47,9 @@ export const MAP_VIEWER_THEME_CLASSNAMES = [
   "[--map-viewer-marker-elevator-ring:oklch(0.61_0.08_240_/_0.24)]",
   "[--map-viewer-marker-shelf:oklch(0.72_0.09_100)]",
   "[--map-viewer-marker-shelf-ring:oklch(0.72_0.09_100_/_0.24)]",
+  "[--map-viewer-route-line:oklch(0.58_0.19_262)]",
+  "[--map-viewer-route-origin:oklch(0.63_0.14_145)]",
+  "[--map-viewer-route-destination:oklch(0.65_0.18_25)]",
   "dark:[--map-viewer-canvas:oklch(0.275_0.01_238)]",
   "dark:[--map-viewer-grid-minor:oklch(0.48_0.008_236_/_0.24)]",
   "dark:[--map-viewer-grid-major:oklch(0.58_0.01_236_/_0.3)]",
@@ -95,4 +98,7 @@ export const MAP_VIEWER_THEME_CLASSNAMES = [
   "dark:[--map-viewer-marker-elevator-ring:oklch(0.73_0.07_240_/_0.24)]",
   "dark:[--map-viewer-marker-shelf:oklch(0.72_0.09_100)]",
   "dark:[--map-viewer-marker-shelf-ring:oklch(0.72_0.09_100_/_0.24)]",
+  "dark:[--map-viewer-route-line:oklch(0.72_0.16_262)]",
+  "dark:[--map-viewer-route-origin:oklch(0.73_0.14_145)]",
+  "dark:[--map-viewer-route-destination:oklch(0.76_0.17_28)]",
 ].join(" ");

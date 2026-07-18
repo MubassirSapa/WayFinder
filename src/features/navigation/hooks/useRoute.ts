@@ -1,0 +1,93 @@
+"use client";
+
+import { useMemo } from "react";
+
+import type {
+  MapViewerData,
+  ViewerMapNode,
+  ViewerPathEdge,
+} from "@/features/map-viewer/types/map-viewer.types";
+
+import { findDefaultOriginNode } from "../lib/defaultOrigin";
+import { findShortestPath } from "../lib/dijkstra";
+import { buildRouteGraph } from "../lib/graph";
+import { splitRouteByFloor } from "../lib/routeSegments";
+import { useNavigationStore } from "../store/useNavigationStore";
+
+export function useRoute(data: MapViewerData) {
+  const originNodeId = useNavigationStore((state) => state.originNodeId);
+  const destinationNodeId = useNavigationStore((state) => state.destinationNodeId);
+  const accessibleOnly = useNavigationStore((state) => state.accessibleOnly);
+  const activeSegmentIndex = useNavigationStore((state) => state.activeSegmentIndex);
+
+  const allNodes = useMemo(
+    () => Object.values(data.nodesByFloorId).flat(),
+    [data.nodesByFloorId],
+  );
+  const allEdges = useMemo(
+    () => Object.values(data.edgesByFloorId).flat(),
+    [data.edgesByFloorId],
+  );
+
+  const nodesById = useMemo(
+    () => Object.fromEntries(allNodes.map((node) => [node.id, node])) as Record<string, ViewerMapNode>,
+    [allNodes],
+  );
+  const edgesById = useMemo(
+    () => Object.fromEntries(allEdges.map((edge) => [edge.id, edge])) as Record<string, ViewerPathEdge>,
+    [allEdges],
+  );
+
+  const effectiveOriginId = originNodeId
+    ?? findDefaultOriginNode(data.floors, data.nodesByFloorId)?.id
+    ?? null;
+
+  const route = useMemo(() => {
+    if (!effectiveOriginId || !destinationNodeId) {
+      return null;
+    }
+
+    const graph = buildRouteGraph(allNodes, allEdges, { accessibleOnly });
+    return findShortestPath(graph, effectiveOriginId, destinationNodeId);
+  }, [effectiveOriginId, destinationNodeId, allNodes, allEdges, accessibleOnly]);
+
+  const segments = useMemo(() => {
+    if (!route) {
+      return [];
+    }
+
+    return splitRouteByFloor(route, nodesById, edgesById);
+  }, [route, nodesById, edgesById]);
+
+  const clampedSegmentIndex = Math.min(
+    activeSegmentIndex,
+    Math.max(segments.length - 1, 0),
+  );
+  const activeSegment = segments[clampedSegmentIndex] ?? null;
+
+  // Raw floor-local coordinates — matches the un-padded space MapViewerSvg's
+  // node/edge/object layers already render in (padding is applied once, via
+  // the shared <g transform> those layers sit inside).
+  const routePoints = useMemo(() => {
+    if (!activeSegment) {
+      return [];
+    }
+
+    return activeSegment.nodeIds
+      .map((nodeId) => nodesById[nodeId])
+      .filter((node): node is ViewerMapNode => Boolean(node))
+      .map((node) => ({ x: node.x, y: node.y }));
+  }, [activeSegment, nodesById]);
+
+  return {
+    activeSegment,
+    activeSegmentIndex: clampedSegmentIndex,
+    allNodes,
+    edgesById,
+    effectiveOriginId,
+    nodesById,
+    route,
+    routePoints,
+    segments,
+  };
+}
