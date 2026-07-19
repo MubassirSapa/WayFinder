@@ -35,6 +35,12 @@ export function MapNodeView({ node }: MapNodeViewProps) {
       onPointerDown={(e) => {
         if (canDragNode) {
           handlePointerDown(node.id, node.x, node.y, e);
+        } else {
+          // Still stop the pointerdown from reaching the canvas wrapper's
+          // pan handler even when this node isn't draggable right now —
+          // otherwise a plain select-click on a node could get suppressed
+          // as an accidental pan (same reasoning as MapObjectView).
+          e.stopPropagation();
         }
       }}
       onClick={(e) => handleNodeClick(node.id, e)}

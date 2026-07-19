@@ -42,6 +42,12 @@ export function MapObjectView({ object }: MapObjectViewProps) {
     <g
       transform={`translate(${object.x}, ${object.y}) rotate(${object.rotation || 0}, ${cx}, ${cy})`}
       onMouseDown={handlePointerDown}
+      // The canvas wrapper starts a pan-drag on any pointerdown that reaches
+      // it. mousedown/pointerdown are separate native events — stopping
+      // propagation on the mouse event above does NOT stop the pointerdown
+      // that fires first and bubbles independently, so without this every
+      // object drag also panned the whole canvas underneath it.
+      onPointerDown={(e) => e.stopPropagation()}
       className={`${canDragObject ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'} transition-all`}
     >
       {/* Background shape */}

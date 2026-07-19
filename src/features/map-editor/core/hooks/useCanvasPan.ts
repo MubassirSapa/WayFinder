@@ -46,15 +46,19 @@ export function useCanvasPan({ floorHeight, floorWidth, wrapperRef }: UseCanvasP
     }
 
     // Node/object drags call stopPropagation on their own pointerdown, so
-    // this only ever fires for a press on genuinely empty canvas.
-    e.currentTarget.setPointerCapture(e.pointerId);
+    // this only ever fires for a press on genuinely empty canvas. Capture is
+    // deferred to handlePointerMove (only once real movement is detected)
+    // rather than grabbed here — capturing a pointer that came from a
+    // trackpad/touch tap retargets the *compatibility* click/dblclick events
+    // the browser synthesizes from it to this element instead of whatever
+    // was actually under the finger, which silently broke double-tap object
+    // placement (its dblclick handler lives on the SVG, a descendant).
     dragStateRef.current = {
       didMove: false,
       originPan: pan,
       pointerId: e.pointerId,
       start: { x: e.clientX, y: e.clientY },
     };
-    setIsPanning(true);
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -69,6 +73,12 @@ export function useCanvasPan({ floorHeight, floorWidth, wrapperRef }: UseCanvasP
     if (!dragState.didMove && Math.hypot(dx, dy) > DRAG_THRESHOLD) {
       dragState.didMove = true;
       suppressClickRef.current = true;
+      e.currentTarget.setPointerCapture(e.pointerId);
+      setIsPanning(true);
+    }
+
+    if (!dragState.didMove) {
+      return;
     }
 
     setPan(clampPan({ x: dragState.originPan.x + dx, y: dragState.originPan.y + dy }));
