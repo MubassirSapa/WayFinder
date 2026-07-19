@@ -105,7 +105,7 @@ export function MapCanvas() {
             handleCanvasDoubleClick(e);
           }}
           data-editor-canvas="true"
-          className={`absolute inset-0 select-none overflow-hidden ${mode === 'object' || mode === 'node' ? 'cursor-crosshair' : ''}`}
+          className={`absolute inset-0 select-none overflow-hidden ${mode === 'node' ? 'cursor-crosshair' : ''}`}
         >
           {/* Faded Background Image if configured */}
           {floor.backgroundImageUrl && (

@@ -25,10 +25,6 @@ export function EditorToolbar() {
   const { mode, floor, isDirty, isSaving, setMode } = useEditorStore();
   const { saveChanges } = useSaveEditorChanges();
 
-  // "object" mode has no button here — it's entered automatically when you
-  // pick something in the "Add to Map" panel (ObjectToolbox's
-  // handleSelectType calls setMode('object')), so a manual toolbar entry
-  // point would just duplicate that.
   const modes: { id: EditorMode; label: string; hint: string; icon: LucideIcon }[] = [
     { id: 'select', label: EDITOR_UI_TEXT.toolbar.modes.select, hint: EDITOR_UI_TEXT.toolbar.modeHints.select, icon: MousePointer },
     { id: 'node', label: EDITOR_UI_TEXT.toolbar.modes.node, hint: EDITOR_UI_TEXT.toolbar.modeHints.node, icon: MapPin },

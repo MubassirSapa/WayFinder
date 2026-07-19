@@ -21,7 +21,7 @@ export const EDITOR_UI_TEXT = {
   objectToolbox: {
     title: "Add to Map",
     description:
-      "Pick something below, then click anywhere on the map to place it. Drag anything already placed to move it.",
+      "Pick something below, then double-click anywhere on the map to place it. Drag anything already placed to move it.",
   },
   referencePanel: {
     altFieldLabel: "Alt Text",
@@ -76,12 +76,12 @@ export const EDITOR_UI_TEXT = {
     modes: {
       node: "Add Path Nodes",
       path: "Connect Paths",
-      select: "Select & Move",
+      select: "Select & Place",
     },
     modeHints: {
       node: "Click the map to drop a new path node. Drag existing nodes to reposition them.",
       path: "Click a node, then another, to connect them. Click the same node again to cancel.",
-      select: "Click anything to inspect it. Drag to move, or use the handles to resize and rotate.",
+      select: "Drag anything to move, resize, or rotate it. Double-click empty space to place the object picked below.",
     },
     save: "Save Changes",
     saving: "Saving...",

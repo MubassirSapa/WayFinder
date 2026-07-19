@@ -21,7 +21,7 @@ export function useNodeDrag() {
     initialY: number,
     e: React.PointerEvent<SVGGElement>,
   ) => {
-    if ((mode !== 'select' && mode !== 'node' && mode !== 'object') || e.button !== 0) return;
+    if ((mode !== 'select' && mode !== 'node') || e.button !== 0) return;
 
     e.stopPropagation();
     e.preventDefault();

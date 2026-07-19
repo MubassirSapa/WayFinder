@@ -80,8 +80,6 @@ export function useCanvasPointer(canvasRef: RefObject<SVGSVGElement | null>) {
 
     if (mode === 'select') {
       clearSelection();
-    } else if (mode === 'object') {
-      return;
     } else if (mode === 'node') {
       const tempId = `temp_node_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       const hallwayPointCount = Object.values(nodes).filter((n) => n.role === 'hallway_point').length;
@@ -112,7 +110,7 @@ export function useCanvasPointer(canvasRef: RefObject<SVGSVGElement | null>) {
 
   const handleCanvasDoubleClick = (e: React.MouseEvent<SVGSVGElement>) => {
     if (!isCanvasTarget(e)) return;
-    if (mode !== 'object') return;
+    if (mode !== 'select') return;
 
     e.preventDefault();
     addSelectedObjectAtEvent(e);

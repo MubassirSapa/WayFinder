@@ -1,4 +1,4 @@
-export type EditorMode = 'select' | 'object' | 'node' | 'path';
+export type EditorMode = 'select' | 'node' | 'path';
 
 export type ToolboxObjectType =
   | 'room'

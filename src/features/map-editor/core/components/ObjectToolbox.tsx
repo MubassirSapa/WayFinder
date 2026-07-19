@@ -14,11 +14,15 @@ interface ObjectToolboxProps {
 }
 
 export function ObjectToolbox({ footer }: ObjectToolboxProps) {
-  const { mode, selectedToolboxType, setMode, setSelectedToolboxType } = useEditorStore();
+  const { selectedToolboxType, setMode, setSelectedToolboxType } = useEditorStore();
 
   const handleSelectType = (type: ToolboxObjectType) => {
     setSelectedToolboxType(type);
-    setMode('object');
+    // Moving existing objects and placing new ones both live in "select"
+    // mode now — picking a type here just changes what double-clicking the
+    // canvas places next, it doesn't need its own exclusive mode. Still
+    // exits "node"/"path" mode, since those really are exclusive tools.
+    setMode('select');
   };
 
   return (
@@ -46,7 +50,7 @@ export function ObjectToolbox({ footer }: ObjectToolboxProps) {
                   {category.types.map((type) => {
                     const config = OBJECT_CONFIGS[type];
                     const Icon = config.icon;
-                    const isSelected = mode === 'object' && selectedToolboxType === type;
+                    const isSelected = selectedToolboxType === type;
 
                     return (
                       <button
