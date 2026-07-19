@@ -3,6 +3,7 @@
 import { useDeferredValue, useState } from "react";
 
 import { FloorHopIndicator } from "@/features/navigation/components/FloorHopIndicator";
+import { MapSelectionBar } from "@/features/navigation/components/MapSelectionBar";
 import { RouteOriginTrigger } from "@/features/navigation/components/RouteOriginTrigger";
 import { RoutePanel } from "@/features/navigation/components/RoutePanel";
 import { useRoute } from "@/features/navigation/hooks/useRoute";
@@ -53,7 +54,6 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
     handleViewportPointerCancel,
     handleViewportPointerLeave,
     handleViewportPointerUp,
-    handleViewportWheel,
   } = useMapViewerViewport({
     activeFloor,
     activeFloorId,
@@ -204,7 +204,6 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
               onSvgPointerDown={handleSvgPointerDown}
               onSvgPointerMove={handleSvgPointerMove}
               onSvgPointerUp={handleSvgPointerUp}
-              onWheel={handleViewportWheel}
               pan={pan}
               routePoints={routePointsForActiveFloor}
               selectedObjectId={selectedObjectId}
@@ -212,6 +211,13 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
               viewportRef={viewportRef}
               zoom={zoom}
             />
+            {selectedObject ? (
+              <MapSelectionBar
+                label={selectedObject.label || selectedObject.name}
+                nodeId={findNodeIdForObject(selectedObject.id, allNodes)}
+                onClose={() => setSelectedObjectId(null)}
+              />
+            ) : null}
             {nextSegment && nextFloor ? (
               <FloorHopIndicator
                 edgeType={nextSegment.enterViaEdgeType}

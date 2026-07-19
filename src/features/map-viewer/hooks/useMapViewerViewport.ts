@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { PointerEvent, WheelEvent } from "react";
+import type { PointerEvent } from "react";
 
 import { MAP_VIEWER_DRAG_THRESHOLD } from "../constants/mapViewer.constants";
 import {
@@ -225,38 +225,54 @@ export function useMapViewerViewport({
     }
   };
 
-  const handleViewportWheel = (event: WheelEvent<HTMLDivElement>) => {
-    event.preventDefault();
-
-    const nextZoom = clampZoom(
-      event.deltaY > 0 ? zoom / 1.08 : zoom * 1.08,
-      viewportSize.x,
-    );
-    const viewportRect = viewportRef.current?.getBoundingClientRect();
-
-    if (!viewportRect || !activeFloor) {
-      setZoom(nextZoom);
+  // Registered as a native, non-passive listener (not a React onWheel prop)
+  // deliberately: React attaches wheel listeners at the root as passive by
+  // default, which silently blocks event.preventDefault() from working —
+  // the map would zoom, but the browser's own page zoom/scroll would fire
+  // right alongside it. A real addEventListener with { passive: false } is
+  // the only way to actually suppress the native behavior.
+  useEffect(() => {
+    const element = viewportRef.current;
+    if (!element) {
       return;
     }
 
-    const pointerX = event.clientX - viewportRect.left;
-    const pointerY = event.clientY - viewportRect.top;
-    const worldX = (pointerX - pan.x) / zoom;
-    const worldY = (pointerY - pan.y) / zoom;
+    const handleWheel = (event: globalThis.WheelEvent) => {
+      event.preventDefault();
 
-    setZoom(nextZoom);
-    setPan(
-      clampPanToViewport(
-        {
-          x: pointerX - worldX * nextZoom,
-          y: pointerY - worldY * nextZoom,
-        },
-        activeFloor,
-        viewportSize,
-        nextZoom,
-      ),
-    );
-  };
+      const nextZoom = clampZoom(
+        event.deltaY > 0 ? zoom / 1.08 : zoom * 1.08,
+        viewportSize.x,
+      );
+      const viewportRect = element.getBoundingClientRect();
+
+      if (!activeFloor) {
+        setZoom(nextZoom);
+        return;
+      }
+
+      const pointerX = event.clientX - viewportRect.left;
+      const pointerY = event.clientY - viewportRect.top;
+      const worldX = (pointerX - pan.x) / zoom;
+      const worldY = (pointerY - pan.y) / zoom;
+
+      setZoom(nextZoom);
+      setPan(
+        clampPanToViewport(
+          {
+            x: pointerX - worldX * nextZoom,
+            y: pointerY - worldY * nextZoom,
+          },
+          activeFloor,
+          viewportSize,
+          nextZoom,
+        ),
+      );
+    };
+
+    element.addEventListener("wheel", handleWheel, { passive: false });
+    return () => element.removeEventListener("wheel", handleWheel);
+  }, [activeFloor, pan, viewportSize, zoom]);
 
   const handleSvgPointerDown = (event: PointerEvent<SVGSVGElement>) => {
     if (
@@ -410,6 +426,5 @@ export function useMapViewerViewport({
     handleViewportPointerCancel,
     handleViewportPointerLeave,
     handleViewportPointerUp,
-    handleViewportWheel,
   };
 }

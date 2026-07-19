@@ -242,7 +242,7 @@ function ViewerNodes({ nodes }: { nodes: ViewerMapNode[] }) {
         const palette = getViewerNodePalette(node.role);
 
         return (
-          <g key={node.id} transform={`translate(${node.x}, ${node.y})`}>
+          <g className="group" key={node.id} transform={`translate(${node.x}, ${node.y})`}>
             <circle fill={palette.ring} r="14" />
             <circle
               fill={palette.fill}
@@ -251,8 +251,11 @@ function ViewerNodes({ nodes }: { nodes: ViewerMapNode[] }) {
               strokeWidth="2"
               vectorEffect="non-scaling-stroke"
             />
+            {/* Hidden by default — a floor with a few dozen markers turns
+                into a wall of text otherwise; shown on hover instead. */}
             {node.label ? (
               <text
+                className="pointer-events-none opacity-0 transition-opacity duration-150 group-hover:opacity-100"
                 fill="var(--map-viewer-label)"
                 fontFamily="var(--font-sans)"
                 fontSize="10"

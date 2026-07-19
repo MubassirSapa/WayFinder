@@ -3,8 +3,9 @@
 import { useDeferredValue, useState } from "react";
 
 import { Switch } from "@/components/ui/switch";
-import type { ViewerFloor, ViewerMapNode, ViewerMapObject } from "@/features/map-viewer/types/map-viewer.types";
-import { ArrowRight, Navigation, X } from "lucide-react";
+import { cn } from "@/lib/utils";
+import type { ViewerFloor, ViewerMapNode, ViewerMapObject, ViewerPathEdge } from "@/features/map-viewer/types/map-viewer.types";
+import { ArrowUpDown, ArrowUpRight, Navigation, TrendingUp, Waypoints, X, type LucideIcon } from "lucide-react";
 
 import { findNodeIdForObject } from "../lib/findNodeForObject";
 import { useNavigationStore } from "../store/useNavigationStore";
@@ -43,7 +44,19 @@ function findFloorNameForObject(object: ViewerMapObject, floors: ViewerFloor[]):
   return floors.find((floor) => floor.id === object.floorId)?.name ?? null;
 }
 
-function filterCandidates(objects: ViewerMapObject[], query: string) {
+const CONNECTOR_ICONS: Record<ViewerPathEdge["type"], LucideIcon> = {
+  elevator: ArrowUpDown,
+  escalator: TrendingUp,
+  ramp: Waypoints,
+  stairs: ArrowUpRight,
+  walkway: Waypoints,
+};
+
+// Only objects that actually resolve to a routable node are worth showing —
+// anything else was a dead click (looked like a valid result, picking it did
+// nothing, no feedback). Filtering here means every visible suggestion is
+// guaranteed to work.
+function filterCandidates(objects: ViewerMapObject[], nodes: ViewerMapNode[], query: string) {
   const normalized = query.trim().toLowerCase();
   if (!normalized) {
     return [];
@@ -54,6 +67,7 @@ function filterCandidates(objects: ViewerMapObject[], query: string) {
       object.name.toLowerCase().includes(normalized)
       || object.label.toLowerCase().includes(normalized)
     ))
+    .filter((object) => findNodeIdForObject(object.id, nodes) !== null)
     .slice(0, 6);
 }
 
@@ -87,7 +101,7 @@ export function RoutePanel({
 
   const fromValue = focusedField === "from" ? draftQuery : originLabel ?? "";
   const toValue = focusedField === "to" ? draftQuery : destinationLabel ?? "";
-  const candidates = focusedField ? filterCandidates(searchableObjects, deferredDraftQuery) : [];
+  const candidates = focusedField ? filterCandidates(searchableObjects, nodes, deferredDraftQuery) : [];
 
   const startEditing = (field: "from" | "to") => {
     setFocusedField(field);
@@ -135,7 +149,7 @@ export function RoutePanel({
             style={{ backgroundColor: "var(--map-viewer-route-origin)" }}
           />
           <input
-            className="h-10 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+            className="h-10 min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
             onBlur={() => stopEditing("from")}
             onChange={(event) => setDraftQuery(event.target.value)}
             onFocus={() => startEditing("from")}
@@ -143,7 +157,7 @@ export function RoutePanel({
             value={fromValue}
           />
           {originNodeId ? (
-            <button aria-label="Clear starting point" onClick={() => setOrigin(null)} type="button">
+            <button aria-label="Clear starting point" className="shrink-0" onClick={() => setOrigin(null)} type="button">
               <X className="h-3.5 w-3.5 text-muted-foreground" />
             </button>
           ) : null}
@@ -154,14 +168,14 @@ export function RoutePanel({
             {candidates.map((object) => (
               <button
                 key={object.id}
-                className="flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2 text-left text-sm hover:bg-muted/60"
+                className="block w-full rounded-xl px-3 py-2 text-left hover:bg-muted/60"
                 onClick={() => pickOrigin(object)}
                 onMouseDown={(event) => event.preventDefault()}
                 type="button"
               >
-                <span className="truncate">{object.label || object.name}</span>
+                <span className="block truncate text-sm">{object.label || object.name}</span>
                 {findFloorNameForObject(object, floors) ? (
-                  <span className="shrink-0 text-xs text-muted-foreground">{findFloorNameForObject(object, floors)}</span>
+                  <span className="block truncate text-xs text-muted-foreground">{findFloorNameForObject(object, floors)}</span>
                 ) : null}
               </button>
             ))}
@@ -175,7 +189,7 @@ export function RoutePanel({
             style={{ backgroundColor: "var(--map-viewer-route-destination)" }}
           />
           <input
-            className="h-10 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+            className="h-10 min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
             onBlur={() => stopEditing("to")}
             onChange={(event) => setDraftQuery(event.target.value)}
             onFocus={() => startEditing("to")}
@@ -183,7 +197,7 @@ export function RoutePanel({
             value={toValue}
           />
           {destinationNodeId ? (
-            <button aria-label="Clear destination" onClick={clearRoute} type="button">
+            <button aria-label="Clear destination" className="shrink-0" onClick={clearRoute} type="button">
               <X className="h-3.5 w-3.5 text-muted-foreground" />
             </button>
           ) : null}
@@ -194,14 +208,14 @@ export function RoutePanel({
             {candidates.map((object) => (
               <button
                 key={object.id}
-                className="flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2 text-left text-sm hover:bg-muted/60"
+                className="block w-full rounded-xl px-3 py-2 text-left hover:bg-muted/60"
                 onClick={() => pickDestination(object)}
                 onMouseDown={(event) => event.preventDefault()}
                 type="button"
               >
-                <span className="truncate">{object.label || object.name}</span>
+                <span className="block truncate text-sm">{object.label || object.name}</span>
                 {findFloorNameForObject(object, floors) ? (
-                  <span className="shrink-0 text-xs text-muted-foreground">{findFloorNameForObject(object, floors)}</span>
+                  <span className="block truncate text-xs text-muted-foreground">{findFloorNameForObject(object, floors)}</span>
                 ) : null}
               </button>
             ))}
@@ -231,27 +245,46 @@ export function RoutePanel({
                 {segments.length > 1 ? ` • crosses ${segments.length - 1} floor${segments.length > 2 ? "s" : ""}` : ""}
               </p>
               {segments.length > 1 ? (
-                <div className="flex flex-wrap items-center gap-1.5">
+                <div className="space-y-1 rounded-2xl border border-border bg-background p-1.5">
                   {segments.map((segment, index) => {
                     const segmentFloor = floors.find((floor) => floor.id === segment.floorId);
                     const isActive = index === activeSegmentIndex;
+                    const ConnectorIcon = segment.enterViaEdgeType ? CONNECTOR_ICONS[segment.enterViaEdgeType] : null;
 
                     return (
-                      <span className="flex items-center gap-1.5" key={segment.floorId + index}>
-                        {index > 0 ? <ArrowRight className="h-3 w-3 text-muted-foreground" /> : null}
+                      <div key={segment.floorId + index}>
+                        {index > 0 && ConnectorIcon ? (
+                          <div className="flex items-center gap-1.5 py-1 pl-4 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                            <ConnectorIcon className="h-3 w-3" />
+                            <span>via {segment.enterViaEdgeType}</span>
+                          </div>
+                        ) : null}
                         <button
-                          className={[
-                            "rounded-full border px-2.5 py-1 text-xs font-medium transition-colors",
+                          className={cn(
+                            "flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-left text-sm transition-colors",
                             isActive
-                              ? "border-primary/40 bg-primary/10 text-foreground"
-                              : "border-border bg-background text-muted-foreground hover:bg-muted/60",
-                          ].join(" ")}
+                              ? "bg-primary/10 font-semibold text-foreground ring-1 ring-primary/30"
+                              : "text-muted-foreground hover:bg-muted/60",
+                          )}
                           onClick={() => onJumpToSegment(index)}
                           type="button"
                         >
-                          {segmentFloor?.name ?? "Floor"}
+                          <span
+                            className={cn(
+                              "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold",
+                              isActive ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground",
+                            )}
+                          >
+                            {index + 1}
+                          </span>
+                          <span className="truncate">{segmentFloor?.name ?? "Floor"}</span>
+                          {isActive ? (
+                            <span className="ml-auto shrink-0 text-[10px] font-bold uppercase tracking-wide text-primary">
+                              You&apos;re here
+                            </span>
+                          ) : null}
                         </button>
-                      </span>
+                      </div>
                     );
                   })}
                 </div>

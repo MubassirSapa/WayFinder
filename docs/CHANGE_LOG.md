@@ -16,6 +16,17 @@
 - Reworked the map editor's left panel: the "Add to Map" object list is now grouped into collapsible categories (Structure, Connectors, Wayfinding & Amenities, Retail & Storage) via an accordion, and the Reference/Automation tools below it collapse by default instead of always taking up scroll space. Panel copy was also reworded to be less jargon-heavy (e.g. "Objects" → "Add to Map").
 - Removed the toolbar's "Object" mode toggle — it was ~95% identical to "Select & Move" (both let you drag/rotate/resize existing objects) and was never actually needed manually, since picking an item from the "Add to Map" panel already switches into placement mode automatically. Also fixed the overlap itself: "Select & Move" now exclusively handles moving/inspecting what's already on the map, while placement mode (still reachable via the toolbox) no longer lets you drag existing objects or nodes, so nothing gets bumped by accident while you're placing something new. Toolbar buttons now show a hover tooltip explaining what each mode actually does.
 
+### Fixed
+- Fixed a public map viewer bug where searching "Get directions" for a room with no navigation node yet would silently do nothing when clicked — no error, no feedback, the field just stayed empty. Such rooms no longer appear as search results at all, since picking one could never have worked.
+- Fixed the map viewer's zoom (scroll/pinch) also triggering the browser's own page zoom at the same time. React attaches wheel listeners as passive by default, which was silently blocking `preventDefault()`; the zoom handler is now a real non-passive native listener, so only the map zooms.
+- Fixed truncated room names in the "Get directions" From/To suggestion dropdown — the floor name was squeezed onto the same line as the room name, cutting long names short. Floor name now sits on its own line below.
+
+### Changed (public map viewer)
+- Node labels on the public map are now hidden by default and shown on hover, same reasoning and fix as the editor canvas.
+- Floor and Places are now collapsible accordion sections in the sidebar (closed by default), matching the pattern used for the map editor's left panel, instead of two lists that were always fully expanded.
+- The floor-crossing route breadcrumb was redesigned from a row of small pills into a numbered vertical stepper, with an icon showing how you get from one floor to the next (stairs/elevator/escalator) and a clear "You're here" marker on the active step.
+- Clicking an object directly on the map now shows an inline "Start here" / "Route here" bar over the canvas itself, so setting an origin or destination no longer requires scrolling to the sidebar's Selection card.
+
 ## 2026-06-11
 
 ### Added
