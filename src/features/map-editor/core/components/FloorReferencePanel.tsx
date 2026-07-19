@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import React, { useRef, useState, useTransition } from 'react';
-import { ImageIcon, ImageUp, Loader2, Trash2 } from 'lucide-react';
+import { ImageUp, Loader2, Trash2 } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -78,44 +78,17 @@ export function FloorReferencePanel() {
 
   return (
     <div className="p-4 space-y-4">
-      <div className="space-y-1.5">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-          <div className="flex min-w-0 items-center gap-2 text-zinc-100">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-sky-500/20 bg-sky-500/10">
-              <ImageIcon className="h-4 w-4 text-sky-400" />
-            </div>
-            <div className="min-w-0">
-              <h3 className="text-xs font-bold uppercase tracking-[0.22em] text-zinc-100">
-                {EDITOR_UI_TEXT.referencePanel.title}
-              </h3>
-              <p className="mt-0.5 text-[10px] text-zinc-500">
-                {EDITOR_UI_TEXT.referencePanel.imageTypeLabel}
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge
-              variant="outline"
-              className="border-zinc-700 bg-zinc-950/60 text-zinc-300"
-            >
-              {floor?.backgroundImageUrl
-                ? EDITOR_UI_TEXT.referencePanel.attachedStatus
-                : EDITOR_UI_TEXT.referencePanel.emptyStatus}
-            </Badge>
-            {floor?._dirty ? (
-              <Badge
-                variant="outline"
-                className="border-amber-500/30 bg-amber-500/10 text-amber-300"
-              >
-                Unsaved
-              </Badge>
-            ) : null}
-          </div>
-        </div>
-        <p className="text-[11px] leading-relaxed text-zinc-500">
-          {EDITOR_UI_TEXT.referencePanel.description}
-        </p>
-      </div>
+      {floor?._dirty ? (
+        <Badge
+          variant="outline"
+          className="border-amber-500/30 bg-amber-500/10 text-amber-300"
+        >
+          Unsaved
+        </Badge>
+      ) : null}
+      <p className="text-[11px] leading-relaxed text-zinc-500">
+        {EDITOR_UI_TEXT.referencePanel.description}
+      </p>
 
       {floor?.backgroundImageUrl ? (
         <div className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950/70">

@@ -16,7 +16,9 @@ export function MapNodeView({ node }: MapNodeViewProps) {
 
   const isSelected = selectedEntity?.kind === 'node' && selectedEntity.id === node.id;
   const isPendingSource = pendingPathNodeId === node.id;
-  const canDragNode = mode === 'select' || mode === 'node' || mode === 'object';
+  // "object" mode is exclusively for placing new objects — it ignores
+  // existing nodes entirely, same reasoning as MapObjectView.
+  const canDragNode = mode === 'select' || mode === 'node';
 
   // Node color depending on role
   let fillColor = '#3b82f6'; // blue-500 for hallway_point

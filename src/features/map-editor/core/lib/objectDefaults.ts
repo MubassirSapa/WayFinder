@@ -176,6 +176,21 @@ export function getDefaultObjectName(
   return `${OBJECT_CONFIGS[type].label} ${sameTypeCount + 1}`;
 }
 
+export interface ObjectCategory {
+  id: string;
+  label: string;
+  types: ToolboxObjectType[];
+}
+
+// Single source of truth for how the toolbox groups object types — edit
+// this list to add/move/rename a category.
+export const OBJECT_CATEGORIES: ObjectCategory[] = [
+  { id: 'structure', label: 'Structure', types: ['room', 'wall', 'door', 'hallway'] },
+  { id: 'connectors', label: 'Connectors', types: ['stairs', 'elevator', 'escalator'] },
+  { id: 'wayfinding', label: 'Wayfinding & Amenities', types: ['washroom', 'exit', 'poi'] },
+  { id: 'retail', label: 'Retail & Storage', types: ['aisle', 'shelf', 'section'] },
+];
+
 export const NODE_ROLE_OPTIONS = [
   { label: 'Entrance', value: 'entrance' },
   { label: 'Exit', value: 'exit' },

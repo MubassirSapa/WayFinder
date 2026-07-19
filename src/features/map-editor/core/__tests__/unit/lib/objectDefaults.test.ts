@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getDefaultDimensions, getDefaultObjectName, getObjectColor, OBJECT_CONFIGS } from '../../../lib/objectDefaults'
+import { getDefaultDimensions, getDefaultObjectName, getObjectColor, OBJECT_CATEGORIES, OBJECT_CONFIGS } from '../../../lib/objectDefaults'
 import type { EditorMapObject } from '../../../types/map.types'
 
 function makeObject(overrides: Partial<EditorMapObject> & { id: string; type: EditorMapObject['type'] }): EditorMapObject {
@@ -57,6 +57,24 @@ describe('getObjectColor', () => {
       expect(fill.length).toBeGreaterThan(0)
       expect(stroke.length).toBeGreaterThan(0)
       expect(color.length).toBeGreaterThan(0)
+    }
+  })
+})
+
+describe('OBJECT_CATEGORIES', () => {
+  it('covers every toolbox object type exactly once', () => {
+    const allTypes = Object.keys(OBJECT_CONFIGS)
+    const categorizedTypes = OBJECT_CATEGORIES.flatMap((category) => category.types)
+
+    expect(categorizedTypes.sort()).toEqual([...allTypes].sort())
+    expect(new Set(categorizedTypes).size).toBe(categorizedTypes.length)
+  })
+
+  it('has a unique id and non-empty label for every category', () => {
+    const ids = OBJECT_CATEGORIES.map((category) => category.id)
+    expect(new Set(ids).size).toBe(ids.length)
+    for (const category of OBJECT_CATEGORIES) {
+      expect(category.label.length).toBeGreaterThan(0)
     }
   })
 })

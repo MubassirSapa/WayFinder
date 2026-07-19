@@ -7,7 +7,6 @@ import { useSaveEditorChanges } from '../hooks/useSaveEditorChanges';
 import {
   ArrowLeft,
   MousePointer,
-  Box,
   MapPin,
   Waypoints,
   Save,
@@ -17,6 +16,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { EditorMode } from '../types/editor.types';
 
@@ -24,11 +24,14 @@ export function EditorToolbar() {
   const { mode, floor, isDirty, isSaving, setMode } = useEditorStore();
   const { saveChanges } = useSaveEditorChanges();
 
-  const modes: { id: EditorMode; label: string; icon: LucideIcon }[] = [
-    { id: 'select', label: EDITOR_UI_TEXT.toolbar.modes.select, icon: MousePointer },
-    { id: 'object', label: EDITOR_UI_TEXT.toolbar.modes.object, icon: Box },
-    { id: 'node', label: EDITOR_UI_TEXT.toolbar.modes.node, icon: MapPin },
-    { id: 'path', label: EDITOR_UI_TEXT.toolbar.modes.path, icon: Waypoints },
+  // "object" mode has no button here — it's entered automatically when you
+  // pick something in the "Add to Map" panel (ObjectToolbox's
+  // handleSelectType calls setMode('object')), so a manual toolbar entry
+  // point would just duplicate that.
+  const modes: { id: EditorMode; label: string; hint: string; icon: LucideIcon }[] = [
+    { id: 'select', label: EDITOR_UI_TEXT.toolbar.modes.select, hint: EDITOR_UI_TEXT.toolbar.modeHints.select, icon: MousePointer },
+    { id: 'node', label: EDITOR_UI_TEXT.toolbar.modes.node, hint: EDITOR_UI_TEXT.toolbar.modeHints.node, icon: MapPin },
+    { id: 'path', label: EDITOR_UI_TEXT.toolbar.modes.path, hint: EDITOR_UI_TEXT.toolbar.modeHints.path, icon: Waypoints },
   ];
 
   return (
@@ -63,21 +66,27 @@ export function EditorToolbar() {
           const isActive = mode === m.id;
 
           return (
-            <Button
-              key={m.id}
-              onClick={() => setMode(m.id)}
-              variant="ghost"
-              size="sm"
-              className={cn(
-                "h-8 px-3 rounded-md text-xs font-semibold gap-2 transition-all",
-                isActive
-                  ? "bg-zinc-800 text-zinc-100 hover:bg-zinc-800 hover:text-zinc-100 shadow"
-                  : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/50"
-              )}
-            >
-              <Icon className="h-3.5 w-3.5" />
-              <span>{m.label}</span>
-            </Button>
+            <Tooltip key={m.id}>
+              <TooltipTrigger
+                render={
+                  <Button
+                    onClick={() => setMode(m.id)}
+                    variant="ghost"
+                    size="sm"
+                    className={cn(
+                      "h-8 px-3 rounded-md text-xs font-semibold gap-2 transition-all",
+                      isActive
+                        ? "bg-zinc-800 text-zinc-100 hover:bg-zinc-800 hover:text-zinc-100 shadow"
+                        : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/50"
+                    )}
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                    <span>{m.label}</span>
+                  </Button>
+                }
+              />
+              <TooltipContent>{m.hint}</TooltipContent>
+            </Tooltip>
           );
         })}
       </div>

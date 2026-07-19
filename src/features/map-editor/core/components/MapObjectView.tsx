@@ -13,9 +13,13 @@ interface MapObjectViewProps {
 export function MapObjectView({ object }: MapObjectViewProps) {
   const { selectedEntity, selectEntity, mode } = useEditorStore();
   const { handleMouseDown, handleResizeStart, handleRotateStart } = useObjectDrag();
-  const canDragObject = mode === 'select' || mode === 'object';
-  const canRotateObject = mode === 'select' || mode === 'object';
-  const canResizeObject = mode === 'select' || mode === 'object';
+  // "object" mode is exclusively for placing new objects from the toolbox —
+  // existing objects are select-only there (see handlePointerDown below) so
+  // nothing gets accidentally dragged while you're aiming a placement.
+  // Moving/resizing/rotating what's already on the map is "select" mode's job.
+  const canDragObject = mode === 'select';
+  const canRotateObject = mode === 'select';
+  const canResizeObject = mode === 'select';
 
   const isSelected = selectedEntity?.kind === 'object' && selectedEntity.id === object.id;
   const colors = getObjectColor(object.type);

@@ -1,6 +1,6 @@
 'use client';
 
-import { Boxes, Link2, Route, Settings2, Trash2 } from "lucide-react";
+import { Boxes, Link2, Route, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -26,35 +26,9 @@ export function SmartBuilderPanel() {
 
   return (
     <div className="p-4 space-y-4">
-      <div className="space-y-1.5">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 text-zinc-100">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-emerald-500/20 bg-emerald-500/10">
-              <Settings2 className="h-4 w-4 text-emerald-400" />
-            </div>
-            <div>
-              <h3 className="text-xs font-bold uppercase tracking-[0.22em]">
-                {EDITOR_UI_TEXT.smartBuilder.title}
-              </h3>
-              <p className="text-[10px] text-zinc-500 mt-0.5">
-                {EDITOR_UI_TEXT.smartBuilder.subtitle}
-              </p>
-            </div>
-          </div>
-          <span
-            className={
-              isSmartBuilderEnabled
-                ? "rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.16em] text-emerald-300"
-                : "rounded-full border border-zinc-700 bg-zinc-900 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.16em] text-zinc-500"
-            }
-          >
-            {isSmartBuilderEnabled ? EDITOR_UI_TEXT.smartBuilder.on : EDITOR_UI_TEXT.smartBuilder.off}
-          </span>
-        </div>
-        <p className="text-[11px] leading-relaxed text-zinc-500">
-          {EDITOR_UI_TEXT.smartBuilder.summary}
-        </p>
-      </div>
+      <p className="text-[11px] leading-relaxed text-zinc-500">
+        {EDITOR_UI_TEXT.smartBuilder.summary}
+      </p>
 
       <label className="flex items-start justify-between gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/70 px-4 py-3">
         <div className="space-y-1">

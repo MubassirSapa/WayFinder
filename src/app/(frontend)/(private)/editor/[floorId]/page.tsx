@@ -1,8 +1,8 @@
 import { MapEditorShell } from "@/features/map-editor/core/components/MapEditorShell";
-import { FloorReferencePanel } from "@/features/map-editor/core/components/FloorReferencePanel";
+import { ReferenceSection } from "@/features/map-editor/core/components/ReferenceSection";
 import { getFloorEditorData } from "@/features/map-editor/core/actions/floorEditorActions";
+import { AutomationSection } from "@/features/map-editor/smart-builder/components/AutomationSection";
 import { SmartBuilderBridge } from "@/features/map-editor/smart-builder/components/SmartBuilderBridge";
-import { SmartBuilderPanel } from "@/features/map-editor/smart-builder/components/SmartBuilderPanel";
 
 interface PageProps {
   params: Promise<{
@@ -28,10 +28,10 @@ export default async function EditorPage({ params }: PageProps) {
         initialData={initialData}
         initialError={initialError}
         leftSidebarFooter={
-          <div className="divide-y divide-zinc-800/80">
-            <FloorReferencePanel />
-            <SmartBuilderPanel />
-          </div>
+          <>
+            <ReferenceSection />
+            <AutomationSection />
+          </>
         }
       />
       {initialData ? <SmartBuilderBridge /> : null}
