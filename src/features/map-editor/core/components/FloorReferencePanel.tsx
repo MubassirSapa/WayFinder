@@ -81,18 +81,18 @@ export function FloorReferencePanel() {
       {floor?._dirty ? (
         <Badge
           variant="outline"
-          className="border-amber-500/30 bg-amber-500/10 text-amber-300"
+          className="border-warning/30 bg-warning/10 text-warning"
         >
           Unsaved
         </Badge>
       ) : null}
-      <p className="text-[11px] leading-relaxed text-zinc-500">
+      <p className="text-[11px] leading-relaxed text-editor-subtle-foreground">
         {EDITOR_UI_TEXT.referencePanel.description}
       </p>
 
       {floor?.backgroundImageUrl ? (
-        <div className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950/70">
-          <div className="relative aspect-4/3 w-full bg-zinc-900">
+        <div className="overflow-hidden rounded-2xl border border-editor-border bg-editor-background/70">
+          <div className="relative aspect-4/3 w-full bg-editor-panel">
             <Image
               alt={floor.backgroundImageAlt ?? `${floor.name} reference image`}
               className="object-cover"
@@ -101,12 +101,12 @@ export function FloorReferencePanel() {
               src={floor.backgroundImageUrl}
             />
           </div>
-          <div className="flex flex-col gap-3 border-t border-zinc-800 px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 border-t border-editor-border px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0">
-              <p className="truncate text-[11px] font-medium text-zinc-200">
+              <p className="truncate text-[11px] font-medium text-editor-foreground">
                 {floor.backgroundImageName ?? EDITOR_UI_TEXT.referencePanel.currentImageFallback}
               </p>
-              <p className="truncate text-[10px] text-zinc-500">
+              <p className="truncate text-[10px] text-editor-subtle-foreground">
                 {floor.backgroundImageAlt ?? EDITOR_UI_TEXT.referencePanel.noAltFallback}
               </p>
             </div>
@@ -114,7 +114,7 @@ export function FloorReferencePanel() {
               type="button"
               variant="ghost"
               size="sm"
-              className="self-start text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100 sm:self-auto"
+              className="self-start text-editor-muted-foreground hover:bg-editor-panel hover:text-editor-foreground sm:self-auto"
               onClick={handleRemove}
             >
               <Trash2 className="h-3 w-3" />
@@ -124,9 +124,9 @@ export function FloorReferencePanel() {
         </div>
       ) : null}
 
-      <div className="space-y-3 rounded-2xl border border-zinc-800 bg-zinc-900/45 p-3">
+      <div className="space-y-3 rounded-2xl border border-editor-border bg-editor-panel/45 p-3">
         <div className="space-y-1.5">
-          <Label htmlFor="floor-reference-file" className="text-[11px] text-zinc-300">
+          <Label htmlFor="floor-reference-file" className="text-[11px] text-editor-muted-foreground">
             {EDITOR_UI_TEXT.referencePanel.fileFieldLabel}
           </Label>
           <input
@@ -147,7 +147,7 @@ export function FloorReferencePanel() {
               setError(null);
             }}
           />
-          <p className="text-[10px] text-zinc-500">
+          <p className="text-[10px] text-editor-subtle-foreground">
             {selectedFile
               ? `${EDITOR_UI_TEXT.referencePanel.readyToUploadPrefix} ${selectedFile.name}`
               : EDITOR_UI_TEXT.referencePanel.fileHint}
@@ -155,7 +155,7 @@ export function FloorReferencePanel() {
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="floor-reference-alt" className="text-[11px] text-zinc-300">
+          <Label htmlFor="floor-reference-alt" className="text-[11px] text-editor-muted-foreground">
             {EDITOR_UI_TEXT.referencePanel.altFieldLabel}
           </Label>
           <Input
@@ -174,7 +174,7 @@ export function FloorReferencePanel() {
         </div>
 
         {error ? (
-          <p className="rounded-xl border border-red-500/20 bg-red-500/10 px-3 py-2 text-[10px] text-red-300">
+          <p className="rounded-xl border border-destructive/20 bg-destructive/10 px-3 py-2 text-[10px] text-destructive">
             {error}
           </p>
         ) : null}
@@ -183,7 +183,7 @@ export function FloorReferencePanel() {
           type="button"
           variant="outline"
           size="sm"
-          className="h-auto w-full justify-start rounded-xl border-zinc-800 bg-zinc-950/50 px-3 py-3 text-left text-zinc-200 hover:bg-zinc-900"
+          className="h-auto w-full justify-start rounded-xl border-editor-border bg-editor-background/50 px-3 py-3 text-left text-editor-foreground hover:bg-editor-panel"
           disabled={!floor || !selectedFile || isUploading}
           onClick={handleUpload}
         >

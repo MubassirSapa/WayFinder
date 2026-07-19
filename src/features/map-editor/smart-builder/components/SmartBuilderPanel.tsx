@@ -26,14 +26,14 @@ export function SmartBuilderPanel() {
 
   return (
     <div className="p-4 space-y-4">
-      <p className="text-[11px] leading-relaxed text-zinc-500">
+      <p className="text-[11px] leading-relaxed text-editor-subtle-foreground">
         {EDITOR_UI_TEXT.smartBuilder.summary}
       </p>
 
-      <label className="flex items-start justify-between gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/70 px-4 py-3">
+      <label className="flex items-start justify-between gap-3 rounded-2xl border border-editor-border bg-editor-panel/70 px-4 py-3">
         <div className="space-y-1">
-          <p className="text-xs font-semibold text-zinc-100">{EDITOR_UI_TEXT.smartBuilder.enabledLabel}</p>
-          <p className="text-[10px] leading-relaxed text-zinc-500">{EDITOR_UI_TEXT.smartBuilder.enabledDescription}</p>
+          <p className="text-xs font-semibold text-editor-foreground">{EDITOR_UI_TEXT.smartBuilder.enabledLabel}</p>
+          <p className="text-[10px] leading-relaxed text-editor-subtle-foreground">{EDITOR_UI_TEXT.smartBuilder.enabledDescription}</p>
         </div>
         <Checkbox
           checked={isSmartBuilderEnabled}
@@ -41,16 +41,16 @@ export function SmartBuilderPanel() {
         />
       </label>
 
-      <div className="rounded-2xl border border-zinc-800 bg-zinc-900/45 p-3 space-y-3">
+      <div className="rounded-2xl border border-editor-border bg-editor-panel/45 p-3 space-y-3">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-500">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-editor-subtle-foreground">
             {EDITOR_UI_TEXT.smartBuilder.options}
           </p>
         </div>
-        <label className="flex items-start justify-between gap-3 rounded-xl border border-zinc-800/80 bg-zinc-950/40 px-3 py-3">
+        <label className="flex items-start justify-between gap-3 rounded-xl border border-editor-border/80 bg-editor-background/40 px-3 py-3">
           <div className="space-y-1">
-            <p className="text-xs font-medium text-zinc-100">{EDITOR_UI_TEXT.smartBuilder.autoNodes.label}</p>
-            <p className="text-[10px] text-zinc-500">
+            <p className="text-xs font-medium text-editor-foreground">{EDITOR_UI_TEXT.smartBuilder.autoNodes.label}</p>
+            <p className="text-[10px] text-editor-subtle-foreground">
               {EDITOR_UI_TEXT.smartBuilder.autoNodes.description}
             </p>
           </div>
@@ -61,10 +61,10 @@ export function SmartBuilderPanel() {
           />
         </label>
 
-        <label className="flex items-start justify-between gap-3 rounded-xl border border-zinc-800/80 bg-zinc-950/40 px-3 py-3">
+        <label className="flex items-start justify-between gap-3 rounded-xl border border-editor-border/80 bg-editor-background/40 px-3 py-3">
           <div className="space-y-1">
-            <p className="text-xs font-medium text-zinc-100">{EDITOR_UI_TEXT.smartBuilder.autoConnect.label}</p>
-            <p className="text-[10px] text-zinc-500">
+            <p className="text-xs font-medium text-editor-foreground">{EDITOR_UI_TEXT.smartBuilder.autoConnect.label}</p>
+            <p className="text-[10px] text-editor-subtle-foreground">
               {EDITOR_UI_TEXT.smartBuilder.autoConnect.description}
             </p>
           </div>
@@ -76,10 +76,10 @@ export function SmartBuilderPanel() {
         </label>
       </div>
 
-      <Separator className="bg-zinc-800" />
+      <Separator className="bg-editor-surface" />
 
       <div className="space-y-2">
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-500">
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-editor-subtle-foreground">
           {EDITOR_UI_TEXT.smartBuilder.actions}
         </p>
       </div>
@@ -88,7 +88,7 @@ export function SmartBuilderPanel() {
         <Button
           variant="outline"
           size="sm"
-          className="h-auto justify-start rounded-xl border-zinc-800 bg-zinc-950/50 px-3 py-3 text-left text-zinc-200 hover:bg-zinc-900"
+          className="h-auto justify-start rounded-xl border-editor-border bg-editor-background/50 px-3 py-3 text-left text-editor-foreground hover:bg-editor-panel"
           disabled={!floor || !isSmartBuilderEnabled}
           onClick={generateMissingNodes}
         >
@@ -98,7 +98,7 @@ export function SmartBuilderPanel() {
         <Button
           variant="outline"
           size="sm"
-          className="h-auto justify-start rounded-xl border-zinc-800 bg-zinc-950/50 px-3 py-3 text-left text-zinc-200 hover:bg-zinc-900"
+          className="h-auto justify-start rounded-xl border-editor-border bg-editor-background/50 px-3 py-3 text-left text-editor-foreground hover:bg-editor-panel"
           disabled={!floor || !isSmartBuilderEnabled}
           onClick={autoConnectExistingNodes}
         >
@@ -108,7 +108,7 @@ export function SmartBuilderPanel() {
         <Button
           variant="outline"
           size="sm"
-          className="h-auto justify-start rounded-xl border-zinc-800 bg-zinc-950/50 px-3 py-3 text-left text-zinc-200 hover:bg-zinc-900"
+          className="h-auto justify-start rounded-xl border-editor-border bg-editor-background/50 px-3 py-3 text-left text-editor-foreground hover:bg-editor-panel"
           disabled={!floor || hallwayDrawingPoints.length < 2 || !isSmartBuilderEnabled}
           onClick={finishHallwayPath}
         >
@@ -118,7 +118,7 @@ export function SmartBuilderPanel() {
         <Button
           variant="ghost"
           size="sm"
-          className="h-auto justify-start rounded-xl px-3 py-3 text-left text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200"
+          className="h-auto justify-start rounded-xl px-3 py-3 text-left text-editor-muted-foreground hover:bg-editor-panel hover:text-editor-foreground"
           disabled={hallwayDrawingPoints.length === 0}
           onClick={clearHallwayDrawingPoints}
         >
@@ -127,7 +127,7 @@ export function SmartBuilderPanel() {
         </Button>
       </div>
 
-      <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 px-3.5 py-3 text-[10px] leading-relaxed text-zinc-500">
+      <div className="rounded-2xl border border-editor-border bg-editor-background/70 px-3.5 py-3 text-[10px] leading-relaxed text-editor-subtle-foreground">
         {hallwayDrawingPoints.length > 0
           ? EDITOR_UI_TEXT.smartBuilder.queuedPoints(hallwayDrawingPoints.length)
           : EDITOR_UI_TEXT.smartBuilder.queuedPointsEmpty}

@@ -62,9 +62,9 @@ export function NodeInspector({ nodeId }: NodeInspectorProps) {
           value={node.label}
           onChange={(e) => handleFieldChange('label', e.target.value)}
           placeholder="e.g. Stairs A"
-          className="bg-zinc-800 border-zinc-700 text-zinc-100"
+          className="bg-editor-surface border-editor-border-strong text-editor-foreground"
         />
-        <p className="text-[10px] text-zinc-500">Hidden on the canvas until you hover or select this node.</p>
+        <p className="text-[10px] text-editor-subtle-foreground">Hidden on the canvas until you hover or select this node.</p>
       </div>
 
       <div className="space-y-1.5">
@@ -73,12 +73,12 @@ export function NodeInspector({ nodeId }: NodeInspectorProps) {
           value={node.role}
           onValueChange={(val) => handleFieldChange('role', val)}
         >
-          <SelectTrigger id="node-role" className="bg-zinc-800 border-zinc-700 text-zinc-100">
+          <SelectTrigger id="node-role" className="bg-editor-surface border-editor-border-strong text-editor-foreground">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="bg-zinc-850 border-zinc-800 text-zinc-100">
+          <SelectContent className="bg-editor-surface border-editor-border text-editor-foreground">
             {NODE_ROLE_OPTIONS.map((opt) => (
-              <SelectItem key={opt.value} value={opt.value} className="focus:bg-zinc-700">
+              <SelectItem key={opt.value} value={opt.value} className="focus:bg-editor-hover">
                 {opt.label}
               </SelectItem>
             ))}
@@ -92,15 +92,15 @@ export function NodeInspector({ nodeId }: NodeInspectorProps) {
           value={node.objectId || 'none'}
           onValueChange={(val) => handleFieldChange('objectId', val === 'none' ? null : val)}
         >
-          <SelectTrigger id="node-object" className="bg-zinc-800 border-zinc-700 text-zinc-100">
+          <SelectTrigger id="node-object" className="bg-editor-surface border-editor-border-strong text-editor-foreground">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="bg-zinc-850 border-zinc-800 text-zinc-100">
-            <SelectItem value="none" className="focus:bg-zinc-700">None / Unlinked</SelectItem>
+          <SelectContent className="bg-editor-surface border-editor-border text-editor-foreground">
+            <SelectItem value="none" className="focus:bg-editor-hover">None / Unlinked</SelectItem>
             {objectsList
               .filter(o => o.type !== 'wall') // Don't link nodes to walls
               .map((obj) => (
-                <SelectItem key={obj.id} value={obj.id} className="focus:bg-zinc-700">
+                <SelectItem key={obj.id} value={obj.id} className="focus:bg-editor-hover">
                   {obj.name} ({obj.type})
                 </SelectItem>
               ))}
@@ -116,7 +116,7 @@ export function NodeInspector({ nodeId }: NodeInspectorProps) {
             type="number"
             value={node.x}
             onChange={(e) => handleFieldChange('x', Number(e.target.value))}
-            className="bg-zinc-800 border-zinc-700 text-zinc-100"
+            className="bg-editor-surface border-editor-border-strong text-editor-foreground"
           />
         </div>
         <div className="space-y-1.5">
@@ -126,7 +126,7 @@ export function NodeInspector({ nodeId }: NodeInspectorProps) {
             type="number"
             value={node.y}
             onChange={(e) => handleFieldChange('y', Number(e.target.value))}
-            className="bg-zinc-800 border-zinc-700 text-zinc-100"
+            className="bg-editor-surface border-editor-border-strong text-editor-foreground"
           />
         </div>
       </div>
@@ -138,7 +138,7 @@ export function NodeInspector({ nodeId }: NodeInspectorProps) {
             checked={node.isAccessible}
             onCheckedChange={(checked) => handleFieldChange('isAccessible', !!checked)}
           />
-          <Label htmlFor="node-access" className="text-xs font-normal text-zinc-300">
+          <Label htmlFor="node-access" className="text-xs font-normal text-editor-muted-foreground">
             Accessible (Wheelchair friendly)
           </Label>
         </div>
@@ -150,7 +150,7 @@ export function NodeInspector({ nodeId }: NodeInspectorProps) {
         </div>
       ) : null}
 
-      <div className="pt-4 border-t border-zinc-800 flex gap-2">
+      <div className="pt-4 border-t border-editor-border flex gap-2">
         <Button
           variant="destructive"
           onClick={handleDelete}

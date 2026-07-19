@@ -90,26 +90,26 @@ export function FloorLinkPanel({ node }: FloorLinkPanelProps) {
   };
 
   return (
-    <div className="space-y-4 rounded-2xl border border-zinc-800 bg-zinc-950/60 p-4">
-      <div className="flex items-center gap-2 text-zinc-100">
-        <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-sky-500/20 bg-sky-500/10">
-          <Waypoints className="h-4 w-4 text-sky-400" />
+    <div className="space-y-4 rounded-2xl border border-editor-border bg-editor-background/60 p-4">
+      <div className="flex items-center gap-2 text-editor-foreground">
+        <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-info/20 bg-info/10">
+          <Waypoints className="h-4 w-4 text-info" />
         </div>
         <div>
           <h3 className="text-xs font-bold uppercase tracking-[0.22em]">
             {LINK_TYPE_LABELS[linkType]} Link
           </h3>
-          <p className="text-[10px] text-zinc-500 mt-0.5">
-            Connect to another floor · you&apos;re on <span className="text-zinc-300">{floor.name}</span>
+          <p className="text-[10px] text-editor-subtle-foreground mt-0.5">
+            Connect to another floor · you&apos;re on <span className="text-editor-muted-foreground">{floor.name}</span>
           </p>
         </div>
       </div>
 
       {linksForNode.length > 0 ? (
-        <div className="space-y-2 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-3">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-400">Already linked</p>
+        <div className="space-y-2 rounded-2xl border border-success/20 bg-success/5 p-3">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-success">Already linked</p>
           {linksForNode.map((link) => (
-            <div key={link.id} className="flex items-center justify-between gap-2 text-[11px] text-zinc-300">
+            <div key={link.id} className="flex items-center justify-between gap-2 text-[11px] text-editor-muted-foreground">
               <span>
                 To <span className="font-semibold">{link.fromNodeId === node.id ? link.toFloorName : link.fromFloorName}</span> ({link.distanceMeters}m)
               </span>
@@ -128,7 +128,7 @@ export function FloorLinkPanel({ node }: FloorLinkPanelProps) {
 
       <div className="space-y-3">
         <select
-          className="w-full rounded-xl border border-zinc-800 bg-zinc-950/50 px-3 py-2 text-[11px] text-zinc-200"
+          className="w-full rounded-xl border border-editor-border bg-editor-background/50 px-3 py-2 text-[11px] text-editor-foreground"
           disabled={isLoading || linkableNodes.length === 0}
           onChange={(event) => setTargetNodeId(event.target.value)}
           value={targetNodeId}

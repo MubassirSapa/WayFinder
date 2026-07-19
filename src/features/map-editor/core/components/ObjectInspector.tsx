@@ -66,7 +66,7 @@ export function ObjectInspector({ objectId }: ObjectInspectorProps) {
           type="text"
           value={object.name}
           onChange={(e) => handleFieldChange('name', e.target.value)}
-          className="bg-zinc-800 border-zinc-700 text-zinc-100"
+          className="bg-editor-surface border-editor-border-strong text-editor-foreground"
         />
       </div>
 
@@ -78,7 +78,7 @@ export function ObjectInspector({ objectId }: ObjectInspectorProps) {
           value={object.label}
           onChange={(e) => handleFieldChange('label', e.target.value)}
           placeholder="Optional text overlay"
-          className="bg-zinc-800 border-zinc-700 text-zinc-100"
+          className="bg-editor-surface border-editor-border-strong text-editor-foreground"
         />
       </div>
 
@@ -88,12 +88,12 @@ export function ObjectInspector({ objectId }: ObjectInspectorProps) {
           value={object.type}
           onValueChange={(val) => handleFieldChange('type', val as ToolboxObjectType)}
         >
-          <SelectTrigger id="obj-type" className="bg-zinc-800 border-zinc-700 text-zinc-100">
+          <SelectTrigger id="obj-type" className="bg-editor-surface border-editor-border-strong text-editor-foreground">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="bg-zinc-850 border-zinc-800 text-zinc-100">
+          <SelectContent className="bg-editor-surface border-editor-border text-editor-foreground">
             {Object.entries(OBJECT_CONFIGS).map(([key, config]) => (
-              <SelectItem key={key} value={key} className="focus:bg-zinc-700">
+              <SelectItem key={key} value={key} className="focus:bg-editor-hover">
                 {config.label}
               </SelectItem>
             ))}
@@ -109,7 +109,7 @@ export function ObjectInspector({ objectId }: ObjectInspectorProps) {
             type="number"
             value={object.x}
             onChange={(e) => handleFieldChange('x', Number(e.target.value))}
-            className="bg-zinc-800 border-zinc-700 text-zinc-100"
+            className="bg-editor-surface border-editor-border-strong text-editor-foreground"
           />
         </div>
         <div className="space-y-1.5">
@@ -119,7 +119,7 @@ export function ObjectInspector({ objectId }: ObjectInspectorProps) {
             type="number"
             value={object.y}
             onChange={(e) => handleFieldChange('y', Number(e.target.value))}
-            className="bg-zinc-800 border-zinc-700 text-zinc-100"
+            className="bg-editor-surface border-editor-border-strong text-editor-foreground"
           />
         </div>
       </div>
@@ -132,7 +132,7 @@ export function ObjectInspector({ objectId }: ObjectInspectorProps) {
             type="number"
             value={object.width}
             onChange={(e) => handleFieldChange('width', Number(e.target.value))}
-            className="bg-zinc-800 border-zinc-700 text-zinc-100"
+            className="bg-editor-surface border-editor-border-strong text-editor-foreground"
           />
         </div>
         <div className="space-y-1.5">
@@ -142,7 +142,7 @@ export function ObjectInspector({ objectId }: ObjectInspectorProps) {
             type="number"
             value={object.height}
             onChange={(e) => handleFieldChange('y', Number(e.target.value))}
-            className="bg-zinc-800 border-zinc-700 text-zinc-100"
+            className="bg-editor-surface border-editor-border-strong text-editor-foreground"
             style={{ display: 'none' }} // we'll use actual input below
           />
           <Input
@@ -150,7 +150,7 @@ export function ObjectInspector({ objectId }: ObjectInspectorProps) {
             type="number"
             value={object.height}
             onChange={(e) => handleFieldChange('height', Number(e.target.value))}
-            className="bg-zinc-800 border-zinc-700 text-zinc-100"
+            className="bg-editor-surface border-editor-border-strong text-editor-foreground"
           />
         </div>
       </div>
@@ -164,7 +164,7 @@ export function ObjectInspector({ objectId }: ObjectInspectorProps) {
           max="360"
           value={object.rotation}
           onChange={(e) => handleFieldChange('rotation', Number(e.target.value))}
-          className="bg-zinc-800 border-zinc-700 text-zinc-100"
+          className="bg-editor-surface border-editor-border-strong text-editor-foreground"
         />
       </div>
 
@@ -175,7 +175,7 @@ export function ObjectInspector({ objectId }: ObjectInspectorProps) {
             checked={object.isSearchable}
             onCheckedChange={(checked) => handleFieldChange('isSearchable', !!checked)}
           />
-          <Label htmlFor="obj-search" className="text-xs font-normal text-zinc-300">
+          <Label htmlFor="obj-search" className="text-xs font-normal text-editor-muted-foreground">
             Searchable (Index for guests)
           </Label>
         </div>
@@ -186,7 +186,7 @@ export function ObjectInspector({ objectId }: ObjectInspectorProps) {
             checked={object.isAccessible}
             onCheckedChange={(checked) => handleFieldChange('isAccessible', !!checked)}
           />
-          <Label htmlFor="obj-access" className="text-xs font-normal text-zinc-300">
+          <Label htmlFor="obj-access" className="text-xs font-normal text-editor-muted-foreground">
             Accessible Pathing (Wheelchair friendly)
           </Label>
         </div>
@@ -197,14 +197,14 @@ export function ObjectInspector({ objectId }: ObjectInspectorProps) {
           {linkedNode && isConnectorNodeRole(linkedNode.role) ? (
             <FloorLinkPanel node={linkedNode} />
           ) : (
-            <p className="rounded-2xl border border-zinc-800 bg-zinc-900/45 p-3 text-[11px] leading-relaxed text-zinc-500">
+            <p className="rounded-2xl border border-editor-border bg-editor-panel/45 p-3 text-[11px] leading-relaxed text-editor-subtle-foreground">
               This {object.type} has no navigation node yet — generate one (Smart Builder → Generate Nodes, or switch to Node mode) before linking it to another floor.
             </p>
           )}
         </div>
       ) : null}
 
-      <div className="pt-4 border-t border-zinc-800 flex gap-2">
+      <div className="pt-4 border-t border-editor-border flex gap-2">
         <Button
           variant="destructive"
           onClick={handleDelete}
