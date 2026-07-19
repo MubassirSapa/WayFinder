@@ -27,9 +27,9 @@ export function MapEditorShell({
 
   if (isLoading) {
     return (
-      <div className="flex flex-col h-screen w-screen items-center justify-center bg-zinc-950 text-zinc-400 gap-4">
-        <Loader2 className="h-8 w-8 text-blue-500 animate-spin" />
-        <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 animate-pulse">
+      <div className="flex flex-col h-screen w-screen items-center justify-center bg-editor-background text-editor-muted-foreground gap-4">
+        <Loader2 className="h-8 w-8 text-primary animate-spin" />
+        <p className="text-xs font-semibold uppercase tracking-wider text-editor-subtle-foreground animate-pulse">
           {EDITOR_UI_TEXT.loading.editor}
         </p>
       </div>
@@ -38,13 +38,13 @@ export function MapEditorShell({
 
   if (error) {
     return (
-      <div className="flex flex-col h-screen w-screen items-center justify-center bg-zinc-950 text-zinc-400 gap-4 p-8 text-center">
-        <AlertCircle className="h-12 w-12 text-red-500" />
-        <h2 className="text-base font-bold text-zinc-100">{EDITOR_UI_TEXT.errors.title}</h2>
-        <p className="text-xs text-zinc-500 max-w-sm leading-relaxed">{error}</p>
+      <div className="flex flex-col h-screen w-screen items-center justify-center bg-editor-background text-editor-muted-foreground gap-4 p-8 text-center">
+        <AlertCircle className="h-12 w-12 text-destructive" />
+        <h2 className="text-base font-bold text-editor-foreground">{EDITOR_UI_TEXT.errors.title}</h2>
+        <p className="text-xs text-editor-subtle-foreground max-w-sm leading-relaxed">{error}</p>
         <button
           onClick={() => window.location.reload()}
-          className="mt-4 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-100 text-xs font-semibold rounded-lg border border-zinc-700 transition-colors"
+          className="mt-4 px-4 py-2 bg-editor-surface hover:bg-editor-hover text-editor-foreground text-xs font-semibold rounded-lg border border-editor-border-strong transition-colors"
         >
           {EDITOR_UI_TEXT.errors.reload}
         </button>
@@ -56,7 +56,7 @@ export function MapEditorShell({
     <>
       <EditorDesktopOnlyNotice />
       <TooltipProvider>
-        <div className="hidden h-screen w-screen flex-col overflow-hidden bg-zinc-950 font-sans text-zinc-100 lg:flex">
+        <div className="hidden h-screen w-screen flex-col overflow-hidden bg-editor-background font-sans text-editor-foreground lg:flex">
           {/* Top toolbar */}
           <EditorToolbar />
 

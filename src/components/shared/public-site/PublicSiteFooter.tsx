@@ -32,7 +32,7 @@ export function PublicSiteFooter() {
 
   return (
     <footer className="relative overflow-hidden border-t border-border bg-background">
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[length:56px_56px] opacity-15 [mask-image:radial-gradient(80%_120%_at_50%_0%,#000,transparent_72%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[length:56px_56px] opacity-15 [mask-image:radial-gradient(80%_120%_at_50%_0%,var(--mask-opaque),transparent_72%)]" />
 
       <div className="relative mx-auto grid max-w-6xl gap-9 px-5 py-10 sm:px-6 md:grid-cols-[1.2fr_1.8fr] lg:py-12">
         <div>

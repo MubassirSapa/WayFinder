@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { WayfinderBrand } from "@/components/shared/brand/WayfinderBrand";
+import { ModeToggle } from "@/components/shared/theme/ModeToggle";
 
 import {
   formatFloorLabel,
@@ -26,12 +27,13 @@ export function MapViewerPageHeader({
           </h1>
         </div>
 
-        <div className="hidden items-center gap-2 md:flex">
+        <div className="flex items-center gap-2">
           {activeFloor ? (
             <Badge variant="outline" className="border-border bg-card/70 text-muted-foreground">
               {formatFloorLabel(activeFloor)}
             </Badge>
           ) : null}
+          <ModeToggle />
         </div>
       </div>
     </header>

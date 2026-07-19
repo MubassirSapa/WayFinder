@@ -2,6 +2,7 @@ import Link from "next/link";
 import { LogIn } from "lucide-react";
 
 import { WayfinderBrand } from "@/components/shared/brand/WayfinderBrand";
+import { ModeToggle } from "@/components/shared/theme/ModeToggle";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -40,6 +41,7 @@ export function PublicSiteHeader({ activePage }: PublicSiteHeaderProps) {
         </div>
 
         <div className="flex items-center gap-2">
+          <ModeToggle />
           <Link
             className={cn(buttonVariants({ variant: "ghost", size: "lg" }), "hidden sm:inline-flex")}
             href="/signin"

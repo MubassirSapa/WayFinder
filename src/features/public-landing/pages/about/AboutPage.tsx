@@ -100,7 +100,7 @@ export function AboutPage() {
 
       <main>
         <section className="relative overflow-hidden border-b border-border">
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[length:60px_60px] opacity-10 [mask-image:radial-gradient(80%_80%_at_50%_10%,#000,transparent_72%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[length:60px_60px] opacity-10 [mask-image:radial-gradient(80%_80%_at_50%_10%,var(--mask-opaque),transparent_72%)]" />
           <div className="relative mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:px-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-center lg:py-20">
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">

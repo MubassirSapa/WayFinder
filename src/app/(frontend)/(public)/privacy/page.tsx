@@ -49,7 +49,7 @@ export default function PrivacyPage() {
 
       <main>
         <section className="relative overflow-hidden border-b border-border">
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[60px_60px] opacity-10 mask-[radial-gradient(80%_80%_at_50%_10%,#000,transparent_72%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[60px_60px] opacity-10 mask-[radial-gradient(80%_80%_at_50%_10%,var(--mask-opaque),transparent_72%)]" />
           <div className="relative mx-auto max-w-6xl px-5 py-14 sm:px-6 lg:py-20">
             <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
               <ShieldCheck className="size-3.5 text-primary" aria-hidden />

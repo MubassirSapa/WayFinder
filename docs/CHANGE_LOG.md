@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Added
+- Added a light/dark theme toggle (`next-themes`), with a `ModeToggle` control in the public site header, map viewer header, and editor toolbar. Introduced proper semantic `:root`/`.dark` color tokens (editor surfaces, 404 page, info/success/warning) instead of the app being force-locked to a hardcoded `dark` class.
 - Added single-floor pathfinding: the public map viewer can now compute and render a shortest-path route between a "Start here" origin (or a default entrance) and a searched destination, with an accessible-only routing toggle. New `src/features/navigation/` feature slice (Dijkstra over the existing `MapNode`/`PathEdge` graph); see `docs/technical/NAVIGATION.md`.
 - Added multi-floor route following in the viewer: the active floor is now client state (instant switching, no page reload), and a "Continue via stairs/elevator to Floor N" indicator appears mid-route, advancing the floor and reframing the camera on that floor's portion of the route.
 - Redesigned the "Get directions" search into From/To fields that search every floor in the building (not just the active one), each result tagged with its floor name, plus a clickable floor breadcrumb showing the full route path for multi-floor routes.
