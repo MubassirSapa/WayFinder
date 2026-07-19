@@ -36,6 +36,12 @@ export function getViewerObjectPalette(type: ViewerMapObject["type"]) {
         label: "var(--map-viewer-label)",
         stroke: "var(--map-viewer-elevator-stroke)",
       };
+    case "escalator":
+      return {
+        fill: "var(--map-viewer-escalator-fill)",
+        label: "var(--map-viewer-label)",
+        stroke: "var(--map-viewer-escalator-stroke)",
+      };
     case "washroom":
       return {
         fill: "var(--map-viewer-washroom-fill)",
@@ -104,6 +110,11 @@ export function getViewerNodePalette(role: ViewerMapNode["role"]) {
         fill: "var(--map-viewer-marker-elevator)",
         ring: "var(--map-viewer-marker-elevator-ring)",
       };
+    case "escalator_entry":
+      return {
+        fill: "var(--map-viewer-marker-escalator)",
+        ring: "var(--map-viewer-marker-escalator-ring)",
+      };
     case "shelf_access":
       return {
         fill: "var(--map-viewer-marker-shelf)",
@@ -127,6 +138,10 @@ export function getViewerEdgePalette(type: ViewerPathEdge["type"]) {
     case "elevator":
       return {
         stroke: "var(--map-viewer-path-elevator)",
+      };
+    case "escalator":
+      return {
+        stroke: "var(--map-viewer-path-escalator)",
       };
     case "ramp":
       return {

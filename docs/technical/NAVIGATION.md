@@ -11,7 +11,7 @@
 - With `accessibleOnly: true`, nodes and edges with `isAccessible: false` are dropped entirely rather than just deprioritized.
 - Edges referencing a node id not present in the input `nodes` array are skipped (mirrors the dangling-reference guard `ViewerEdges` already has when rendering).
 
-Crucially, the graph is built once from **all floors' nodes/edges merged together**, not per floor. A cross-floor `PathEdge` (`type: "stairs" | "elevator"`) is just another edge in this graph — nothing about `buildRouteGraph` or the search below is floor-aware. See [`FLOOR_LINKS_EDITOR.md`](FLOOR_LINKS_EDITOR.md) for how admins create these cross-floor edges in the map editor.
+Crucially, the graph is built once from **all floors' nodes/edges merged together**, not per floor. A cross-floor `PathEdge` (`type: "stairs" | "elevator" | "escalator"`) is just another edge in this graph — nothing about `buildRouteGraph` or the search below is floor-aware or cares how many connector types exist. See [`FLOOR_LINKS_EDITOR.md`](FLOOR_LINKS_EDITOR.md) for how admins create these cross-floor edges in the map editor.
 
 ## Why Dijkstra, not A*
 

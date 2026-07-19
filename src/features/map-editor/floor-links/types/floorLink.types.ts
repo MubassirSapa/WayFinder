@@ -4,7 +4,7 @@ export interface LinkableFloorLinkNode {
   floorId: string;
   floorName: string;
   floorLevel: number;
-  role: "stairs_entry" | "elevator_entry";
+  role: "stairs_entry" | "elevator_entry" | "escalator_entry";
   label: string;
   x: number;
   y: number;
@@ -19,6 +19,6 @@ export interface CrossFloorLink {
   toNodeId: string;
   toNodeLabel: string;
   toFloorName: string;
-  type: "stairs" | "elevator";
+  type: "stairs" | "elevator" | "escalator";
   distanceMeters: number;
 }

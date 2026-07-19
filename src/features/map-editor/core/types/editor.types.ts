@@ -7,6 +7,7 @@ export type ToolboxObjectType =
   | 'hallway'
   | 'stairs'
   | 'elevator'
+  | 'escalator'
   | 'washroom'
   | 'exit'
   | 'poi'

@@ -37,6 +37,10 @@ export const SMART_OBJECT_NODE_RULES: SmartObjectNodeRuleMap = {
     enabled: true,
     nodeRole: "elevator_entry",
   },
+  escalator: {
+    enabled: true,
+    nodeRole: "escalator_entry",
+  },
   shelf: {
     enabled: true,
     nodeRole: "shelf_access",

@@ -295,7 +295,7 @@ function ViewerEdges({
           <line
             key={edge.id}
             stroke={palette.stroke}
-            strokeDasharray={edge.type === "stairs" ? "6 5" : undefined}
+            strokeDasharray={edge.type === "stairs" ? "6 5" : edge.type === "escalator" ? "2 4" : undefined}
             strokeLinecap="round"
             strokeOpacity={0.72}
             strokeWidth={edge.type === "walkway" ? 3 : 3.6}

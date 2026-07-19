@@ -16,6 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { isConnectorNodeRole } from '@/features/map-editor/floor-links/lib/crossFloorConnect';
+import { FloorLinkPanel } from '@/features/map-editor/floor-links/components/FloorLinkPanel';
 
 interface NodeInspectorProps {
   nodeId: string;
@@ -139,6 +141,12 @@ export function NodeInspector({ nodeId }: NodeInspectorProps) {
           </Label>
         </div>
       </div>
+
+      {isConnectorNodeRole(node.role) ? (
+        <div className="pt-2">
+          <FloorLinkPanel node={node} />
+        </div>
+      ) : null}
 
       <div className="pt-4 border-t border-zinc-800 flex gap-2">
         <Button

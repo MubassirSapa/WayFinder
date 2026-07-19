@@ -17,17 +17,24 @@ import {
 } from '@/components/ui/select';
 import { ToolboxObjectType } from '../types/editor.types';
 import { EditorMapObject } from '../types/map.types';
+import { isConnectorNodeRole } from '@/features/map-editor/floor-links/lib/crossFloorConnect';
+import { FloorLinkPanel } from '@/features/map-editor/floor-links/components/FloorLinkPanel';
+
+const CONNECTOR_OBJECT_TYPES: ToolboxObjectType[] = ['stairs', 'elevator', 'escalator'];
 
 interface ObjectInspectorProps {
   objectId: string;
 }
 
 export function ObjectInspector({ objectId }: ObjectInspectorProps) {
-  const { objects, updateObject, removeObject } = useEditorStore();
+  const { objects, nodes, updateObject, removeObject } = useEditorStore();
   const [isDeleting, setIsDeleting] = useState(false);
   const object = objects[objectId];
 
   if (!object) return null;
+
+  const linkedNode = Object.values(nodes).find((candidate) => candidate.objectId === object.id) ?? null;
+  const isConnectorObject = CONNECTOR_OBJECT_TYPES.includes(object.type);
 
   const handleFieldChange = (field: string, value: unknown) => {
     updateObject(objectId, { [field]: value } as Partial<EditorMapObject>);
@@ -184,6 +191,18 @@ export function ObjectInspector({ objectId }: ObjectInspectorProps) {
           </Label>
         </div>
       </div>
+
+      {isConnectorObject ? (
+        <div className="pt-2">
+          {linkedNode && isConnectorNodeRole(linkedNode.role) ? (
+            <FloorLinkPanel node={linkedNode} />
+          ) : (
+            <p className="rounded-2xl border border-zinc-800 bg-zinc-900/45 p-3 text-[11px] leading-relaxed text-zinc-500">
+              This {object.type} has no navigation node yet — generate one (Smart Builder → Generate Nodes, or switch to Node mode) before linking it to another floor.
+            </p>
+          )}
+        </div>
+      ) : null}
 
       <div className="pt-4 border-t border-zinc-800 flex gap-2">
         <Button

@@ -4,6 +4,7 @@ import config from "@payload-config";
 import type { Floor, MapNode as PayloadMapNode, PathEdge as PayloadPathEdge } from "@/payload-types";
 import { getPayload } from "payload";
 
+import { CONNECTOR_NODE_ROLES, type ConnectorNodeRole, type CrossFloorEdgeType } from "../lib/crossFloorConnect";
 import type { CrossFloorLink, LinkableFloorLinkNode } from "../types/floorLink.types";
 
 async function getPayloadClient() {
@@ -24,7 +25,7 @@ export async function listLinkableNodes(
     where: {
       and: [
         { buildingId: { equals: buildingId } },
-        { role: { in: ["stairs_entry", "elevator_entry"] } },
+        { role: { in: CONNECTOR_NODE_ROLES } },
         { floor: { not_equals: Number(excludeFloorId) } },
       ],
     },
@@ -42,7 +43,7 @@ export async function listLinkableNodes(
       id: String(node.id),
       isAccessible: node.isAccessible ?? true,
       label: node.label ?? "",
-      role: node.role as "stairs_entry" | "elevator_entry",
+      role: node.role as ConnectorNodeRole,
       x: node.x,
       y: node.y,
     };
@@ -62,7 +63,7 @@ export async function listCrossFloorLinks(buildingId: string): Promise<CrossFloo
     where: {
       and: [
         { buildingId: { equals: buildingId } },
-        { type: { in: ["stairs", "elevator"] } },
+        { type: { in: ["stairs", "elevator", "escalator"] } },
       ],
     },
   });
@@ -83,7 +84,7 @@ export async function listCrossFloorLinks(buildingId: string): Promise<CrossFloo
       toFloorName: toFloor.name,
       toNodeId: String(toNode.id),
       toNodeLabel: toNode.label || toNode.role,
-      type: edge.type as "stairs" | "elevator",
+      type: edge.type as CrossFloorEdgeType,
     };
   });
 }

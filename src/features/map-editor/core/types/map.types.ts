@@ -26,6 +26,7 @@ export interface EditorMapObject {
     | 'hallway'
     | 'stairs'
     | 'elevator'
+    | 'escalator'
     | 'washroom'
     | 'exit'
     | 'poi'
@@ -56,7 +57,7 @@ export interface EditorMapNode {
   floorId: string;
   buildingId: string;
   objectId: string | null;
-  role: 'entrance' | 'exit' | 'hallway_point' | 'stairs_entry' | 'elevator_entry' | 'shelf_access';
+  role: 'entrance' | 'exit' | 'hallway_point' | 'stairs_entry' | 'elevator_entry' | 'escalator_entry' | 'shelf_access';
   label: string;
   x: number;
   y: number;
@@ -76,7 +77,7 @@ export interface EditorPathEdge {
   buildingId: string;
   fromNodeId: string;
   toNodeId: string;
-  type: 'walkway' | 'stairs' | 'elevator' | 'ramp';
+  type: 'walkway' | 'stairs' | 'elevator' | 'escalator' | 'ramp';
   distanceMeters: number;
   bidirectional: boolean;
   isAccessible: boolean;

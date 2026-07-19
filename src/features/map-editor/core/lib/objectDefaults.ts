@@ -5,6 +5,7 @@ import {
   Route,
   ArrowUpRight,
   ArrowUpDown,
+  TrendingUp,
   Bath,
   LogOut,
   MapPin,
@@ -79,6 +80,15 @@ export const OBJECT_CONFIGS: Record<ToolboxObjectType, ObjectConfig> = {
     fill: 'rgba(168, 85, 247, 0.2)',
     stroke: '#a855f7',
     icon: ArrowUpDown,
+  },
+  escalator: {
+    label: 'Escalator',
+    defaultWidth: 100,
+    defaultHeight: 60,
+    color: '#0ea5e9', // sky-500
+    fill: 'rgba(14, 165, 233, 0.2)',
+    stroke: '#0ea5e9',
+    icon: TrendingUp,
   },
   washroom: {
     label: 'Washroom',
@@ -159,6 +169,7 @@ export const NODE_ROLE_OPTIONS = [
   { label: 'Hallway Point', value: 'hallway_point' },
   { label: 'Stairs Entry', value: 'stairs_entry' },
   { label: 'Elevator Entry', value: 'elevator_entry' },
+  { label: 'Escalator Entry', value: 'escalator_entry' },
   { label: 'Shelf Access', value: 'shelf_access' },
 ] as const;
 
@@ -166,5 +177,6 @@ export const EDGE_TYPE_OPTIONS = [
   { label: 'Walkway', value: 'walkway' },
   { label: 'Stairs', value: 'stairs' },
   { label: 'Elevator', value: 'elevator' },
+  { label: 'Escalator', value: 'escalator' },
   { label: 'Ramp', value: 'ramp' },
 ] as const;

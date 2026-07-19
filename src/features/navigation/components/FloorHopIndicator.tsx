@@ -5,13 +5,13 @@ import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface FloorHopIndicatorProps {
-  edgeType?: "stairs" | "elevator" | "walkway" | "ramp";
+  edgeType?: "stairs" | "elevator" | "escalator" | "walkway" | "ramp";
   floorName: string;
   onAdvance: () => void;
 }
 
 export function FloorHopIndicator({ edgeType, floorName, onAdvance }: FloorHopIndicatorProps) {
-  const via = edgeType === "elevator" ? "elevator" : "stairs";
+  const via = edgeType === "elevator" || edgeType === "escalator" ? edgeType : "stairs";
 
   return (
     <div className="pointer-events-none absolute inset-x-0 bottom-4 z-10 flex justify-center px-4">

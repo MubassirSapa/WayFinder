@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest'
-import { buildCrossFloorEdge, CROSS_FLOOR_DEFAULT_DISTANCE_METERS } from '../../../lib/crossFloorConnect'
+import {
+  buildCrossFloorEdge,
+  CONNECTOR_NODE_ROLES,
+  CROSS_FLOOR_DEFAULT_DISTANCE_METERS,
+  CROSS_FLOOR_TYPE_BY_NODE_ROLE,
+  isConnectorNodeRole,
+} from '../../../lib/crossFloorConnect'
 import type { EditorMapNode, EditorPathEdge } from '@/features/map-editor/core/types/map.types'
 
 function makeNode(overrides: Partial<EditorMapNode> & { id: string; floorId: string }): EditorMapNode {
@@ -60,5 +66,37 @@ describe('buildCrossFloorEdge', () => {
     const toNode = makeNode({ id: 'n2', floorId: 'f2' })
     const edge = buildCrossFloorEdge(fromNode, toNode, [], 'elevator')
     expect(edge?.isAccessible).toBe(false)
+  })
+
+  it('builds a valid escalator edge with its own default distance', () => {
+    const fromNode = makeNode({ id: 'n1', floorId: 'f1', role: 'escalator_entry' })
+    const toNode = makeNode({ id: 'n2', floorId: 'f2', role: 'escalator_entry' })
+    const edge = buildCrossFloorEdge(fromNode, toNode, [], 'escalator')
+
+    expect(edge).toMatchObject({
+      distanceMeters: CROSS_FLOOR_DEFAULT_DISTANCE_METERS.escalator,
+      type: 'escalator',
+    })
+  })
+})
+
+describe('isConnectorNodeRole', () => {
+  it('accepts stairs, elevator, and escalator entry roles', () => {
+    for (const role of CONNECTOR_NODE_ROLES) {
+      expect(isConnectorNodeRole(role)).toBe(true)
+    }
+  })
+
+  it('rejects non-connector roles', () => {
+    expect(isConnectorNodeRole('entrance')).toBe(false)
+    expect(isConnectorNodeRole('hallway_point')).toBe(false)
+  })
+})
+
+describe('CROSS_FLOOR_TYPE_BY_NODE_ROLE', () => {
+  it('maps every connector role to its matching cross-floor edge type', () => {
+    expect(CROSS_FLOOR_TYPE_BY_NODE_ROLE.stairs_entry).toBe('stairs')
+    expect(CROSS_FLOOR_TYPE_BY_NODE_ROLE.elevator_entry).toBe('elevator')
+    expect(CROSS_FLOOR_TYPE_BY_NODE_ROLE.escalator_entry).toBe('escalator')
   })
 })

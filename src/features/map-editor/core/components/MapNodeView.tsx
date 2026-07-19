@@ -24,6 +24,7 @@ export function MapNodeView({ node }: MapNodeViewProps) {
   if (node.role === 'exit') fillColor = '#ef4444'; // red-500
   if (node.role === 'stairs_entry') fillColor = '#f97316'; // orange-500
   if (node.role === 'elevator_entry') fillColor = '#a855f7'; // purple-500
+  if (node.role === 'escalator_entry') fillColor = '#0ea5e9'; // sky-500
   if (node.role === 'shelf_access') fillColor = '#14b8a6'; // teal-500
 
   return (

@@ -39,6 +39,7 @@ export const MapObjects: CollectionConfig = {
         { label: "Hallway", value: "hallway" },
         { label: "Stairs", value: "stairs" },
         { label: "Elevator", value: "elevator" },
+        { label: "Escalator", value: "escalator" },
         { label: "Washroom", value: "washroom" },
         { label: "Exit", value: "exit" },
         { label: "POI", value: "poi" },
