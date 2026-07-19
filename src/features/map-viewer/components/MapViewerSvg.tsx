@@ -221,6 +221,13 @@ function ViewerObjects({
               event.stopPropagation();
               onSelect(object);
             }}
+            // Without this, a press on an object also reaches the SVG's own
+            // pointerdown handler and starts a pan-drag gesture. Any tiny
+            // amount of pointer movement between down and up (extremely
+            // common on a trackpad) then crosses the drag threshold and the
+            // click gets silently suppressed as "that was a pan, not a
+            // click" — objects became effectively unclickable.
+            onPointerDown={(event) => event.stopPropagation()}
             transform={`translate(${object.x}, ${object.y}) rotate(${object.rotation}, ${centerX}, ${centerY})`}
           >
             <rect

@@ -20,6 +20,7 @@
 - Fixed a public map viewer bug where searching "Get directions" for a room with no navigation node yet would silently do nothing when clicked — no error, no feedback, the field just stayed empty. Such rooms no longer appear as search results at all, since picking one could never have worked.
 - Fixed the map viewer's zoom (scroll/pinch) also triggering the browser's own page zoom at the same time. React attaches wheel listeners as passive by default, which was silently blocking `preventDefault()`; the zoom handler is now a real non-passive native listener, so only the map zooms.
 - Fixed truncated room names in the "Get directions" From/To suggestion dropdown — the floor name was squeezed onto the same line as the room name, cutting long names short. Floor name now sits on its own line below.
+- Fixed objects on the public map being effectively unclickable on trackpads: pressing a room also reached the map's own pan-drag handler (nothing stopped that pointerdown from bubbling up from the object to the SVG), so any tiny amount of pointer movement between press and release — near-unavoidable on a trackpad — crossed the drag threshold and silently suppressed the click as "that was a pan, not a click."
 
 ### Changed (public map viewer)
 - Node labels on the public map are now hidden by default and shown on hover, same reasoning and fix as the editor canvas.
@@ -30,6 +31,7 @@
 - Fixed both the editor and the public viewer so the page itself no longer scrolls at the desktop breakpoint — only the sidebar (and, in the editor, the object toolbox / inspector) scrolls internally, while the map area stays fixed in place. The viewer previously had no cap on total page height, so on a tall enough sidebar the whole page — map included — would scroll. Mobile/tablet keep the existing stacked, page-scrolling layout, since a phone screen doesn't have room for both a fixed map and an independently scrolling sidebar.
 - The public map viewer's header now shows the Wayfinder brand mark (icon + wordmark, linking home), reusing the same `WayfinderBrand` component the marketing site's header already uses, instead of no branding at all next to the building/floor name.
 - The route line on the map now has a "marching ants" flow animation toward the destination and an arrowhead at the destination end, instead of a static dashed line, so the direction of travel is obvious at a glance.
+- Clicking an object on the map (or in the Places list) now sets it as the route origin automatically when no starting point has been chosen yet, instead of requiring an explicit "Start here" tap for the common first click. Once an origin exists, further clicks just select/inspect as before — you can still change it explicitly.
 
 ## 2026-06-11
 

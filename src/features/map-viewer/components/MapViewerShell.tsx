@@ -71,6 +71,8 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
     segments,
   } = useRoute(data);
   const setActiveSegmentIndex = useNavigationStore((state) => state.setActiveSegmentIndex);
+  const originNodeId = useNavigationStore((state) => state.originNodeId);
+  const setOrigin = useNavigationStore((state) => state.setOrigin);
   const routePointsForActiveFloor = activeSegment?.floorId === activeFloorId ? routePoints : undefined;
   const nextSegment = segments[activeSegmentIndex + 1] ?? null;
   const nextFloor = nextSegment ? floors.find((floor) => floor.id === nextSegment.floorId) ?? null : null;
@@ -124,6 +126,17 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
       x: MAP_VIEWER_FLOOR_CONTENT_PADDING + object.x + object.width / 2,
       y: MAP_VIEWER_FLOOR_CONTENT_PADDING + object.y + object.height / 2,
     });
+
+    // No starting point chosen yet — treat the first thing you click (on
+    // the map or in the Places list) as "that's where I am", instead of
+    // requiring an explicit "Start here" tap for the common first click.
+    // Once an origin exists, further clicks just select/inspect as normal.
+    if (!originNodeId) {
+      const nodeId = findNodeIdForObject(object.id, allNodes);
+      if (nodeId) {
+        setOrigin(nodeId);
+      }
+    }
   };
 
   const handleBackgroundClick = () => {
