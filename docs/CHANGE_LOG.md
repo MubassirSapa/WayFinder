@@ -28,6 +28,8 @@
 - Clicking an object directly on the map now shows an inline "Start here" / "Route here" bar over the canvas itself, so setting an origin or destination no longer requires scrolling to the sidebar's Selection card.
 - The map editor canvas now supports click-and-drag panning, replacing scroll-to-pan (native browser scrollbars) — the canvas area no longer scrolls at all; empty-canvas drags pan the floor plan instead, and existing object/node dragging is unaffected since it already claims the pointer event first.
 - Fixed both the editor and the public viewer so the page itself no longer scrolls at the desktop breakpoint — only the sidebar (and, in the editor, the object toolbox / inspector) scrolls internally, while the map area stays fixed in place. The viewer previously had no cap on total page height, so on a tall enough sidebar the whole page — map included — would scroll. Mobile/tablet keep the existing stacked, page-scrolling layout, since a phone screen doesn't have room for both a fixed map and an independently scrolling sidebar.
+- The public map viewer's header now shows the Wayfinder brand mark (icon + wordmark, linking home), reusing the same `WayfinderBrand` component the marketing site's header already uses, instead of no branding at all next to the building/floor name.
+- The route line on the map now has a "marching ants" flow animation toward the destination and an arrowhead at the destination end, instead of a static dashed line, so the direction of travel is obvious at a glance.
 
 ## 2026-06-11
 

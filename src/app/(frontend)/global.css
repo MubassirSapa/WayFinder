@@ -195,3 +195,10 @@
       60px 60px;
   }
 }
+
+/* "Marching ants" flow along a route polyline, toward the destination. */
+@keyframes wf-route-flow {
+  to {
+    stroke-dashoffset: -32;
+  }
+}

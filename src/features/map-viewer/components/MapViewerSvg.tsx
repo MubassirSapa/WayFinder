@@ -161,8 +161,27 @@ function RoutePolyline({ points }: { points: { x: number; y: number }[] }) {
 
   return (
     <g>
+      <defs>
+        <marker
+          id="route-direction-arrow"
+          markerHeight="10"
+          markerUnits="userSpaceOnUse"
+          markerWidth="10"
+          orient="auto"
+          refX="5"
+          refY="5"
+          viewBox="0 0 10 10"
+        >
+          <path d="M1,1 L9,5 L1,9 L3.4,5 Z" fill="var(--map-viewer-route-line)" />
+        </marker>
+      </defs>
+      {/* Dashes "flow" toward the destination (marching-ants effect) and an
+          arrowhead points the final direction of travel, so which way to
+          walk is obvious at a glance instead of just a static line. */}
       <polyline
+        className="animate-[wf-route-flow_1.2s_linear_infinite]"
         fill="none"
+        markerEnd="url(#route-direction-arrow)"
         points={points.map((point) => `${point.x},${point.y}`).join(" ")}
         stroke="var(--map-viewer-route-line)"
         strokeDasharray="10 6"
