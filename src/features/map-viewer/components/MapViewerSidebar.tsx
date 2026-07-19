@@ -40,12 +40,12 @@ export function MapViewerSidebar({
   onSearchChange,
 }: MapViewerSidebarProps) {
   return (
-    <aside className="order-2 overflow-hidden border-x-0 border-b-0 border-t border-border bg-card/80 shadow-sm backdrop-blur-md sm:rounded-3xl sm:border lg:order-none lg:rounded-4xl">
-      <div className="border-b border-border px-5 py-4">
+    <aside className="order-2 overflow-hidden border-x-0 border-b-0 border-t border-border bg-card/80 shadow-sm backdrop-blur-md sm:rounded-3xl sm:border lg:order-none lg:flex lg:h-full lg:min-h-0 lg:flex-col lg:rounded-4xl">
+      <div className="shrink-0 border-b border-border px-5 py-4">
         <h2 className="text-base font-semibold">Browse the map</h2>
       </div>
 
-      <div className="space-y-5 p-5">
+      <div className="space-y-5 p-5 lg:min-h-0 lg:flex-1 lg:overflow-y-auto">
         {routePanelSlot ? (
           <>
             {routePanelSlot}

@@ -26,6 +26,8 @@
 - Floor and Places are now collapsible accordion sections in the sidebar (closed by default), matching the pattern used for the map editor's left panel, instead of two lists that were always fully expanded.
 - The floor-crossing route breadcrumb was redesigned from a row of small pills into a numbered vertical stepper, with an icon showing how you get from one floor to the next (stairs/elevator/escalator) and a clear "You're here" marker on the active step.
 - Clicking an object directly on the map now shows an inline "Start here" / "Route here" bar over the canvas itself, so setting an origin or destination no longer requires scrolling to the sidebar's Selection card.
+- The map editor canvas now supports click-and-drag panning, replacing scroll-to-pan (native browser scrollbars) — the canvas area no longer scrolls at all; empty-canvas drags pan the floor plan instead, and existing object/node dragging is unaffected since it already claims the pointer event first.
+- Fixed both the editor and the public viewer so the page itself no longer scrolls at the desktop breakpoint — only the sidebar (and, in the editor, the object toolbox / inspector) scrolls internally, while the map area stays fixed in place. The viewer previously had no cap on total page height, so on a tall enough sidebar the whole page — map included — would scroll. Mobile/tablet keep the existing stacked, page-scrolling layout, since a phone screen doesn't have room for both a fixed map and an independently scrolling sidebar.
 
 ## 2026-06-11
 

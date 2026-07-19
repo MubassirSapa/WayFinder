@@ -144,12 +144,17 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
 
   return (
     <section
-      className={["min-h-screen bg-background text-foreground", MAP_VIEWER_THEME_CLASSNAMES].join(" ")}
+      className={["min-h-screen bg-background text-foreground lg:h-dvh lg:overflow-hidden", MAP_VIEWER_THEME_CLASSNAMES].join(" ")}
     >
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-screen flex-col lg:h-full lg:min-h-0">
         <MapViewerPageHeader activeFloor={activeFloor} />
 
-        <div className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col gap-0 p-0 sm:gap-4 sm:p-6 lg:grid lg:grid-cols-[340px_minmax(0,1fr)]">
+        {/* Below lg, the page scrolls as a whole (map, then sidebar) — there
+            isn't room for both to be independently fixed-height on a phone
+            screen. At lg and up, this row is height-bounded so only the
+            sidebar scrolls internally and the map stays fixed in place,
+            matching the editor's layout. */}
+        <div className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col gap-0 p-0 sm:gap-4 sm:p-6 lg:grid lg:min-h-0 lg:grid-cols-[340px_minmax(0,1fr)]">
           <MapViewerSidebar
             activeFloor={activeFloor}
             activeFloorId={activeFloorId}
@@ -181,7 +186,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
             ) : null}
           />
 
-          <main className="order-1 relative h-[calc(100dvh-7.5rem)] min-h-[calc(100dvh-7.5rem)] overflow-hidden border-x-0 border-t-0 border-b border-border bg-[var(--map-viewer-canvas)] shadow-sm sm:h-[calc(100dvh-8.5rem)] sm:min-h-[calc(100dvh-8.5rem)] sm:rounded-3xl sm:border lg:order-none lg:h-auto lg:min-h-[680px] lg:rounded-4xl">
+          <main className="order-1 relative h-[calc(100dvh-7.5rem)] min-h-[calc(100dvh-7.5rem)] overflow-hidden border-x-0 border-t-0 border-b border-border bg-[var(--map-viewer-canvas)] shadow-sm sm:h-[calc(100dvh-8.5rem)] sm:min-h-[calc(100dvh-8.5rem)] sm:rounded-3xl sm:border lg:order-none lg:h-full lg:min-h-0 lg:rounded-4xl">
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklch,var(--primary)_10%,transparent),transparent_32%),linear-gradient(to_right,var(--map-viewer-grid-minor)_1px,transparent_1px),linear-gradient(to_bottom,var(--map-viewer-grid-minor)_1px,transparent_1px)] [background-size:auto,28px_28px,28px_28px]" />
             <MapViewerToolbar
               activeFloor={activeFloor}
