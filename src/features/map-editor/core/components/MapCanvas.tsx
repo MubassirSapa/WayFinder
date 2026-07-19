@@ -65,7 +65,7 @@ export function MapCanvas() {
 
   if (!floor) {
     return (
-      <div className="flex h-full w-full items-center justify-center bg-zinc-950 text-zinc-400">
+      <div className="flex h-full w-full items-center justify-center bg-editor-background text-editor-muted-foreground">
         <p>No floor data loaded.</p>
       </div>
     );
@@ -76,7 +76,7 @@ export function MapCanvas() {
 
   return (
     <div
-      className={`relative h-full w-full touch-none overflow-hidden bg-zinc-950 p-6 flex items-start justify-start select-none ${isPanning ? 'cursor-grabbing' : 'cursor-grab'}`}
+      className={`relative h-full w-full touch-none overflow-hidden bg-editor-background p-6 flex items-start justify-start select-none ${isPanning ? 'cursor-grabbing' : 'cursor-grab'}`}
       onPointerCancel={handlePanPointerUp}
       onPointerDown={handlePanPointerDown}
       onPointerLeave={handlePanPointerUp}
@@ -85,7 +85,7 @@ export function MapCanvas() {
       ref={wrapperRef}
     >
       <div
-        className="relative overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900 shadow-2xl"
+        className="relative overflow-hidden rounded-xl border border-editor-border bg-editor-panel shadow-2xl"
         style={{
           height: floor.height,
           transform: `translate(${pan.x}px, ${pan.y}px)`,
@@ -131,7 +131,7 @@ export function MapCanvas() {
               y1={sourceNode.y}
               x2={mousePos.x}
               y2={mousePos.y}
-              stroke="rgba(234, 179, 8, 0.6)"
+              stroke="var(--editor-reference-line)"
               strokeWidth="2"
               strokeDasharray="4 4"
               className="pointer-events-none"
