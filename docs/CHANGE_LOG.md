@@ -10,6 +10,10 @@
 - Added "Escalator" as a third connector type alongside stairs and elevator: new `MapObjects`/`MapNodes`/`PathEdges` select option, its own color/icon in both the editor and public map viewer, and support throughout pathfinding and floor-linking.
 - Moved the Floor Links tool from a static left-sidebar panel into the right-hand Inspector, appearing contextually when a stairs/elevator/escalator node **or its object** is selected (previously only the node worked) — and it no longer asks you to re-pick the connector type, since the selected node's role already determines it.
 
+### Changed
+- Node labels on the map editor canvas are now hidden by default and only appear on hover or while the node is selected, instead of every node's label being permanently rendered (with dozens of nodes on a floor, that was mostly visual noise). The label field itself is unchanged — still set and stored the same way, just not drawn on the canvas at all times.
+- New objects placed from the toolbox are now numbered per type instead of all sharing one generic name — e.g. `Room 1`, `Room 2`, `Door 1` — instead of every placed object being named `New Room`/`New Door` until manually renamed. Computed entirely from objects already loaded in the editor's local state (a simple count), so it adds no server round trip or database query.
+
 ## 2026-06-11
 
 ### Added

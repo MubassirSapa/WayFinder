@@ -1,7 +1,7 @@
 import { RefObject } from 'react';
 import { useEditorStore } from "@/store";
 import { snapToGrid, canvasPointFromEvent } from '../lib/canvas';
-import { getDefaultDimensions } from '../lib/objectDefaults';
+import { getDefaultDimensions, getDefaultObjectName } from '../lib/objectDefaults';
 import { pixelDistance, pixelsToMeters } from '../lib/distance';
 import { EditorMapObject, EditorMapNode, EditorPathEdge } from '../types/map.types';
 
@@ -11,6 +11,7 @@ export function useCanvasPointer(canvasRef: RefObject<SVGSVGElement | null>) {
     floor,
     selectedToolboxType,
     pendingPathNodeId,
+    objects,
     nodes,
     edges,
     addObject,
@@ -49,7 +50,7 @@ export function useCanvasPointer(canvasRef: RefObject<SVGSVGElement | null>) {
       buildingId: floor.buildingId,
       parentObjectId: null,
       type: selectedToolboxType,
-      name: `New ${selectedToolboxType.charAt(0).toUpperCase() + selectedToolboxType.slice(1)}`,
+      name: getDefaultObjectName(selectedToolboxType, Object.values(objects)),
       label: '',
       x: snapX,
       y: snapY,
@@ -83,7 +84,7 @@ export function useCanvasPointer(canvasRef: RefObject<SVGSVGElement | null>) {
       return;
     } else if (mode === 'node') {
       const tempId = `temp_node_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      const nodeCount = Object.keys(nodes).length;
+      const hallwayPointCount = Object.values(nodes).filter((n) => n.role === 'hallway_point').length;
 
       const newNode: EditorMapNode = {
         id: tempId,
@@ -91,7 +92,7 @@ export function useCanvasPointer(canvasRef: RefObject<SVGSVGElement | null>) {
         buildingId: floor.buildingId,
         objectId: null,
         role: 'hallway_point',
-        label: `Node ${nodeCount + 1}`,
+        label: `Hallway Point ${hallwayPointCount + 1}`,
         x: snapX,
         y: snapY,
         geometryType: 'icon',

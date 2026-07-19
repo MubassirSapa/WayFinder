@@ -83,15 +83,21 @@ export function MapNodeView({ node }: MapNodeViewProps) {
         className="transition-transform duration-150 group-hover:scale-110 shadow-lg"
       />
 
-      {/* Label overlay above node */}
-      <text
-        y="-12"
-        textAnchor="middle"
-        fill="#f4f4f5"
-        className="text-[9px] font-sans font-medium pointer-events-none select-none tracking-wide drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]"
-      >
-        {node.label}
-      </text>
+      {/* Label overlay above node — hidden by default (dozens of nodes with
+          permanent text turns the canvas into visual noise); shown on hover
+          or while selected, when you actually need to identify one. */}
+      {node.label ? (
+        <text
+          y="-12"
+          textAnchor="middle"
+          fill="#f4f4f5"
+          className={`text-[9px] font-sans font-medium pointer-events-none select-none tracking-wide drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] transition-opacity duration-150 ${
+            isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+          }`}
+        >
+          {node.label}
+        </text>
+      ) : null}
     </g>
   );
 }

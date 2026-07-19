@@ -61,8 +61,10 @@ export function NodeInspector({ nodeId }: NodeInspectorProps) {
           type="text"
           value={node.label}
           onChange={(e) => handleFieldChange('label', e.target.value)}
+          placeholder="e.g. Stairs A"
           className="bg-zinc-800 border-zinc-700 text-zinc-100"
         />
+        <p className="text-[10px] text-zinc-500">Hidden on the canvas until you hover or select this node.</p>
       </div>
 
       <div className="space-y-1.5">

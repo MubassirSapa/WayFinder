@@ -15,6 +15,7 @@ import {
   LucideIcon,
 } from 'lucide-react';
 import { ToolboxObjectType } from '../types/editor.types';
+import type { EditorMapObject } from '../types/map.types';
 
 export interface ObjectConfig {
   label: string;
@@ -161,6 +162,18 @@ export function getObjectColor(type: ToolboxObjectType): { fill: string; stroke:
     stroke: config.stroke,
     color: config.color,
   };
+}
+
+// Counts existing objects of the same type already on this floor (all
+// already in the local editor store — no server round trip) and numbers
+// the new one after them, so placing ten rooms gives "Room 1".."Room 10"
+// instead of ten identical "New Room"s.
+export function getDefaultObjectName(
+  type: ToolboxObjectType,
+  existingObjects: EditorMapObject[],
+): string {
+  const sameTypeCount = existingObjects.filter((object) => object.type === type).length;
+  return `${OBJECT_CONFIGS[type].label} ${sameTypeCount + 1}`;
 }
 
 export const NODE_ROLE_OPTIONS = [
