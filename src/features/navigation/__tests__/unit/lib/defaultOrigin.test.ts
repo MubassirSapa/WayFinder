@@ -5,7 +5,7 @@ import type { ViewerFloor, ViewerMapNode } from '@/features/map-viewer/types/map
 function makeFloor(overrides: Partial<ViewerFloor> & { id: string; level: number }): ViewerFloor {
   return {
     buildingId: 'b1', height: 800, name: `Floor ${overrides.level}`,
-    status: 'published', width: 1200,
+    organizationName: null, status: 'published', width: 1200,
     ...overrides,
   }
 }

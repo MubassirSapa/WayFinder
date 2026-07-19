@@ -10,6 +10,7 @@ import type {
   LandingVenue,
   PublicLandingData,
 } from "@/features/public-landing/types";
+import { resolveOrganizationNamesByBuildingId } from "@/lib/organizationBuilding";
 
 type VenueGroup = {
   buildingId: string;
@@ -85,14 +86,18 @@ export async function getPublicLandingData(): Promise<PublicLandingData> {
       if (item.isAccessible) group.accessibleCount += 1;
     }
 
+    const organizationNamesByBuildingId = await resolveOrganizationNamesByBuildingId(
+      floors.map((floor) => floor.buildingId),
+    );
+
     const venues = Array.from(groups.values())
-      .map(toLandingVenue)
+      .map((group) => toLandingVenue(group, organizationNamesByBuildingId))
       .sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt));
 
     const recentDestinations = searchableObjects
       .filter((item) => groups.has(item.buildingId))
       .slice(0, 5)
-      .map(toLandingDestination);
+      .map((item) => toLandingDestination(item, organizationNamesByBuildingId));
 
     return {
       venues,
@@ -120,7 +125,10 @@ export async function getPublicLandingData(): Promise<PublicLandingData> {
   }
 }
 
-function toLandingVenue(group: VenueGroup): LandingVenue {
+function toLandingVenue(
+  group: VenueGroup,
+  organizationNamesByBuildingId: Record<string, string>,
+): LandingVenue {
   const sortedFloors = [...group.floors].sort((a, b) => a.level - b.level);
   const primaryFloor = [...group.floors].sort(
     (a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt),
@@ -128,7 +136,7 @@ function toLandingVenue(group: VenueGroup): LandingVenue {
 
   return {
     id: group.buildingId,
-    name: formatBuildingName(group.buildingId),
+    name: organizationNamesByBuildingId[group.buildingId] ?? formatBuildingName(group.buildingId),
     floorCount: sortedFloors.length,
     searchableCount: group.searchableCount,
     accessibleCount: group.accessibleCount,
@@ -146,14 +154,17 @@ function toLandingVenue(group: VenueGroup): LandingVenue {
   };
 }
 
-function toLandingDestination(item: MapObject): LandingDestination {
+function toLandingDestination(
+  item: MapObject,
+  organizationNamesByBuildingId: Record<string, string>,
+): LandingDestination {
   const floor = typeof item.floor === "object" ? item.floor : null;
 
   return {
     id: String(item.id),
     name: item.label || item.name,
     type: item.type,
-    venueName: formatBuildingName(item.buildingId),
+    venueName: organizationNamesByBuildingId[item.buildingId] ?? formatBuildingName(item.buildingId),
     floorName: floor?.name ?? "Floor pending",
     isAccessible: Boolean(item.isAccessible),
     href: floor ? `/map/${floor.id}` : null,

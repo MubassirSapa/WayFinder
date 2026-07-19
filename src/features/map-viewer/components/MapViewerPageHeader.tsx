@@ -23,7 +23,9 @@ export function MapViewerPageHeader({
           <WayfinderBrand href="/" className="shrink-0" textClassName="hidden sm:inline" />
           <Separator className="hidden h-6 sm:block" orientation="vertical" />
           <h1 className="truncate text-xl font-semibold tracking-tight sm:text-2xl">
-            {activeFloor ? formatOrganizationName(activeFloor.buildingId) : "Published maps"}
+            {activeFloor
+              ? activeFloor.organizationName ?? formatOrganizationName(activeFloor.buildingId)
+              : "Published maps"}
           </h1>
         </div>
 

@@ -1,6 +1,7 @@
 export interface ViewerFloor {
   id: string;
   buildingId: string;
+  organizationName: string | null;
   name: string;
   level: number;
   width: number;
