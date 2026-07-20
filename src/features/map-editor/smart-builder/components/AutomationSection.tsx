@@ -3,12 +3,12 @@
 import { Settings2 } from "lucide-react";
 
 import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 import { EDITOR_UI_TEXT } from "../../constants/editorUi.constants";
 import { SmartBuilderPanel } from "./SmartBuilderPanel";
 
 export function AutomationSection() {
-  const isSmartBuilderEnabled = useEditorStore((state) => state.isSmartBuilderEnabled);
+  const isSmartBuilderEnabled = useAppStore((state) => state.isSmartBuilderEnabled);
 
   return (
     <AccordionItem value="automation" className="border-editor-border data-open:bg-editor-panel/40">

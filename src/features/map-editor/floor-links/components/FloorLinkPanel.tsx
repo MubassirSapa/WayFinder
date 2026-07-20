@@ -7,7 +7,7 @@ import { Waypoints } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { deletePathEdge } from "@/features/map-editor/core/actions/floorEditorActions";
 import type { EditorMapNode } from "@/features/map-editor/core/types/map.types";
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 
 import {
   buildCrossFloorEdge,
@@ -30,10 +30,10 @@ interface FloorLinkPanelProps {
 }
 
 export function FloorLinkPanel({ node }: FloorLinkPanelProps) {
-  const floor = useEditorStore((state) => state.floor);
-  const edgesRecord = useEditorStore((state) => state.edges);
+  const floor = useAppStore((state) => state.floor);
+  const edgesRecord = useAppStore((state) => state.edges);
   const edges = Object.values(edgesRecord);
-  const addEdge = useEditorStore((state) => state.addEdge);
+  const addEdge = useAppStore((state) => state.addEdge);
 
   const [targetNodeId, setTargetNodeId] = useState<string>("");
   const [isDeleting, setIsDeleting] = useState<string | null>(null);

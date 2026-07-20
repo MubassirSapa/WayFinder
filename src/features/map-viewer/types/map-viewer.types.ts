@@ -87,6 +87,12 @@ export interface ViewerPathEdge {
   isAccessible: boolean;
 }
 
+export interface ConnectorTargetInfo {
+  floorId: string;
+  floorName: string;
+  targetNode: ViewerMapNode;
+}
+
 export interface MapViewerData {
   edgesByFloorId: Record<string, ViewerPathEdge[]>;
   floors: ViewerFloor[];

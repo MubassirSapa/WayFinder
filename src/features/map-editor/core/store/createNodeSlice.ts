@@ -1,11 +1,11 @@
 import { StateCreator } from "zustand";
 
-import type { EditorStore } from "@/store/types";
+import type { AppStore } from "@/store/types";
 
 import { EditorMapNode } from "../types/map.types";
 import { NodeSlice } from "./types";
 
-export const createNodeSlice: StateCreator<EditorStore, [], [], NodeSlice> = (set) => ({
+export const createNodeSlice: StateCreator<AppStore, [], [], NodeSlice> = (set) => ({
   nodes: {},
   pendingPathNodeId: null,
 

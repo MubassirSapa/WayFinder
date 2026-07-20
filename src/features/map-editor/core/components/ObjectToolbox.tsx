@@ -1,7 +1,7 @@
 'use client';
 
 import React, { type ReactNode } from 'react';
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 import { EDITOR_UI_TEXT } from '../../constants/editorUi.constants';
 import { OBJECT_CATEGORIES, OBJECT_CONFIGS } from '../lib/objectDefaults';
 import { ToolboxObjectType } from '../types/editor.types';
@@ -14,7 +14,7 @@ interface ObjectToolboxProps {
 }
 
 export function ObjectToolbox({ footer }: ObjectToolboxProps) {
-  const { selectedToolboxType, setMode, setSelectedToolboxType } = useEditorStore();
+  const { selectedToolboxType, setMode, setSelectedToolboxType } = useAppStore();
 
   const handleSelectType = (type: ToolboxObjectType) => {
     setSelectedToolboxType(type);

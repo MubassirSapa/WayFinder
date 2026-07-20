@@ -9,7 +9,7 @@ import {
   updatePathEdge,
   updateFloor,
 } from "../actions/floorEditorActions";
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 
 type LocalEditorEntity = {
   id: string;
@@ -46,7 +46,7 @@ export function useSaveEditorChanges() {
     selectEntity,
     markDirty,
     setSaving,
-  } = useEditorStore();
+  } = useAppStore();
 
   const saveChanges = async () => {
     if (isSaving) return;

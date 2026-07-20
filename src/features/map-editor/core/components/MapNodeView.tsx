@@ -1,6 +1,6 @@
 'use client';
 
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 import { useCanvasPointer } from '../hooks/useCanvasPointer';
 import { useNodeDrag } from '../hooks/useNodeDrag';
 import { EditorMapNode } from '../types/map.types';
@@ -10,7 +10,7 @@ interface MapNodeViewProps {
 }
 
 export function MapNodeView({ node }: MapNodeViewProps) {
-  const { selectedEntity, pendingPathNodeId, mode } = useEditorStore();
+  const { selectedEntity, pendingPathNodeId, mode } = useAppStore();
   const { handleNodeClick } = useCanvasPointer({ current: null });
   const { handlePointerDown } = useNodeDrag();
 

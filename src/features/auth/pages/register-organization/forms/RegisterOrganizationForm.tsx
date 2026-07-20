@@ -11,7 +11,7 @@ import TextField from "@/components/shared/form/fields/TextField";
 import SelectField from "@/components/shared/form/fields/SelectField";
 import { FieldGroup } from "@/components/ui/field";
 
-import { useSignupFlowStore } from "@/features/auth/store/useSignupFlowStore";
+import { useAppStore } from "@/store";
 import { OrganizationSchema } from "@/features/auth/validations/organization";
 import {
   ORGANIZATION_TYPES,
@@ -23,7 +23,7 @@ const FORM_ID = "register-organization-form";
 
 const RegisterOrganizationForm = () => {
   const router = useRouter();
-  const setOrganization = useSignupFlowStore((state) => state.setOrganization);
+  const setOrganization = useAppStore((state) => state.setOrganization);
 
   const form = useForm({
     defaultValues: {

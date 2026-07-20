@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 import { deleteMapNode } from "../actions/floorEditorActions";
 import { NODE_ROLE_OPTIONS } from '../lib/objectDefaults';
 import { EditorMapNode } from '../types/map.types';
@@ -24,7 +24,7 @@ interface NodeInspectorProps {
 }
 
 export function NodeInspector({ nodeId }: NodeInspectorProps) {
-  const { nodes, objects, updateNode, removeNode } = useEditorStore();
+  const { nodes, objects, updateNode, removeNode } = useAppStore();
   const [isDeleting, setIsDeleting] = useState(false);
   const node = nodes[nodeId];
   const objectsList = Object.values(objects);

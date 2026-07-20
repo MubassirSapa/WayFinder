@@ -6,6 +6,7 @@ import type {
 import { getRenderedFloorSize } from "../lib/mapViewerViewport";
 import { isNodePublicMarker } from "../lib/mapStyles";
 import type {
+  ConnectorTargetInfo,
   ViewerFloor,
   ViewerMapNode,
   ViewerMapObject,
@@ -15,6 +16,7 @@ import { MapViewerSvg } from "./MapViewerSvg";
 
 interface MapViewerCanvasProps {
   activeFloor: ViewerFloor | null;
+  connectorTargetsByNodeId: Record<string, ConnectorTargetInfo>;
   edges: ViewerPathEdge[];
   isDragging: boolean;
   nodes: ViewerMapNode[];
@@ -26,6 +28,7 @@ interface MapViewerCanvasProps {
   viewportRef: RefObject<HTMLDivElement | null>;
   zoom: number;
   onBackgroundClick: () => void;
+  onConnectorActivate: (target: ConnectorTargetInfo) => void;
   onObjectSelect: (object: ViewerMapObject) => void;
   onPointerCancel: PointerEventHandler<HTMLDivElement>;
   onPointerLeave: PointerEventHandler<HTMLDivElement>;
@@ -37,6 +40,7 @@ interface MapViewerCanvasProps {
 
 export function MapViewerCanvas({
   activeFloor,
+  connectorTargetsByNodeId,
   edges,
   isDragging,
   nodes,
@@ -48,6 +52,7 @@ export function MapViewerCanvas({
   viewportRef,
   zoom,
   onBackgroundClick,
+  onConnectorActivate,
   onObjectSelect,
   onPointerCancel,
   onPointerLeave,
@@ -62,7 +67,7 @@ export function MapViewerCanvas({
     <>
       <div
         className={[
-          "relative h-full min-h-[62dvh] touch-none overflow-hidden bg-[linear-gradient(to_bottom,color-mix(in_oklch,var(--muted)_38%,transparent),transparent_22%)] lg:min-h-[680px]",
+          "relative h-full min-h-[62dvh] touch-none overflow-hidden bg-[linear-gradient(to_bottom,color-mix(in_oklch,var(--muted)_38%,transparent),transparent_22%)] md:min-h-[560px] lg:min-h-[680px]",
           "sm:min-h-[calc(100dvh-8.5rem)]",
           "before:pointer-events-none before:absolute before:inset-0 before:bg-[linear-gradient(to_bottom,color-mix(in_oklch,var(--map-viewer-canvas)_88%,transparent),transparent_20%)]",
           isDragging ? "cursor-grabbing select-none" : "cursor-grab",
@@ -93,10 +98,12 @@ export function MapViewerCanvas({
           >
             <MapViewerSvg
               activeFloor={activeFloor}
+              connectorTargetsByNodeId={connectorTargetsByNodeId}
               edges={edges}
               nodes={nodes}
               objects={objects}
               onBackgroundClick={onBackgroundClick}
+              onConnectorActivate={onConnectorActivate}
               onObjectSelect={onObjectSelect}
               onPointerDown={onSvgPointerDown}
               onPointerMove={onSvgPointerMove}

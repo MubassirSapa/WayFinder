@@ -5,7 +5,7 @@ import { Boxes, Link2, Route, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 import { EDITOR_UI_TEXT } from "../../constants/editorUi.constants";
 
 export function SmartBuilderPanel() {
@@ -22,7 +22,7 @@ export function SmartBuilderPanel() {
     autoConnectExistingNodes,
     finishHallwayPath,
     clearHallwayDrawingPoints,
-  } = useEditorStore();
+  } = useAppStore();
 
   return (
     <div className="p-4 space-y-4">

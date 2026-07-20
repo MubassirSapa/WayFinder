@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 import { EDITOR_UI_TEXT } from '../../constants/editorUi.constants';
 import { useSaveEditorChanges } from '../hooks/useSaveEditorChanges';
 import {
@@ -22,7 +22,7 @@ import { cn } from '@/lib/utils';
 import { EditorMode } from '../types/editor.types';
 
 export function EditorToolbar() {
-  const { mode, floor, isDirty, isSaving, setMode } = useEditorStore();
+  const { mode, floor, isDirty, isSaving, setMode } = useAppStore();
   const { saveChanges } = useSaveEditorChanges();
 
   const modes: { id: EditorMode; label: string; hint: string; icon: LucideIcon }[] = [

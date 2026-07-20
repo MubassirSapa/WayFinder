@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 import { useCanvasPan } from '../hooks/useCanvasPan';
 import { useCanvasPointer } from '../hooks/useCanvasPointer';
 import { MapGrid } from './MapGrid';
@@ -13,7 +13,7 @@ import { PathEdgeLayer } from './PathEdgeLayer';
 export function MapCanvas() {
   const canvasRef = useRef<SVGSVGElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const { floor, mode, pendingPathNodeId, nodes } = useEditorStore();
+  const { floor, mode, pendingPathNodeId, nodes } = useAppStore();
   const { handleCanvasClick, handleCanvasDoubleClick } = useCanvasPointer(canvasRef);
   const {
     consumeSuppressedClick,

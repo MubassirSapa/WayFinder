@@ -4,7 +4,7 @@ import { MapPin, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
-import { useNavigationStore } from "../store/useNavigationStore";
+import { useAppStore } from "@/store";
 
 interface MapSelectionBarProps {
   label: string;
@@ -16,9 +16,9 @@ interface MapSelectionBarProps {
 // the map, instead of having to go find the same actions in the sidebar's
 // Selection card (which may be scrolled out of view, especially on mobile).
 export function MapSelectionBar({ label, nodeId, onClose }: MapSelectionBarProps) {
-  const originNodeId = useNavigationStore((state) => state.originNodeId);
-  const setOrigin = useNavigationStore((state) => state.setOrigin);
-  const setDestination = useNavigationStore((state) => state.setDestination);
+  const originNodeId = useAppStore((state) => state.originNodeId);
+  const setOrigin = useAppStore((state) => state.setOrigin);
+  const setDestination = useAppStore((state) => state.setDestination);
 
   const isOrigin = nodeId !== null && originNodeId === nodeId;
 

@@ -40,12 +40,12 @@ export function MapViewerSidebar({
   onSearchChange,
 }: MapViewerSidebarProps) {
   return (
-    <aside className="order-2 overflow-hidden border-x-0 border-b-0 border-t border-border bg-card/80 shadow-sm backdrop-blur-md sm:rounded-3xl sm:border lg:order-none lg:flex lg:h-full lg:min-h-0 lg:flex-col lg:rounded-4xl">
+    <aside className="order-2 overflow-hidden border-x-0 border-b-0 border-t border-border bg-card/80 shadow-sm backdrop-blur-md sm:rounded-3xl sm:border md:order-none md:flex md:h-full md:min-h-0 md:flex-col lg:rounded-4xl">
       <div className="shrink-0 border-b border-border px-5 py-4">
         <h2 className="text-base font-semibold">Browse the map</h2>
       </div>
 
-      <div className="space-y-5 p-5 lg:min-h-0 lg:flex-1 lg:overflow-y-auto">
+      <div className="space-y-5 p-5 md:min-h-0 md:flex-1 md:overflow-y-auto">
         {routePanelSlot ? (
           <>
             {routePanelSlot}
@@ -56,7 +56,7 @@ export function MapViewerSidebar({
         <div className="relative">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            className="h-10 rounded-2xl border-border bg-background pl-10"
+            className="h-11 rounded-2xl border-border bg-background pl-10 sm:h-10"
             disabled={!activeFloor}
             onChange={(event) => onSearchChange(event.target.value)}
             placeholder="Search rooms, exits, POIs..."

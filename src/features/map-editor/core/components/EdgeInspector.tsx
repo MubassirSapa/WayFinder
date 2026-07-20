@@ -1,7 +1,7 @@
 'use client';
 
 import  { useState } from 'react';
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 import { deletePathEdge } from "../actions/floorEditorActions";
 import { EDGE_TYPE_OPTIONS } from '../lib/objectDefaults';
 import { EditorPathEdge } from '../types/map.types';
@@ -22,7 +22,7 @@ interface EdgeInspectorProps {
 }
 
 export function EdgeInspector({ edgeId }: EdgeInspectorProps) {
-  const { edges, nodes, updateEdge, removeEdge } = useEditorStore();
+  const { edges, nodes, updateEdge, removeEdge } = useAppStore();
   const [isDeleting, setIsDeleting] = useState(false);
   const edge = edges[edgeId];
 

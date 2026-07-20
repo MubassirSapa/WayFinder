@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 import type { FloorEditorData } from "../actions/floorEditorActions";
 
 export function useFloorEditorData(
@@ -7,7 +7,7 @@ export function useFloorEditorData(
   initialError: string | null,
 ) {
   const { setFloor, setObjects, setNodes, setEdges, resetStore } =
-    useEditorStore();
+    useAppStore();
 
   useEffect(() => {
     if (!initialData) {

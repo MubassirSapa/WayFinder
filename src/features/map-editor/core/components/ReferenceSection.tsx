@@ -4,12 +4,12 @@ import { ImageIcon } from 'lucide-react';
 
 import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 import { EDITOR_UI_TEXT } from '../../constants/editorUi.constants';
 import { FloorReferencePanel } from './FloorReferencePanel';
 
 export function ReferenceSection() {
-  const floor = useEditorStore((state) => state.floor);
+  const floor = useAppStore((state) => state.floor);
 
   return (
     <AccordionItem value="reference" className="border-editor-border data-open:bg-editor-panel/40">

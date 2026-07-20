@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 import { deleteMapObject } from "../actions/floorEditorActions";
 import { OBJECT_CONFIGS } from '../lib/objectDefaults';
 import { Input } from '@/components/ui/input';
@@ -27,7 +27,7 @@ interface ObjectInspectorProps {
 }
 
 export function ObjectInspector({ objectId }: ObjectInspectorProps) {
-  const { objects, nodes, updateObject, removeObject } = useEditorStore();
+  const { objects, nodes, updateObject, removeObject } = useAppStore();
   const [isDeleting, setIsDeleting] = useState(false);
   const object = objects[objectId];
 

@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 import { snapToGrid } from '../lib/canvas';
 
 const MIN_OBJECT_SIZE = 20;
@@ -30,7 +30,7 @@ function clientPointToSvg(
 }
 
 export function useObjectDrag() {
-  const { mode, selectEntity, moveObject, rotateObject, updateObject } = useEditorStore();
+  const { mode, selectEntity, moveObject, rotateObject, updateObject } = useAppStore();
   const dragInfo = useRef<
     | {
         type: 'move';

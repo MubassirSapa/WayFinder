@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 import { useObjectDrag } from '../hooks/useObjectDrag';
 import { getObjectColor } from '../lib/objectDefaults';
 import { EditorMapObject } from '../types/map.types';
@@ -11,7 +11,7 @@ interface MapObjectViewProps {
 }
 
 export function MapObjectView({ object }: MapObjectViewProps) {
-  const { selectedEntity, selectEntity, mode } = useEditorStore();
+  const { selectedEntity, selectEntity, mode } = useAppStore();
   const { handleMouseDown, handleResizeStart, handleRotateStart } = useObjectDrag();
   // "object" mode is exclusively for placing new objects from the toolbox —
   // existing objects are select-only there (see handlePointerDown below) so

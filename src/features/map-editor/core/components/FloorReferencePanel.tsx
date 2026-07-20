@@ -10,10 +10,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { EDITOR_UI_TEXT } from '../../constants/editorUi.constants';
 import { uploadFloorReferenceImage } from '../actions/floorEditorActions';
-import { useEditorStore } from '@/store';
+import { useAppStore } from '@/store';
 
 export function FloorReferencePanel() {
-  const { floor, updateFloor } = useEditorStore();
+  const { floor, updateFloor } = useAppStore();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [altText, setAltText] = useState('');

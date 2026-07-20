@@ -8,7 +8,7 @@ import type { ViewerFloor, ViewerMapNode, ViewerMapObject, ViewerPathEdge } from
 import { ArrowUpDown, ArrowUpRight, Navigation, TrendingUp, Waypoints, X, type LucideIcon } from "lucide-react";
 
 import { findNodeIdForObject } from "../lib/findNodeForObject";
-import { useNavigationStore } from "../store/useNavigationStore";
+import { useAppStore } from "@/store";
 import type { RouteFloorSegment, ShortestPathResult } from "../types/navigation.types";
 
 interface RoutePanelProps {
@@ -81,13 +81,13 @@ export function RoutePanel({
   searchableObjects,
   segments,
 }: RoutePanelProps) {
-  const originNodeId = useNavigationStore((state) => state.originNodeId);
-  const destinationNodeId = useNavigationStore((state) => state.destinationNodeId);
-  const accessibleOnly = useNavigationStore((state) => state.accessibleOnly);
-  const setAccessibleOnly = useNavigationStore((state) => state.setAccessibleOnly);
-  const setOrigin = useNavigationStore((state) => state.setOrigin);
-  const setDestination = useNavigationStore((state) => state.setDestination);
-  const clearRoute = useNavigationStore((state) => state.clearRoute);
+  const originNodeId = useAppStore((state) => state.originNodeId);
+  const destinationNodeId = useAppStore((state) => state.destinationNodeId);
+  const accessibleOnly = useAppStore((state) => state.accessibleOnly);
+  const setAccessibleOnly = useAppStore((state) => state.setAccessibleOnly);
+  const setOrigin = useAppStore((state) => state.setOrigin);
+  const setDestination = useAppStore((state) => state.setDestination);
+  const clearRoute = useAppStore((state) => state.clearRoute);
 
   const originLabel = findObjectLabelForNode(originNodeId, nodes, searchableObjects);
   const destinationLabel = findObjectLabelForNode(destinationNodeId, nodes, searchableObjects);

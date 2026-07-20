@@ -1,10 +1,10 @@
 import { StateCreator } from "zustand";
 
-import type { EditorStore } from "@/store/types";
+import type { AppStore } from "@/store/types";
 
 import { EditorSlice } from "./types";
 
-export const createEditorSlice: StateCreator<EditorStore, [], [], EditorSlice> = (set, get) => ({
+export const createEditorSlice: StateCreator<AppStore, [], [], EditorSlice> = (set, get) => ({
   mode: 'select',
   floor: null,
   selectedEntity: null,

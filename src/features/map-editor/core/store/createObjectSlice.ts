@@ -1,6 +1,6 @@
 import { StateCreator } from "zustand";
 
-import type { EditorStore } from "@/store/types";
+import type { AppStore } from "@/store/types";
 
 import { EditorMapNode, EditorMapObject } from "../types/map.types";
 import { ObjectSlice } from "./types";
@@ -24,7 +24,7 @@ function moveLinkedNode(
 }
 
 function updateLinkedNodesForObjectMove(
-  state: EditorStore,
+  state: AppStore,
   objectId: string,
   deltaX: number,
   deltaY: number,
@@ -50,7 +50,7 @@ function updateLinkedNodesForObjectMove(
   return nodesChanged ? updatedNodes : null;
 }
 
-export const createObjectSlice: StateCreator<EditorStore, [], [], ObjectSlice> = (set) => ({
+export const createObjectSlice: StateCreator<AppStore, [], [], ObjectSlice> = (set) => ({
   objects: {},
 
   setObjects: (objectsList) => {

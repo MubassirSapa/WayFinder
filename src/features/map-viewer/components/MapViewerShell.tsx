@@ -1,6 +1,6 @@
 'use client';
 
-import { useDeferredValue, useState } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 
 import { FloorHopIndicator } from "@/features/navigation/components/FloorHopIndicator";
 import { MapSelectionBar } from "@/features/navigation/components/MapSelectionBar";
@@ -9,12 +9,14 @@ import { RoutePanel } from "@/features/navigation/components/RoutePanel";
 import { useRoute } from "@/features/navigation/hooks/useRoute";
 import { getRouteSegmentBounds } from "@/features/navigation/lib/routeBounds";
 import { findNodeIdForObject } from "@/features/navigation/lib/findNodeForObject";
-import { useNavigationStore } from "@/features/navigation/store/useNavigationStore";
+import { useAppStore } from "@/store";
 
 import { MAP_VIEWER_FLOOR_CONTENT_PADDING } from "../constants/mapViewer.constants";
 import { MAP_VIEWER_THEME_CLASSNAMES } from "../constants/mapViewerTheme.constants";
+import { findConnectorTarget, isConnectorNode } from "../lib/connectors";
 import { useMapViewerViewport } from "../hooks/useMapViewerViewport";
 import type {
+  ConnectorTargetInfo,
   MapViewerData,
   ViewerMapObject,
 } from "../types/map-viewer.types";
@@ -22,6 +24,8 @@ import { MapViewerCanvas } from "./MapViewerCanvas";
 import { MapViewerPageHeader } from "./MapViewerPageHeader";
 import { MapViewerSidebar } from "./MapViewerSidebar";
 import { MapViewerToolbar } from "./MapViewerToolbar";
+
+const CONNECTOR_JUMP_FOCUS_RADIUS = 260;
 
 interface MapViewerShellProps {
   data: MapViewerData;
@@ -36,7 +40,10 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
   const floors = data.floors;
   const activeFloor = floors.find((floor) => floor.id === activeFloorId) ?? null;
   const objects = activeFloor ? data.objectsByFloorId[activeFloor.id] ?? [] : [];
-  const nodes = activeFloor ? data.nodesByFloorId[activeFloor.id] ?? [] : [];
+  const nodes = useMemo(
+    () => (activeFloor ? data.nodesByFloorId[activeFloor.id] ?? [] : []),
+    [activeFloor, data.nodesByFloorId],
+  );
   const edges = activeFloor ? data.edgesByFloorId[activeFloor.id] ?? [] : [];
   const {
     changeZoom,
@@ -70,9 +77,9 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
     routePoints,
     segments,
   } = useRoute(data);
-  const setActiveSegmentIndex = useNavigationStore((state) => state.setActiveSegmentIndex);
-  const originNodeId = useNavigationStore((state) => state.originNodeId);
-  const setOrigin = useNavigationStore((state) => state.setOrigin);
+  const setActiveSegmentIndex = useAppStore((state) => state.setActiveSegmentIndex);
+  const originNodeId = useAppStore((state) => state.originNodeId);
+  const setOrigin = useAppStore((state) => state.setOrigin);
   const routePointsForActiveFloor = activeSegment?.floorId === activeFloorId ? routePoints : undefined;
   const nextSegment = segments[activeSegmentIndex + 1] ?? null;
   const nextFloor = nextSegment ? floors.find((floor) => floor.id === nextSegment.floorId) ?? null : null;
@@ -82,10 +89,53 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
     .flat()
     .filter((object) => object.isSearchable);
 
+  // Cross-floor edges are only stored under their origin floor's bucket, so
+  // resolving a connector's target requires searching every floor's edges,
+  // not just the active floor's.
+  const allEdges = useMemo(
+    () => Object.values(data.edgesByFloorId).flat(),
+    [data.edgesByFloorId],
+  );
+
+  const connectorTargetsByNodeId = useMemo(() => {
+    const map: Record<string, ConnectorTargetInfo> = {};
+
+    for (const node of nodes) {
+      if (!isConnectorNode(node)) {
+        continue;
+      }
+
+      const target = findConnectorTarget(node, allEdges, nodesById);
+      if (!target) {
+        continue;
+      }
+
+      const floor = floors.find((candidate) => candidate.id === target.floorId);
+      map[node.id] = {
+        floorId: target.floorId,
+        floorName: floor?.name ?? "another floor",
+        targetNode: target.node,
+      };
+    }
+
+    return map;
+  }, [nodes, allEdges, nodesById, floors]);
+
   const handleFloorChange = (floorId: string) => {
     setActiveFloorId(floorId);
     setSelectedObjectId(null);
     setSearch("");
+  };
+
+  const handleConnectorJump = (target: ConnectorTargetInfo) => {
+    focusWorldBounds({
+      maxX: target.targetNode.x + MAP_VIEWER_FLOOR_CONTENT_PADDING + CONNECTOR_JUMP_FOCUS_RADIUS,
+      maxY: target.targetNode.y + MAP_VIEWER_FLOOR_CONTENT_PADDING + CONNECTOR_JUMP_FOCUS_RADIUS,
+      minX: target.targetNode.x + MAP_VIEWER_FLOOR_CONTENT_PADDING - CONNECTOR_JUMP_FOCUS_RADIUS,
+      minY: target.targetNode.y + MAP_VIEWER_FLOOR_CONTENT_PADDING - CONNECTOR_JUMP_FOCUS_RADIUS,
+    });
+    setActiveFloorId(target.floorId);
+    setSelectedObjectId(null);
   };
 
   const handleJumpToSegment = (index: number) => {
@@ -157,17 +207,17 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
 
   return (
     <section
-      className={["min-h-screen bg-background text-foreground lg:h-dvh lg:overflow-hidden", MAP_VIEWER_THEME_CLASSNAMES].join(" ")}
+      className={["min-h-screen bg-background text-foreground md:h-dvh md:overflow-hidden", MAP_VIEWER_THEME_CLASSNAMES].join(" ")}
     >
-      <div className="flex min-h-screen flex-col lg:h-full lg:min-h-0">
-        <MapViewerPageHeader activeFloor={activeFloor} />
+      <div className="flex min-h-screen flex-col md:h-full md:min-h-0">
+        <MapViewerPageHeader activeFloor={activeFloor} floors={floors} onFloorChange={handleFloorChange} />
 
-        {/* Below lg, the page scrolls as a whole (map, then sidebar) — there
+        {/* Below md, the page scrolls as a whole (map, then sidebar) — there
             isn't room for both to be independently fixed-height on a phone
-            screen. At lg and up, this row is height-bounded so only the
-            sidebar scrolls internally and the map stays fixed in place,
-            matching the editor's layout. */}
-        <div className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col gap-0 p-0 sm:gap-4 sm:p-6 lg:grid lg:min-h-0 lg:grid-cols-[340px_minmax(0,1fr)]">
+            screen. At md and up (tablet and desktop), this row is
+            height-bounded so only the sidebar scrolls internally and the map
+            stays fixed in place, matching the editor's layout. */}
+        <div className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col gap-0 p-0 sm:gap-4 sm:p-6 md:grid md:min-h-0 md:grid-cols-[300px_minmax(0,1fr)] lg:grid-cols-[340px_minmax(0,1fr)]">
           <MapViewerSidebar
             activeFloor={activeFloor}
             activeFloorId={activeFloorId}
@@ -199,22 +249,28 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
             ) : null}
           />
 
-          <main className="order-1 relative h-[calc(100dvh-7.5rem)] min-h-[calc(100dvh-7.5rem)] overflow-hidden border-x-0 border-t-0 border-b border-border bg-[var(--map-viewer-canvas)] shadow-sm sm:h-[calc(100dvh-8.5rem)] sm:min-h-[calc(100dvh-8.5rem)] sm:rounded-3xl sm:border lg:order-none lg:h-full lg:min-h-0 lg:rounded-4xl">
+          <main className="order-1 relative h-[calc(100dvh-7.5rem)] min-h-[calc(100dvh-7.5rem)] overflow-hidden border-x-0 border-t-0 border-b border-border bg-[var(--map-viewer-canvas)] shadow-sm sm:h-[calc(100dvh-8.5rem)] sm:min-h-[calc(100dvh-8.5rem)] sm:rounded-3xl sm:border md:order-none md:h-full md:min-h-0 lg:rounded-4xl">
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklch,var(--primary)_10%,transparent),transparent_32%),linear-gradient(to_right,var(--map-viewer-grid-minor)_1px,transparent_1px),linear-gradient(to_bottom,var(--map-viewer-grid-minor)_1px,transparent_1px)] [background-size:auto,28px_28px,28px_28px]" />
             <MapViewerToolbar
               activeFloor={activeFloor}
+              activeSegmentIndex={activeSegmentIndex}
+              floors={floors}
+              onJumpToSegment={handleJumpToSegment}
               onResetView={resetView}
               onToggleGrid={() => setShowGrid((current) => !current)}
               onZoomChange={changeZoom}
+              segments={segments}
               showGrid={showGrid}
             />
             <MapViewerCanvas
               activeFloor={activeFloor}
+              connectorTargetsByNodeId={connectorTargetsByNodeId}
               edges={edges}
               isDragging={isDragging}
               nodes={nodes}
               objects={objects}
               onBackgroundClick={handleBackgroundClick}
+              onConnectorActivate={handleConnectorJump}
               onObjectSelect={handleObjectSelect}
               onPointerCancel={handleViewportPointerCancel}
               onPointerLeave={handleViewportPointerLeave}

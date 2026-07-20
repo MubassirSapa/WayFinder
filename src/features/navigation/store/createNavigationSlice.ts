@@ -1,8 +1,8 @@
-"use client";
+import type { StateCreator } from "zustand";
 
-import { create } from "zustand";
+import type { AppStore } from "@/store/types";
 
-interface NavigationState {
+export interface NavigationSlice {
   originNodeId: string | null;
   destinationNodeId: string | null;
   accessibleOnly: boolean;
@@ -12,16 +12,16 @@ interface NavigationState {
   setAccessibleOnly: (value: boolean) => void;
   setActiveSegmentIndex: (index: number) => void;
   clearRoute: () => void;
-  reset: () => void;
+  resetNavigation: () => void;
 }
 
-export const useNavigationStore = create<NavigationState>((set) => ({
+export const createNavigationSlice: StateCreator<AppStore, [], [], NavigationSlice> = (set) => ({
   accessibleOnly: false,
   activeSegmentIndex: 0,
   clearRoute: () => set({ activeSegmentIndex: 0, destinationNodeId: null }),
   destinationNodeId: null,
   originNodeId: null,
-  reset: () => set({
+  resetNavigation: () => set({
     accessibleOnly: false,
     activeSegmentIndex: 0,
     destinationNodeId: null,
@@ -31,4 +31,4 @@ export const useNavigationStore = create<NavigationState>((set) => ({
   setActiveSegmentIndex: (index) => set({ activeSegmentIndex: index }),
   setDestination: (nodeId) => set({ activeSegmentIndex: 0, destinationNodeId: nodeId }),
   setOrigin: (nodeId) => set({ activeSegmentIndex: 0, originNodeId: nodeId }),
-}));
+});
