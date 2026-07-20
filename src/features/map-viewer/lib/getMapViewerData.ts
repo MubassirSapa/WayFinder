@@ -120,8 +120,20 @@ function normalizeEdge(doc: PathEdge): ViewerPathEdge {
   };
 }
 
-export async function getMapViewerData(): Promise<MapViewerData> {
+export async function getMapViewerData(floorId?: string): Promise<MapViewerData> {
   const payload = await getPayloadClient();
+
+  let buildingId: string | undefined;
+  if (floorId) {
+    const requestedFloor = await payload
+      .findByID({
+        id: floorId,
+        collection: "floors",
+        overrideAccess: true,
+      })
+      .catch(() => null);
+    buildingId = requestedFloor?.buildingId ?? undefined;
+  }
 
   const floorsResult = await payload.find({
     collection: "floors",
@@ -130,9 +142,10 @@ export async function getMapViewerData(): Promise<MapViewerData> {
     overrideAccess: true,
     sort: "level",
     where: {
-      status: {
-        equals: "published",
-      },
+      and: [
+        { status: { equals: "published" } },
+        ...(buildingId ? [{ buildingId: { equals: buildingId } }] : []),
+      ],
     },
   });
 

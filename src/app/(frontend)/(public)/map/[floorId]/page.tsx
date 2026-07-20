@@ -12,7 +12,7 @@ export default async function PublicFloorMapPage({
   params,
 }: PublicFloorMapPageProps) {
   const { floorId } = await params;
-  const data = await getMapViewerData();
+  const data = await getMapViewerData(floorId);
   const floorExists = data.floors.some((floor) => floor.id === floorId);
 
   if (!floorExists) {
