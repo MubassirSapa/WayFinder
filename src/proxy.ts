@@ -8,12 +8,14 @@ const authRoutes = new Set<string>([
   PUBLIC_ROUTES.REGISTER_ORGANIZATION,
   PUBLIC_ROUTES.FORGOT_PASSWORD,
   PUBLIC_ROUTES.RESET_PASSWORD,
+  
 ]);
 
 export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get("payload-token")?.value;
-  const isPrivateRoute = pathname.startsWith(PRIVATE_ROUTES.EDITOR);
+  const isPrivateRoute =
+    pathname.startsWith(PRIVATE_ROUTES.DASHBOARD) || pathname.startsWith(PRIVATE_ROUTES.EDITOR);
   const isAuthRoute = authRoutes.has(pathname);
 
   if (isPrivateRoute && !token) {
@@ -37,7 +39,7 @@ export default async function proxy(request: NextRequest) {
     const data = response.ok ? await response.json().catch(() => null) : null;
 
     if (data?.user) {
-      return NextResponse.redirect(new URL(PRIVATE_ROUTES.EDITOR, request.url));
+      return NextResponse.redirect(new URL(PRIVATE_ROUTES.DASHBOARD, request.url));
     }
   } catch {
     return NextResponse.next();
@@ -48,6 +50,7 @@ export default async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/dashboard/:path*",
     "/editor/:path*",
     "/signin",
     "/signup",

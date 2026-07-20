@@ -3,6 +3,7 @@ import { ArrowUpRightIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import BrandHeader from "@/components/shared/form/BrandHeader";
+import { ModeToggle } from "@/components/shared/theme/ModeToggle";
 import { PRIVATE_ROUTES, PUBLIC_ROUTES } from "@/constants/routes";
 
 import { DASHBOARD_CLIENT } from "../constants/dashboard.constants";
@@ -24,6 +25,7 @@ export function DashboardTopbar({ user }: DashboardTopbarProps) {
         </div>
 
         <div className="flex items-center gap-3 sm:gap-5">
+          <ModeToggle />
           <Link
             href={PUBLIC_ROUTES.HOME}
             className="hidden items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"

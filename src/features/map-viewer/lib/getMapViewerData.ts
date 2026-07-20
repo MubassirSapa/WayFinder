@@ -6,6 +6,7 @@ import type {
   PathEdge,
 } from "@/payload-types";
 import { getPayloadClient } from "@/lib/getPayloadClient";
+import { resolveOrganizationNamesByBuildingId } from "@/lib/organizationBuilding";
 
 import type {
   MapViewerData,
@@ -41,7 +42,7 @@ function hasMediaDocument(value: unknown): value is Media {
   return typeof value === "object" && value !== null && "alt" in value && "id" in value;
 }
 
-function normalizeFloor(doc: Floor): ViewerFloor {
+function normalizeFloor(doc: Floor, organizationName: string | null): ViewerFloor {
   const floorDoc = doc as Floor & {
     backgroundImage?: Media | number | null;
     metersPerPixel?: number | null;
@@ -50,6 +51,7 @@ function normalizeFloor(doc: Floor): ViewerFloor {
   return {
     id: String(doc.id),
     buildingId: doc.buildingId,
+    organizationName,
     name: doc.name,
     level: doc.level ?? 0,
     width: doc.width ?? 1200,
@@ -134,7 +136,12 @@ export async function getMapViewerData(): Promise<MapViewerData> {
     },
   });
 
-  const floors = floorsResult.docs.map(normalizeFloor);
+  const organizationNamesByBuildingId = await resolveOrganizationNamesByBuildingId(
+    floorsResult.docs.map((doc) => doc.buildingId),
+  );
+  const floors = floorsResult.docs.map((doc) =>
+    normalizeFloor(doc, organizationNamesByBuildingId[doc.buildingId] ?? null),
+  );
 
   if (floors.length === 0) {
     return {

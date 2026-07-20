@@ -1,6 +1,7 @@
 export interface ViewerFloor {
   id: string;
   buildingId: string;
+  organizationName: string | null;
   name: string;
   level: number;
   width: number;
@@ -17,6 +18,7 @@ export type ViewerObjectType =
   | "hallway"
   | "stairs"
   | "elevator"
+  | "escalator"
   | "washroom"
   | "exit"
   | "poi"
@@ -53,6 +55,7 @@ export type ViewerNodeRole =
   | "hallway_point"
   | "stairs_entry"
   | "elevator_entry"
+  | "escalator_entry"
   | "shelf_access";
 
 export interface ViewerMapNode {
@@ -78,7 +81,7 @@ export interface ViewerPathEdge {
   buildingId: string;
   fromNodeId: string;
   toNodeId: string;
-  type: "walkway" | "stairs" | "elevator" | "ramp";
+  type: "walkway" | "stairs" | "elevator" | "escalator" | "ramp";
   distanceMeters: number;
   bidirectional: boolean;
   isAccessible: boolean;

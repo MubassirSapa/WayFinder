@@ -221,6 +221,7 @@ export interface MapObject {
     | 'hallway'
     | 'stairs'
     | 'elevator'
+    | 'escalator'
     | 'washroom'
     | 'exit'
     | 'poi'
@@ -248,7 +249,7 @@ export interface MapNode {
   buildingId: string;
   floor: number | Floor;
   object?: (number | null) | MapObject;
-  role: 'entrance' | 'exit' | 'hallway_point' | 'stairs_entry' | 'elevator_entry' | 'shelf_access';
+  role: 'entrance' | 'exit' | 'hallway_point' | 'stairs_entry' | 'elevator_entry' | 'escalator_entry' | 'shelf_access';
   label?: string | null;
   x: number;
   y: number;
@@ -277,7 +278,7 @@ export interface PathEdge {
   floor: number | Floor;
   fromNode: number | MapNode;
   toNode: number | MapNode;
-  type: 'walkway' | 'stairs' | 'elevator' | 'ramp';
+  type: 'walkway' | 'stairs' | 'elevator' | 'escalator' | 'ramp';
   distanceMeters: number;
   bidirectional?: boolean | null;
   isAccessible?: boolean | null;

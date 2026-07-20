@@ -22,7 +22,7 @@ export function PathEdgeLayer() {
           markerHeight="6"
           orient="auto-start-reverse"
         >
-          <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#71717a" />
+          <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--editor-node-neutral)" />
         </marker>
         <marker
           id="edge-arrow-selected"
@@ -33,7 +33,7 @@ export function PathEdgeLayer() {
           markerHeight="6"
           orient="auto-start-reverse"
         >
-          <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#3b82f6" />
+          <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--editor-selection)" />
         </marker>
       </defs>
 
@@ -46,13 +46,13 @@ export function PathEdgeLayer() {
         const isSelected = selectedEntity?.kind === 'edge' && selectedEntity.id === edge.id;
 
         // Determine edge color based on connection type
-        let strokeColor = '#71717a'; // zinc-400 for walkway
-        if (edge.type === 'stairs') strokeColor = '#f97316'; // orange-500
-        if (edge.type === 'elevator') strokeColor = '#a855f7'; // purple-500
-        if (edge.type === 'ramp') strokeColor = '#22c55e'; // green-500
+        let strokeColor = 'var(--editor-node-neutral)'; // zinc-400 for walkway
+        if (edge.type === 'stairs') strokeColor = 'var(--editor-object-stairs)'; // orange-500
+        if (edge.type === 'elevator') strokeColor = 'var(--editor-object-elevator)'; // purple-500
+        if (edge.type === 'ramp') strokeColor = 'var(--editor-node-entrance)'; // green-500
 
         // If selected, override color
-        const color = isSelected ? '#3b82f6' : strokeColor;
+        const color = isSelected ? 'var(--editor-selection)' : strokeColor;
 
         return (
           <g key={edge.id} className="group">
@@ -81,7 +81,7 @@ export function PathEdgeLayer() {
               strokeWidth={isSelected ? '3.5' : '2.5'}
               strokeDasharray={edge.type === 'stairs' ? '3 3' : undefined}
               markerEnd={!edge.bidirectional ? (isSelected ? 'url(#edge-arrow-selected)' : 'url(#edge-arrow)') : undefined}
-              className="pointer-events-none transition-all duration-150 group-hover:stroke-blue-400"
+              className="pointer-events-none transition-all duration-150 group-hover:stroke-primary"
             />
           </g>
         );

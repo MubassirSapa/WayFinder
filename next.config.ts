@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  allowedDevOrigins: ["month-soccer-standings-cancer.trycloudflare.com"],
 };
 
 export default withPayload(nextConfig);

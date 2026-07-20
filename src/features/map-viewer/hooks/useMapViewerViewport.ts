@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { PointerEvent, WheelEvent } from "react";
+import type { PointerEvent } from "react";
 
 import { MAP_VIEWER_DRAG_THRESHOLD } from "../constants/mapViewer.constants";
 import {
@@ -7,8 +7,10 @@ import {
   clampZoom,
   getDefaultViewState,
   getDistance,
+  getFitBoundsView,
   getMidpoint,
   type Point,
+  type WorldBounds,
 } from "../lib/mapViewerViewport";
 import type { ViewerFloor } from "../types/map-viewer.types";
 
@@ -35,6 +37,7 @@ export function useMapViewerViewport({
   const [pan, setPan] = useState<Point>({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const initializedFloorIdRef = useRef<string | null>(null);
+  const pendingFocusRef = useRef(false);
   const suppressClickRef = useRef(false);
   const dragSurfaceRef = useRef<SVGSVGElement | null>(null);
   const activePointersRef = useRef<Map<number, Point>>(new Map());
@@ -69,6 +72,16 @@ export function useMapViewerViewport({
 
       if (initializedFloorIdRef.current !== floor.id) {
         initializedFloorIdRef.current = floor.id;
+
+        // A route floor-hop already set an explicit pan/zoom via
+        // focusWorldBounds just before this floor change — keep it instead
+        // of overriding it with the floor's default fit-to-view.
+        if (pendingFocusRef.current) {
+          pendingFocusRef.current = false;
+          setPan((currentPan) => clampPanToViewport(currentPan, floor, nextViewport, zoom));
+          return;
+        }
+
         const defaultView = getDefaultViewState(floor, nextViewport);
         setZoom(defaultView.zoom);
         setPan(defaultView.pan);
@@ -157,6 +170,17 @@ export function useMapViewerViewport({
     setPan(clampPanToViewport(nextPan, activeFloor, viewportSize, zoom));
   };
 
+  const focusWorldBounds = (bounds: WorldBounds) => {
+    if (viewportSize.x === 0 || viewportSize.y === 0) {
+      return;
+    }
+
+    pendingFocusRef.current = true;
+    const fitView = getFitBoundsView(bounds, viewportSize);
+    setZoom(fitView.zoom);
+    setPan(fitView.pan);
+  };
+
   const consumeSuppressedClick = () => {
     if (!suppressClickRef.current) {
       return false;
@@ -201,38 +225,54 @@ export function useMapViewerViewport({
     }
   };
 
-  const handleViewportWheel = (event: WheelEvent<HTMLDivElement>) => {
-    event.preventDefault();
-
-    const nextZoom = clampZoom(
-      event.deltaY > 0 ? zoom / 1.08 : zoom * 1.08,
-      viewportSize.x,
-    );
-    const viewportRect = viewportRef.current?.getBoundingClientRect();
-
-    if (!viewportRect || !activeFloor) {
-      setZoom(nextZoom);
+  // Registered as a native, non-passive listener (not a React onWheel prop)
+  // deliberately: React attaches wheel listeners at the root as passive by
+  // default, which silently blocks event.preventDefault() from working —
+  // the map would zoom, but the browser's own page zoom/scroll would fire
+  // right alongside it. A real addEventListener with { passive: false } is
+  // the only way to actually suppress the native behavior.
+  useEffect(() => {
+    const element = viewportRef.current;
+    if (!element) {
       return;
     }
 
-    const pointerX = event.clientX - viewportRect.left;
-    const pointerY = event.clientY - viewportRect.top;
-    const worldX = (pointerX - pan.x) / zoom;
-    const worldY = (pointerY - pan.y) / zoom;
+    const handleWheel = (event: globalThis.WheelEvent) => {
+      event.preventDefault();
 
-    setZoom(nextZoom);
-    setPan(
-      clampPanToViewport(
-        {
-          x: pointerX - worldX * nextZoom,
-          y: pointerY - worldY * nextZoom,
-        },
-        activeFloor,
-        viewportSize,
-        nextZoom,
-      ),
-    );
-  };
+      const nextZoom = clampZoom(
+        event.deltaY > 0 ? zoom / 1.08 : zoom * 1.08,
+        viewportSize.x,
+      );
+      const viewportRect = element.getBoundingClientRect();
+
+      if (!activeFloor) {
+        setZoom(nextZoom);
+        return;
+      }
+
+      const pointerX = event.clientX - viewportRect.left;
+      const pointerY = event.clientY - viewportRect.top;
+      const worldX = (pointerX - pan.x) / zoom;
+      const worldY = (pointerY - pan.y) / zoom;
+
+      setZoom(nextZoom);
+      setPan(
+        clampPanToViewport(
+          {
+            x: pointerX - worldX * nextZoom,
+            y: pointerY - worldY * nextZoom,
+          },
+          activeFloor,
+          viewportSize,
+          nextZoom,
+        ),
+      );
+    };
+
+    element.addEventListener("wheel", handleWheel, { passive: false });
+    return () => element.removeEventListener("wheel", handleWheel);
+  }, [activeFloor, pan, viewportSize, zoom]);
 
   const handleSvgPointerDown = (event: PointerEvent<SVGSVGElement>) => {
     if (
@@ -373,6 +413,7 @@ export function useMapViewerViewport({
   return {
     changeZoom,
     consumeSuppressedClick,
+    focusWorldBounds,
     focusWorldPoint,
     isDragging,
     pan,
@@ -385,6 +426,5 @@ export function useMapViewerViewport({
     handleViewportPointerCancel,
     handleViewportPointerLeave,
     handleViewportPointerUp,
-    handleViewportWheel,
   };
 }

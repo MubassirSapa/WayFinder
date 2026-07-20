@@ -22,7 +22,7 @@ export function MapGrid({ width, height }: MapGridProps) {
           <path
             d={`M ${GRID_SIZE} 0 L 0 0 0 ${GRID_SIZE}`}
             fill="none"
-            stroke="rgba(255, 255, 255, 0.04)"
+            stroke="var(--editor-grid-minor)"
             strokeWidth="1"
           />
         </pattern>
@@ -37,7 +37,7 @@ export function MapGrid({ width, height }: MapGridProps) {
           <path
             d={`M ${GRID_SIZE * 5} 0 L 0 0 0 ${GRID_SIZE * 5}`}
             fill="none"
-            stroke="rgba(255, 255, 255, 0.1)"
+            stroke="var(--editor-grid-major)"
             strokeWidth="1.5"
           />
         </pattern>

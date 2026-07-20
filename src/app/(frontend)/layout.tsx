@@ -1,6 +1,8 @@
 import { IBM_Plex_Sans, Montserrat } from "next/font/google";
 import React from "react";
 
+import { ThemeProvider } from "@/components/theme-provider";
+
 import "./global.css";
 
 const fontSans = Montserrat({
@@ -15,17 +17,19 @@ const fontHeading = IBM_Plex_Sans({
 });
 
 export const metadata = {
-  description: "A blank template using Payload in a Next.js app.",
-  title: "Payload Blank Template",
+  description: "Indoor maps and wayfinding for public venues and facilities.",
+  title: "Wayfinder",
 };
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
   const { children } = props;
 
   return (
-    <html lang="en">
-      <body className={`${fontSans.variable} ${fontHeading.variable} antialiased dark`}>
-        <main>{children}</main>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${fontSans.variable} ${fontHeading.variable} antialiased`}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <main>{children}</main>
+        </ThemeProvider>
       </body>
     </html>
   );

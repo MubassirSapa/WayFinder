@@ -1,7 +1,6 @@
 import type {
   PointerEventHandler,
   RefObject,
-  WheelEventHandler,
 } from "react";
 
 import { getRenderedFloorSize } from "../lib/mapViewerViewport";
@@ -21,6 +20,7 @@ interface MapViewerCanvasProps {
   nodes: ViewerMapNode[];
   objects: ViewerMapObject[];
   pan: { x: number; y: number };
+  routePoints?: { x: number; y: number }[];
   selectedObjectId: string | null;
   showGrid: boolean;
   viewportRef: RefObject<HTMLDivElement | null>;
@@ -33,7 +33,6 @@ interface MapViewerCanvasProps {
   onSvgPointerDown: PointerEventHandler<SVGSVGElement>;
   onSvgPointerMove: PointerEventHandler<SVGSVGElement>;
   onSvgPointerUp: PointerEventHandler<SVGSVGElement>;
-  onWheel: WheelEventHandler<HTMLDivElement>;
 }
 
 export function MapViewerCanvas({
@@ -43,6 +42,7 @@ export function MapViewerCanvas({
   nodes,
   objects,
   pan,
+  routePoints,
   selectedObjectId,
   showGrid,
   viewportRef,
@@ -55,7 +55,6 @@ export function MapViewerCanvas({
   onSvgPointerDown,
   onSvgPointerMove,
   onSvgPointerUp,
-  onWheel,
 }: MapViewerCanvasProps) {
   const renderedSize = activeFloor ? getRenderedFloorSize(activeFloor) : null;
 
@@ -71,7 +70,6 @@ export function MapViewerCanvas({
         onPointerCancel={onPointerCancel}
         onPointerLeave={onPointerLeave}
         onPointerUp={onPointerUp}
-        onWheel={onWheel}
         ref={viewportRef}
       >
         {!activeFloor ? (
@@ -103,6 +101,7 @@ export function MapViewerCanvas({
               onPointerDown={onSvgPointerDown}
               onPointerMove={onSvgPointerMove}
               onPointerUp={onSvgPointerUp}
+              routePoints={routePoints}
               selectedObjectId={selectedObjectId}
               showGrid={showGrid}
             />

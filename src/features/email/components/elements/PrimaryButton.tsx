@@ -15,7 +15,7 @@ export function PrimaryButton({ href, children }: TPrimaryButton) {
         style={{
           display: "inline-block",
           background: EMAIL_THEME.primary,
-          color: "#ffffff",
+          color: EMAIL_THEME.surface,
           textDecoration: "none",
           borderRadius: 8,
           padding: "12px 18px",

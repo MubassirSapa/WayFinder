@@ -10,21 +10,21 @@ export function InspectorPanel() {
   const { selectedEntity } = useEditorStore();
 
   return (
-    <div className="w-72 h-full border-l border-zinc-800 bg-zinc-900/50 flex flex-col backdrop-blur-md">
-      <div className="p-4 border-b border-zinc-800">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400">
+    <div className="w-72 h-full border-l border-editor-border bg-editor-panel/50 flex flex-col backdrop-blur-md">
+      <div className="p-4 border-b border-editor-border">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-editor-muted-foreground">
           {EDITOR_UI_TEXT.inspector.title}
         </h3>
-        <p className="text-[11px] text-zinc-500 mt-1">
+        <p className="text-[11px] text-editor-subtle-foreground mt-1">
           {EDITOR_UI_TEXT.inspector.description}
         </p>
       </div>
 
       <div className="flex-1 overflow-y-auto">
         {!selectedEntity ? (
-          <div className="h-full flex flex-col items-center justify-center p-6 text-center text-zinc-500 select-none">
+          <div className="h-full flex flex-col items-center justify-center p-6 text-center text-editor-subtle-foreground select-none">
             <svg
-              className="h-8 w-8 text-zinc-600 mb-2"
+              className="h-8 w-8 text-editor-disabled-foreground mb-2"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -37,7 +37,7 @@ export function InspectorPanel() {
               />
             </svg>
             <p className="text-xs">{EDITOR_UI_TEXT.inspector.emptyTitle}</p>
-            <p className="text-[10px] text-zinc-600 mt-1 max-w-[180px] leading-relaxed">
+            <p className="text-[10px] text-editor-disabled-foreground mt-1 max-w-[180px] leading-relaxed">
               {EDITOR_UI_TEXT.inspector.emptyDescription}
             </p>
           </div>

@@ -42,6 +42,7 @@ export const PathEdges: CollectionConfig = {
         { label: "Walkway", value: "walkway" },
         { label: "Stairs", value: "stairs" },
         { label: "Elevator", value: "elevator" },
+        { label: "Escalator", value: "escalator" },
         { label: "Ramp", value: "ramp" },
       ],
     },

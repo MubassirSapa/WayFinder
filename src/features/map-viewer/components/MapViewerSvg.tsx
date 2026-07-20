@@ -20,6 +20,7 @@ interface MapViewerSvgProps {
   edges: ViewerPathEdge[];
   nodes: ViewerMapNode[];
   objects: ViewerMapObject[];
+  routePoints?: { x: number; y: number }[];
   selectedObjectId: string | null;
   showGrid: boolean;
   onBackgroundClick: () => void;
@@ -34,6 +35,7 @@ export function MapViewerSvg({
   edges,
   nodes,
   objects,
+  routePoints,
   selectedObjectId,
   showGrid,
   onBackgroundClick,
@@ -147,8 +149,50 @@ export function MapViewerSvg({
           selectedObjectId={selectedObjectId}
         />
         <ViewerNodes nodes={nodes} />
+        {routePoints && routePoints.length > 1 ? <RoutePolyline points={routePoints} /> : null}
       </g>
     </svg>
+  );
+}
+
+function RoutePolyline({ points }: { points: { x: number; y: number }[] }) {
+  const origin = points[0];
+  const destination = points[points.length - 1];
+
+  return (
+    <g>
+      <defs>
+        <marker
+          id="route-direction-arrow"
+          markerHeight="10"
+          markerUnits="userSpaceOnUse"
+          markerWidth="10"
+          orient="auto"
+          refX="5"
+          refY="5"
+          viewBox="0 0 10 10"
+        >
+          <path d="M1,1 L9,5 L1,9 L3.4,5 Z" fill="var(--map-viewer-route-line)" />
+        </marker>
+      </defs>
+      {/* Dashes "flow" toward the destination (marching-ants effect) and an
+          arrowhead points the final direction of travel, so which way to
+          walk is obvious at a glance instead of just a static line. */}
+      <polyline
+        className="animate-[wf-route-flow_1.2s_linear_infinite]"
+        fill="none"
+        markerEnd="url(#route-direction-arrow)"
+        points={points.map((point) => `${point.x},${point.y}`).join(" ")}
+        stroke="var(--map-viewer-route-line)"
+        strokeDasharray="10 6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={4}
+        vectorEffect="non-scaling-stroke"
+      />
+      <circle cx={origin.x} cy={origin.y} fill="var(--map-viewer-route-origin)" r="7" stroke="var(--background)" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+      <circle cx={destination.x} cy={destination.y} fill="var(--map-viewer-route-destination)" r="7" stroke="var(--background)" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+    </g>
   );
 }
 
@@ -177,6 +221,13 @@ function ViewerObjects({
               event.stopPropagation();
               onSelect(object);
             }}
+            // Without this, a press on an object also reaches the SVG's own
+            // pointerdown handler and starts a pan-drag gesture. Any tiny
+            // amount of pointer movement between down and up (extremely
+            // common on a trackpad) then crosses the drag threshold and the
+            // click gets silently suppressed as "that was a pan, not a
+            // click" — objects became effectively unclickable.
+            onPointerDown={(event) => event.stopPropagation()}
             transform={`translate(${object.x}, ${object.y}) rotate(${object.rotation}, ${centerX}, ${centerY})`}
           >
             <rect
@@ -217,7 +268,7 @@ function ViewerNodes({ nodes }: { nodes: ViewerMapNode[] }) {
         const palette = getViewerNodePalette(node.role);
 
         return (
-          <g key={node.id} transform={`translate(${node.x}, ${node.y})`}>
+          <g className="group" key={node.id} transform={`translate(${node.x}, ${node.y})`}>
             <circle fill={palette.ring} r="14" />
             <circle
               fill={palette.fill}
@@ -226,8 +277,11 @@ function ViewerNodes({ nodes }: { nodes: ViewerMapNode[] }) {
               strokeWidth="2"
               vectorEffect="non-scaling-stroke"
             />
+            {/* Hidden by default — a floor with a few dozen markers turns
+                into a wall of text otherwise; shown on hover instead. */}
             {node.label ? (
               <text
+                className="pointer-events-none opacity-0 transition-opacity duration-150 group-hover:opacity-100"
                 fill="var(--map-viewer-label)"
                 fontFamily="var(--font-sans)"
                 fontSize="10"
@@ -270,7 +324,7 @@ function ViewerEdges({
           <line
             key={edge.id}
             stroke={palette.stroke}
-            strokeDasharray={edge.type === "stairs" ? "6 5" : undefined}
+            strokeDasharray={edge.type === "stairs" ? "6 5" : edge.type === "escalator" ? "2 4" : undefined}
             strokeLinecap="round"
             strokeOpacity={0.72}
             strokeWidth={edge.type === "walkway" ? 3 : 3.6}
