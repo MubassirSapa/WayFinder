@@ -8,6 +8,13 @@ export interface ViewerFloor {
   height: number;
   metersPerPixel?: number | null;
   backgroundImageUrl?: string | null;
+  backgroundImageRotation?: number;
+  backgroundImageScale?: number;
+  backgroundImageOffsetX?: number;
+  backgroundImageOffsetY?: number;
+  backgroundImageFit?: "fill" | "cover" | "contain";
+  backgroundImageNaturalWidth?: number | null;
+  backgroundImageNaturalHeight?: number | null;
   status: "draft" | "published";
 }
 

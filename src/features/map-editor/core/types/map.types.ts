@@ -10,6 +10,16 @@ export interface EditorFloor {
   backgroundImageName?: string | null;
   backgroundImageAlt?: string | null;
   backgroundImageUrl?: string | null;
+  backgroundImageRotation?: number;
+  backgroundImageScale?: number;
+  backgroundImageOpacity?: number;
+  backgroundImageLocked?: boolean;
+  backgroundImageOffsetX?: number;
+  backgroundImageOffsetY?: number;
+  backgroundImageFit?: 'fill' | 'cover' | 'contain';
+  /** Natural pixel size of the uploaded file, read-only (from the media doc) — used to compute "cover"/"contain" fit. */
+  backgroundImageNaturalWidth?: number | null;
+  backgroundImageNaturalHeight?: number | null;
   status: 'draft' | 'published';
   _dirty?: boolean;
 }

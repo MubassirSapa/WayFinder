@@ -102,6 +102,27 @@ export async function updateFloorAdapter(id: string, data: Partial<EditorFloor>)
     } else if (data.backgroundImageUrl !== undefined) {
       updateData.backgroundImageUrl = data.backgroundImageUrl;
     }
+    if (data.backgroundImageRotation !== undefined) {
+      updateData.backgroundImageRotation = data.backgroundImageRotation;
+    }
+    if (data.backgroundImageScale !== undefined) {
+      updateData.backgroundImageScale = data.backgroundImageScale;
+    }
+    if (data.backgroundImageOpacity !== undefined) {
+      updateData.backgroundImageOpacity = data.backgroundImageOpacity;
+    }
+    if (data.backgroundImageLocked !== undefined) {
+      updateData.backgroundImageLocked = data.backgroundImageLocked;
+    }
+    if (data.backgroundImageOffsetX !== undefined) {
+      updateData.backgroundImageOffsetX = data.backgroundImageOffsetX;
+    }
+    if (data.backgroundImageOffsetY !== undefined) {
+      updateData.backgroundImageOffsetY = data.backgroundImageOffsetY;
+    }
+    if (data.backgroundImageFit !== undefined) {
+      updateData.backgroundImageFit = data.backgroundImageFit;
+    }
     if (data.status !== undefined) updateData.status = data.status;
 
     const doc = await payload.update({
@@ -152,6 +173,8 @@ export async function uploadFloorReferenceImageAdapter(formData: FormData) {
       filename: doc.filename ?? null,
       id: String(doc.id),
       url: doc.url ?? null,
+      width: doc.width ?? null,
+      height: doc.height ?? null,
     };
   });
 }

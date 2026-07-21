@@ -2,6 +2,7 @@ import type { PointerEventHandler } from "react";
 
 import { MAP_VIEWER_FLOOR_CONTENT_PADDING } from "../constants/mapViewer.constants";
 import { useConnectorDoublePress } from "../hooks/useConnectorDoublePress";
+import { BACKGROUND_IMAGE_CLIP_PATH_ID, computeBackgroundImageFit } from "../lib/backgroundImageFit";
 import {
   getViewerEdgePalette,
   getViewerNodePalette,
@@ -51,6 +52,20 @@ export function MapViewerSvg({
   onPointerUp,
 }: MapViewerSvgProps) {
   const renderedSize = getRenderedFloorSize(activeFloor);
+  const backgroundImageFit = computeBackgroundImageFit({
+    floorWidth: activeFloor.width,
+    floorHeight: activeFloor.height,
+    naturalWidth: activeFloor.backgroundImageNaturalWidth,
+    naturalHeight: activeFloor.backgroundImageNaturalHeight,
+    fit: activeFloor.backgroundImageFit ?? "fill",
+    offsetX: activeFloor.backgroundImageOffsetX,
+    offsetY: activeFloor.backgroundImageOffsetY,
+  });
+  const backgroundImageX = MAP_VIEWER_FLOOR_CONTENT_PADDING + backgroundImageFit.x;
+  const backgroundImageY = MAP_VIEWER_FLOOR_CONTENT_PADDING + backgroundImageFit.y;
+  const backgroundImageCenterX = backgroundImageX + backgroundImageFit.width / 2;
+  const backgroundImageCenterY = backgroundImageY + backgroundImageFit.height / 2;
+  const backgroundImageTransform = `translate(${backgroundImageCenterX} ${backgroundImageCenterY}) rotate(${activeFloor.backgroundImageRotation ?? 0}) scale(${activeFloor.backgroundImageScale ?? 1}) translate(${-backgroundImageCenterX} ${-backgroundImageCenterY})`;
 
   return (
     <svg
@@ -96,6 +111,14 @@ export function MapViewerSvg({
             values="0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0 0 0 1 0"
           />
         </filter>
+        <clipPath id={BACKGROUND_IMAGE_CLIP_PATH_ID}>
+          <rect
+            height={activeFloor.height}
+            width={activeFloor.width}
+            x={MAP_VIEWER_FLOOR_CONTENT_PADDING}
+            y={MAP_VIEWER_FLOOR_CONTENT_PADDING}
+          />
+        </clipPath>
       </defs>
 
       <rect
@@ -124,12 +147,14 @@ export function MapViewerSvg({
         <image
           filter="url(#viewer-reference-image)"
           href={activeFloor.backgroundImageUrl}
-          height={activeFloor.height}
+          height={backgroundImageFit.height}
           opacity={0.07}
           preserveAspectRatio="none"
-          width={activeFloor.width}
-          x={MAP_VIEWER_FLOOR_CONTENT_PADDING}
-          y={MAP_VIEWER_FLOOR_CONTENT_PADDING}
+          width={backgroundImageFit.width}
+          x={backgroundImageX}
+          y={backgroundImageY}
+          clipPath={backgroundImageFit.needsClip ? `url(#${BACKGROUND_IMAGE_CLIP_PATH_ID})` : undefined}
+          transform={backgroundImageTransform}
         />
       ) : null}
 

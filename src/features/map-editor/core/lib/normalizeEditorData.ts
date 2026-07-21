@@ -66,6 +66,19 @@ export function normalizeFloor(doc: Floor): EditorFloor {
       ? backgroundImage.alt
       : null,
     backgroundImageUrl,
+    backgroundImageRotation: floorDoc.backgroundImageRotation ?? 0,
+    backgroundImageScale: floorDoc.backgroundImageScale ?? 1,
+    backgroundImageOpacity: floorDoc.backgroundImageOpacity ?? 0.3,
+    backgroundImageLocked: floorDoc.backgroundImageLocked ?? false,
+    backgroundImageOffsetX: floorDoc.backgroundImageOffsetX ?? 0,
+    backgroundImageOffsetY: floorDoc.backgroundImageOffsetY ?? 0,
+    backgroundImageFit: floorDoc.backgroundImageFit ?? 'fill',
+    backgroundImageNaturalWidth: hasMediaDocument(backgroundImage)
+      ? backgroundImage.width ?? null
+      : null,
+    backgroundImageNaturalHeight: hasMediaDocument(backgroundImage)
+      ? backgroundImage.height ?? null
+      : null,
     status: doc.status ?? 'draft',
   };
 }

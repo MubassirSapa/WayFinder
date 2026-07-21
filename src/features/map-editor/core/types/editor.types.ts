@@ -19,6 +19,8 @@ export interface UploadedReferenceImage {
   filename: string | null;
   id: string;
   url: string | null;
+  width: number | null;
+  height: number | null;
 }
 
 export type ToolboxObjectType =

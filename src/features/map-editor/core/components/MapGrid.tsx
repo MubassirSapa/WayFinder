@@ -43,12 +43,15 @@ export function MapGrid({ width, height }: MapGridProps) {
         </pattern>
       </defs>
 
-      {/* Grid Background */}
+      {/* Grid Background — purely decorative, must not intercept pointer
+          events (it fully covers the canvas and would otherwise block
+          dragging anything rendered beneath it, like the reference image). */}
       <rect
         width={width}
         height={height}
         fill="url(#editor-grid-major)"
         data-canvas-bg="true"
+        style={{ pointerEvents: 'none' }}
       />
     </>
   );

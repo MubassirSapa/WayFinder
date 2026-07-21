@@ -60,6 +60,17 @@ function normalizeFloor(doc: Floor, organizationName: string | null): ViewerFloo
     backgroundImageUrl: hasMediaDocument(floorDoc.backgroundImage)
       ? floorDoc.backgroundImage.url ?? doc.backgroundImageUrl ?? null
       : doc.backgroundImageUrl ?? null,
+    backgroundImageRotation: floorDoc.backgroundImageRotation ?? 0,
+    backgroundImageScale: floorDoc.backgroundImageScale ?? 1,
+    backgroundImageOffsetX: floorDoc.backgroundImageOffsetX ?? 0,
+    backgroundImageOffsetY: floorDoc.backgroundImageOffsetY ?? 0,
+    backgroundImageFit: floorDoc.backgroundImageFit ?? "fill",
+    backgroundImageNaturalWidth: hasMediaDocument(floorDoc.backgroundImage)
+      ? floorDoc.backgroundImage.width ?? null
+      : null,
+    backgroundImageNaturalHeight: hasMediaDocument(floorDoc.backgroundImage)
+      ? floorDoc.backgroundImage.height ?? null
+      : null,
     status: doc.status ?? "draft",
   };
 }

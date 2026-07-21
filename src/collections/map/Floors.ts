@@ -60,6 +60,46 @@ export const Floors: CollectionConfig = {
       type: "text",
     },
     {
+      name: "backgroundImageRotation",
+      type: "number",
+      defaultValue: 0,
+    },
+    {
+      name: "backgroundImageScale",
+      type: "number",
+      defaultValue: 1,
+    },
+    {
+      name: "backgroundImageOpacity",
+      type: "number",
+      defaultValue: 0.3,
+    },
+    {
+      name: "backgroundImageLocked",
+      type: "checkbox",
+      defaultValue: false,
+    },
+    {
+      name: "backgroundImageOffsetX",
+      type: "number",
+      defaultValue: 0,
+    },
+    {
+      name: "backgroundImageOffsetY",
+      type: "number",
+      defaultValue: 0,
+    },
+    {
+      name: "backgroundImageFit",
+      type: "select",
+      defaultValue: "fill",
+      options: [
+        { label: "Fill", value: "fill" },
+        { label: "Cover", value: "cover" },
+        { label: "Contain", value: "contain" },
+      ],
+    },
+    {
       name: "status",
       type: "select",
       required: true,

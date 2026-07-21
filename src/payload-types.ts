@@ -201,6 +201,13 @@ export interface Floor {
   metersPerPixel?: number | null;
   backgroundImage?: (number | null) | Media;
   backgroundImageUrl?: string | null;
+  backgroundImageRotation?: number | null;
+  backgroundImageScale?: number | null;
+  backgroundImageOpacity?: number | null;
+  backgroundImageLocked?: boolean | null;
+  backgroundImageOffsetX?: number | null;
+  backgroundImageOffsetY?: number | null;
+  backgroundImageFit?: ('fill' | 'cover' | 'contain') | null;
   status: 'draft' | 'published';
   updatedAt: string;
   createdAt: string;
@@ -447,6 +454,13 @@ export interface FloorsSelect<T extends boolean = true> {
   metersPerPixel?: T;
   backgroundImage?: T;
   backgroundImageUrl?: T;
+  backgroundImageRotation?: T;
+  backgroundImageScale?: T;
+  backgroundImageOpacity?: T;
+  backgroundImageLocked?: T;
+  backgroundImageOffsetX?: T;
+  backgroundImageOffsetY?: T;
+  backgroundImageFit?: T;
   status?: T;
   updatedAt?: T;
   createdAt?: T;
