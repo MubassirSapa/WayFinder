@@ -7,6 +7,13 @@ export const EDITOR_UI_TEXT = {
     reload: "Reload",
     title: "Unable to load editor",
   },
+  leftPanel: {
+    tabs: {
+      automation: "Automation",
+      create: "Create",
+      image: "Image",
+    },
+  },
   inspector: {
     description: "View and edit the selected item.",
     emptyDescription:

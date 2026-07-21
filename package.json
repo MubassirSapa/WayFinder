@@ -19,7 +19,7 @@
     "@payloadcms/email-resend": "^3.85.1",
     "@payloadcms/next": "^3.85.1",
     "@payloadcms/richtext-lexical": "^3.85.1",
-    "@payloadcms/sdk": "^3.86.0",
+    "@payloadcms/sdk": "^3.85.1",
     "@tanstack/react-form": "^1.33.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
