@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest'
-import { getDefaultDimensions, getDefaultObjectName, getObjectColor, OBJECT_CATEGORIES, OBJECT_CONFIGS } from '../../../lib/objectDefaults'
+import { defaultPolygonPoints, getDefaultDimensions, getDefaultObjectName, getObjectColor, OBJECT_CATEGORIES, OBJECT_CONFIGS } from '../../../lib/objectDefaults'
 import type { EditorMapObject } from '../../../types/map.types'
 
 function makeObject(overrides: Partial<EditorMapObject> & { id: string; type: EditorMapObject['type'] }): EditorMapObject {
   return {
     buildingId: 'b1', floorId: 'f1', height: 100, isAccessible: true, isSearchable: true,
-    label: '', name: '', parentObjectId: null, rotation: 0, width: 100, x: 0, y: 0,
+    label: '', name: '', parentObjectId: null, rotation: 0, shape: 'rectangle', width: 100, x: 0, y: 0,
     ...overrides,
   }
 }
@@ -76,6 +76,26 @@ describe('OBJECT_CATEGORIES', () => {
     for (const category of OBJECT_CATEGORIES) {
       expect(category.label.length).toBeGreaterThan(0)
     }
+  })
+})
+
+describe('defaultPolygonPoints', () => {
+  it('returns the 4 corners of the bounding box in clockwise order', () => {
+    expect(defaultPolygonPoints(120, 80)).toEqual([
+      { x: 0, y: 0 },
+      { x: 120, y: 0 },
+      { x: 120, y: 80 },
+      { x: 0, y: 80 },
+    ])
+  })
+
+  it('handles a zero-size box without throwing', () => {
+    expect(defaultPolygonPoints(0, 0)).toEqual([
+      { x: 0, y: 0 },
+      { x: 0, y: 0 },
+      { x: 0, y: 0 },
+      { x: 0, y: 0 },
+    ])
   })
 })
 

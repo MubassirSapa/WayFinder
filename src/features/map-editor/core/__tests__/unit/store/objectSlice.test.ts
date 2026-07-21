@@ -5,7 +5,7 @@ import type { EditorMapObject } from '../../../types/map.types'
 const OBJ: EditorMapObject = {
   id: 'temp_obj_1', floorId: 'f1', buildingId: 'b1', parentObjectId: null,
   type: 'room', name: 'Room A', label: 'A', x: 0, y: 0, width: 100, height: 80,
-  rotation: 0, isSearchable: true, isAccessible: true,
+  rotation: 0, shape: 'rectangle', isSearchable: true, isAccessible: true,
 }
 
 describe('ObjectSlice', () => {
