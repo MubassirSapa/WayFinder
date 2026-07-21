@@ -71,6 +71,7 @@ not just new features:
 
 - Prefer the project's installed shadcn components and existing shared components instead of building equivalent UI primitives from scratch.
 - Before creating a UI component, check the shadcn registry for an available equivalent. If it exists but is not installed in the project, install and use it.
-- Reuse the app's theme tokens and semantic color classes. Do not hardcode colors when an appropriate theme token exists.
+- Use theme tokens only — never a hardcoded color (hex/rgb/oklch literal, or an arbitrary Tailwind value) in component code. Every color a component needs must resolve to a CSS variable/semantic class defined in `src/app/(frontend)/global.css` (`--background`, `--editor-*`, `--map-viewer-*`, etc.).
+- If no existing token fits, add a new one to `global.css` (light and dark, plus `.map-viewer-theme` if it's a map-viewer color) and use that — don't hardcode a one-off value as a workaround.
 - Keep Tailwind usage minimal: add only the classes required to achieve the requested layout, state, and responsive behavior.
 - Reuse existing variants, utilities, and component APIs before introducing custom styling or duplicated abstractions.

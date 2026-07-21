@@ -72,11 +72,11 @@
 
 :root {
   color-scheme: light;
-  --background: oklch(0.968 0.006 195);
+  --background: oklch(0.97 0 0);
   --foreground: oklch(0.148 0.004 228.8);
-  --card: oklch(0.982 0.004 195);
+  --card: oklch(0.978 0 0);
   --card-foreground: oklch(0.148 0.004 228.8);
-  --popover: oklch(0.988 0.003 195);
+  --popover: oklch(0.983 0 0);
   --popover-foreground: oklch(0.148 0.004 228.8);
   --primary: oklch(0.511 0.096 186.391);
   --primary-foreground: oklch(0.984 0.014 180.72);
@@ -96,7 +96,7 @@
   --chart-4: oklch(0.511 0.096 186.391);
   --chart-5: oklch(0.437 0.078 188.216);
   --radius: 0.625rem;
-  --sidebar: oklch(0.955 0.007 195);
+  --sidebar: oklch(0.96 0 0);
   --sidebar-foreground: oklch(0.148 0.004 228.8);
   --sidebar-primary: oklch(0.6 0.118 184.704);
   --sidebar-primary-foreground: oklch(0.984 0.014 180.72);
@@ -107,8 +107,8 @@
   --info: oklch(0.59 0.14 238);
   --success: oklch(0.55 0.14 153);
   --warning: oklch(0.62 0.14 75);
-  --editor-background: oklch(0.985 0.002 228);
-  --editor-panel: oklch(0.97 0.004 228);
+  --editor-background: oklch(0.975 0 0);
+  --editor-panel: oklch(0.965 0 0);
   --editor-surface: oklch(0.93 0.006 228);
   --editor-hover: oklch(0.88 0.008 228);
   --editor-border: oklch(0.84 0.008 228);
@@ -123,7 +123,7 @@
   --editor-grid-minor: oklch(0.52 0.01 228 / 10%);
   --editor-grid-major: oklch(0.52 0.01 228 / 22%);
   --editor-canvas-label: oklch(0.22 0.008 228 / 90%);
-  --editor-canvas-label-inverse: oklch(0.985 0.002 228);
+  --editor-canvas-label-inverse: oklch(0.975 0 0);
   --editor-node-neutral: oklch(0.55 0.014 226);
   --editor-node-entrance: oklch(0.58 0.16 145);
   --editor-node-exit: oklch(0.58 0.2 27);
@@ -226,10 +226,10 @@
 }
 
 .map-viewer-theme {
-  --map-viewer-canvas:oklch(0.975 0.006 228);
+  --map-viewer-canvas:oklch(0.97 0 0);
   --map-viewer-grid-minor:oklch(0.82 0.008 228 / 0.35);
   --map-viewer-grid-major:oklch(0.74 0.01 228 / 0.5);
-  --map-viewer-floor-fill:oklch(0.993 0.001 106);
+  --map-viewer-floor-fill:oklch(0.978 0 0);
   --map-viewer-floor-stroke:oklch(0.74 0.012 227);
   --map-viewer-floor-inner-stroke:oklch(0.86 0.006 223);
   --map-viewer-label:oklch(0.29 0.01 228);
