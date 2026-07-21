@@ -242,6 +242,14 @@ export interface MapObject {
   width?: number | null;
   height?: number | null;
   rotation?: number | null;
+  shape?: ('rectangle' | 'ellipse' | 'polygon') | null;
+  points?:
+    | {
+        x: number;
+        y: number;
+        id?: string | null;
+      }[]
+    | null;
   isSearchable?: boolean | null;
   isAccessible?: boolean | null;
   updatedAt: string;
@@ -481,6 +489,14 @@ export interface MapObjectsSelect<T extends boolean = true> {
   width?: T;
   height?: T;
   rotation?: T;
+  shape?: T;
+  points?:
+    | T
+    | {
+        x?: T;
+        y?: T;
+        id?: T;
+      };
   isSearchable?: T;
   isAccessible?: T;
   updatedAt?: T;

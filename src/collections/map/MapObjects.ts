@@ -92,6 +92,32 @@ export const MapObjects: CollectionConfig = {
       defaultValue: 0,
     },
     {
+      name: "shape",
+      type: "select",
+      defaultValue: "rectangle",
+      options: [
+        { label: "Rectangle", value: "rectangle" },
+        { label: "Ellipse", value: "ellipse" },
+        { label: "Custom", value: "polygon" },
+      ],
+    },
+    {
+      name: "points",
+      type: "array",
+      fields: [
+        {
+          name: "x",
+          type: "number",
+          required: true,
+        },
+        {
+          name: "y",
+          type: "number",
+          required: true,
+        },
+      ],
+    },
+    {
       name: "isSearchable",
       type: "checkbox",
       defaultValue: true,

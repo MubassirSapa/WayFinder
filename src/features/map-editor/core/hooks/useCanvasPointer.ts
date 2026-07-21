@@ -57,6 +57,7 @@ export function useCanvasPointer(canvasRef: RefObject<SVGSVGElement | null>) {
       width,
       height,
       rotation: 0,
+      shape: 'rectangle',
       isSearchable: true,
       isAccessible: true,
       _clientId: tempId,

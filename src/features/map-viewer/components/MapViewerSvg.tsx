@@ -295,7 +295,6 @@ function ViewerObjects({
         const isSelected = selectedObjectId === object.id;
         const centerX = object.width / 2;
         const centerY = object.height / 2;
-        const radius = object.type === "room" || object.type === "section" ? 14 : 8;
 
         // Stairs/elevator/escalator objects are a much bigger, easier target
         // than their connector node marker — clicking anywhere on the shape
@@ -325,15 +324,46 @@ function ViewerObjects({
             onPointerDown={(event) => event.stopPropagation()}
             transform={`translate(${object.x}, ${object.y}) rotate(${object.rotation}, ${centerX}, ${centerY})`}
           >
-            <rect
-              fill={palette.fill}
-              height={object.height}
-              rx={radius}
-              stroke={isSelected ? "var(--primary)" : palette.stroke}
-              strokeWidth={isSelected ? 2.4 : 1.2}
-              vectorEffect="non-scaling-stroke"
-              width={object.width}
-            />
+            {object.shape === "polygon" ? (
+              <polygon
+                fill={palette.fill}
+                points={(
+                  (object.points?.length ?? 0) >= 3
+                    ? object.points!
+                    : [
+                        { x: 0, y: 0 },
+                        { x: object.width, y: 0 },
+                        { x: object.width, y: object.height },
+                        { x: 0, y: object.height },
+                      ]
+                )
+                  .map((point) => `${point.x},${point.y}`)
+                  .join(" ")}
+                stroke={isSelected ? "var(--primary)" : palette.stroke}
+                strokeWidth={isSelected ? 2.4 : 1.2}
+                vectorEffect="non-scaling-stroke"
+              />
+            ) : object.shape === "ellipse" ? (
+              <ellipse
+                cx={centerX}
+                cy={centerY}
+                fill={palette.fill}
+                rx={centerX}
+                ry={centerY}
+                stroke={isSelected ? "var(--primary)" : palette.stroke}
+                strokeWidth={isSelected ? 2.4 : 1.2}
+                vectorEffect="non-scaling-stroke"
+              />
+            ) : (
+              <rect
+                fill={palette.fill}
+                height={object.height}
+                stroke={isSelected ? "var(--primary)" : palette.stroke}
+                strokeWidth={isSelected ? 2.4 : 1.2}
+                vectorEffect="non-scaling-stroke"
+                width={object.width}
+              />
+            )}
 
             {object.type !== "wall" && object.type !== "aisle" && object.width > 52 && object.height > 26 ? (
               <text

@@ -50,6 +50,9 @@ export interface EditorMapObject {
   width: number;
   height: number;
   rotation: number;
+  shape: 'rectangle' | 'ellipse' | 'polygon';
+  /** Only meaningful when shape === 'polygon' — local, unrotated coordinates. */
+  points?: { x: number; y: number }[] | null;
   isSearchable: boolean;
   isAccessible: boolean;
   _clientId?: string; // used to link unsaved local references

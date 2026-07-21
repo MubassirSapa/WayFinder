@@ -97,6 +97,8 @@ export function normalizeMapObject(doc: PayloadMapObject): EditorMapObject {
     width: doc.width ?? 100,
     height: doc.height ?? 80,
     rotation: doc.rotation ?? 0,
+    shape: doc.shape ?? 'rectangle',
+    points: doc.points?.map((point) => ({ x: point.x, y: point.y })) ?? null,
     isSearchable: doc.isSearchable ?? true,
     isAccessible: doc.isAccessible ?? true,
   };

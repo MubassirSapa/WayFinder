@@ -1,32 +1,12 @@
 import React, { useRef } from 'react';
 import { useAppStore } from "@/store";
-import { snapToGrid } from '../lib/canvas';
+import { clientPointToSvg, snapToGrid } from '../lib/canvas';
 
 const MIN_OBJECT_SIZE = 20;
 
 function normalizeRotation(rotation: number): number {
   const normalized = rotation % 360;
   return normalized < 0 ? normalized + 360 : normalized;
-}
-
-function clientPointToSvg(
-  clientX: number,
-  clientY: number,
-  svg: SVGSVGElement,
-): { x: number; y: number } | null {
-  const svgPoint = svg.createSVGPoint();
-  svgPoint.x = clientX;
-  svgPoint.y = clientY;
-
-  try {
-    const matrix = svg.getScreenCTM()?.inverse();
-    if (matrix) {
-      const transformed = svgPoint.matrixTransform(matrix);
-      return { x: transformed.x, y: transformed.y };
-    }
-  } catch {}
-
-  return null;
 }
 
 export function useObjectDrag() {

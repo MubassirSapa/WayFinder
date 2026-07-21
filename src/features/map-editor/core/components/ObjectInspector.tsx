@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useAppStore } from "@/store";
 import { deleteMapObject } from "../actions/server/object-actions";
 import { assertSuccess } from "@/lib/responses";
-import { OBJECT_CONFIGS } from '../lib/objectDefaults';
+import { defaultPolygonPoints, OBJECT_CONFIGS } from '../lib/objectDefaults';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -22,6 +22,12 @@ import { isConnectorNodeRole } from '@/features/map-editor/floor-links/lib/cross
 import { FloorLinkPanel } from '@/features/map-editor/floor-links/components/FloorLinkPanel';
 
 const CONNECTOR_OBJECT_TYPES: ToolboxObjectType[] = ['stairs', 'elevator', 'escalator'];
+
+const SHAPE_OPTIONS = [
+  { value: 'rectangle', label: 'Rectangle' },
+  { value: 'ellipse', label: 'Round' },
+  { value: 'polygon', label: 'Custom' },
+] as const;
 
 interface ObjectInspectorProps {
   objectId: string;
@@ -125,36 +131,34 @@ export function ObjectInspector({ objectId }: ObjectInspectorProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <div className="space-y-1.5">
-          <Label htmlFor="obj-w">Width (px)</Label>
-          <Input
-            id="obj-w"
-            type="number"
-            value={object.width}
-            onChange={(e) => handleFieldChange('width', Number(e.target.value))}
-            className="bg-editor-surface border-editor-border-strong text-editor-foreground"
-          />
+      {object.shape === 'polygon' ? (
+        <p className="rounded-xl border border-editor-border bg-editor-panel/45 px-3 py-2 text-[11px] leading-relaxed text-editor-subtle-foreground">
+          Drag the corner points on the canvas to reshape. Drag a small dashed point to pull out a new corner from that edge.
+        </p>
+      ) : (
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-1.5">
+            <Label htmlFor="obj-w">Width (px)</Label>
+            <Input
+              id="obj-w"
+              type="number"
+              value={object.width}
+              onChange={(e) => handleFieldChange('width', Number(e.target.value))}
+              className="bg-editor-surface border-editor-border-strong text-editor-foreground"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="obj-h">Height (px)</Label>
+            <Input
+              id="obj-h"
+              type="number"
+              value={object.height}
+              onChange={(e) => handleFieldChange('height', Number(e.target.value))}
+              className="bg-editor-surface border-editor-border-strong text-editor-foreground"
+            />
+          </div>
         </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="obj-h">Height (px)</Label>
-          <Input
-            id="obj-h"
-            type="number"
-            value={object.height}
-            onChange={(e) => handleFieldChange('y', Number(e.target.value))}
-            className="bg-editor-surface border-editor-border-strong text-editor-foreground"
-            style={{ display: 'none' }} // we'll use actual input below
-          />
-          <Input
-            id="obj-h-actual"
-            type="number"
-            value={object.height}
-            onChange={(e) => handleFieldChange('height', Number(e.target.value))}
-            className="bg-editor-surface border-editor-border-strong text-editor-foreground"
-          />
-        </div>
-      </div>
+      )}
 
       <div className="space-y-1.5">
         <Label htmlFor="obj-rot">Rotation (degrees)</Label>
@@ -167,6 +171,32 @@ export function ObjectInspector({ objectId }: ObjectInspectorProps) {
           onChange={(e) => handleFieldChange('rotation', Number(e.target.value))}
           className="bg-editor-surface border-editor-border-strong text-editor-foreground"
         />
+      </div>
+
+      <div className="space-y-1.5">
+        <Label>Shape</Label>
+        <div className="grid grid-cols-3 gap-1.5">
+          {SHAPE_OPTIONS.map((option) => (
+            <Button
+              key={option.value}
+              type="button"
+              variant={object.shape === option.value ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => {
+                if (option.value === 'polygon' && (object.points?.length ?? 0) < 3) {
+                  updateObject(objectId, {
+                    shape: option.value,
+                    points: defaultPolygonPoints(object.width, object.height),
+                  });
+                } else {
+                  handleFieldChange('shape', option.value);
+                }
+              }}
+            >
+              {option.label}
+            </Button>
+          ))}
+        </div>
       </div>
 
       <div className="space-y-3 pt-2">

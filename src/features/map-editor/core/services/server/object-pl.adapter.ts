@@ -33,6 +33,8 @@ export async function createMapObjectAdapter(
         width: data.width,
         height: data.height,
         rotation: data.rotation,
+        shape: data.shape,
+        points: data.points,
         isSearchable: data.isSearchable,
         isAccessible: data.isAccessible,
       },
@@ -64,6 +66,8 @@ export async function updateMapObjectAdapter(
     if (data.width !== undefined) updateData.width = data.width;
     if (data.height !== undefined) updateData.height = data.height;
     if (data.rotation !== undefined) updateData.rotation = data.rotation;
+    if (data.shape !== undefined) updateData.shape = data.shape;
+    if (data.points !== undefined) updateData.points = data.points;
     if (data.isSearchable !== undefined) {
       updateData.isSearchable = data.isSearchable;
     }
