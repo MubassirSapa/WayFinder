@@ -1,14 +1,10 @@
 'use client';
 
-import {
-  createMapObject,
-  updateMapObject,
-  createMapNode,
-  updateMapNode,
-  createPathEdge,
-  updatePathEdge,
-  updateFloor,
-} from "../actions/floorEditorActions";
+import { createMapObject, updateMapObject } from "../server-actions/object-actions";
+import { createMapNode, updateMapNode } from "../server-actions/node-actions";
+import { createPathEdge, updatePathEdge } from "../server-actions/edge-actions";
+import { updateFloor } from "../server-actions/floor-actions";
+import { assertSuccess } from "@/lib/responses";
 import { useAppStore } from "@/store";
 
 type LocalEditorEntity = {
@@ -64,7 +60,7 @@ export function useSaveEditorChanges() {
       const edgeIdMap: Record<string, string> = {};
 
       if (localFloor?._dirty) {
-        const savedFloor = await updateFloor(localFloor.id, localFloor);
+        const savedFloor = assertSuccess(await updateFloor(localFloor.id, localFloor));
         localFloor = { ...savedFloor, _dirty: false };
       }
 
@@ -72,12 +68,12 @@ export function useSaveEditorChanges() {
         const payloadData = stripLocalFields(obj);
 
         if (isTempId(obj.id)) {
-          const saved = await createMapObject(payloadData);
+          const saved = assertSuccess(await createMapObject(payloadData));
           objectIdMap[obj.id] = saved.id;
           localObjects[saved.id] = { ...saved, _dirty: false };
           delete localObjects[obj.id];
         } else if (obj._dirty) {
-          const saved = await updateMapObject(obj.id, payloadData);
+          const saved = assertSuccess(await updateMapObject(obj.id, payloadData));
           localObjects[obj.id] = { ...saved, _dirty: false };
         }
       }
@@ -92,12 +88,12 @@ export function useSaveEditorChanges() {
         const payloadData = stripLocalFields(node);
 
         if (isTempId(node.id)) {
-          const saved = await createMapNode(payloadData);
+          const saved = assertSuccess(await createMapNode(payloadData));
           nodeIdMap[node.id] = saved.id;
           localNodes[saved.id] = { ...saved, _dirty: false };
           delete localNodes[node.id];
         } else if (node._dirty) {
-          const saved = await updateMapNode(node.id, payloadData);
+          const saved = assertSuccess(await updateMapNode(node.id, payloadData));
           localNodes[node.id] = { ...saved, _dirty: false };
         }
       }
@@ -115,12 +111,12 @@ export function useSaveEditorChanges() {
         const payloadData = stripLocalFields(edge);
 
         if (isTempId(edge.id)) {
-          const saved = await createPathEdge(payloadData);
+          const saved = assertSuccess(await createPathEdge(payloadData));
           edgeIdMap[edge.id] = saved.id;
           localEdges[saved.id] = { ...saved, _dirty: false };
           delete localEdges[edge.id];
         } else if (edge._dirty) {
-          const saved = await updatePathEdge(edge.id, payloadData);
+          const saved = assertSuccess(await updatePathEdge(edge.id, payloadData));
           localEdges[edge.id] = { ...saved, _dirty: false };
         }
       }

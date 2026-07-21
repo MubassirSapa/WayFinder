@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAppStore } from "@/store";
-import type { FloorEditorData } from "../actions/floorEditorActions";
+import type { FloorEditorData } from "../types/editor.types";
 
 export function useFloorEditorData(
   initialData: FloorEditorData | null,

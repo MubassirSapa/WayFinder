@@ -1,7 +1,7 @@
 'use client';
 
 import React, { type ReactNode } from 'react';
-import type { FloorEditorData } from "../actions/floorEditorActions";
+import type { FloorEditorData } from "../types/editor.types";
 import { EDITOR_UI_TEXT } from '../../constants/editorUi.constants';
 import { useFloorEditorData } from '../hooks/useFloorEditorData';
 import { EditorToolbar } from './EditorToolbar';

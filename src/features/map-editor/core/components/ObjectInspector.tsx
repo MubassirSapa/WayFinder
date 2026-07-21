@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import { useAppStore } from "@/store";
-import { deleteMapObject } from "../actions/floorEditorActions";
+import { deleteMapObject } from "../server-actions/object-actions";
+import { assertSuccess } from "@/lib/responses";
 import { OBJECT_CONFIGS } from '../lib/objectDefaults';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -45,7 +46,7 @@ export function ObjectInspector({ objectId }: ObjectInspectorProps) {
       try {
         setIsDeleting(true);
         if (!objectId.startsWith('temp_')) {
-          await deleteMapObject(objectId);
+          assertSuccess(await deleteMapObject(objectId));
         }
         removeObject(objectId);
       } catch (err) {

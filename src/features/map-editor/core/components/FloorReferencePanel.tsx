@@ -9,7 +9,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { EDITOR_UI_TEXT } from '../../constants/editorUi.constants';
-import { uploadFloorReferenceImage } from '../actions/floorEditorActions';
+import { uploadFloorReferenceImage } from '../server-actions/floor-actions';
+import { assertSuccess } from '@/lib/responses';
 import { useAppStore } from '@/store';
 
 export function FloorReferencePanel() {
@@ -38,7 +39,7 @@ export function FloorReferencePanel() {
             || EDITOR_UI_TEXT.referencePanel.defaultAlt(floor.name),
         );
 
-        const uploadedImage = await uploadFloorReferenceImage(formData);
+        const uploadedImage = assertSuccess(await uploadFloorReferenceImage(formData));
 
         updateFloor({
           backgroundImageAlt: uploadedImage.alt,

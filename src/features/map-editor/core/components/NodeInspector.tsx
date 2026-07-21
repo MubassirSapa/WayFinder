@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import { useAppStore } from "@/store";
-import { deleteMapNode } from "../actions/floorEditorActions";
+import { deleteMapNode } from "../server-actions/node-actions";
+import { assertSuccess } from "@/lib/responses";
 import { NODE_ROLE_OPTIONS } from '../lib/objectDefaults';
 import { EditorMapNode } from '../types/map.types';
 import { Input } from '@/components/ui/input';
@@ -40,7 +41,7 @@ export function NodeInspector({ nodeId }: NodeInspectorProps) {
       try {
         setIsDeleting(true);
         if (!nodeId.startsWith('temp_')) {
-          await deleteMapNode(nodeId);
+          assertSuccess(await deleteMapNode(nodeId));
         }
         removeNode(nodeId);
       } catch (err) {

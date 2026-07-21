@@ -2,7 +2,8 @@
 
 import  { useState } from 'react';
 import { useAppStore } from "@/store";
-import { deletePathEdge } from "../actions/floorEditorActions";
+import { deletePathEdge } from "../server-actions/edge-actions";
+import { assertSuccess } from "@/lib/responses";
 import { EDGE_TYPE_OPTIONS } from '../lib/objectDefaults';
 import { EditorPathEdge } from '../types/map.types';
 import { Input } from '@/components/ui/input';
@@ -40,7 +41,7 @@ export function EdgeInspector({ edgeId }: EdgeInspectorProps) {
       try {
         setIsDeleting(true);
         if (!edgeId.startsWith('temp_')) {
-          await deletePathEdge(edgeId);
+          assertSuccess(await deletePathEdge(edgeId));
         }
         removeEdge(edgeId);
       } catch (err) {
