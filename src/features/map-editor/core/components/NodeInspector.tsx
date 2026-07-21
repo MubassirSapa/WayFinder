@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useAppStore } from "@/store";
-import { deleteMapNode } from "../server-actions/node-actions";
+import { deleteMapNode } from "../actions/server/node-actions";
 import { assertSuccess } from "@/lib/responses";
 import { NODE_ROLE_OPTIONS } from '../lib/objectDefaults';
 import { EditorMapNode } from '../types/map.types';

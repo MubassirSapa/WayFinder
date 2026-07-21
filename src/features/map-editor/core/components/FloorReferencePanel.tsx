@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { EDITOR_UI_TEXT } from '../../constants/editorUi.constants';
-import { uploadFloorReferenceImage } from '../server-actions/floor-actions';
+import { uploadFloorReferenceImage } from '../actions/server/floor-actions';
 import { assertSuccess } from '@/lib/responses';
 import { useAppStore } from '@/store';
 

@@ -2,7 +2,7 @@
 
 import  { useState } from 'react';
 import { useAppStore } from "@/store";
-import { deletePathEdge } from "../server-actions/edge-actions";
+import { deletePathEdge } from "../actions/server/edge-actions";
 import { assertSuccess } from "@/lib/responses";
 import { EDGE_TYPE_OPTIONS } from '../lib/objectDefaults';
 import { EditorPathEdge } from '../types/map.types';

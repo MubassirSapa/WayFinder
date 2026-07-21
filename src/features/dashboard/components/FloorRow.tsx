@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 
 import { buildEditorHref, DASHBOARD_CLIENT } from "../constants/dashboard.constants";
-import { toggleFloorStatusAction } from "../server-actions/toggle-floor-status";
+import { toggleFloorStatusAction } from "../actions/server/toggle-floor-status";
 import type { DashboardFloor } from "../types/dashboard.types";
 import { FloorMiniMap } from "./FloorMiniMap";
 

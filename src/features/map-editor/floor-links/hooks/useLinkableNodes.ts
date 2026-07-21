@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { listLinkableNodes } from "../server-actions/floor-link-actions";
+import { listLinkableNodes } from "../actions/client/floor-link-client-actions";
 import type { LinkableFloorLinkNode } from "../types/floorLink.types";
 
 export function useLinkableNodes(buildingId: string | null, excludeFloorId: string | null) {

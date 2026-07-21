@@ -8,10 +8,11 @@ Whenever the user asks to commit changes:
 
 1. Stage and commit the requested code changes.
 2. Keep commits atomic — each commit should contain only one related set of changes. Even if the user's request is as simple as "commit," check whether the pending changes span multiple unrelated pieces of work; if so, split them into separate commits instead of combining everything into one.
-3. Add notable user-facing changes to the `[Unreleased]` section of `docs/CHANGE_LOG.md`.
-4. Do not bump the version in `package.json` for normal commits.
-5. Only bump the version when the user explicitly asks to create or prepare a release.
-6. During a release:
+3. Do not add a `Co-Authored-By` trailer (or any other AI-attribution trailer) to commit messages.
+4. Add notable user-facing changes to the `[Unreleased]` section of `docs/CHANGE_LOG.md`.
+5. Do not bump the version in `package.json` for normal commits.
+6. Only bump the version when the user explicitly asks to create or prepare a release.
+7. During a release:
 
    * Use the semantic version bump requested by the user.
    * If no bump type is provided, default to patch.
@@ -39,14 +40,28 @@ not just new features:
 - Keep `src/app` routes thin: set metadata, call one feature data loader, render one
   feature component. No business logic or direct Payload calls in `src/app`.
 - Put feature code under `src/features/<name>/` using the standard sub-folders
-  (`constants/`, `validations/`, `types/`, `services/`, `server-actions/`, `store/`,
-  `lib/`, `hooks/`, `components/`, optionally `pages/`). Don't invent new top-level
-  folders or names for these concepts.
-- The `'use server'` folder is always named `server-actions/` — never `actions/`.
+  (`constants/`, `validations/`, `types/`, `services/{server,client}`,
+  `actions/{server,client}`, `store/`, `lib/`, `hooks/`, `components/`, optionally
+  `pages/`). Don't invent new top-level folders or names for these concepts.
+- **`actions/server/` (`'use server'`) is for client-triggered mutations only —
+  never reads.** Never named `server-actions/` or bare `actions/`.
+- **A read needed only inside a Server Component calls `services/server/*`
+  directly — no action wrapper**, since no client/server boundary is crossed (e.g.
+  `getDashboardData`, `getFloorEditorData`).
+- **A read triggered from a client component goes through `actions/client/*` →
+  `services/client/*`**, which calls the shared Payload REST SDK client
+  (`src/lib/payload-sdk.ts`) — never the Local API, never a server action. Only
+  create this pair when a feature actually has a client-triggered read (most don't).
+- **No component ever imports the Payload SDK, `getPayload`, or a service directly**
+  — always through an `actions/` file.
+- Adding `services/client/` code against a collection requires that collection to
+  have correct `access` rules first — REST requests (what the SDK uses) enforce
+  real access control, unlike the Local API's `overrideAccess: true`. A collection
+  with no `access` block defaults to open to everyone, every operation.
 - `types/` is always a folder, never a flat `types.ts` at the feature root.
-- Split a `server-actions/`, `services/`, or `lib/` file by sub-domain as soon as it
+- Split an `actions/`, `services/`, or `lib/` file by sub-domain as soon as it
   stops being a single responsibility, independent of line count — see
-  `src/features/map-editor/core/server-actions/` (split into `floor-actions.ts`,
+  `src/features/map-editor/core/actions/server/` (split into `floor-actions.ts`,
   `object-actions.ts`, `node-actions.ts`, `edge-actions.ts`) as the reference example.
 - Root-level `src/lib`, `src/store`, `src/constants`, `src/validations` are for
   code genuinely shared across features only. Feature-specific code belongs inside

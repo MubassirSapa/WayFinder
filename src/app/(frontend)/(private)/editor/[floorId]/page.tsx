@@ -1,6 +1,6 @@
 import { MapEditorShell } from "@/features/map-editor/core/components/MapEditorShell";
 import { ReferenceSection } from "@/features/map-editor/core/components/ReferenceSection";
-import { getFloorEditorData } from "@/features/map-editor/core/server-actions/floor-actions";
+import { getFloorEditorData } from "@/features/map-editor/core/services/server/floor.ports";
 import { AutomationSection } from "@/features/map-editor/smart-builder/components/AutomationSection";
 import { SmartBuilderBridge } from "@/features/map-editor/smart-builder/components/SmartBuilderBridge";
 

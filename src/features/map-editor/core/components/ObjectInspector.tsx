@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useAppStore } from "@/store";
-import { deleteMapObject } from "../server-actions/object-actions";
+import { deleteMapObject } from "../actions/server/object-actions";
 import { assertSuccess } from "@/lib/responses";
 import { OBJECT_CONFIGS } from '../lib/objectDefaults';
 import { Input } from '@/components/ui/input';

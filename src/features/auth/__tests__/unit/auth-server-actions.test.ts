@@ -6,11 +6,11 @@ import { RESET_PASSWORD_CLIENT } from "@/features/auth/constants/reset-password"
 import { SIGNIN_CLIENT } from "@/features/auth/constants/signin";
 import { SIGNUP_CLIENT } from "@/features/auth/constants/signup";
 import { VERIFY_EMAIL_CLIENT } from "@/features/auth/constants/verify-email";
-import { forgotPasswordAction } from "@/features/auth/server-actions/forgot-password";
-import { resetPasswordAction } from "@/features/auth/server-actions/reset-password";
-import { signinAction } from "@/features/auth/server-actions/signin";
-import { signupAction } from "@/features/auth/server-actions/signup";
-import { verifyEmailAction } from "@/features/auth/server-actions/verify-email";
+import { forgotPasswordAction } from "@/features/auth/actions/server/forgot-password";
+import { resetPasswordAction } from "@/features/auth/actions/server/reset-password";
+import { signinAction } from "@/features/auth/actions/server/signin";
+import { signupAction } from "@/features/auth/actions/server/signup";
+import { verifyEmailAction } from "@/features/auth/actions/server/verify-email";
 
 const redirectMock = vi.hoisted(() => vi.fn());
 const authPortsMock = vi.hoisted(() => ({
@@ -28,7 +28,7 @@ vi.mock("next/navigation", () => ({
   redirect: redirectMock,
 }));
 
-vi.mock("@/features/auth/services/auth.ports", () => authPortsMock);
+vi.mock("@/features/auth/services/server/auth.ports", () => authPortsMock);
 
 vi.mock("@/features/email/services/email.ports", () => emailPortsMock);
 

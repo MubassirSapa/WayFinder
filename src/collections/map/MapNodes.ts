@@ -1,10 +1,18 @@
 import type { CollectionConfig } from "payload";
 
+import { access } from "../access";
+
 export const MapNodes: CollectionConfig = {
   slug: "map-nodes",
   admin: {
     useAsTitle: "label",
     group: "Indoor Map",
+  },
+  access: {
+    read: access.isLoggedIn,
+    create: access.isLoggedIn,
+    update: access.isLoggedIn,
+    delete: access.isLoggedIn,
   },
   fields: [
     {

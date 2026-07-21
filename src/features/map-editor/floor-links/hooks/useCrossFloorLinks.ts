@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { listCrossFloorLinks } from "../server-actions/floor-link-actions";
+import { listCrossFloorLinks } from "../actions/client/floor-link-client-actions";
 import type { CrossFloorLink } from "../types/floorLink.types";
 
 export function useCrossFloorLinks(buildingId: string | null) {

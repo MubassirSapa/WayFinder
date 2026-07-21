@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Waypoints } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { deletePathEdge } from "@/features/map-editor/core/server-actions/edge-actions";
+import { deletePathEdge } from "@/features/map-editor/core/actions/server/edge-actions";
 import { assertSuccess } from "@/lib/responses";
 import type { EditorMapNode } from "@/features/map-editor/core/types/map.types";
 import { useAppStore } from "@/store";

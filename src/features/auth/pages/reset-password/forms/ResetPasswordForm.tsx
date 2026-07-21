@@ -16,7 +16,7 @@ import {
   RESET_PASSWORD_CLIENT as CLIENT,
   RESET_PASSWORD_CONST,
 } from "@/features/auth/constants/reset-password";
-import { resetPasswordAction } from "@/features/auth/server-actions/reset-password";
+import { resetPasswordAction } from "@/features/auth/actions/server/reset-password";
 import { ResetPasswordSchema } from "@/features/auth/validations/reset-password";
 import { TokenSchema } from "@/features/auth/validations/token";
 

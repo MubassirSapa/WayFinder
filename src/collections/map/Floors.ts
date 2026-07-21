@@ -1,10 +1,19 @@
 import type { CollectionConfig } from "payload";
 
+import { access } from "../access";
+
 export const Floors: CollectionConfig = {
   slug: "floors",
   admin: {
     useAsTitle: "name",
     group: "Indoor Map",
+  },
+
+  access: {
+    read: ({ req }) => (req.user ? true : { status: { equals: "published" } }),
+    create: access.isLoggedIn,
+    update: access.isLoggedIn,
+    delete: access.isLoggedIn,
   },
 
   fields: [

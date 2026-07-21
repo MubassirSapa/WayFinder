@@ -1,9 +1,9 @@
 'use client';
 
-import { createMapObject, updateMapObject } from "../server-actions/object-actions";
-import { createMapNode, updateMapNode } from "../server-actions/node-actions";
-import { createPathEdge, updatePathEdge } from "../server-actions/edge-actions";
-import { updateFloor } from "../server-actions/floor-actions";
+import { createMapObject, updateMapObject } from "../actions/server/object-actions";
+import { createMapNode, updateMapNode } from "../actions/server/node-actions";
+import { createPathEdge, updatePathEdge } from "../actions/server/edge-actions";
+import { updateFloor } from "../actions/server/floor-actions";
 import { assertSuccess } from "@/lib/responses";
 import { useAppStore } from "@/store";
 

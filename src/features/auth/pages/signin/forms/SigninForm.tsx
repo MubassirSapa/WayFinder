@@ -13,7 +13,7 @@ import EmailField from "@/components/shared/form/fields/EmailField";
 import PasswordField from "@/components/shared/form/fields/PasswordField";
 import { FieldGroup } from "@/components/ui/field";
 import { SIGNIN_CLIENT as CLIENT, SIGNIN_CONST } from "@/features/auth/constants/signin";
-import { signinAction } from "@/features/auth/server-actions/signin";
+import { signinAction } from "@/features/auth/actions/server/signin";
 import { SigninSchema } from "@/features/auth/validations/signin";
 
 const SigninForm = () => {

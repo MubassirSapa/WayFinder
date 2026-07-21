@@ -19,7 +19,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
 import { useAppStore } from "@/store";
-import { signupAction } from "@/features/auth/server-actions/signup";
+import { signupAction } from "@/features/auth/actions/server/signup";
 import { SignupSchema } from "@/features/auth/validations/signup";
 import { SIGNUP_CLIENT as CLIENT } from "@/features/auth/constants/signup";
 import { PUBLIC_ROUTES } from "@/constants/routes";
