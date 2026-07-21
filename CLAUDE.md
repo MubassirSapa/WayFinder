@@ -32,6 +32,32 @@ Use this format for commit messages:
 [optional footer]
 ```
 
+## Documentation maintenance
+
+Documentation is part of the implementation and must be updated in the same
+change as the code it describes:
+
+- When a Payload collection is added, removed, renamed, or changed, update
+  `docs/project/SCHEMA.md`. This includes fields, relationships, required or
+  optional status, enum values, access-relevant structure, and registered
+  collections. Remove stale schema entries as well as adding new ones.
+- When a feature, module, architecture-significant component, port, adapter,
+  action, service, store slice, external integration, or communication path is
+  added, removed, renamed, or changes responsibility, update the relevant
+  Mermaid diagrams and explanations in
+  `docs/technical/APPLICATION_ARCHITECTURE.md`.
+- When behavior, workflows, persistence, map loading, navigation, editor
+  extensions, APIs, configuration, or developer conventions change, update the
+  relevant files under `docs/`, including the README or changelog when
+  applicable. Do not leave documentation describing behavior that no longer
+  exists.
+- Keep diagrams at the correct level of abstraction: add a UI component to an
+  architecture diagram when it introduces or changes a meaningful module
+  boundary or communication path, not for a purely presentational leaf
+  refactor.
+- Validate edited Markdown and Mermaid syntax, and ensure names and dependency
+  directions match the current code before considering the task complete.
+
 ## Project structure & code splitting
 
 Full convention: `docs/project/PROJECT_STRUCTURE.md`. Follow it for every change,
