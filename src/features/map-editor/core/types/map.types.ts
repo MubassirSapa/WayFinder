@@ -14,6 +14,7 @@ export interface EditorFloor {
   backgroundImageScale?: number;
   backgroundImageOpacity?: number;
   backgroundImageLocked?: boolean;
+  backgroundImageVisible?: boolean;
   backgroundImageOffsetX?: number;
   backgroundImageOffsetY?: number;
   backgroundImageFit?: 'fill' | 'cover' | 'contain';

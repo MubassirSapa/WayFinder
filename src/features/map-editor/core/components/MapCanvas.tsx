@@ -124,7 +124,7 @@ export function MapCanvas() {
           className={`absolute inset-0 select-none overflow-hidden ${mode === 'node' ? 'cursor-crosshair' : ''}`}
         >
           {/* Faded Background Image if configured */}
-          {floor.backgroundImageUrl && (
+          {floor.backgroundImageUrl && (floor.backgroundImageVisible ?? true) && (
             <>
               <defs>
                 <clipPath id={BACKGROUND_IMAGE_CLIP_PATH_ID}>

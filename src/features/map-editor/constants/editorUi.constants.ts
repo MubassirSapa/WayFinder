@@ -61,6 +61,7 @@ export const EDITOR_UI_TEXT = {
       fitFill: "Fill",
       fitCover: "Cover",
       fitContain: "Contain",
+      visible: "Show on canvas",
       lock: "Lock reference image",
       lockDescription: "Prevents accidental changes to position, zoom, and opacity.",
     },

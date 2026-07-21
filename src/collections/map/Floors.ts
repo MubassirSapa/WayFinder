@@ -80,6 +80,11 @@ export const Floors: CollectionConfig = {
       defaultValue: false,
     },
     {
+      name: "backgroundImageVisible",
+      type: "checkbox",
+      defaultValue: true,
+    },
+    {
       name: "backgroundImageOffsetX",
       type: "number",
       defaultValue: 0,

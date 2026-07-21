@@ -70,6 +70,7 @@ export function normalizeFloor(doc: Floor): EditorFloor {
     backgroundImageScale: floorDoc.backgroundImageScale ?? 1,
     backgroundImageOpacity: floorDoc.backgroundImageOpacity ?? 0.3,
     backgroundImageLocked: floorDoc.backgroundImageLocked ?? false,
+    backgroundImageVisible: floorDoc.backgroundImageVisible ?? true,
     backgroundImageOffsetX: floorDoc.backgroundImageOffsetX ?? 0,
     backgroundImageOffsetY: floorDoc.backgroundImageOffsetY ?? 0,
     backgroundImageFit: floorDoc.backgroundImageFit ?? 'fill',

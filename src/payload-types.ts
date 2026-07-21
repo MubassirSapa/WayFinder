@@ -205,6 +205,7 @@ export interface Floor {
   backgroundImageScale?: number | null;
   backgroundImageOpacity?: number | null;
   backgroundImageLocked?: boolean | null;
+  backgroundImageVisible?: boolean | null;
   backgroundImageOffsetX?: number | null;
   backgroundImageOffsetY?: number | null;
   backgroundImageFit?: ('fill' | 'cover' | 'contain') | null;
@@ -466,6 +467,7 @@ export interface FloorsSelect<T extends boolean = true> {
   backgroundImageScale?: T;
   backgroundImageOpacity?: T;
   backgroundImageLocked?: T;
+  backgroundImageVisible?: T;
   backgroundImageOffsetX?: T;
   backgroundImageOffsetY?: T;
   backgroundImageFit?: T;

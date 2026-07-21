@@ -1,6 +1,5 @@
 import type {
   Floor,
-  Media,
   MapNode,
   MapObject,
   PathEdge,
@@ -38,15 +37,8 @@ function getRequiredRelationId(relation: Exclude<RelationValue, null | undefined
   return String(relation);
 }
 
-function hasMediaDocument(value: unknown): value is Media {
-  return typeof value === "object" && value !== null && "alt" in value && "id" in value;
-}
-
 function normalizeFloor(doc: Floor, organizationName: string | null): ViewerFloor {
-  const floorDoc = doc as Floor & {
-    backgroundImage?: Media | number | null;
-    metersPerPixel?: number | null;
-  };
+  const floorDoc = doc as Floor & { metersPerPixel?: number | null };
 
   return {
     id: String(doc.id),
@@ -57,20 +49,6 @@ function normalizeFloor(doc: Floor, organizationName: string | null): ViewerFloo
     width: doc.width ?? 1200,
     height: doc.height ?? 800,
     metersPerPixel: floorDoc.metersPerPixel ?? null,
-    backgroundImageUrl: hasMediaDocument(floorDoc.backgroundImage)
-      ? floorDoc.backgroundImage.url ?? doc.backgroundImageUrl ?? null
-      : doc.backgroundImageUrl ?? null,
-    backgroundImageRotation: floorDoc.backgroundImageRotation ?? 0,
-    backgroundImageScale: floorDoc.backgroundImageScale ?? 1,
-    backgroundImageOffsetX: floorDoc.backgroundImageOffsetX ?? 0,
-    backgroundImageOffsetY: floorDoc.backgroundImageOffsetY ?? 0,
-    backgroundImageFit: floorDoc.backgroundImageFit ?? "fill",
-    backgroundImageNaturalWidth: hasMediaDocument(floorDoc.backgroundImage)
-      ? floorDoc.backgroundImage.width ?? null
-      : null,
-    backgroundImageNaturalHeight: hasMediaDocument(floorDoc.backgroundImage)
-      ? floorDoc.backgroundImage.height ?? null
-      : null,
     status: doc.status ?? "draft",
   };
 }
@@ -89,6 +67,8 @@ function normalizeObject(doc: MapObject): ViewerMapObject {
     width: doc.width ?? 100,
     height: doc.height ?? 80,
     rotation: doc.rotation ?? 0,
+    shape: doc.shape ?? "rectangle",
+    points: doc.points?.map((point) => ({ x: point.x, y: point.y })) ?? null,
     isSearchable: doc.isSearchable ?? true,
     isAccessible: doc.isAccessible ?? true,
   };
@@ -148,7 +128,7 @@ export async function getMapViewerData(floorId?: string): Promise<MapViewerData>
 
   const floorsResult = await payload.find({
     collection: "floors",
-    depth: 1,
+    depth: 0,
     limit: 100,
     overrideAccess: true,
     sort: "level",

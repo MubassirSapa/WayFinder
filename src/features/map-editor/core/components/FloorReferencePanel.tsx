@@ -34,6 +34,7 @@ export function FloorReferencePanel() {
   const [isUploading, startUpload] = useTransition();
 
   const isLocked = floor?.backgroundImageLocked ?? false;
+  const isVisible = floor?.backgroundImageVisible ?? true;
 
   const handleUpload = () => {
     if (!floor || !selectedFile) {
@@ -168,15 +169,27 @@ export function FloorReferencePanel() {
                 {EDITOR_UI_TEXT.referencePanel.adjust.lockDescription}
               </p>
             </div>
-            <div className="flex shrink-0 items-center gap-2">
-              <Label htmlFor="floor-reference-lock" className="text-[10px] text-editor-muted-foreground">
-                {EDITOR_UI_TEXT.referencePanel.adjust.lock}
-              </Label>
-              <Switch
-                id="floor-reference-lock"
-                checked={isLocked}
-                onCheckedChange={(checked) => updateFloor({ backgroundImageLocked: checked })}
-              />
+            <div className="flex shrink-0 flex-col items-end gap-2">
+              <div className="flex items-center gap-2">
+                <Label htmlFor="floor-reference-visible" className="text-[10px] text-editor-muted-foreground">
+                  {EDITOR_UI_TEXT.referencePanel.adjust.visible}
+                </Label>
+                <Switch
+                  id="floor-reference-visible"
+                  checked={isVisible}
+                  onCheckedChange={(checked) => updateFloor({ backgroundImageVisible: checked })}
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <Label htmlFor="floor-reference-lock" className="text-[10px] text-editor-muted-foreground">
+                  {EDITOR_UI_TEXT.referencePanel.adjust.lock}
+                </Label>
+                <Switch
+                  id="floor-reference-lock"
+                  checked={isLocked}
+                  onCheckedChange={(checked) => updateFloor({ backgroundImageLocked: checked })}
+                />
+              </div>
             </div>
           </div>
 

@@ -7,14 +7,6 @@ export interface ViewerFloor {
   width: number;
   height: number;
   metersPerPixel?: number | null;
-  backgroundImageUrl?: string | null;
-  backgroundImageRotation?: number;
-  backgroundImageScale?: number;
-  backgroundImageOffsetX?: number;
-  backgroundImageOffsetY?: number;
-  backgroundImageFit?: "fill" | "cover" | "contain";
-  backgroundImageNaturalWidth?: number | null;
-  backgroundImageNaturalHeight?: number | null;
   status: "draft" | "published";
 }
 
@@ -46,6 +38,8 @@ export interface ViewerMapObject {
   width: number;
   height: number;
   rotation: number;
+  shape: "rectangle" | "ellipse" | "polygon";
+  points?: { x: number; y: number }[] | null;
   isSearchable: boolean;
   isAccessible: boolean;
 }

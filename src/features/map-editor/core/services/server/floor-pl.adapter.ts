@@ -114,6 +114,9 @@ export async function updateFloorAdapter(id: string, data: Partial<EditorFloor>)
     if (data.backgroundImageLocked !== undefined) {
       updateData.backgroundImageLocked = data.backgroundImageLocked;
     }
+    if (data.backgroundImageVisible !== undefined) {
+      updateData.backgroundImageVisible = data.backgroundImageVisible;
+    }
     if (data.backgroundImageOffsetX !== undefined) {
       updateData.backgroundImageOffsetX = data.backgroundImageOffsetX;
     }
