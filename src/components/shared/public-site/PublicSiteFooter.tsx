@@ -64,10 +64,8 @@ export function PublicSiteFooter({
           {groups.map((group, index) => (
             <div
               className={cn(
-                "justify-self-center text-center md:justify-self-start md:text-left",
-                groups.length === 3 &&
-                  index === 2 &&
-                  "col-span-2 md:col-span-1",
+                "justify-self-start text-left",
+                index === 2 && "ml-3 md:ml-0",
               )}
               key={group.title}
             >
