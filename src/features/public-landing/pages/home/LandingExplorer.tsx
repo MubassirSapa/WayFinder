@@ -73,7 +73,7 @@ export function LandingExplorer({ data }: LandingExplorerProps) {
         </p>
 
         <div className="mt-7 w-full max-w-3xl rounded-[15px] border border-border bg-card px-5 shadow-sm transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15">
-          <div className="flex h-[62px] items-center gap-3">
+          <div className="flex h-15.5 items-center gap-3">
             <Search className="size-5 shrink-0 text-muted-foreground" aria-hidden />
             <Input
               aria-label="Search venues, rooms, or categories"
