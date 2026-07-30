@@ -84,8 +84,8 @@ export default function TermsPage() {
               <div className="space-y-8">
                 <LegalBlock title="Accounts and organizations">
                   By creating an account, you agree to provide accurate information and to keep your
-                  login credentials secure. One organization is used to manage one building and its
-                  related floors.
+                  login credentials secure. Organization workspaces are used to manage authorized
+                  building and floor information.
                 </LegalBlock>
                 <LegalBlock title="Map content">
                   You are responsible for the floor plans, labels, routes, and points of interest
@@ -106,11 +106,11 @@ export default function TermsPage() {
             <aside className="rounded-md border border-border bg-muted/30 p-6">
               <h2 className="text-lg font-semibold text-foreground">Ready to continue?</h2>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Create your organization workspace or return to the public venue directory.
+                Learn about organization workspaces or return to the public venue directory.
               </p>
               <div className="mt-5 flex flex-col gap-3">
-                <Link className={cn(buttonVariants({ size: "lg" }), "h-10")} href={PUBLIC_ROUTES.SIGNUP}>
-                  Register
+                <Link className={cn(buttonVariants({ size: "lg" }), "h-10")} href={PUBLIC_ROUTES.ORGANIZATION}>
+                  For organizations
                   <ArrowRight className="size-4" aria-hidden />
                 </Link>
                 <Link

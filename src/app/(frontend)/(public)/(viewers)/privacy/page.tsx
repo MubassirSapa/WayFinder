@@ -108,23 +108,18 @@ export default function PrivacyPage() {
             </article>
 
             <aside className="rounded-md border border-border bg-muted/30 p-6">
-              <h2 className="text-lg font-semibold text-foreground">Need to manage your data?</h2>
+              <h2 className="text-lg font-semibold text-foreground">Manage an organization?</h2>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Sign in to update your workspace, or create an account if your organization is not
-                set up yet.
+                Visit the organization page to learn about workspace access, map management, and
+                account setup.
               </p>
-              <div className="mt-5 flex flex-col gap-3">
-                <Link className={cn(buttonVariants({ size: "lg" }), "h-10")} href={PUBLIC_ROUTES.SIGNIN}>
-                  Log in
-                </Link>
-                <Link
-                  className={cn(buttonVariants({ variant: "outline", size: "lg" }), "h-10")}
-                  href={PUBLIC_ROUTES.SIGNUP}
-                >
-                  Register
-                  <ArrowRight className="size-4" aria-hidden />
-                </Link>
-              </div>
+              <Link
+                className={cn(buttonVariants({ variant: "outline", size: "lg" }), "mt-5 h-10")}
+                href={PUBLIC_ROUTES.ORGANIZATION}
+              >
+                For organizations
+                <ArrowRight className="size-4" aria-hidden />
+              </Link>
             </aside>
           </div>
         </section>

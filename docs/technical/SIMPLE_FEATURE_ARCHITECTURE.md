@@ -24,7 +24,8 @@ module at the arrow's beginning.
 ```mermaid
 flowchart TB
     subgraph routes ["1. Next.js routes"]
-        publicPages["Public pages"]
+        publicPages["Viewer public pages"]
+        organizationPages["Organization public pages"]
         authPages["Authentication pages"]
         privatePages["Private dashboard and editor pages"]
         payloadPages["Payload Admin and API routes"]
@@ -32,6 +33,7 @@ flowchart TB
 
     subgraph mainFeatures ["2. Main features"]
         publicLanding["Public landing"]
+        organizationLanding["Organization landing"]
         authentication["Authentication"]
         dashboard["Dashboard"]
         editorCore["Map editor core"]
@@ -59,6 +61,7 @@ flowchart TB
 
     publicPages --> publicLanding
     publicPages --> mapViewer
+    organizationPages --> organizationLanding
     authPages --> authentication
     privatePages --> authentication
     privatePages --> dashboard
@@ -81,6 +84,7 @@ flowchart TB
     navigation --> rootStore
 
     publicLanding --> sharedUi
+    organizationLanding --> sharedUi
     authentication --> sharedUi
     dashboard --> sharedUi
     editorCore --> sharedUi
@@ -129,6 +133,21 @@ Public pages --> Public landing --> Data boundary --> Payload --> SQLite
 ```
 
 It does not know about the editor or navigation features.
+
+### Organization landing
+
+The organization landing feature explains the management workflow and owns the
+public organization About experience. It links organization owners to the
+existing registration and sign-in routes, but it does not own authentication,
+organization data, or dashboard behavior.
+
+```text
+Organization public pages --> Organization landing --> Authentication routes
+```
+
+Viewer routes live under the `(viewers)` route group. Organization information
+lives under `(organization)` and is available at `/organization` and
+`/organization/about`.
 
 ### Authentication and email
 
@@ -263,6 +282,7 @@ components use the combined `useAppStore` hook.
 
 ```text
 Public landing ------> reads published venue data
+Organization landing -> explains organization setup and links to auth
 Authentication ------> manages accounts and uses Email
 Dashboard -----------> manages floors
 Map editor core -----> owns editable map data and saving
