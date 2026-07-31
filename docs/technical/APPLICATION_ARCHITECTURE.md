@@ -21,7 +21,7 @@ The main architectural ideas are:
 - Zustand provides temporary browser state for the editor and navigation;
 - Payload CMS provides authentication, validation, collection APIs, and data
   access;
-- SQLite stores the application records;
+- an environment-selected SQLite or MongoDB adapter stores the application records;
 - navigation derives a route from map-viewer data instead of loading a second
   copy of the map;
 - Smart Builder and floor links extend the core editor through shared contracts
@@ -76,7 +76,7 @@ flowchart LR
     subgraph infrastructure ["Infrastructure"]
         payloadCms["Payload CMS Local API and Auth"]
         collections["Payload collection schemas"]
-        sqlite["SQLite database"]
+        database["SQLite or MongoDB"]
         mediaStorage["Uploaded media files"]
     end
 
@@ -126,7 +126,7 @@ flowchart LR
     payloadSdk --> payloadRoutes
     payloadRoutes --> payloadCms
     payloadCms --> collections
-    collections --> sqlite
+    collections --> database
     payloadCms --> mediaStorage
     emailFeature --> payloadCms
     payloadCms -.-> resend
@@ -137,9 +137,11 @@ flowchart LR
 The upper half contains user-facing routes and feature modules. The lower half
 contains communication boundaries and infrastructure.
 
-A feature does not normally write directly to SQLite. It asks a port to perform
+A feature does not normally write directly to the database. It asks a port to perform
 an operation. A Payload adapter implements that port and talks to Payload CMS.
-Payload validates the collection data and then writes it to SQLite.
+Payload validates the collection data and then writes it through the selected
+database adapter. `DATABASE_ENGINE=sql` selects SQLite; `DATABASE_ENGINE=mongo`
+selects MongoDB.
 
 ## 2. Ports-and-adapters communication
 
@@ -172,7 +174,7 @@ flowchart LR
     end
 
     subgraph storage ["Storage"]
-        database["SQLite"]
+        database["SQLite or MongoDB"]
     end
 
     component -->|"Create, update, or delete"| mutationAction
@@ -201,7 +203,7 @@ Component
   -> Payload adapter
   -> Payload Local API
   -> collection
-  -> SQLite
+  -> selected database adapter
 ```
 
 Examples include authentication mutations, floor creation, floor status
@@ -219,7 +221,7 @@ Hook
   -> shared Payload SDK
   -> Payload REST API
   -> collection access rules
-  -> SQLite
+  -> selected database adapter
 ```
 
 ### Server-rendered read path
@@ -230,7 +232,7 @@ Data needed to render a page on the server does not use a server action:
 Next.js Server Component
   -> server loader or server port
   -> Payload Local API
-  -> SQLite
+  -> selected database adapter
   -> normalized data
   -> feature shell
 ```
@@ -287,7 +289,7 @@ flowchart TB
         payloadLocal["Payload Local API"]
         payloadRest["Payload REST API"]
         mapCollections["Floors, map objects, map nodes, and path edges"]
-        editorDb["SQLite"]
+        editorDb["SQLite or MongoDB"]
     end
 
     editorPage --> editorLoader
@@ -366,7 +368,7 @@ sequenceDiagram
     participant Ports as Entity ports
     participant Adapters as Payload adapters
     participant Payload as Payload Local API
-    participant DB as SQLite
+    participant DB as SQLite or MongoDB
 
     Owner->>Toolbar: Press Save Changes
     Toolbar->>SaveHook: saveChanges
@@ -435,7 +437,7 @@ flowchart LR
 
     subgraph databaseLayer ["Persistence"]
         collections["Published floors, objects, nodes, and edges"]
-        database["SQLite"]
+        database["SQLite or MongoDB"]
     end
 
     mapRoute --> viewerLoader
@@ -512,7 +514,7 @@ flowchart LR
     subgraph authInfrastructure ["Infrastructure"]
         payloadAuth["Payload authentication"]
         userCollections["Users and organizations"]
-        authDb["SQLite"]
+        authDb["SQLite or MongoDB"]
         emailProvider["Resend"]
     end
 
@@ -553,7 +555,7 @@ The intended dependency direction is:
 
 ```text
 Route -> Feature component -> Action or server loader -> Port -> Adapter
-      -> Payload -> Collection -> SQLite
+      -> Payload -> Collection -> selected database adapter
 ```
 
 For browser-only feature collaboration:
@@ -564,7 +566,7 @@ Component -> Feature hook or store action -> Shared typed state
 
 Important rules:
 
-1. UI components should not call Payload or SQLite directly.
+1. UI components should not call Payload or the configured database directly.
 2. Client-triggered mutations go through server actions.
 3. Client-triggered reads go through client actions and the REST SDK.
 4. Server-rendered reads use server-only loaders directly.
@@ -572,8 +574,8 @@ Important rules:
 6. Extensions use core contracts instead of creating duplicate data models.
 7. Navigation derives its graph from viewer data instead of fetching a parallel
    copy.
-8. Payload collections are the persistence schema and SQLite is an
-   implementation detail behind Payload.
+8. Payload collections are the persistence schema; whether SQLite or MongoDB
+   stores them is an implementation detail selected through the environment.
 
 ## 9. Current implementation notes
 

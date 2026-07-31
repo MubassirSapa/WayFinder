@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-07-31
+
+### Added
+- Added an environment-selected Payload database plugin. `DATABASE_ENGINE=sql` uses SQLite, while `DATABASE_ENGINE=mongo` uses MongoDB; both require `DATABASE_URL` and invalid configuration now fails at startup.
+
+### Changed
+- Temporarily hid the editor reference-image tools in production while keeping them available in development and test environments.
+
 ## [0.1.1] - 2026-07-31
 
 ### Added
