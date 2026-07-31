@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "@tanstack/react-form";
-import { useRouter } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 
 import FormCard from "@/components/shared/form/FormCard";
 import FormSubmitButton from "@/components/shared/form/FormSubmitButton";

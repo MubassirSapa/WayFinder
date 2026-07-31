@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 
-import { PublicLandingPage } from "@/features/public-landing/pages/home/PublicLandingPage";
+import { PublicLandingPage } from "@/features/viewer/pages/home/PublicLandingPage";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Wayfinder | Indoor Maps",
-  description: "Search and explore indoor maps for public venues and facilities.",
+  title: "Find Indoor Maps | Wayfinder",
+  description: "Search available venues and open an indoor map to find your destination.",
 };
 
 export default function HomePage() {

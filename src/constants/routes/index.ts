@@ -1,5 +1,9 @@
 const PUBLIC_ROUTES = {
   HOME: "/",
+  DISCOVER: "/#venues",
+  VENUES: "/venues",
+  VENUES_RECENT: "/venues?view=recent",
+  ABOUT: "/about",
 
   MAP: "/map",
   ORGANIZATION: "/organization",

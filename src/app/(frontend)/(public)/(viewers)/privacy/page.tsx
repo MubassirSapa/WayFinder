@@ -7,7 +7,7 @@ import { PublicSiteFooter } from "@/components/shared/public-site/PublicSiteFoot
 import { buttonVariants } from "@/components/ui/button";
 import { BRAND } from "@/constants/brand";
 import { PUBLIC_ROUTES } from "@/constants/routes";
-import { PublicSiteHeader } from "@/features/public-landing/components/PublicSiteHeader";
+import { PublicSiteHeader } from "@/features/viewer/components/PublicSiteHeader";
 import { cn } from "@/lib/utils";
 
 const privacySections = [
@@ -44,10 +44,10 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
       <PublicSiteHeader />
 
-      <main>
+      <main className="flex-1">
         <section className="relative overflow-hidden border-b border-border">
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[60px_60px] opacity-10 mask-[radial-gradient(80%_80%_at_50%_10%,var(--mask-opaque),transparent_72%)]" />
           <div className="relative mx-auto max-w-6xl px-5 py-14 sm:px-6 lg:py-20">

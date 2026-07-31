@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "@tanstack/react-form";
-import { useRouter } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import Link from "next/link";
 
 import FormCard from "@/components/shared/form/FormCard";
