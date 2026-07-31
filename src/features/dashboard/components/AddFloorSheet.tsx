@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import { Loader2Icon, XIcon } from "lucide-react";
 
 import FormAlert from "@/components/shared/form/FormAlert";

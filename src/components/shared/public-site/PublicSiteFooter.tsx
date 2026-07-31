@@ -1,6 +1,5 @@
-import Link from "next/link";
-
 import { WayfinderBrand } from "@/components/shared/brand/WayfinderBrand";
+import { SmoothHashLink } from "@/components/shared/public-site/SmoothHashLink";
 import { PUBLIC_ROUTES } from "@/constants/routes";
 import { cn } from "@/lib/utils";
 
@@ -22,15 +21,16 @@ const defaultFooterGroups = [
   {
     title: "Explore",
     links: [
-      { label: "Discover", href: PUBLIC_ROUTES.HOME },
-      { label: "Venues", href: `${PUBLIC_ROUTES.HOME}#venues` },
+      { label: "Discover", href: PUBLIC_ROUTES.DISCOVER },
+      { label: "Venues", href: PUBLIC_ROUTES.VENUES },
+      { label: "About Wayfinder", href: PUBLIC_ROUTES.ABOUT },
     ],
   },
   {
     title: "Organization",
     links: [
       { label: "For organizations", href: PUBLIC_ROUTES.ORGANIZATION },
-      { label: "About", href: PUBLIC_ROUTES.ORGANIZATION_ABOUT },
+      { label: "About organizations", href: PUBLIC_ROUTES.ORGANIZATION_ABOUT },
       { label: "Join now", href: PUBLIC_ROUTES.REGISTER_ORGANIZATION },
     ],
   },
@@ -50,7 +50,7 @@ export function PublicSiteFooter({
 }: PublicSiteFooterProps = {}) {
   return (
     <footer className="relative overflow-hidden border-t border-border bg-background">
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[length:56px_56px] opacity-15 [mask-image:radial-gradient(80%_120%_at_50%_0%,var(--mask-opaque),transparent_72%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[56px_56px] opacity-15 mask-[radial-gradient(80%_120%_at_50%_0%,var(--mask-opaque),transparent_72%)]" />
 
       <div className="relative mx-auto grid max-w-6xl gap-9 px-5 py-10 sm:px-6 md:grid-cols-[minmax(0,1fr)_auto] md:gap-14 lg:py-12">
         <div>
@@ -74,20 +74,19 @@ export function PublicSiteFooter({
               </h2>
               <div className="mt-4 flex flex-col gap-3 text-sm">
                 {group.links.map((link) => (
-                  <Link
+                  <SmoothHashLink
                     className="text-muted-foreground transition hover:text-foreground"
                     href={link.href}
                     key={link.href}
                   >
                     {link.label}
-                  </Link>
+                  </SmoothHashLink>
                 ))}
               </div>
             </div>
           ))}
         </div>
       </div>
-
     </footer>
   );
 }

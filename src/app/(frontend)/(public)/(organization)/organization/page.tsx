@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { OrganizationLandingPage } from "@/features/organization-landing/pages/home/OrganizationLandingPage";
+import { OrganizationLandingPage } from "@/features/organization/pages/home/OrganizationLandingPage";
 
 export const metadata: Metadata = {
   title: "Indoor Mapping for Organizations | Wayfinder",

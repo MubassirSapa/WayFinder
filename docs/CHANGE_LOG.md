@@ -3,7 +3,11 @@
 ## [Unreleased]
 
 ### Added
+- Added a public viewer About page at `/about` and simplified the public feature names to `viewer` and `organization`.
 - Added a separate public organization experience at `/organization`, with its About content at `/organization/about`, final page metadata, and focused coverage for organization navigation, footer links, and calls to action. Public routes are now grouped into `(viewers)` and `(organization)` segments without changing the existing viewer URLs. The viewer header no longer exposes authentication, and its footer contains one organization entry point.
+- Added a responsive Popular Maps strip to the public viewer. It uses real grouped venue data, shows each building once, and routes multi-floor venues through the existing floor chooser.
+- Added a dedicated searchable public venue directory at `/venues`. The viewer home keeps a four-venue preview, reuses the venue-card design for Recently Added, and opens every building's floors in a bounded dialog so long floor lists never resize the page.
+- Added `nextjs-toploader` to show themed route progress for links and client-side navigation.
 - Added a light/dark theme toggle (`next-themes`), with a `ModeToggle` control in the public site header, map viewer header, and editor toolbar. Introduced proper semantic `:root`/`.dark` color tokens (editor surfaces, 404 page, info/success/warning) instead of the app being force-locked to a hardcoded `dark` class.
 - Added single-floor pathfinding: the public map viewer can now compute and render a shortest-path route between a "Start here" origin (or a default entrance) and a searched destination, with an accessible-only routing toggle. New `src/features/navigation/` feature slice (Dijkstra over the existing `MapNode`/`PathEdge` graph); see `docs/technical/NAVIGATION.md`.
 - Added multi-floor route following in the viewer: the active floor is now client state (instant switching, no page reload), and a "Continue via stairs/elevator to Floor N" indicator appears mid-route, advancing the floor and reframing the camera on that floor's portion of the route.

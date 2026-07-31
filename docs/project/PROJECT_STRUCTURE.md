@@ -64,7 +64,7 @@ vertical slice. Use these sub-folders — and only these — as needed:
 | `lib/` | Pure, stateless helper functions (formatting, math, transforms). |
 | `hooks/` | Client-side React hooks. |
 | `components/` | Feature UI. Split further into `forms/`, `sections/`, `containers/`, `fields/` when a component naturally decomposes that way (see `src/features/auth/pages/*/forms` and `sections`). |
-| `pages/` | Only when a feature spans multiple routes (e.g. `auth` has 7 pages, `public-landing` has 3). Each `pages/<page-name>/` groups that page's own `forms/`/`sections/`. A single-route feature (e.g. `dashboard`, `map-editor`, `map-viewer`) skips `pages/` and just exposes one `components/<Feature>Shell.tsx`. |
+| `pages/` | Only when a feature spans multiple routes (e.g. `auth` has 7 pages, `viewer` has 4). Each `pages/<page-name>/` groups that page's own `forms/`/`sections/`. A single-route feature (e.g. `dashboard`, `map-editor`, `map-viewer`) skips `pages/` and just exposes one `components/<Feature>Shell.tsx`. |
 | `__tests__/unit/...` | Co-located tests, mirroring the source subfolder being tested (e.g. `__tests__/unit/lib/`, `__tests__/unit/store/`). |
 
 **The read/write, client/server rule:**
@@ -88,7 +88,7 @@ Not every feature needs every folder — only `auth`, `dashboard`, and
 `map-editor/core` have mutations, so only they have `actions/server/` +
 `services/server/`. Only `map-editor/floor-links` has client-triggered reads, so
 it's the only feature with `actions/client/` + `services/client/` (it has no
-mutations of its own, so no `server/` side at all). `email`/`public-landing`/
+mutations of its own, so no `server/` side at all). `email`/`viewer`/
 `map-viewer` have neither — just plain server-only functions called directly from
 Server Components. What must stay consistent across all features is the **naming**
 of whichever folders they do have.
@@ -151,6 +151,6 @@ hypothetical examples — call them out if you see them recur:
   meaning their REST endpoints were open to everyone (read and write) regardless of
   the app's own auth checks. Fixed as part of enabling `services/client/` safely
   (see above).
-- `public-landing` kept its types in a flat `types.ts` while every other feature
+- `viewer` kept its types in a flat `types.ts` while every other feature
   used a `types/` folder. Converted to `types/index.ts` (no import changes needed —
   TypeScript resolves `.../types` to `.../types/index.ts` either way).

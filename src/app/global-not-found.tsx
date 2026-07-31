@@ -1,6 +1,6 @@
 import { IBM_Plex_Sans, Montserrat } from "next/font/google";
 
-import { NotFoundPage } from "@/features/public-landing/pages/not-found/NotFoundPage";
+import { NotFoundPage } from "@/features/viewer/pages/not-found/NotFoundPage";
 import "./(frontend)/global.css";
 
 const fontSans = Montserrat({

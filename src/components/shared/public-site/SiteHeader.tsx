@@ -1,7 +1,6 @@
-import Link from "next/link";
-
 import { WayfinderBrand } from "@/components/shared/brand/WayfinderBrand";
 import { MobileSiteMenu } from "@/components/shared/public-site/MobileSiteMenu";
+import { SmoothHashLink } from "@/components/shared/public-site/SmoothHashLink";
 import { ModeToggle } from "@/components/shared/theme/ModeToggle";
 import { cn } from "@/lib/utils";
 
@@ -33,7 +32,8 @@ export function SiteHeader({
 
         <div className="ml-auto hidden items-center gap-6 text-sm font-medium text-muted-foreground sm:flex">
           {links.map((link) => (
-            <Link
+            <SmoothHashLink
+              aria-current={activeHref === link.href ? "page" : undefined}
               className={cn(
                 "transition-colors hover:text-foreground",
                 activeHref === link.href && "text-foreground",
@@ -42,7 +42,7 @@ export function SiteHeader({
               key={link.href}
             >
               {link.label}
-            </Link>
+            </SmoothHashLink>
           ))}
         </div>
 
