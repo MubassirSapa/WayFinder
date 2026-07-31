@@ -1,7 +1,7 @@
 import { RefObject } from 'react';
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 import { snapToGrid, canvasPointFromEvent } from '../lib/canvas';
-import { getDefaultDimensions } from '../lib/objectDefaults';
+import { getDefaultDimensions, getDefaultObjectName } from '../lib/objectDefaults';
 import { pixelDistance, pixelsToMeters } from '../lib/distance';
 import { EditorMapObject, EditorMapNode, EditorPathEdge } from '../types/map.types';
 
@@ -11,6 +11,7 @@ export function useCanvasPointer(canvasRef: RefObject<SVGSVGElement | null>) {
     floor,
     selectedToolboxType,
     pendingPathNodeId,
+    objects,
     nodes,
     edges,
     addObject,
@@ -19,7 +20,7 @@ export function useCanvasPointer(canvasRef: RefObject<SVGSVGElement | null>) {
     setPendingPathNode,
     selectEntity,
     clearSelection,
-  } = useEditorStore();
+  } = useAppStore();
 
   const isCanvasTarget = (e: React.MouseEvent<SVGSVGElement>) => {
     // The visible grid is rendered as a background rect inside the SVG, so treat
@@ -49,13 +50,14 @@ export function useCanvasPointer(canvasRef: RefObject<SVGSVGElement | null>) {
       buildingId: floor.buildingId,
       parentObjectId: null,
       type: selectedToolboxType,
-      name: `New ${selectedToolboxType.charAt(0).toUpperCase() + selectedToolboxType.slice(1)}`,
+      name: getDefaultObjectName(selectedToolboxType, Object.values(objects)),
       label: '',
       x: snapX,
       y: snapY,
       width,
       height,
       rotation: 0,
+      shape: 'rectangle',
       isSearchable: true,
       isAccessible: true,
       _clientId: tempId,
@@ -79,11 +81,9 @@ export function useCanvasPointer(canvasRef: RefObject<SVGSVGElement | null>) {
 
     if (mode === 'select') {
       clearSelection();
-    } else if (mode === 'object') {
-      return;
     } else if (mode === 'node') {
       const tempId = `temp_node_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      const nodeCount = Object.keys(nodes).length;
+      const hallwayPointCount = Object.values(nodes).filter((n) => n.role === 'hallway_point').length;
 
       const newNode: EditorMapNode = {
         id: tempId,
@@ -91,7 +91,7 @@ export function useCanvasPointer(canvasRef: RefObject<SVGSVGElement | null>) {
         buildingId: floor.buildingId,
         objectId: null,
         role: 'hallway_point',
-        label: `Node ${nodeCount + 1}`,
+        label: `Hallway Point ${hallwayPointCount + 1}`,
         x: snapX,
         y: snapY,
         geometryType: 'icon',
@@ -111,7 +111,7 @@ export function useCanvasPointer(canvasRef: RefObject<SVGSVGElement | null>) {
 
   const handleCanvasDoubleClick = (e: React.MouseEvent<SVGSVGElement>) => {
     if (!isCanvasTarget(e)) return;
-    if (mode !== 'object') return;
+    if (mode !== 'select') return;
 
     e.preventDefault();
     addSelectedObjectAtEvent(e);

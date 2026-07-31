@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import sharp from "sharp";
 
 import { collections, Users } from "./collections/index";
+import { resendEmailAdapter } from "./plugins/mail/resend";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -18,6 +19,7 @@ export default buildConfig({
     },
   },
   collections,
+  email: resendEmailAdapter,
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: {

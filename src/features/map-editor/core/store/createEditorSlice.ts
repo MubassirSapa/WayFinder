@@ -1,10 +1,10 @@
 import { StateCreator } from "zustand";
 
-import type { EditorStore } from "@/store/types";
+import type { AppStore } from "@/store/types";
 
 import { EditorSlice } from "./types";
 
-export const createEditorSlice: StateCreator<EditorStore, [], [], EditorSlice> = (set, get) => ({
+export const createEditorSlice: StateCreator<AppStore, [], [], EditorSlice> = (set, get) => ({
   mode: 'select',
   floor: null,
   selectedEntity: null,
@@ -21,6 +21,21 @@ export const createEditorSlice: StateCreator<EditorStore, [], [], EditorSlice> =
     set({ mode });
   },
   setFloor: (floor) => set({ floor }),
+  updateFloor: (updates) =>
+    set((state) => {
+      if (!state.floor) {
+        return {};
+      }
+
+      return {
+        floor: {
+          ...state.floor,
+          ...updates,
+          _dirty: true,
+        },
+        isDirty: true,
+      };
+    }),
   selectEntity: (selectedEntity) => set({ selectedEntity }),
   clearSelection: () => set({ selectedEntity: null }),
   setSelectedToolboxType: (selectedToolboxType) => set({ selectedToolboxType }),

@@ -68,6 +68,7 @@ export interface Config {
   blocks: {};
   collections: {
     users: User;
+    organizations: Organization;
     media: Media;
     floors: Floor;
     'map-objects': MapObject;
@@ -81,6 +82,7 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
+    organizations: OrganizationsSelect<false> | OrganizationsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     floors: FloorsSelect<false> | FloorsSelect<true>;
     'map-objects': MapObjectsSelect<false> | MapObjectsSelect<true>;
@@ -131,6 +133,9 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: number;
+  name: string;
+  role?: ('admin' | 'user') | null;
+  organization?: (number | null) | Organization;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -138,6 +143,8 @@ export interface User {
   resetPasswordExpiration?: string | null;
   salt?: string | null;
   hash?: string | null;
+  _verified?: boolean | null;
+  _verificationToken?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
   sessions?:
@@ -149,6 +156,17 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "organizations".
+ */
+export interface Organization {
+  id: number;
+  name: string;
+  type: 'hospital' | 'university' | 'mall' | 'office' | 'airport' | 'library' | 'other';
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -180,7 +198,17 @@ export interface Floor {
   level: number;
   width: number;
   height: number;
+  metersPerPixel?: number | null;
+  backgroundImage?: (number | null) | Media;
   backgroundImageUrl?: string | null;
+  backgroundImageRotation?: number | null;
+  backgroundImageScale?: number | null;
+  backgroundImageOpacity?: number | null;
+  backgroundImageLocked?: boolean | null;
+  backgroundImageVisible?: boolean | null;
+  backgroundImageOffsetX?: number | null;
+  backgroundImageOffsetY?: number | null;
+  backgroundImageFit?: ('fill' | 'cover' | 'contain') | null;
   status: 'draft' | 'published';
   updatedAt: string;
   createdAt: string;
@@ -201,6 +229,7 @@ export interface MapObject {
     | 'hallway'
     | 'stairs'
     | 'elevator'
+    | 'escalator'
     | 'washroom'
     | 'exit'
     | 'poi'
@@ -214,6 +243,14 @@ export interface MapObject {
   width?: number | null;
   height?: number | null;
   rotation?: number | null;
+  shape?: ('rectangle' | 'ellipse' | 'polygon') | null;
+  points?:
+    | {
+        x: number;
+        y: number;
+        id?: string | null;
+      }[]
+    | null;
   isSearchable?: boolean | null;
   isAccessible?: boolean | null;
   updatedAt: string;
@@ -228,7 +265,7 @@ export interface MapNode {
   buildingId: string;
   floor: number | Floor;
   object?: (number | null) | MapObject;
-  role: 'entrance' | 'exit' | 'hallway_point' | 'stairs_entry' | 'elevator_entry' | 'shelf_access';
+  role: 'entrance' | 'exit' | 'hallway_point' | 'stairs_entry' | 'elevator_entry' | 'escalator_entry' | 'shelf_access';
   label?: string | null;
   x: number;
   y: number;
@@ -257,7 +294,7 @@ export interface PathEdge {
   floor: number | Floor;
   fromNode: number | MapNode;
   toNode: number | MapNode;
-  type: 'walkway' | 'stairs' | 'elevator' | 'ramp';
+  type: 'walkway' | 'stairs' | 'elevator' | 'escalator' | 'ramp';
   distanceMeters: number;
   bidirectional?: boolean | null;
   isAccessible?: boolean | null;
@@ -291,6 +328,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'organizations';
+        value: number | Organization;
       } | null)
     | ({
         relationTo: 'media';
@@ -359,6 +400,9 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  organization?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -366,6 +410,8 @@ export interface UsersSelect<T extends boolean = true> {
   resetPasswordExpiration?: T;
   salt?: T;
   hash?: T;
+  _verified?: T;
+  _verificationToken?: T;
   loginAttempts?: T;
   lockUntil?: T;
   sessions?:
@@ -375,6 +421,16 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "organizations_select".
+ */
+export interface OrganizationsSelect<T extends boolean = true> {
+  name?: T;
+  type?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -404,7 +460,17 @@ export interface FloorsSelect<T extends boolean = true> {
   level?: T;
   width?: T;
   height?: T;
+  metersPerPixel?: T;
+  backgroundImage?: T;
   backgroundImageUrl?: T;
+  backgroundImageRotation?: T;
+  backgroundImageScale?: T;
+  backgroundImageOpacity?: T;
+  backgroundImageLocked?: T;
+  backgroundImageVisible?: T;
+  backgroundImageOffsetX?: T;
+  backgroundImageOffsetY?: T;
+  backgroundImageFit?: T;
   status?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -425,6 +491,14 @@ export interface MapObjectsSelect<T extends boolean = true> {
   width?: T;
   height?: T;
   rotation?: T;
+  shape?: T;
+  points?:
+    | T
+    | {
+        x?: T;
+        y?: T;
+        id?: T;
+      };
   isSearchable?: T;
   isAccessible?: T;
   updatedAt?: T;

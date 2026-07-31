@@ -16,6 +16,7 @@ export interface EditorSlice {
   isSaving: boolean;
   setMode: (mode: EditorMode) => void;
   setFloor: (floor: EditorFloor | null) => void;
+  updateFloor: (updates: Partial<EditorFloor>) => void;
   selectEntity: (entity: SelectedEntity) => void;
   clearSelection: () => void;
   setSelectedToolboxType: (type: ToolboxObjectType) => void;

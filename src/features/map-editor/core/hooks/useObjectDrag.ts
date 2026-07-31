@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
-import { useEditorStore } from "@/store";
-import { snapToGrid } from '../lib/canvas';
+import { useAppStore } from "@/store";
+import { clientPointToSvg, snapToGrid } from '../lib/canvas';
 
 const MIN_OBJECT_SIZE = 20;
 
@@ -9,28 +9,8 @@ function normalizeRotation(rotation: number): number {
   return normalized < 0 ? normalized + 360 : normalized;
 }
 
-function clientPointToSvg(
-  clientX: number,
-  clientY: number,
-  svg: SVGSVGElement,
-): { x: number; y: number } | null {
-  const svgPoint = svg.createSVGPoint();
-  svgPoint.x = clientX;
-  svgPoint.y = clientY;
-
-  try {
-    const matrix = svg.getScreenCTM()?.inverse();
-    if (matrix) {
-      const transformed = svgPoint.matrixTransform(matrix);
-      return { x: transformed.x, y: transformed.y };
-    }
-  } catch {}
-
-  return null;
-}
-
 export function useObjectDrag() {
-  const { mode, selectEntity, moveObject, rotateObject, updateObject } = useEditorStore();
+  const { mode, selectEntity, moveObject, rotateObject, updateObject } = useAppStore();
   const dragInfo = useRef<
     | {
         type: 'move';
@@ -59,8 +39,7 @@ export function useObjectDrag() {
   >(null);
 
   const handleMouseDown = (objectId: string, initialX: number, initialY: number, e: React.MouseEvent) => {
-    // Support moving objects from both select and object placement modes.
-    if ((mode !== 'select' && mode !== 'object') || e.button !== 0) return;
+    if (mode !== 'select' || e.button !== 0) return;
 
     e.stopPropagation();
     e.preventDefault();
@@ -87,7 +66,7 @@ export function useObjectDrag() {
     height: number,
     e: React.MouseEvent<SVGRectElement>,
   ) => {
-    if ((mode !== 'select' && mode !== 'object') || e.button !== 0) return;
+    if (mode !== 'select' || e.button !== 0) return;
 
     e.stopPropagation();
     e.preventDefault();
@@ -115,7 +94,7 @@ export function useObjectDrag() {
     height: number,
     e: React.MouseEvent<SVGCircleElement>,
   ) => {
-    if ((mode !== 'select' && mode !== 'object') || e.button !== 0) return;
+    if (mode !== 'select' || e.button !== 0) return;
 
     const svg = e.currentTarget.ownerSVGElement;
     if (!svg) return;

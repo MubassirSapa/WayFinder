@@ -6,8 +6,23 @@ export interface EditorFloor {
   width: number;
   height: number;
   metersPerPixel?: number | null;
+  backgroundImageId?: string | null;
+  backgroundImageName?: string | null;
+  backgroundImageAlt?: string | null;
   backgroundImageUrl?: string | null;
+  backgroundImageRotation?: number;
+  backgroundImageScale?: number;
+  backgroundImageOpacity?: number;
+  backgroundImageLocked?: boolean;
+  backgroundImageVisible?: boolean;
+  backgroundImageOffsetX?: number;
+  backgroundImageOffsetY?: number;
+  backgroundImageFit?: 'fill' | 'cover' | 'contain';
+  /** Natural pixel size of the uploaded file, read-only (from the media doc) — used to compute "cover"/"contain" fit. */
+  backgroundImageNaturalWidth?: number | null;
+  backgroundImageNaturalHeight?: number | null;
   status: 'draft' | 'published';
+  _dirty?: boolean;
 }
 
 export interface EditorMapObject {
@@ -22,6 +37,7 @@ export interface EditorMapObject {
     | 'hallway'
     | 'stairs'
     | 'elevator'
+    | 'escalator'
     | 'washroom'
     | 'exit'
     | 'poi'
@@ -35,6 +51,9 @@ export interface EditorMapObject {
   width: number;
   height: number;
   rotation: number;
+  shape: 'rectangle' | 'ellipse' | 'polygon';
+  /** Only meaningful when shape === 'polygon' — local, unrotated coordinates. */
+  points?: { x: number; y: number }[] | null;
   isSearchable: boolean;
   isAccessible: boolean;
   _clientId?: string; // used to link unsaved local references
@@ -52,7 +71,7 @@ export interface EditorMapNode {
   floorId: string;
   buildingId: string;
   objectId: string | null;
-  role: 'entrance' | 'exit' | 'hallway_point' | 'stairs_entry' | 'elevator_entry' | 'shelf_access';
+  role: 'entrance' | 'exit' | 'hallway_point' | 'stairs_entry' | 'elevator_entry' | 'escalator_entry' | 'shelf_access';
   label: string;
   x: number;
   y: number;
@@ -72,7 +91,7 @@ export interface EditorPathEdge {
   buildingId: string;
   fromNodeId: string;
   toNodeId: string;
-  type: 'walkway' | 'stairs' | 'elevator' | 'ramp';
+  type: 'walkway' | 'stairs' | 'elevator' | 'escalator' | 'ramp';
   distanceMeters: number;
   bidirectional: boolean;
   isAccessible: boolean;

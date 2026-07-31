@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
 import { canvasPointFromEvent, snapToGrid } from "@/features/map-editor/core/lib/canvas";
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 
 export function SmartBuilderBridge() {
   const {
@@ -18,7 +18,7 @@ export function SmartBuilderBridge() {
     addHallwayDrawingPoint,
     clearHallwayDrawingPoints,
     applySmartBuilderToObject,
-  } = useEditorStore();
+  } = useAppStore();
 
   const processedObjectIdsRef = useRef<Set<string>>(new Set());
   const activeFloorIdRef = useRef<string | null>(null);
@@ -115,7 +115,7 @@ export function SmartBuilderBridge() {
         <polyline
           points={pathPoints}
           fill="none"
-          stroke="rgba(16, 185, 129, 0.9)"
+          stroke="var(--editor-smart-builder)"
           strokeWidth="3"
           strokeDasharray="6 4"
         />
@@ -126,15 +126,15 @@ export function SmartBuilderBridge() {
             cx={point.x}
             cy={point.y}
             r="7"
-            fill="rgba(16, 185, 129, 0.18)"
-            stroke="rgba(16, 185, 129, 0.9)"
+            fill="var(--editor-smart-builder-fill)"
+            stroke="var(--editor-smart-builder)"
             strokeWidth="1.5"
           />
           <text
             x={point.x}
             y={point.y - 12}
             textAnchor="middle"
-            fill="#d1fae5"
+            fill="var(--editor-canvas-label-inverse)"
             className="text-[9px] font-medium"
           >
             {index + 1}

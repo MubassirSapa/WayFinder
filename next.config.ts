@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  allowedDevOrigins: ["badge-arcade-donna-commercial.trycloudflare.com"],
+  allowedDevOrigins: ["*.trycloudflare.com"],
 };
 
 export default withPayload(nextConfig);

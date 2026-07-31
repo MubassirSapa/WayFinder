@@ -1,11 +1,11 @@
 import React, { useRef } from 'react';
 
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 
 import { snapToGrid } from '../lib/canvas';
 
 export function useNodeDrag() {
-  const { mode, selectEntity, moveNode } = useEditorStore();
+  const { mode, selectEntity, moveNode } = useAppStore();
   const dragInfo = useRef<{
     nodeId: string;
     startX: number;
@@ -21,7 +21,7 @@ export function useNodeDrag() {
     initialY: number,
     e: React.PointerEvent<SVGGElement>,
   ) => {
-    if ((mode !== 'select' && mode !== 'node' && mode !== 'object') || e.button !== 0) return;
+    if ((mode !== 'select' && mode !== 'node') || e.button !== 0) return;
 
     e.stopPropagation();
     e.preventDefault();

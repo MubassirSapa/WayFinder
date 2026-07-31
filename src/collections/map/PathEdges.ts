@@ -1,10 +1,18 @@
 import type { CollectionConfig } from "payload";
 
+import { access } from "../access";
+
 export const PathEdges: CollectionConfig = {
   slug: "path-edges",
   admin: {
     useAsTitle: "id",
     group: "Indoor Map",
+  },
+  access: {
+    read: access.isLoggedIn,
+    create: access.isLoggedIn,
+    update: access.isLoggedIn,
+    delete: access.isLoggedIn,
   },
   fields: [
     {
@@ -42,6 +50,7 @@ export const PathEdges: CollectionConfig = {
         { label: "Walkway", value: "walkway" },
         { label: "Stairs", value: "stairs" },
         { label: "Elevator", value: "elevator" },
+        { label: "Escalator", value: "escalator" },
         { label: "Ramp", value: "ramp" },
       ],
     },

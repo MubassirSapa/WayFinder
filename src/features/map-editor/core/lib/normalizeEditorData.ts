@@ -1,5 +1,6 @@
 import type {
   Floor,
+  Media,
   MapNode as PayloadMapNode,
   MapObject as PayloadMapObject,
   PathEdge as PayloadPathEdge,
@@ -17,6 +18,15 @@ function hasNumericOrStringId(value: unknown): value is { id: number | string } 
   );
 }
 
+function hasMediaDocument(value: unknown): value is Media {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'id' in value &&
+    'alt' in value
+  );
+}
+
 function getRelationId(relation: RelationValue): string | null {
   if (relation === null || relation === undefined) return null;
   if (hasNumericOrStringId(relation)) return String(relation.id);
@@ -29,7 +39,16 @@ function getRequiredRelationId(relation: Exclude<RelationValue, null | undefined
 }
 
 export function normalizeFloor(doc: Floor): EditorFloor {
-  const floorDoc = doc as Floor & { metersPerPixel?: number | null };
+  const floorDoc = doc as Floor & {
+    backgroundImage?: Media | number | null;
+    metersPerPixel?: number | null;
+  };
+  const backgroundImage = floorDoc.backgroundImage;
+  const backgroundImageId = getRelationId(backgroundImage);
+  const backgroundImageUrl =
+    hasMediaDocument(backgroundImage)
+      ? backgroundImage.url ?? doc.backgroundImageUrl ?? null
+      : doc.backgroundImageUrl ?? null;
 
   return {
     id: String(doc.id),
@@ -39,7 +58,28 @@ export function normalizeFloor(doc: Floor): EditorFloor {
     width: doc.width ?? 1200,
     height: doc.height ?? 800,
     metersPerPixel: floorDoc.metersPerPixel ?? null,
-    backgroundImageUrl: doc.backgroundImageUrl,
+    backgroundImageId,
+    backgroundImageName: hasMediaDocument(backgroundImage)
+      ? backgroundImage.filename ?? null
+      : null,
+    backgroundImageAlt: hasMediaDocument(backgroundImage)
+      ? backgroundImage.alt
+      : null,
+    backgroundImageUrl,
+    backgroundImageRotation: floorDoc.backgroundImageRotation ?? 0,
+    backgroundImageScale: floorDoc.backgroundImageScale ?? 1,
+    backgroundImageOpacity: floorDoc.backgroundImageOpacity ?? 0.3,
+    backgroundImageLocked: floorDoc.backgroundImageLocked ?? false,
+    backgroundImageVisible: floorDoc.backgroundImageVisible ?? true,
+    backgroundImageOffsetX: floorDoc.backgroundImageOffsetX ?? 0,
+    backgroundImageOffsetY: floorDoc.backgroundImageOffsetY ?? 0,
+    backgroundImageFit: floorDoc.backgroundImageFit ?? 'fill',
+    backgroundImageNaturalWidth: hasMediaDocument(backgroundImage)
+      ? backgroundImage.width ?? null
+      : null,
+    backgroundImageNaturalHeight: hasMediaDocument(backgroundImage)
+      ? backgroundImage.height ?? null
+      : null,
     status: doc.status ?? 'draft',
   };
 }
@@ -58,6 +98,8 @@ export function normalizeMapObject(doc: PayloadMapObject): EditorMapObject {
     width: doc.width ?? 100,
     height: doc.height ?? 80,
     rotation: doc.rotation ?? 0,
+    shape: doc.shape ?? 'rectangle',
+    points: doc.points?.map((point) => ({ x: point.x, y: point.y })) ?? null,
     isSearchable: doc.isSearchable ?? true,
     isAccessible: doc.isAccessible ?? true,
   };

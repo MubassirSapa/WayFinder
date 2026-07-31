@@ -22,7 +22,7 @@ export function MapGrid({ width, height }: MapGridProps) {
           <path
             d={`M ${GRID_SIZE} 0 L 0 0 0 ${GRID_SIZE}`}
             fill="none"
-            stroke="rgba(255, 255, 255, 0.04)"
+            stroke="var(--editor-grid-minor)"
             strokeWidth="1"
           />
         </pattern>
@@ -37,18 +37,21 @@ export function MapGrid({ width, height }: MapGridProps) {
           <path
             d={`M ${GRID_SIZE * 5} 0 L 0 0 0 ${GRID_SIZE * 5}`}
             fill="none"
-            stroke="rgba(255, 255, 255, 0.1)"
+            stroke="var(--editor-grid-major)"
             strokeWidth="1.5"
           />
         </pattern>
       </defs>
 
-      {/* Grid Background */}
+      {/* Grid Background — purely decorative, must not intercept pointer
+          events (it fully covers the canvas and would otherwise block
+          dragging anything rendered beneath it, like the reference image). */}
       <rect
         width={width}
         height={height}
         fill="url(#editor-grid-major)"
         data-canvas-bg="true"
+        style={{ pointerEvents: 'none' }}
       />
     </>
   );

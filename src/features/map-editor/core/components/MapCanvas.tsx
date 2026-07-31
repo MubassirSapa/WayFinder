@@ -1,8 +1,11 @@
 'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
+import { useCanvasPan } from '../hooks/useCanvasPan';
 import { useCanvasPointer } from '../hooks/useCanvasPointer';
+import { useBackgroundImageDrag } from '../hooks/useBackgroundImageDrag';
+import { BACKGROUND_IMAGE_CLIP_PATH_ID, computeBackgroundImageFit } from '../lib/backgroundImageFit';
 import { MapGrid } from './MapGrid';
 import { MapNodeLayer } from './MapNodeLayer';
 import { MapObjectLayer } from './MapObjectLayer';
@@ -11,8 +14,22 @@ import { PathEdgeLayer } from './PathEdgeLayer';
 
 export function MapCanvas() {
   const canvasRef = useRef<SVGSVGElement | null>(null);
-  const { floor, mode, pendingPathNodeId, nodes } = useEditorStore();
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const { floor, mode, pendingPathNodeId, nodes } = useAppStore();
   const { handleCanvasClick, handleCanvasDoubleClick } = useCanvasPointer(canvasRef);
+  const {
+    consumeSuppressedClick,
+    handlePointerDown: handlePanPointerDown,
+    handlePointerMove: handlePanPointerMove,
+    handlePointerUp: handlePanPointerUp,
+    isPanning,
+    pan,
+  } = useCanvasPan({
+    floorHeight: floor?.height ?? 0,
+    floorWidth: floor?.width ?? 0,
+    wrapperRef,
+  });
+  const { handleMouseDown: handleBackgroundImageMouseDown } = useBackgroundImageDrag();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   // Track cursor position in path mode to render temporary edge preview
@@ -51,7 +68,7 @@ export function MapCanvas() {
 
   if (!floor) {
     return (
-      <div className="flex h-full w-full items-center justify-center bg-zinc-950 text-zinc-400">
+      <div className="flex h-full w-full items-center justify-center bg-editor-background text-editor-muted-foreground">
         <p>No floor data loaded.</p>
       </div>
     );
@@ -60,33 +77,76 @@ export function MapCanvas() {
   // Find source node coordinates for drawing path preview line
   const sourceNode = pendingPathNodeId ? nodes[pendingPathNodeId] : null;
 
+  const backgroundImageFit = computeBackgroundImageFit({
+    floorWidth: floor.width,
+    floorHeight: floor.height,
+    naturalWidth: floor.backgroundImageNaturalWidth,
+    naturalHeight: floor.backgroundImageNaturalHeight,
+    fit: floor.backgroundImageFit ?? 'fill',
+    offsetX: floor.backgroundImageOffsetX,
+    offsetY: floor.backgroundImageOffsetY,
+  });
+  const backgroundImageCenterX = backgroundImageFit.x + backgroundImageFit.width / 2;
+  const backgroundImageCenterY = backgroundImageFit.y + backgroundImageFit.height / 2;
+  const backgroundImageTransform = `translate(${backgroundImageCenterX} ${backgroundImageCenterY}) rotate(${floor.backgroundImageRotation ?? 0}) scale(${floor.backgroundImageScale ?? 1}) translate(${-backgroundImageCenterX} ${-backgroundImageCenterY})`;
+
   return (
-    <div className="relative h-full w-full overflow-auto bg-zinc-950 p-6 flex items-start justify-start select-none">
+    <div
+      className={`relative h-full w-full touch-none overflow-hidden bg-editor-background p-6 flex items-start justify-start select-none ${isPanning ? 'cursor-grabbing' : 'cursor-grab'}`}
+      onPointerCancel={handlePanPointerUp}
+      onPointerDown={handlePanPointerDown}
+      onPointerLeave={handlePanPointerUp}
+      onPointerMove={handlePanPointerMove}
+      onPointerUp={handlePanPointerUp}
+      ref={wrapperRef}
+    >
       <div
-        className="rounded-xl border border-zinc-800 bg-zinc-900 shadow-2xl relative"
+        className="relative overflow-hidden rounded-xl border border-editor-border bg-editor-panel shadow-2xl"
         style={{
-          width: floor.width,
           height: floor.height,
+          transform: `translate(${pan.x}px, ${pan.y}px)`,
+          width: floor.width,
         }}
       >
         <svg
           ref={canvasRef}
           width={floor.width}
           height={floor.height}
-          onClick={handleCanvasClick}
-          onDoubleClick={handleCanvasDoubleClick}
+          onClick={(e) => {
+            if (consumeSuppressedClick()) return;
+            handleCanvasClick(e);
+          }}
+          onDoubleClick={(e) => {
+            if (consumeSuppressedClick()) return;
+            handleCanvasDoubleClick(e);
+          }}
           data-editor-canvas="true"
-          className="absolute inset-0 select-none cursor-crosshair overflow-visible"
+          className={`absolute inset-0 select-none overflow-hidden ${mode === 'node' ? 'cursor-crosshair' : ''}`}
         >
           {/* Faded Background Image if configured */}
-          {floor.backgroundImageUrl && (
-            <image
-              href={floor.backgroundImageUrl}
-              width={floor.width}
-              height={floor.height}
-              opacity={0.3}
-              style={{ pointerEvents: 'none' }}
-            />
+          {floor.backgroundImageUrl && (floor.backgroundImageVisible ?? true) && (
+            <>
+              <defs>
+                <clipPath id={BACKGROUND_IMAGE_CLIP_PATH_ID}>
+                  <rect width={floor.width} height={floor.height} />
+                </clipPath>
+              </defs>
+              <image
+                href={floor.backgroundImageUrl}
+                x={backgroundImageFit.x}
+                y={backgroundImageFit.y}
+                width={backgroundImageFit.width}
+                height={backgroundImageFit.height}
+                opacity={floor.backgroundImageOpacity ?? 0.3}
+                clipPath={backgroundImageFit.needsClip ? `url(#${BACKGROUND_IMAGE_CLIP_PATH_ID})` : undefined}
+                style={{
+                  cursor: mode === 'select' && !floor.backgroundImageLocked ? 'move' : undefined,
+                  pointerEvents: mode === 'select' && !floor.backgroundImageLocked ? 'auto' : 'none',
+                }}
+                transform={backgroundImageTransform}
+                onMouseDown={handleBackgroundImageMouseDown}
+              />
+            </>
           )}
 
           {/* Canvas grid background */}
@@ -102,7 +162,7 @@ export function MapCanvas() {
               y1={sourceNode.y}
               x2={mousePos.x}
               y2={mousePos.y}
-              stroke="rgba(234, 179, 8, 0.6)"
+              stroke="var(--editor-reference-line)"
               strokeWidth="2"
               strokeDasharray="4 4"
               className="pointer-events-none"

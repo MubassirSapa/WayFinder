@@ -4,6 +4,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 @theme inline {
   --font-heading: var(--font-heading-source);
   --font-sans: var(--font-sans-source);
@@ -38,6 +44,30 @@
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
+  --color-info: var(--info);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-overlay: var(--overlay);
+  --color-editor-background: var(--editor-background);
+  --color-editor-panel: var(--editor-panel);
+  --color-editor-surface: var(--editor-surface);
+  --color-editor-hover: var(--editor-hover);
+  --color-editor-border: var(--editor-border);
+  --color-editor-border-strong: var(--editor-border-strong);
+  --color-editor-foreground: var(--editor-foreground);
+  --color-editor-muted-foreground: var(--editor-muted-foreground);
+  --color-editor-subtle-foreground: var(--editor-subtle-foreground);
+  --color-editor-disabled-foreground: var(--editor-disabled-foreground);
+  --color-not-found-background: var(--not-found-background);
+  --color-not-found-foreground: var(--not-found-foreground);
+  --color-not-found-strong: var(--not-found-strong);
+  --color-not-found-muted: var(--not-found-muted);
+  --color-not-found-subtle: var(--not-found-subtle);
+  --color-not-found-danger: var(--not-found-danger);
+  --color-not-found-ring: var(--not-found-ring);
+  --color-not-found-ring-strong: var(--not-found-ring-strong);
+  --color-not-found-crosshair: var(--not-found-crosshair);
+  --color-not-found-marker-background: var(--not-found-marker-background);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -48,72 +78,326 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
+  --site-header-height: 4rem;
+  color-scheme: light;
+  --background: oklch(0.94 0.004 210);
   --foreground: oklch(0.148 0.004 228.8);
-  --card: oklch(1 0 0);
+  --card: oklch(0.965 0.003 210);
   --card-foreground: oklch(0.148 0.004 228.8);
-  --popover: oklch(1 0 0);
+  --popover: oklch(0.972 0.003 210);
   --popover-foreground: oklch(0.148 0.004 228.8);
   --primary: oklch(0.511 0.096 186.391);
   --primary-foreground: oklch(0.984 0.014 180.72);
-  --secondary: oklch(0.967 0.001 286.375);
+  --secondary: oklch(0.91 0.004 210);
   --secondary-foreground: oklch(0.21 0.006 285.885);
-  --muted: oklch(0.963 0.002 197.1);
-  --muted-foreground: oklch(0.56 0.021 213.5);
-  --accent: oklch(0.963 0.002 197.1);
+  --muted: oklch(0.915 0.004 210);
+  --muted-foreground: oklch(0.48 0.018 213.5);
+  --accent: oklch(0.9 0.005 210);
   --accent-foreground: oklch(0.218 0.008 223.9);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.925 0.005 214.3);
-  --input: oklch(0.925 0.005 214.3);
-  --ring: oklch(0.723 0.014 214.4);
+  --border: oklch(0.82 0.008 214.3);
+  --input: oklch(0.86 0.007 214.3);
+  --ring: oklch(0.62 0.018 214.4);
   --chart-1: oklch(0.855 0.138 181.071);
   --chart-2: oklch(0.704 0.14 182.503);
   --chart-3: oklch(0.6 0.118 184.704);
   --chart-4: oklch(0.511 0.096 186.391);
   --chart-5: oklch(0.437 0.078 188.216);
   --radius: 0.625rem;
-  --sidebar: oklch(0.987 0.002 197.1);
+  --sidebar: oklch(0.925 0.004 210);
   --sidebar-foreground: oklch(0.148 0.004 228.8);
   --sidebar-primary: oklch(0.6 0.118 184.704);
   --sidebar-primary-foreground: oklch(0.984 0.014 180.72);
-  --sidebar-accent: oklch(0.963 0.002 197.1);
+  --sidebar-accent: oklch(0.9 0.005 210);
   --sidebar-accent-foreground: oklch(0.218 0.008 223.9);
-  --sidebar-border: oklch(0.925 0.005 214.3);
-  --sidebar-ring: oklch(0.723 0.014 214.4);
+  --sidebar-border: oklch(0.82 0.008 214.3);
+  --sidebar-ring: oklch(0.62 0.018 214.4);
+  --info: oklch(0.59 0.14 238);
+  --success: oklch(0.55 0.14 153);
+  --warning: oklch(0.62 0.14 75);
+  --overlay: oklch(0.12 0.006 210);
+  --editor-background: oklch(0.975 0 0);
+  --editor-panel: oklch(0.965 0 0);
+  --editor-surface: oklch(0.93 0.006 228);
+  --editor-hover: oklch(0.88 0.008 228);
+  --editor-border: oklch(0.84 0.008 228);
+  --editor-border-strong: oklch(0.74 0.01 228);
+  --editor-foreground: oklch(0.22 0.008 228);
+  --editor-muted-foreground: oklch(0.44 0.012 228);
+  --editor-subtle-foreground: oklch(0.55 0.014 228);
+  --editor-disabled-foreground: oklch(0.66 0.012 228);
+  --editor-selection: oklch(0.58 0.19 262);
+  --editor-selection-fill: oklch(0.58 0.19 262 / 14%);
+  --editor-selection-border: oklch(0.58 0.19 262 / 20%);
+  --editor-grid-minor: oklch(0.52 0.01 228 / 10%);
+  --editor-grid-major: oklch(0.52 0.01 228 / 22%);
+  --editor-canvas-label: oklch(0.22 0.008 228 / 90%);
+  --editor-canvas-label-inverse: oklch(0.975 0 0);
+  --editor-node-neutral: oklch(0.55 0.014 226);
+  --editor-node-entrance: oklch(0.58 0.16 145);
+  --editor-node-exit: oklch(0.58 0.2 27);
+  --editor-node-stairs: oklch(0.65 0.17 55);
+  --editor-node-elevator: oklch(0.58 0.18 300);
+  --editor-node-escalator: oklch(0.59 0.14 238);
+  --editor-node-shelf: oklch(0.58 0.13 180);
+  --editor-object-room: oklch(0.58 0.19 262);
+  --editor-object-wall: oklch(0.55 0.03 250);
+  --editor-object-door: oklch(0.72 0.15 85);
+  --editor-object-hallway: oklch(0.68 0.025 245);
+  --editor-object-stairs: oklch(0.65 0.17 55);
+  --editor-object-elevator: oklch(0.58 0.18 300);
+  --editor-object-escalator: oklch(0.59 0.14 238);
+  --editor-object-washroom: oklch(0.62 0.13 210);
+  --editor-object-exit: oklch(0.58 0.2 27);
+  --editor-object-poi: oklch(0.62 0.19 350);
+  --editor-object-aisle: oklch(0.58 0.16 160);
+  --editor-object-shelf: oklch(0.58 0.13 180);
+  --editor-object-section: oklch(0.55 0.19 278);
+  --editor-reference-line: oklch(0.72 0.15 85 / 60%);
+  --editor-smart-builder: oklch(0.58 0.16 160);
+  --editor-smart-builder-fill: oklch(0.58 0.16 160 / 18%);
+  --mask-opaque: oklch(0 0 0);
+  --not-found-background: oklch(0.97 0.008 165);
+  --not-found-foreground: oklch(0.24 0.018 165);
+  --not-found-strong: oklch(0.15 0.012 165);
+  --not-found-muted: oklch(0.45 0.03 165);
+  --not-found-subtle: oklch(0.58 0.025 165);
+  --not-found-danger: oklch(0.62 0.16 28);
+  --not-found-ring: oklch(0.48 0.08 165 / 20%);
+  --not-found-ring-strong: oklch(0.48 0.08 165 / 36%);
+  --not-found-crosshair: oklch(0.48 0.08 165 / 27%);
+  --not-found-marker-background: oklch(0.94 0.015 165);
+  --not-found-backdrop: radial-gradient(
+    120% 100% at 78% 18%,
+    var(--not-found-marker-background) 0%,
+    var(--not-found-background) 55%,
+    color-mix(in oklch, var(--not-found-background), var(--not-found-strong) 18%) 100%
+  );
+  --not-found-grid-line: color-mix(in oklch, var(--primary) 10%, transparent);
+  --not-found-vignette: radial-gradient(
+    70% 70% at 50% 50%,
+    transparent 40%,
+    color-mix(in oklch, var(--not-found-background), var(--not-found-strong) 35%) 100%
+  );
+  --not-found-sweep: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 300deg,
+    color-mix(in oklch, var(--primary) 20%, transparent) 350deg,
+    color-mix(in oklch, var(--primary) 34%, transparent) 360deg
+  );
+}
+
+#nprogress .wayfinder-route-loader {
+  position: fixed;
+  top: var(--site-header-height);
+  left: 0;
+  z-index: 50;
+  width: 100%;
+  height: 3px;
+  background: var(--primary);
+}
+
+.not-found-backdrop {
+  background-image: var(--not-found-backdrop);
+}
+
+.not-found-grid {
+  background-image:
+    linear-gradient(var(--not-found-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--not-found-grid-line) 1px, transparent 1px);
+}
+
+.not-found-vignette {
+  background-image: var(--not-found-vignette);
+}
+
+.not-found-sweep {
+  background-image: var(--not-found-sweep);
 }
 
 .dark {
-  --background: oklch(0.148 0.004 228.8);
-  --foreground: oklch(0.987 0.002 197.1);
-  --card: oklch(0.218 0.008 223.9);
-  --card-foreground: oklch(0.987 0.002 197.1);
-  --popover: oklch(0.218 0.008 223.9);
-  --popover-foreground: oklch(0.987 0.002 197.1);
-  --primary: oklch(0.437 0.078 188.216);
-  --primary-foreground: oklch(0.984 0.014 180.72);
-  --secondary: oklch(0.274 0.006 286.033);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.275 0.011 216.9);
-  --muted-foreground: oklch(0.723 0.014 214.4);
-  --accent: oklch(0.275 0.011 216.9);
-  --accent-foreground: oklch(0.987 0.002 197.1);
+  color-scheme: dark;
+  --background: oklch(0.28 0.007 190);
+  --foreground: oklch(0.89 0.006 190);
+  --card: oklch(0.32 0.009 190);
+  --card-foreground: oklch(0.89 0.006 190);
+  --popover: oklch(0.33 0.009 190);
+  --popover-foreground: oklch(0.89 0.006 190);
+  --primary: oklch(0.58 0.1 186);
+  --primary-foreground: oklch(0.16 0.018 190);
+  --secondary: oklch(0.35 0.009 190);
+  --secondary-foreground: oklch(0.89 0.006 190);
+  --muted: oklch(0.36 0.01 190);
+  --muted-foreground: oklch(0.72 0.016 190);
+  --accent: oklch(0.38 0.014 186);
+  --accent-foreground: oklch(0.91 0.006 190);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.56 0.021 213.5);
+  --border: oklch(0.9 0.006 190 / 18%);
+  --input: oklch(0.9 0.006 190 / 22%);
+  --ring: oklch(0.65 0.035 186);
   --chart-1: oklch(0.855 0.138 181.071);
   --chart-2: oklch(0.704 0.14 182.503);
   --chart-3: oklch(0.6 0.118 184.704);
   --chart-4: oklch(0.511 0.096 186.391);
   --chart-5: oklch(0.437 0.078 188.216);
-  --sidebar: oklch(0.218 0.008 223.9);
-  --sidebar-foreground: oklch(0.987 0.002 197.1);
-  --sidebar-primary: oklch(0.704 0.14 182.503);
-  --sidebar-primary-foreground: oklch(0.277 0.046 192.524);
-  --sidebar-accent: oklch(0.275 0.011 216.9);
-  --sidebar-accent-foreground: oklch(0.987 0.002 197.1);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.56 0.021 213.5);
+  --sidebar: oklch(0.31 0.009 190);
+  --sidebar-foreground: oklch(0.89 0.006 190);
+  --sidebar-primary: oklch(0.58 0.1 186);
+  --sidebar-primary-foreground: oklch(0.16 0.018 190);
+  --sidebar-accent: oklch(0.38 0.014 186);
+  --sidebar-accent-foreground: oklch(0.91 0.006 190);
+  --sidebar-border: oklch(0.9 0.006 190 / 18%);
+  --sidebar-ring: oklch(0.65 0.035 186);
+  --info: oklch(0.72 0.11 238);
+  --success: oklch(0.73 0.14 153);
+  --warning: oklch(0.77 0.14 75);
+  --overlay: oklch(0.1 0.004 190);
+  --editor-background: oklch(0.145 0.005 250);
+  --editor-panel: oklch(0.205 0.006 250);
+  --editor-surface: oklch(0.275 0.008 250);
+  --editor-hover: oklch(0.37 0.01 250);
+  --editor-border: oklch(0.285 0.008 250);
+  --editor-border-strong: oklch(0.37 0.01 250);
+  --editor-foreground: oklch(0.97 0.003 228);
+  --editor-muted-foreground: oklch(0.72 0.012 228);
+  --editor-subtle-foreground: oklch(0.55 0.014 228);
+  --editor-disabled-foreground: oklch(0.44 0.012 228);
+  --editor-selection: oklch(0.72 0.16 262);
+  --editor-selection-fill: oklch(0.72 0.16 262 / 14%);
+  --editor-selection-border: oklch(0.72 0.16 262 / 20%);
+  --editor-grid-minor: oklch(1 0 0 / 4%);
+  --editor-grid-major: oklch(1 0 0 / 10%);
+  --editor-canvas-label: oklch(1 0 0 / 90%);
+  --editor-canvas-label-inverse: oklch(0.18 0.02 250);
+  --not-found-background: oklch(0.25 0.012 165);
+  --not-found-foreground: oklch(0.88 0.012 165);
+  --not-found-strong: oklch(0.93 0.008 165);
+  --not-found-muted: oklch(0.68 0.03 165);
+  --not-found-subtle: oklch(0.58 0.035 165);
+  --not-found-danger: oklch(0.7 0.15 28);
+  --not-found-ring: oklch(0.42 0.08 165 / 20%);
+  --not-found-ring-strong: oklch(0.42 0.08 165 / 36%);
+  --not-found-crosshair: oklch(0.42 0.08 165 / 27%);
+  --not-found-marker-background: oklch(0.31 0.025 165);
+}
+
+.map-viewer-theme {
+  --map-viewer-canvas:oklch(0.97 0 0);
+  --map-viewer-grid-minor:oklch(0.82 0.008 228 / 0.35);
+  --map-viewer-grid-major:oklch(0.74 0.01 228 / 0.5);
+  --map-viewer-floor-fill:oklch(0.978 0 0);
+  --map-viewer-floor-stroke:oklch(0.74 0.012 227);
+  --map-viewer-floor-inner-stroke:oklch(0.86 0.006 223);
+  --map-viewer-label:oklch(0.29 0.01 228);
+  --map-viewer-label-muted:oklch(0.54 0.014 226);
+  --map-viewer-wall-fill:oklch(0.866 0.007 228);
+  --map-viewer-wall-stroke:oklch(0.69 0.011 228);
+  --map-viewer-hallway-fill:oklch(0.958 0.004 110);
+  --map-viewer-hallway-stroke:oklch(0.83 0.008 226);
+  --map-viewer-room-fill:oklch(0.975 0.012 210);
+  --map-viewer-room-stroke:oklch(0.72 0.028 220);
+  --map-viewer-section-fill:oklch(0.947 0.013 220);
+  --map-viewer-section-stroke:oklch(0.768 0.027 220);
+  --map-viewer-aisle-fill:oklch(0.957 0.018 100);
+  --map-viewer-aisle-stroke:oklch(0.79 0.026 100);
+  --map-viewer-door-fill:oklch(0.848 0.032 220 / 0.4);
+  --map-viewer-door-stroke:oklch(0.63 0.063 226);
+  --map-viewer-stairs-fill:oklch(0.93 0.028 84);
+  --map-viewer-stairs-stroke:oklch(0.71 0.06 80);
+  --map-viewer-elevator-fill:oklch(0.922 0.016 240);
+  --map-viewer-elevator-stroke:oklch(0.63 0.046 238);
+  --map-viewer-escalator-fill:oklch(0.92 0.02 200);
+  --map-viewer-escalator-stroke:oklch(0.62 0.07 200);
+  --map-viewer-washroom-fill:oklch(0.91 0.04 214);
+  --map-viewer-washroom-stroke:oklch(0.64 0.08 225);
+  --map-viewer-exit-fill:oklch(0.926 0.04 30);
+  --map-viewer-exit-stroke:oklch(0.64 0.13 28);
+  --map-viewer-poi-fill:oklch(0.905 0.03 250);
+  --map-viewer-poi-stroke:oklch(0.59 0.11 252);
+  --map-viewer-shelf-fill:oklch(0.93 0.015 95);
+  --map-viewer-shelf-stroke:oklch(0.75 0.02 92);
+  --map-viewer-path-walkway:oklch(0.59 0.02 228);
+  --map-viewer-path-stairs:oklch(0.69 0.052 82);
+  --map-viewer-path-elevator:oklch(0.58 0.042 240);
+  --map-viewer-path-escalator:oklch(0.56 0.08 200);
+  --map-viewer-path-ramp:oklch(0.58 0.05 145);
+  --map-viewer-marker-neutral:oklch(0.55 0.014 226);
+  --map-viewer-marker-neutral-ring:oklch(0.55 0.014 226 / 0.22);
+  --map-viewer-marker-entrance:oklch(0.63 0.14 145);
+  --map-viewer-marker-entrance-ring:oklch(0.63 0.14 145 / 0.24);
+  --map-viewer-marker-exit:oklch(0.65 0.18 25);
+  --map-viewer-marker-exit-ring:oklch(0.65 0.18 25 / 0.24);
+  --map-viewer-marker-stairs:oklch(0.73 0.12 84);
+  --map-viewer-marker-stairs-ring:oklch(0.73 0.12 84 / 0.24);
+  --map-viewer-marker-elevator:oklch(0.61 0.08 240);
+  --map-viewer-marker-elevator-ring:oklch(0.61 0.08 240 / 0.24);
+  --map-viewer-marker-escalator:oklch(0.6 0.09 200);
+  --map-viewer-marker-escalator-ring:oklch(0.6 0.09 200 / 0.24);
+  --map-viewer-marker-shelf:oklch(0.72 0.09 100);
+  --map-viewer-marker-shelf-ring:oklch(0.72 0.09 100 / 0.24);
+  --map-viewer-route-line:oklch(0.58 0.19 262);
+  --map-viewer-route-origin:oklch(0.63 0.14 145);
+  --map-viewer-route-destination:oklch(0.65 0.18 25);
+}
+
+.dark .map-viewer-theme {
+  --map-viewer-canvas:oklch(0.275 0.01 238);
+  --map-viewer-grid-minor:oklch(0.48 0.008 236 / 0.24);
+  --map-viewer-grid-major:oklch(0.58 0.01 236 / 0.3);
+  --map-viewer-floor-fill:oklch(0.335 0.008 236);
+  --map-viewer-floor-stroke:oklch(0.56 0.015 235);
+  --map-viewer-floor-inner-stroke:oklch(0.44 0.012 235);
+  --map-viewer-label:oklch(0.93 0.004 220);
+  --map-viewer-label-muted:oklch(0.73 0.012 220);
+  --map-viewer-wall-fill:oklch(0.4 0.011 236);
+  --map-viewer-wall-stroke:oklch(0.56 0.012 236);
+  --map-viewer-hallway-fill:oklch(0.248 0.008 236);
+  --map-viewer-hallway-stroke:oklch(0.37 0.01 236);
+  --map-viewer-room-fill:oklch(0.39 0.018 230);
+  --map-viewer-room-stroke:oklch(0.58 0.03 226);
+  --map-viewer-section-fill:oklch(0.33 0.018 232);
+  --map-viewer-section-stroke:oklch(0.52 0.03 226);
+  --map-viewer-aisle-fill:oklch(0.318 0.018 105);
+  --map-viewer-aisle-stroke:oklch(0.5 0.03 100);
+  --map-viewer-door-fill:oklch(0.48 0.024 220 / 0.44);
+  --map-viewer-door-stroke:oklch(0.68 0.055 226);
+  --map-viewer-stairs-fill:oklch(0.42 0.03 84);
+  --map-viewer-stairs-stroke:oklch(0.72 0.11 84);
+  --map-viewer-elevator-fill:oklch(0.36 0.018 240);
+  --map-viewer-elevator-stroke:oklch(0.68 0.055 240);
+  --map-viewer-escalator-fill:oklch(0.35 0.025 200);
+  --map-viewer-escalator-stroke:oklch(0.7 0.08 200);
+  --map-viewer-washroom-fill:oklch(0.37 0.028 220);
+  --map-viewer-washroom-stroke:oklch(0.73 0.09 220);
+  --map-viewer-exit-fill:oklch(0.4 0.04 28);
+  --map-viewer-exit-stroke:oklch(0.76 0.13 28);
+  --map-viewer-poi-fill:oklch(0.36 0.03 252);
+  --map-viewer-poi-stroke:oklch(0.7 0.11 252);
+  --map-viewer-shelf-fill:oklch(0.34 0.016 96);
+  --map-viewer-shelf-stroke:oklch(0.56 0.03 96);
+  --map-viewer-path-walkway:oklch(0.66 0.02 226);
+  --map-viewer-path-stairs:oklch(0.74 0.11 84);
+  --map-viewer-path-elevator:oklch(0.71 0.06 240);
+  --map-viewer-path-escalator:oklch(0.72 0.09 200);
+  --map-viewer-path-ramp:oklch(0.7 0.07 145);
+  --map-viewer-marker-neutral:oklch(0.76 0.012 226);
+  --map-viewer-marker-neutral-ring:oklch(0.76 0.012 226 / 0.22);
+  --map-viewer-marker-entrance:oklch(0.73 0.14 145);
+  --map-viewer-marker-entrance-ring:oklch(0.73 0.14 145 / 0.24);
+  --map-viewer-marker-exit:oklch(0.76 0.17 28);
+  --map-viewer-marker-exit-ring:oklch(0.76 0.17 28 / 0.24);
+  --map-viewer-marker-stairs:oklch(0.77 0.11 84);
+  --map-viewer-marker-stairs-ring:oklch(0.77 0.11 84 / 0.24);
+  --map-viewer-marker-elevator:oklch(0.73 0.07 240);
+  --map-viewer-marker-elevator-ring:oklch(0.73 0.07 240 / 0.24);
+  --map-viewer-marker-escalator:oklch(0.72 0.09 200);
+  --map-viewer-marker-escalator-ring:oklch(0.72 0.09 200 / 0.24);
+  --map-viewer-marker-shelf:oklch(0.72 0.09 100);
+  --map-viewer-marker-shelf-ring:oklch(0.72 0.09 100 / 0.24);
+  --map-viewer-route-line:oklch(0.72 0.16 262);
+  --map-viewer-route-origin:oklch(0.73 0.14 145);
+  --map-viewer-route-destination:oklch(0.76 0.17 28);
 }
 
 @layer base {
@@ -134,5 +418,71 @@
   h5,
   h6 {
     @apply font-heading;
+  }
+}
+
+@keyframes wf-sweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes wf-pulse {
+  0%,
+  100% {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0;
+    transform: scale(1.9);
+  }
+}
+
+@keyframes wf-drift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(6px, -5px);
+  }
+}
+
+@keyframes wf-flicker {
+  0%,
+  97%,
+  100% {
+    opacity: 1;
+  }
+  98% {
+    opacity: 0.45;
+  }
+}
+
+@keyframes wf-needle {
+  0% {
+    transform: rotate(-14deg);
+  }
+  50% {
+    transform: rotate(18deg);
+  }
+  100% {
+    transform: rotate(-14deg);
+  }
+}
+
+@keyframes wf-grid {
+  to {
+    background-position:
+      60px 60px,
+      60px 60px;
+  }
+}
+
+/* "Marching ants" flow along a route polyline, toward the destination. */
+@keyframes wf-route-flow {
+  to {
+    stroke-dashoffset: -32;
   }
 }

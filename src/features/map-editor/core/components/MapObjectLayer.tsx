@@ -1,10 +1,10 @@
 'use client';
 
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 import { MapObjectView } from './MapObjectView';
 
 export function MapObjectLayer() {
-  const objectsMap = useEditorStore((state) => state.objects);
+  const objectsMap = useAppStore((state) => state.objects);
   const objectsList = Object.values(objectsMap);
 
   return (

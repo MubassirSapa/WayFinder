@@ -1,11 +1,11 @@
 import { StateCreator } from "zustand";
 
-import type { EditorStore } from "@/store/types";
+import type { AppStore } from "@/store/types";
 
 import { EditorPathEdge } from "../types/map.types";
 import { EdgeSlice } from "./types";
 
-export const createEdgeSlice: StateCreator<EditorStore, [], [], EdgeSlice> = (set) => ({
+export const createEdgeSlice: StateCreator<AppStore, [], [], EdgeSlice> = (set) => ({
   edges: {},
 
   setEdges: (edgesList) => {
