@@ -45,8 +45,9 @@ flowchart LR
     end
 
     subgraph features ["Feature modules"]
-        landingFeature["Public landing"]
-        viewerFeature["Map viewer"]
+        discoveryFeature["Viewer directory and information"]
+        organizationFeature["Organization public pages"]
+        mapViewerFeature["Map viewer"]
         navigationFeature["Navigation"]
         authFeature["Authentication"]
         dashboardFeature["Dashboard"]
@@ -88,9 +89,10 @@ flowchart LR
     owner --> privateRoutes
     payloadAdmin --> payloadRoutes
 
-    publicRoutes --> landingFeature
-    publicRoutes --> viewerFeature
-    viewerFeature --> navigationFeature
+    publicRoutes --> discoveryFeature
+    publicRoutes --> organizationFeature
+    publicRoutes --> mapViewerFeature
+    mapViewerFeature --> navigationFeature
     authRoutes --> authFeature
     privateRoutes --> dashboardFeature
     privateRoutes --> editorCore
@@ -114,8 +116,8 @@ flowchart LR
     serverActions --> ports
     ports --> payloadAdapters
     clientActions --> payloadSdk
-    landingFeature --> serverLoaders
-    viewerFeature --> serverLoaders
+    discoveryFeature --> serverLoaders
+    mapViewerFeature --> serverLoaders
     dashboardFeature --> serverLoaders
     editorCore --> serverLoaders
 
@@ -234,8 +236,9 @@ Next.js Server Component
 ```
 
 The floor editor uses `getFloorEditorData` through `floor.ports.ts`. The public
-map viewer uses `getMapViewerData`, and the public landing page uses
-`getPublicLandingData`.
+map viewer uses `getMapViewerData`. Both the viewer homepage and the searchable
+`/venues` directory use `getPublicLandingData`, which groups
+published floors by building before rendering venue-level choices.
 
 The current dashboard loader calls the Payload Local API directly for its
 server-rendered read. Dashboard mutations still use dashboard ports and a
@@ -538,7 +541,8 @@ Payload email adapter sends messages through Resend.
 | Map editor core | Editable floor, objects, nodes, edges, selection, canvas, and persistence | Zustand slices, server actions, entity ports, Payload adapters |
 | Smart Builder | Automated node creation, auto-connect behavior, and hallway path building | Core editor store actions and pure helper functions |
 | Floor links | Cross-floor connector discovery and linking UI | Client actions, Payload REST SDK, core edge store and edge mutation action |
-| Public landing | Published venues, floor summaries, and recent destinations | Server-only loader and Payload Local API |
+| Viewer | Searchable published venue directory, public About page, grouped building floors, and popular-map shortcuts | Server-only loader and Payload Local API |
+| Organization | Public organization landing and About pages | Static server components |
 | Map viewer | Normalized published building data, floor switching, viewport, and SVG rendering | Server-only loader, local component state, props |
 | Navigation | Route intent, graph creation, shortest path, floor segments, and route overlay | Navigation store slice, pure functions, `MapViewerShell` bridge |
 | Email | Welcome and account-related email rendering and delivery | Email port, Payload email adapter, Resend |
@@ -578,7 +582,7 @@ places that do not fully follow the preferred convention:
 
 - the dashboard server-rendered loader uses Payload directly instead of a read
   port;
-- the public landing and map-viewer loaders are server-only functions that use
+- the viewer-directory and map-viewer loaders are server-only functions that use
   the Payload Local API directly;
 - the `/editor` floor-list page currently queries Payload directly from its
   route;

@@ -4,6 +4,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 @theme inline {
   --font-heading: var(--font-heading-source);
   --font-sans: var(--font-sans-source);
@@ -41,6 +47,7 @@
   --color-info: var(--info);
   --color-success: var(--success);
   --color-warning: var(--warning);
+  --color-overlay: var(--overlay);
   --color-editor-background: var(--editor-background);
   --color-editor-panel: var(--editor-panel);
   --color-editor-surface: var(--editor-surface);
@@ -71,6 +78,7 @@
 }
 
 :root {
+  --site-header-height: 4rem;
   color-scheme: light;
   --background: oklch(0.94 0.004 210);
   --foreground: oklch(0.148 0.004 228.8);
@@ -107,6 +115,7 @@
   --info: oklch(0.59 0.14 238);
   --success: oklch(0.55 0.14 153);
   --warning: oklch(0.62 0.14 75);
+  --overlay: oklch(0.12 0.006 210);
   --editor-background: oklch(0.975 0 0);
   --editor-panel: oklch(0.965 0 0);
   --editor-surface: oklch(0.93 0.006 228);
@@ -158,6 +167,53 @@
   --not-found-ring-strong: oklch(0.48 0.08 165 / 36%);
   --not-found-crosshair: oklch(0.48 0.08 165 / 27%);
   --not-found-marker-background: oklch(0.94 0.015 165);
+  --not-found-backdrop: radial-gradient(
+    120% 100% at 78% 18%,
+    var(--not-found-marker-background) 0%,
+    var(--not-found-background) 55%,
+    color-mix(in oklch, var(--not-found-background), var(--not-found-strong) 18%) 100%
+  );
+  --not-found-grid-line: color-mix(in oklch, var(--primary) 10%, transparent);
+  --not-found-vignette: radial-gradient(
+    70% 70% at 50% 50%,
+    transparent 40%,
+    color-mix(in oklch, var(--not-found-background), var(--not-found-strong) 35%) 100%
+  );
+  --not-found-sweep: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 300deg,
+    color-mix(in oklch, var(--primary) 20%, transparent) 350deg,
+    color-mix(in oklch, var(--primary) 34%, transparent) 360deg
+  );
+}
+
+#nprogress .wayfinder-route-loader {
+  position: fixed;
+  top: var(--site-header-height);
+  left: 0;
+  z-index: 50;
+  width: 100%;
+  height: 3px;
+  background: var(--primary);
+}
+
+.not-found-backdrop {
+  background-image: var(--not-found-backdrop);
+}
+
+.not-found-grid {
+  background-image:
+    linear-gradient(var(--not-found-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--not-found-grid-line) 1px, transparent 1px);
+}
+
+.not-found-vignette {
+  background-image: var(--not-found-vignette);
+}
+
+.not-found-sweep {
+  background-image: var(--not-found-sweep);
 }
 
 .dark {
@@ -196,6 +252,7 @@
   --info: oklch(0.72 0.11 238);
   --success: oklch(0.73 0.14 153);
   --warning: oklch(0.77 0.14 75);
+  --overlay: oklch(0.1 0.004 190);
   --editor-background: oklch(0.145 0.005 250);
   --editor-panel: oklch(0.205 0.006 250);
   --editor-surface: oklch(0.275 0.008 250);

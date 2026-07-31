@@ -2,8 +2,8 @@
 
 import { Menu } from "@base-ui/react/menu";
 import { Menu as MenuIcon } from "lucide-react";
-import Link from "next/link";
 
+import { SmoothHashLink } from "@/components/shared/public-site/SmoothHashLink";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -35,13 +35,14 @@ export function MobileSiteMenu({
           <Menu.Popup className="w-48 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-lg outline-none">
             {links.map((link) => (
               <Menu.LinkItem
+                aria-current={activeHref === link.href ? "page" : undefined}
                 className={cn(
                   "flex min-h-11 cursor-pointer items-center rounded-sm px-3 text-sm font-medium outline-none transition-colors hover:bg-accent hover:text-accent-foreground data-highlighted:bg-accent data-highlighted:text-accent-foreground",
                   activeHref === link.href && "bg-accent text-accent-foreground",
                 )}
                 closeOnClick
                 key={link.href}
-                render={<Link href={link.href} />}
+                render={<SmoothHashLink href={link.href} />}
               >
                 {link.label}
               </Menu.LinkItem>

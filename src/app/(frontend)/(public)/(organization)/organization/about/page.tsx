@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { AboutPage } from "@/features/organization-landing/pages/about/AboutPage";
+import { AboutPage } from "@/features/organization/pages/about/AboutPage";
 
 export const metadata: Metadata = {
   title: "About Wayfinder for Organizations | Wayfinder",
