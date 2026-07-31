@@ -30,10 +30,12 @@ export function makeStore() {
     destinationNodeId: null,
     accessibleOnly: false,
     activeSegmentIndex: 0,
+    activeFloorId: null,
     setOrigin: () => {},
     setDestination: () => {},
     setAccessibleOnly: () => {},
     setActiveSegmentIndex: () => {},
+    setActiveFloorId: () => {},
     clearRoute: () => {},
     resetNavigation: () => {},
     // SignupFlowSlice stubs — not under test here

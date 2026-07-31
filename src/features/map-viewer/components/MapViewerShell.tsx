@@ -1,6 +1,6 @@
 'use client';
 
-import { useDeferredValue, useMemo, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useState } from "react";
 
 import { FloorHopIndicator } from "@/features/navigation/components/FloorHopIndicator";
 import { MapSelectionBar } from "@/features/navigation/components/MapSelectionBar";
@@ -32,7 +32,25 @@ interface MapViewerShellProps {
 }
 
 export function MapViewerShell({ data }: MapViewerShellProps) {
-  const [activeFloorId, setActiveFloorId] = useState(data.initialFloorId);
+  const storedActiveFloorId = useAppStore((state) => state.activeFloorId);
+  const setActiveFloorId = useAppStore((state) => state.setActiveFloorId);
+  const resetNavigation = useAppStore((state) => state.resetNavigation);
+  // Falls back to data.initialFloorId until the init effect below writes the
+  // store on mount, so the very first render (before effects run) shows the
+  // right floor instead of a flash of "no floor selected".
+  const activeFloorId = storedActiveFloorId ?? data.initialFloorId;
+
+  // data.initialFloorId only changes on a real page load (a different floor's
+  // server data) — never from in-app floor switching, which doesn't touch the
+  // data prop — so this can't fire mid-session. It exists because
+  // originNodeId/destinationNodeId/activeFloorId live in the single app-wide
+  // store: without this, navigating client-side from one building's map to
+  // another would leave a stale route/floor behind.
+  useEffect(() => {
+    resetNavigation();
+    setActiveFloorId(data.initialFloorId);
+  }, [data.initialFloorId, resetNavigation, setActiveFloorId]);
+
   const [selectedObjectId, setSelectedObjectId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const deferredSearch = useDeferredValue(search);
@@ -121,9 +139,23 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
     return map;
   }, [nodes, allEdges, nodesById, floors]);
 
-  const handleFloorChange = (floorId: string) => {
+  // The one place "current floor" changes when the caller doesn't already
+  // know a specific route segment index (header, sidebar, canvas connector
+  // jump) — keeps activeFloorId and activeSegmentIndex from drifting apart,
+  // which used to hide the route line and desync the breadcrumb/route panel
+  // "you're here" highlight from whatever floor was actually on screen.
+  const goToFloor = (floorId: string) => {
     setActiveFloorId(floorId);
     setSelectedObjectId(null);
+
+    const matchingSegmentIndex = segments.findIndex((segment) => segment.floorId === floorId);
+    if (matchingSegmentIndex !== -1) {
+      setActiveSegmentIndex(matchingSegmentIndex);
+    }
+  };
+
+  const handleFloorChange = (floorId: string) => {
+    goToFloor(floorId);
     setSearch("");
   };
 
@@ -134,8 +166,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
       minX: target.targetNode.x + MAP_VIEWER_FLOOR_CONTENT_PADDING - CONNECTOR_JUMP_FOCUS_RADIUS,
       minY: target.targetNode.y + MAP_VIEWER_FLOOR_CONTENT_PADDING - CONNECTOR_JUMP_FOCUS_RADIUS,
     });
-    setActiveFloorId(target.floorId);
-    setSelectedObjectId(null);
+    goToFloor(target.floorId);
   };
 
   const handleJumpToSegment = (index: number) => {

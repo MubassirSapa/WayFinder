@@ -416,12 +416,12 @@ flowchart LR
     subgraph viewerModule ["Map viewer module"]
         viewerShell["MapViewerShell"]
         viewerUi["Sidebar, toolbar, canvas, and SVG"]
-        floorState["Active floor and viewport state"]
+        floorState["Viewport pan and zoom state"]
     end
 
     subgraph navigationModule ["Navigation extension"]
         routePanel["RoutePanel and origin controls"]
-        navigationState["Origin, destination, accessibility, and segment index"]
+        navigationState["Origin, destination, accessibility, segment index, and active floor"]
         routeHook["useRoute"]
         graphBuilder["buildRouteGraph"]
         dijkstra["findShortestPath"]
@@ -445,6 +445,8 @@ flowchart LR
     viewerShell --> floorState
 
     routePanel --> navigationState
+    viewerShell --> navigationState
+    navigationState --> viewerShell
     mapData --> routeHook
     navigationState --> routeHook
     routeHook --> graphBuilder
@@ -479,7 +481,11 @@ MapViewerShell acts as the integration bridge between the two modules.
 
 The navigation Zustand slice stores user intent only. The graph and computed
 route are derived with memoized pure functions, which prevents stale route data
-from being stored separately.
+from being stored separately. The active floor also lives in this slice rather
+than as `MapViewerShell` component state, so every entry point that changes it
+(the header floor select, the sidebar floor list, a canvas connector jump, a
+route panel segment row, and `FloorHopIndicator`) reads and writes the same
+state instead of drifting out of sync with the active route segment.
 
 ## 6. Authentication and email flow
 
