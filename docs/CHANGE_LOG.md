@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-07-31
+
 ### Added
 - Added an idempotent `npm run demo:seed` workflow that creates two verified demo administrators, separate hospital and retail organizations, and seven purpose-built multi-floor maps with realistic room geometry, distinct corridor topologies, searchable destinations, accessible routing, and linked stairs, elevators, and escalators. Demo credentials and floor coverage are documented under `docs/demo/`.
 - Added a public viewer About page at `/about` and simplified the public feature names to `viewer` and `organization`.
