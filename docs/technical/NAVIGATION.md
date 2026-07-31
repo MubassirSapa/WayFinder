@@ -11,7 +11,7 @@
 - With `accessibleOnly: true`, nodes and edges with `isAccessible: false` are dropped entirely rather than just deprioritized.
 - Edges referencing a node id not present in the input `nodes` array are skipped (mirrors the dangling-reference guard `ViewerEdges` already has when rendering).
 
-Crucially, the graph is built once from **all floors' nodes/edges merged together**, not per floor. A cross-floor `PathEdge` (`type: "stairs" | "elevator" | "escalator"`) is just another edge in this graph — nothing about `buildRouteGraph` or the search below is floor-aware or cares how many connector types exist. See [`FLOOR_LINKS_EDITOR.md`](FLOOR_LINKS_EDITOR.md) for how admins create these cross-floor edges in the map editor.
+Crucially, the graph is built once from **all floors' nodes/edges merged together**, not per floor. A cross-floor `PathEdge` (`type: "stairs" | "elevator" | "escalator"`) is just another edge in this graph, weighted by `edge.distanceMeters` plus a flat `FLOOR_CHANGE_PENALTY_METERS` (`constants/routing.constants.ts`) whenever the edge's two nodes are on different floors. Stairs/elevator/escalator connectors otherwise carry small, flat default distances (`CROSS_FLOOR_DEFAULT_DISTANCE_METERS` in `map-editor/floor-links`) regardless of the floor's actual size — without the penalty, Dijkstra could treat hopping through a floor and back as "cheaper" than a longer same-floor walk, producing a route that revisits the same floor non-consecutively. `totalDistanceMeters` on the result includes this penalty, since it reflects real wayfinding effort rather than raw geometry. See [`FLOOR_LINKS_EDITOR.md`](FLOOR_LINKS_EDITOR.md) for how admins create these cross-floor edges in the map editor.
 
 ## Why Dijkstra, not A*
 

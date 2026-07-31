@@ -3,6 +3,7 @@ import type {
   ViewerPathEdge,
 } from "@/features/map-viewer/types/map-viewer.types";
 
+import { FLOOR_CHANGE_PENALTY_METERS } from "../constants/routing.constants";
 import type {
   RouteGraphAdjacency,
   RouteGraphAdjacencyEntry,
@@ -54,12 +55,20 @@ export function buildRouteGraph(
       continue;
     }
 
+    // Crossing floors has real friction beyond the connector's own short
+    // footprint distance — penalize it so the search only leaves a floor when
+    // it's actually worth it, instead of bouncing through a floor and back
+    // just because a connector's flat distance happens to be cheap.
+    const weight = fromNode.floorId === toNode.floorId
+      ? edge.distanceMeters
+      : edge.distanceMeters + FLOOR_CHANGE_PENALTY_METERS;
+
     addEdge(edge.fromNodeId, {
       edgeId: edge.id,
       floorId: toNode.floorId,
       toNodeId: edge.toNodeId,
       type: edge.type,
-      weight: edge.distanceMeters,
+      weight,
     });
 
     if (edge.bidirectional) {
@@ -68,7 +77,7 @@ export function buildRouteGraph(
         floorId: fromNode.floorId,
         toNodeId: edge.fromNodeId,
         type: edge.type,
-        weight: edge.distanceMeters,
+        weight,
       });
     }
   }

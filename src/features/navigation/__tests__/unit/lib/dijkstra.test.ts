@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { findShortestPath } from '../../../lib/dijkstra'
 import { buildRouteGraph } from '../../../lib/graph'
+import { FLOOR_CHANGE_PENALTY_METERS } from '../../../constants/routing.constants'
 import type { ViewerMapNode, ViewerPathEdge } from '@/features/map-viewer/types/map-viewer.types'
 
 function makeNode(overrides: Partial<ViewerMapNode> & { id: string }): ViewerMapNode {
@@ -94,7 +95,7 @@ describe('findShortestPath', () => {
     expect(findShortestPath(accessibleGraph, 'a', 'd')?.totalDistanceMeters).toBe(10)
   })
 
-  it('finds a multi-floor route via stairs/elevator edges', () => {
+  it('finds a multi-floor route via stairs/elevator edges (total includes the floor-change penalty)', () => {
     const nodes = [
       makeNode({ id: 'a', floorId: 'f1' }),
       makeNode({ id: 'stairs1', floorId: 'f1', role: 'stairs_entry' }),
@@ -114,6 +115,37 @@ describe('findShortestPath', () => {
     const result = findShortestPath(graph, 'a', 'z')
 
     expect(result?.nodeIds).toEqual(['a', 'stairs1', 'stairs2', 'elevator1', 'elevator2', 'z'])
-    expect(result?.totalDistanceMeters).toBe(15)
+    // Own leg distances sum to 15m, plus a 12m penalty for each of the 2 floor crossings.
+    expect(result?.totalDistanceMeters).toBe(15 + 2 * FLOOR_CHANGE_PENALTY_METERS)
+  })
+
+  it('prefers a same-floor walk over a shortcut that bounces through another floor and back', () => {
+    // a --(20m walkway)-- b, both on f1 — a plausible long same-floor walk.
+    // A "shortcut" also exists: a -> stairsA (f1) -> stairsA' (f2) -> stairsB' (f2)
+    // -> stairsB (f1) -> b, whose own leg distances sum to only 18m. Without a
+    // floor-change penalty this shortcut used to win, producing a route that
+    // visits f1, then f2, then f1 again (the "repeated floors" bug).
+    const nodes = [
+      makeNode({ id: 'a', floorId: 'f1' }),
+      makeNode({ id: 'b', floorId: 'f1' }),
+      makeNode({ id: 'stairsA', floorId: 'f1', role: 'stairs_entry' }),
+      makeNode({ id: 'stairsAX', floorId: 'f2', role: 'stairs_entry' }),
+      makeNode({ id: 'stairsBX', floorId: 'f2', role: 'stairs_entry' }),
+      makeNode({ id: 'stairsB', floorId: 'f1', role: 'stairs_entry' }),
+    ]
+    const edges = [
+      makeEdge({ id: 'direct', fromNodeId: 'a', toNodeId: 'b', distanceMeters: 20 }),
+      makeEdge({ id: 'toStairsA', fromNodeId: 'a', toNodeId: 'stairsA', distanceMeters: 2 }),
+      makeEdge({ id: 'crossA', fromNodeId: 'stairsA', toNodeId: 'stairsAX', type: 'stairs', distanceMeters: 6 }),
+      makeEdge({ id: 'acrossF2', fromNodeId: 'stairsAX', toNodeId: 'stairsBX', distanceMeters: 2 }),
+      makeEdge({ id: 'crossB', fromNodeId: 'stairsBX', toNodeId: 'stairsB', type: 'stairs', distanceMeters: 6 }),
+      makeEdge({ id: 'fromStairsB', fromNodeId: 'stairsB', toNodeId: 'b', distanceMeters: 2 }),
+    ]
+
+    const graph = buildRouteGraph(nodes, edges)
+    const result = findShortestPath(graph, 'a', 'b')
+
+    expect(result?.nodeIds).toEqual(['a', 'b'])
+    expect(result?.nodeIds.map((id) => nodes.find((n) => n.id === id)?.floorId)).toEqual(['f1', 'f1'])
   })
 })
