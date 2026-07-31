@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Added
+- Added an idempotent `npm run demo:seed` workflow that creates two verified demo administrators, separate hospital and retail organizations, and seven purpose-built multi-floor maps with realistic room geometry, distinct corridor topologies, searchable destinations, accessible routing, and linked stairs, elevators, and escalators. Demo credentials and floor coverage are documented under `docs/demo/`.
 - Added a public viewer About page at `/about` and simplified the public feature names to `viewer` and `organization`.
 - Added a separate public organization experience at `/organization`, with its About content at `/organization/about`, final page metadata, and focused coverage for organization navigation, footer links, and calls to action. Public routes are now grouped into `(viewers)` and `(organization)` segments without changing the existing viewer URLs. The viewer header no longer exposes authentication, and its footer contains one organization entry point.
 - Added a responsive Popular Maps strip to the public viewer. It uses real grouped venue data, shows each building once, and routes multi-floor venues through the existing floor chooser.
