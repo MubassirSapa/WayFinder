@@ -16,7 +16,7 @@ import { MapViewerSvg } from "./MapViewerSvg";
 
 interface MapViewerCanvasProps {
   activeFloor: ViewerFloor | null;
-  connectorTargetsByNodeId: Record<string, ConnectorTargetInfo>;
+  connectorTargetsByNodeId: Record<string, ConnectorTargetInfo[]>;
   edges: ViewerPathEdge[];
   isDragging: boolean;
   nodes: ViewerMapNode[];
@@ -28,7 +28,7 @@ interface MapViewerCanvasProps {
   viewportRef: RefObject<HTMLDivElement | null>;
   zoom: number;
   onBackgroundClick: () => void;
-  onConnectorActivate: (target: ConnectorTargetInfo) => void;
+  onConnectorActivate: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
   onObjectSelect: (object: ViewerMapObject) => void;
   onPointerCancel: PointerEventHandler<HTMLDivElement>;
   onPointerLeave: PointerEventHandler<HTMLDivElement>;

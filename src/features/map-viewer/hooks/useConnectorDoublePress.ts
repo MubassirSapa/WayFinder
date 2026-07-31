@@ -9,7 +9,9 @@ const CONNECTOR_DOUBLE_PRESS_WINDOW_MS = 400;
 // it's treated as abandoned, so it doesn't linger on screen forever.
 const CONNECTOR_HINT_TIMEOUT_MS = 1800;
 
-export function useConnectorDoublePress(onActivate: (target: ConnectorTargetInfo) => void) {
+export function useConnectorDoublePress(
+  onActivate: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void,
+) {
   const [pendingNodeId, setPendingNodeId] = useState<string | null>(null);
   const lastPressRef = useRef<{ nodeId: string; time: number } | null>(null);
   const hintTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -23,7 +25,7 @@ export function useConnectorDoublePress(onActivate: (target: ConnectorTargetInfo
     setPendingNodeId(null);
   };
 
-  const handlePress = (node: ViewerMapNode, target: ConnectorTargetInfo) => {
+  const handlePress = (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => {
     const now = Date.now();
     const last = lastPressRef.current;
     const isDoublePress = last?.nodeId === node.id
@@ -31,7 +33,7 @@ export function useConnectorDoublePress(onActivate: (target: ConnectorTargetInfo
 
     if (isDoublePress) {
       clearPendingHint();
-      onActivate(target);
+      onActivate(node, targets);
       return;
     }
 

@@ -19,7 +19,7 @@ import type {
 
 interface MapViewerSvgProps {
   activeFloor: ViewerFloor;
-  connectorTargetsByNodeId: Record<string, ConnectorTargetInfo>;
+  connectorTargetsByNodeId: Record<string, ConnectorTargetInfo[]>;
   edges: ViewerPathEdge[];
   nodes: ViewerMapNode[];
   objects: ViewerMapObject[];
@@ -27,7 +27,7 @@ interface MapViewerSvgProps {
   selectedObjectId: string | null;
   showGrid: boolean;
   onBackgroundClick: () => void;
-  onConnectorActivate: (target: ConnectorTargetInfo) => void;
+  onConnectorActivate: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
   onObjectSelect: (object: ViewerMapObject) => void;
   onPointerDown: PointerEventHandler<SVGSVGElement>;
   onPointerMove: PointerEventHandler<SVGSVGElement>;
@@ -149,11 +149,11 @@ function ViewerFloorContent({
   routePoints,
   selectedObjectId,
 }: {
-  connectorTargetsByNodeId: Record<string, ConnectorTargetInfo>;
+  connectorTargetsByNodeId: Record<string, ConnectorTargetInfo[]>;
   edges: ViewerPathEdge[];
   nodes: ViewerMapNode[];
   objects: ViewerMapObject[];
-  onConnectorActivate: (target: ConnectorTargetInfo) => void;
+  onConnectorActivate: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
   onObjectSelect: (object: ViewerMapObject) => void;
   routePoints?: { x: number; y: number }[];
   selectedObjectId: string | null;
@@ -237,10 +237,10 @@ function ViewerObjects({
   onSelect,
   selectedObjectId,
 }: {
-  connectorTargetsByNodeId: Record<string, ConnectorTargetInfo>;
+  connectorTargetsByNodeId: Record<string, ConnectorTargetInfo[]>;
   nodes: ViewerMapNode[];
   objects: ViewerMapObject[];
-  onConnectorPress: (node: ViewerMapNode, target: ConnectorTargetInfo) => void;
+  onConnectorPress: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
   onSelect: (object: ViewerMapObject) => void;
   selectedObjectId: string | null;
 }) {
@@ -258,17 +258,20 @@ function ViewerObjects({
         // the small dot. The hint pill itself is left to the node marker
         // (rendered right at the connector point) so the two don't stack.
         const connectorNode = nodes.find((node) => node.objectId === object.id);
-        const connectorTarget = connectorNode ? connectorTargetsByNodeId[connectorNode.id] : undefined;
+        const connectorTargets = connectorNode ? connectorTargetsByNodeId[connectorNode.id] : undefined;
 
         return (
           <g
             key={object.id}
             onClick={(event) => {
               event.stopPropagation();
-              if (connectorNode && connectorTarget) {
-                onConnectorPress(connectorNode, connectorTarget);
-              } else {
-                onSelect(object);
+              // A connector is a routable object like any other — select it
+              // first (so "Start here"/"Route here" works) — and, if it has
+              // a cross-floor edge, also feed the same click into the
+              // double-press-to-jump tracker.
+              onSelect(object);
+              if (connectorNode && connectorTargets && connectorTargets.length > 0) {
+                onConnectorPress(connectorNode, connectorTargets);
               }
             }}
             // Without this, a press on an object also reaches the SVG's own
@@ -348,27 +351,28 @@ function ViewerNodes({
   onConnectorPress,
   pendingNodeId,
 }: {
-  connectorTargetsByNodeId: Record<string, ConnectorTargetInfo>;
+  connectorTargetsByNodeId: Record<string, ConnectorTargetInfo[]>;
   nodes: ViewerMapNode[];
-  onConnectorPress: (node: ViewerMapNode, target: ConnectorTargetInfo) => void;
+  onConnectorPress: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
   pendingNodeId: string | null;
 }) {
   return (
     <g>
       {nodes.filter(isNodePublicMarker).map((node) => {
         const palette = getViewerNodePalette(node.role);
-        const connectorTarget = connectorTargetsByNodeId[node.id];
+        const connectorTargets = connectorTargetsByNodeId[node.id];
+        const hasConnectorTargets = Boolean(connectorTargets && connectorTargets.length > 0);
         const isPending = pendingNodeId === node.id;
 
         return (
           <g
             className="group"
             key={node.id}
-            onClick={connectorTarget ? (event) => {
+            onClick={hasConnectorTargets ? (event) => {
               event.stopPropagation();
-              onConnectorPress(node, connectorTarget);
+              onConnectorPress(node, connectorTargets);
             } : undefined}
-            onPointerDown={connectorTarget ? (event) => event.stopPropagation() : undefined}
+            onPointerDown={hasConnectorTargets ? (event) => event.stopPropagation() : undefined}
             transform={`translate(${node.x}, ${node.y})`}
           >
             <circle fill={palette.ring} r="14" />
@@ -379,8 +383,14 @@ function ViewerNodes({
               strokeWidth="2"
               vectorEffect="non-scaling-stroke"
             />
-            {connectorTarget && isPending ? (
-              <ConnectorJumpHint floorName={connectorTarget.floorName} x={0} y={-14} />
+            {hasConnectorTargets && isPending ? (
+              <ConnectorJumpHint
+                label={connectorTargets.length === 1
+                  ? `Tap again for ${connectorTargets[0].floorName}`
+                  : "Tap again to choose a floor"}
+                x={0}
+                y={-14}
+              />
             ) : node.label ? (
               // Hidden by default — a floor with a few dozen markers turns
               // into a wall of text otherwise; shown on hover instead.
@@ -403,8 +413,7 @@ function ViewerNodes({
   );
 }
 
-function ConnectorJumpHint({ floorName, x, y }: { floorName: string; x: number; y: number }) {
-  const label = `Tap again for ${floorName}`;
+function ConnectorJumpHint({ label, x, y }: { label: string; x: number; y: number }) {
   const width = Math.max(label.length * 5.6 + 20, 88);
 
   return (

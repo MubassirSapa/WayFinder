@@ -2,6 +2,7 @@
 
 import { useDeferredValue, useState } from "react";
 
+import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import type {
@@ -20,6 +21,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+import { filterRouteCandidates } from "../lib/filterRouteCandidates";
 import { findNodeIdForObject } from "../lib/findNodeForObject";
 import { useAppStore } from "@/store";
 import type {
@@ -71,30 +73,6 @@ const CONNECTOR_ICONS: Record<ViewerPathEdge["type"], LucideIcon> = {
   walkway: Waypoints,
 };
 
-// Only objects that actually resolve to a routable node are worth showing —
-// anything else was a dead click (looked like a valid result, picking it did
-// nothing, no feedback). Filtering here means every visible suggestion is
-// guaranteed to work.
-function filterCandidates(
-  objects: ViewerMapObject[],
-  nodes: ViewerMapNode[],
-  query: string,
-) {
-  const normalized = query.trim().toLowerCase();
-  if (!normalized) {
-    return [];
-  }
-
-  return objects
-    .filter(
-      (object) =>
-        object.name.toLowerCase().includes(normalized) ||
-        object.label.toLowerCase().includes(normalized),
-    )
-    .filter((object) => findNodeIdForObject(object.id, nodes) !== null)
-    .slice(0, 6);
-}
-
 export function RoutePanel({
   activeSegmentIndex,
   effectiveOriginId,
@@ -134,7 +112,7 @@ export function RoutePanel({
   const fromValue = focusedField === "from" ? draftQuery : (originLabel ?? "");
   const toValue = focusedField === "to" ? draftQuery : (destinationLabel ?? "");
   const candidates = focusedField
-    ? filterCandidates(searchableObjects, nodes, deferredDraftQuery)
+    ? filterRouteCandidates(searchableObjects, nodes, deferredDraftQuery)
     : [];
 
   const startEditing = (field: "from" | "to") => {
@@ -292,12 +270,12 @@ export function RoutePanel({
             </p>
           ) : route ? (
             <>
-              <p className="font-semibold">
+              <Badge className="font-semibold" variant="outline">
                 {route.totalDistanceMeters.toFixed(1)} m
                 {segments.length > 1
                   ? ` • crosses ${segments.length - 1} floor${segments.length > 2 ? "s" : ""}`
                   : ""}
-              </p>
+              </Badge>
               {segments.length > 1 ? (
                 <div className="space-y-1 rounded-2xl border border-border bg-background p-1.5">
                   {segments.map((segment, index) => {

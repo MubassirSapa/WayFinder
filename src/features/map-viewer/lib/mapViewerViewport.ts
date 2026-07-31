@@ -41,6 +41,10 @@ export function formatFloorLabel(floor: ViewerFloor) {
   return `Floor ${floor.level >= 0 ? floor.level : `B${Math.abs(floor.level)}`}`;
 }
 
+export function formatObjectTypeLabel(type: string) {
+  return type === "poi" ? "POI" : type.charAt(0).toUpperCase() + type.slice(1);
+}
+
 export function getZoomProfile(viewportWidth: number) {
   const isMobile = viewportWidth < MAP_VIEWER_MOBILE_BREAKPOINT;
 

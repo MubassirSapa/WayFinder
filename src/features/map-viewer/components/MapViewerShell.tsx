@@ -6,6 +6,7 @@ import { FloorHopIndicator } from "@/features/navigation/components/FloorHopIndi
 import { MapSelectionBar } from "@/features/navigation/components/MapSelectionBar";
 import { RouteOriginTrigger } from "@/features/navigation/components/RouteOriginTrigger";
 import { RoutePanel } from "@/features/navigation/components/RoutePanel";
+import { RouteStatusIndicator } from "@/features/navigation/components/RouteStatusIndicator";
 import { useRoute } from "@/features/navigation/hooks/useRoute";
 import { getRouteSegmentBounds } from "@/features/navigation/lib/routeBounds";
 import { findNodeIdForObject } from "@/features/navigation/lib/findNodeForObject";
@@ -13,13 +14,15 @@ import { useAppStore } from "@/store";
 
 import { MAP_VIEWER_FLOOR_CONTENT_PADDING } from "../constants/mapViewer.constants";
 import { MAP_VIEWER_THEME_CLASSNAMES } from "../constants/mapViewerTheme.constants";
-import { findConnectorTarget, isConnectorNode } from "../lib/connectors";
+import { findConnectorTargets, getConnectorType, type ConnectorType } from "../lib/connectors";
 import { useMapViewerViewport } from "../hooks/useMapViewerViewport";
 import type {
   ConnectorTargetInfo,
   MapViewerData,
+  ViewerMapNode,
   ViewerMapObject,
 } from "../types/map-viewer.types";
+import { ConnectorFloorPickerDialog } from "./ConnectorFloorPickerDialog";
 import { MapViewerCanvas } from "./MapViewerCanvas";
 import { MapViewerPageHeader } from "./MapViewerPageHeader";
 import { MapViewerSidebar } from "./MapViewerSidebar";
@@ -52,6 +55,15 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
   }, [data.initialFloorId, resetNavigation, setActiveFloorId]);
 
   const [selectedObjectId, setSelectedObjectId] = useState<string | null>(null);
+  // Mobile-only: the sidebar docks as a collapsed handle at the bottom of the
+  // screen (map fully visible above it) and expands into a sheet over the
+  // map when tapped or dragged up — ignored entirely at the md breakpoint
+  // and above, where the sidebar is always a normal, always-visible column.
+  const [isMobileSidebarExpanded, setIsMobileSidebarExpanded] = useState(false);
+  const [connectorPicker, setConnectorPicker] = useState<{
+    connectorType: ConnectorType;
+    targets: ConnectorTargetInfo[];
+  } | null>(null);
   const [search, setSearch] = useState("");
   const deferredSearch = useDeferredValue(search);
   const [showGrid, setShowGrid] = useState(false);
@@ -97,7 +109,34 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
   } = useRoute(data);
   const setActiveSegmentIndex = useAppStore((state) => state.setActiveSegmentIndex);
   const originNodeId = useAppStore((state) => state.originNodeId);
+  const destinationNodeId = useAppStore((state) => state.destinationNodeId);
+  const accessibleOnly = useAppStore((state) => state.accessibleOnly);
   const setOrigin = useAppStore((state) => state.setOrigin);
+
+  // setOrigin/setDestination always reset activeSegmentIndex to 0 (the store
+  // slice has no way to know which floor is active). That's wrong whenever a
+  // route is set while already standing on a floor other than the route's
+  // first segment (e.g. "Start here" on floor A, switch to floor B, "Route
+  // here" on floor B) — segment 0 belongs to floor A, so routePointsForActiveFloor
+  // below would never match floor B and the just-computed route wouldn't
+  // draw at all until something else (a manual segment jump) happened to fix
+  // activeSegmentIndex. Re-sync it here whenever the computed segments (or
+  // the active floor) change, same matching logic goToFloor already uses.
+  useEffect(() => {
+    if (!activeFloorId || segments.length === 0) {
+      return;
+    }
+
+    if (segments[activeSegmentIndex]?.floorId === activeFloorId) {
+      return;
+    }
+
+    const matchingSegmentIndex = segments.findIndex((segment) => segment.floorId === activeFloorId);
+    if (matchingSegmentIndex !== -1) {
+      setActiveSegmentIndex(matchingSegmentIndex);
+    }
+  }, [segments, activeFloorId, activeSegmentIndex, setActiveSegmentIndex]);
+
   const routePointsForActiveFloor = activeSegment?.floorId === activeFloorId ? routePoints : undefined;
   const nextSegment = segments[activeSegmentIndex + 1] ?? null;
   const nextFloor = nextSegment ? floors.find((floor) => floor.id === nextSegment.floorId) ?? null : null;
@@ -116,24 +155,22 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
   );
 
   const connectorTargetsByNodeId = useMemo(() => {
-    const map: Record<string, ConnectorTargetInfo> = {};
+    const map: Record<string, ConnectorTargetInfo[]> = {};
 
     for (const node of nodes) {
-      if (!isConnectorNode(node)) {
+      const targets = findConnectorTargets(node, allEdges, nodesById);
+      if (targets.length === 0) {
         continue;
       }
 
-      const target = findConnectorTarget(node, allEdges, nodesById);
-      if (!target) {
-        continue;
-      }
-
-      const floor = floors.find((candidate) => candidate.id === target.floorId);
-      map[node.id] = {
-        floorId: target.floorId,
-        floorName: floor?.name ?? "another floor",
-        targetNode: target.node,
-      };
+      map[node.id] = targets.map((target) => {
+        const floor = floors.find((candidate) => candidate.id === target.floorId);
+        return {
+          floorId: target.floorId,
+          floorName: floor?.name ?? "another floor",
+          targetNode: target.node,
+        };
+      });
     }
 
     return map;
@@ -159,7 +196,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
     setSearch("");
   };
 
-  const handleConnectorJump = (target: ConnectorTargetInfo) => {
+  const focusConnectorTarget = (target: ConnectorTargetInfo) => {
     focusWorldBounds({
       maxX: target.targetNode.x + MAP_VIEWER_FLOOR_CONTENT_PADDING + CONNECTOR_JUMP_FOCUS_RADIUS,
       maxY: target.targetNode.y + MAP_VIEWER_FLOOR_CONTENT_PADDING + CONNECTOR_JUMP_FOCUS_RADIUS,
@@ -167,6 +204,42 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
       minY: target.targetNode.y + MAP_VIEWER_FLOOR_CONTENT_PADDING - CONNECTOR_JUMP_FOCUS_RADIUS,
     });
     goToFloor(target.floorId);
+  };
+
+  const handleConnectorJump = (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => {
+    if (targets.length === 0) {
+      return;
+    }
+
+    // Mid-route, double-clicking the connector that leads to the very next
+    // segment's floor is "continue" — identical to FloorHopIndicator's
+    // button — instead of an independent jump that might disagree with the
+    // route's own progress if this connector happens to serve other floors
+    // too.
+    if (destinationNodeId && nextSegment) {
+      const continuingTarget = targets.find((target) => target.floorId === nextSegment.floorId);
+      if (continuingTarget) {
+        handleJumpToSegment(activeSegmentIndex + 1);
+        return;
+      }
+    }
+
+    if (targets.length === 1) {
+      focusConnectorTarget(targets[0]);
+      return;
+    }
+
+    // More than one floor this connector could go to, and no active route
+    // pointing at one of them — ask instead of guessing which edge to
+    // follow.
+    setConnectorPicker({ connectorType: getConnectorType(node.role) ?? "elevator", targets });
+  };
+
+  const handleConnectorFloorPicked = (floorId: string) => {
+    const target = connectorPicker?.targets.find((candidate) => candidate.floorId === floorId);
+    if (target) {
+      focusConnectorTarget(target);
+    }
   };
 
   const handleJumpToSegment = (index: number) => {
@@ -201,12 +274,14 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
     })
     .slice(0, 14);
 
-  const focusObject = (object: ViewerMapObject) => {
+  const focusObject = (object: ViewerMapObject, options: { recenter?: boolean } = {}) => {
     setSelectedObjectId(object.id);
-    focusWorldPoint({
-      x: MAP_VIEWER_FLOOR_CONTENT_PADDING + object.x + object.width / 2,
-      y: MAP_VIEWER_FLOOR_CONTENT_PADDING + object.y + object.height / 2,
-    });
+    if (options.recenter !== false) {
+      focusWorldPoint({
+        x: MAP_VIEWER_FLOOR_CONTENT_PADDING + object.x + object.width / 2,
+        y: MAP_VIEWER_FLOOR_CONTENT_PADDING + object.y + object.height / 2,
+      });
+    }
 
     // No starting point chosen yet — treat the first thing you click (on
     // the map or in the Places list) as "that's where I am", instead of
@@ -233,28 +308,45 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
       return;
     }
 
-    focusObject(object);
+    // Connectors are visible right where the user just clicked, and a
+    // double-click needs the second tap to land on the same screen spot as
+    // the first — recentering the viewport on selection (as other objects
+    // do) would shift the connector out from under the cursor between the
+    // two taps of that gesture.
+    const isConnectorObject = object.type === "stairs" || object.type === "elevator" || object.type === "escalator";
+    focusObject(object, { recenter: !isConnectorObject });
   };
 
   return (
     <section
-      className={["min-h-screen bg-background text-foreground md:h-dvh md:overflow-hidden", MAP_VIEWER_THEME_CLASSNAMES].join(" ")}
+      className={["h-dvh overflow-hidden bg-background text-foreground", MAP_VIEWER_THEME_CLASSNAMES].join(" ")}
     >
-      <div className="flex min-h-screen flex-col md:h-full md:min-h-0">
+      <div className="flex h-full min-h-0 flex-col">
         <MapViewerPageHeader activeFloor={activeFloor} floors={floors} onFloorChange={handleFloorChange} />
 
-        {/* Below md, the page scrolls as a whole (map, then sidebar) — there
-            isn't room for both to be independently fixed-height on a phone
-            screen. At md and up (tablet and desktop), this row is
-            height-bounded so only the sidebar scrolls internally and the map
-            stays fixed in place, matching the editor's layout. */}
-        <div className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col gap-0 p-0 sm:gap-4 sm:p-6 md:grid md:min-h-0 md:grid-cols-[300px_minmax(0,1fr)] lg:grid-cols-[340px_minmax(0,1fr)]">
+        {/* Below md, the sidebar is a fixed bottom sheet that docks as a
+            collapsed handle (map fully visible above it) and expands over
+            the map when tapped/dragged — never part of the page's normal
+            flow, so there's nothing to scroll past to reach it. At md and
+            up, it's a normal always-visible grid column, exactly as before. */}
+        <div className="relative mx-auto flex w-full max-w-[1600px] flex-1 flex-col gap-0 p-0 sm:gap-4 sm:p-6 md:grid md:min-h-0 md:grid-cols-[300px_minmax(0,1fr)] lg:grid-cols-[340px_minmax(0,1fr)]">
+          {isMobileSidebarExpanded ? (
+            <button
+              aria-label="Collapse the map sidebar"
+              className="fixed inset-0 z-20 bg-black/35 md:hidden"
+              onClick={() => setIsMobileSidebarExpanded(false)}
+              type="button"
+            />
+          ) : null}
+
           <MapViewerSidebar
             activeFloor={activeFloor}
             activeFloorId={activeFloorId}
             floors={floors}
+            isMobileExpanded={isMobileSidebarExpanded}
             onFloorChange={handleFloorChange}
             onFocusObject={focusObject}
+            onMobileExpandedChange={setIsMobileSidebarExpanded}
             onSearchChange={setSearch}
             routePanelSlot={(
               <RoutePanel
@@ -280,7 +372,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
             ) : null}
           />
 
-          <main className="order-1 relative h-[calc(100dvh-7.5rem)] min-h-[calc(100dvh-7.5rem)] overflow-hidden border-x-0 border-t-0 border-b border-border bg-[var(--map-viewer-canvas)] shadow-sm sm:h-[calc(100dvh-8.5rem)] sm:min-h-[calc(100dvh-8.5rem)] sm:rounded-3xl sm:border md:order-none md:h-full md:min-h-0 lg:rounded-4xl">
+          <main className="order-1 relative min-h-0 flex-1 overflow-hidden border-x-0 border-t-0 border-b border-border bg-[var(--map-viewer-canvas)] shadow-sm sm:rounded-3xl sm:border md:order-none md:h-full md:min-h-0 lg:rounded-4xl">
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklch,var(--primary)_10%,transparent),transparent_32%),linear-gradient(to_right,var(--map-viewer-grid-minor)_1px,transparent_1px),linear-gradient(to_bottom,var(--map-viewer-grid-minor)_1px,transparent_1px)] [background-size:auto,28px_28px,28px_28px]" />
             <MapViewerToolbar
               activeFloor={activeFloor}
@@ -329,10 +421,30 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
                 floorName={nextFloor.name}
                 onAdvance={() => handleJumpToSegment(activeSegmentIndex + 1)}
               />
+            ) : destinationNodeId ? (
+              <RouteStatusIndicator
+                accessibleOnly={accessibleOnly}
+                distanceMeters={route?.totalDistanceMeters}
+                found={Boolean(route)}
+              />
             ) : null}
           </main>
         </div>
       </div>
+
+      {connectorPicker ? (
+        <ConnectorFloorPickerDialog
+          connectorType={connectorPicker.connectorType}
+          onOpenChange={(open) => {
+            if (!open) {
+              setConnectorPicker(null);
+            }
+          }}
+          onSelectFloor={handleConnectorFloorPicked}
+          open
+          targets={connectorPicker.targets}
+        />
+      ) : null}
     </section>
   );
 }
