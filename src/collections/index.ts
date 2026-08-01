@@ -1,5 +1,6 @@
 import type { CollectionConfig } from "payload";
 
+import { Admins } from "./Admins";
 import { Media } from "./Media";
 import { Users } from "./Users";
 import { Organizations } from "./Organizations";
@@ -8,9 +9,10 @@ import { MapNodes } from "./map/MapNodes";
 import { MapObjects } from "./map/MapObjects";
 import { PathEdges } from "./map/PathEdges";
 
-export { Floors, MapNodes, MapObjects, Media, Organizations, PathEdges, Users };
+export { Admins, Floors, MapNodes, MapObjects, Media, Organizations, PathEdges, Users };
 
 export const collections: CollectionConfig[] = [
+  Admins,
   Users,
   Organizations,
   Media,

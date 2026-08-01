@@ -513,7 +513,8 @@ flowchart LR
 
     subgraph authInfrastructure ["Infrastructure"]
         payloadAuth["Payload authentication"]
-        userCollections["Users and organizations"]
+        adminCollection["Payload admins"]
+        userCollections["Organization users and organizations"]
         authDb["SQLite or MongoDB"]
         emailProvider["Resend"]
     end
@@ -522,7 +523,9 @@ flowchart LR
     authActions --> authPorts
     authPorts --> authAdapter
     authAdapter --> payloadAuth
+    payloadAuth --> adminCollection
     payloadAuth --> userCollections
+    adminCollection --> authDb
     userCollections --> authDb
     authActions --> emailPort
     emailPort --> emailAdapter
@@ -530,9 +533,11 @@ flowchart LR
     payloadAuth -.-> emailProvider
 ```
 
-Payload manages sessions, verification tokens, password reset tokens, and user
-authentication. React Email templates create the HTML, while the configured
-Payload email adapter sends messages through Resend.
+Payload manages sessions and authentication for two separate account types.
+The `admins` collection authenticates Payload Admin, while the `users`
+collection handles organization signup, verification, and password recovery.
+React Email templates create the HTML, while the configured Payload email
+adapter sends messages through Resend.
 
 ## 7. Module ownership summary
 

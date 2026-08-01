@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-07-31
+
+### Changed
+- Separated Payload administrators into their own `admins` authentication collection. Organization accounts remain in `users` with application-level `admin` / `user` roles, while Payload Admin authenticates exclusively against `admins` and does not trust the application role.
+- Added a ten-second countdown to the check-email screen, after which users who verified on another device can open the sign-in page directly.
+
 ## [0.1.2] - 2026-07-31
 
 ### Added

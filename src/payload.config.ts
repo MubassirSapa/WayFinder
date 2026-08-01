@@ -4,7 +4,7 @@ import { buildConfig } from "payload";
 import { fileURLToPath } from "url";
 import sharp from "sharp";
 
-import { collections, Users } from "./collections/index";
+import { Admins, collections } from "./collections/index";
 import { requireEnv } from "./lib/env";
 import { databaseAdapter } from "./plugins/database/database";
 import { resendEmailAdapter } from "./plugins/mail/resend";
@@ -14,7 +14,7 @@ const dirname = path.dirname(filename);
 
 export default buildConfig({
   admin: {
-    user: Users.slug,
+    user: Admins.slug,
     importMap: {
       baseDir: path.resolve(dirname),
     },

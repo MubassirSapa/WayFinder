@@ -1,7 +1,8 @@
 # Current Database Schema
 
 This document reflects the application collections currently registered in
-`src/collections/index.ts` and stored through Payload CMS using SQLite.
+`src/collections/index.ts` and stored through Payload CMS using the configured
+SQLite or MongoDB adapter.
 
 ```mermaid
 classDiagram
@@ -11,6 +12,14 @@ class Organization {
   number id
   string name
   enum type
+  datetime createdAt
+  datetime updatedAt
+}
+
+class Admin {
+  number id
+  string name
+  string email
   datetime createdAt
   datetime updatedAt
 }
@@ -131,7 +140,8 @@ MapNode "1" --> "0..*" PathEdge : toNode
 
 | Payload slug | Purpose |
 | --- | --- |
-| `users` | Authenticated accounts, roles, and organization membership |
+| `admins` | Payload Admin accounts, separate from organization users |
+| `users` | Organization accounts, application roles, and organization membership |
 | `organizations` | Organization name and organization type |
 | `media` | Uploaded files, including floor reference images |
 | `floors` | Floor dimensions, scale, status, and background-image settings |
@@ -168,6 +178,13 @@ not ordinary editor fields.
 
 The `organization` relationship is optional. One organization can be linked to
 many users.
+
+### Admin
+
+The separate `admins` authentication collection is the only collection allowed
+to sign in to Payload Admin. Admin accounts are not organization users and do
+not use the application user role field. The `admin` role on a `users` record is
+an application role only and does not grant access to Payload Admin.
 
 ### Floor
 

@@ -93,7 +93,7 @@ export async function signupAdapter(data: TSignup) {
           name: data.name.trim(),
           email,
           password: data.password,
-          role: ROLES.ADMIN,
+          role: ROLES.USER,
           organization: organization.id,
         },
       });
@@ -163,12 +163,12 @@ export async function getCurrentUserAdapter() {
 
   const { user } = await payload.auth({ headers });
 
-  if (!user) {
+  if (!user || user.collection !== "users") {
     return errorResponse(
       [{ message: "You need to be logged in.", status: 401, code: "UNAUTHORIZED" }],
       "You need to be logged in.",
     );
   }
 
-  return successResponse(user as User);
+  return successResponse(user satisfies User);
 }

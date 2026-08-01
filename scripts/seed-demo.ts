@@ -254,7 +254,7 @@ async function seedDemo(demo: DemoSeed) {
   const userData = {
     ...demo.user,
     password: DEMO_PASSWORD,
-    role: "admin" as const,
+    role: "user" as const,
     organization: organization.id,
     _verified: true,
   };

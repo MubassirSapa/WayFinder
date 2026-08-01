@@ -19,7 +19,7 @@ export const isLoggedIn: Access = ({ req: { user } }) => {
 };
 
 export const isAdmin: Access = ({ req: { user } }) => {
-  return user?.role === "admin";
+  return user?.collection === "admins";
 };
 
 /**
@@ -35,7 +35,7 @@ export const isSelf: Access = ({ req: { user }, id }) => {
 export const isAdminOrSelf: Access = ({ req: { user }, id }) => {
   if (!user) return false;
 
-  if (user.role === "admin") return true;
+  if (user.collection === "admins") return true;
 
   return user.id === id;
 };
