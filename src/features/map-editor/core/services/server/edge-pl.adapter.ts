@@ -4,6 +4,7 @@ import config from "@payload-config";
 import type { PathEdge as PayloadPathEdge } from "@/payload-types";
 import { getPayload } from "payload";
 import { tryCatchResponse } from "@/lib/responses";
+import { asPayloadId } from "@/lib/payload-id";
 
 import { normalizePathEdge } from "../../lib/normalizeEditorData";
 import type { EditorPathEdge } from "../../types/map.types";
@@ -23,9 +24,9 @@ export async function createPathEdgeAdapter(
       collection: "path-edges",
       data: {
         buildingId: data.buildingId,
-        floor: Number(data.floorId),
-        fromNode: Number(data.fromNodeId),
-        toNode: Number(data.toNodeId),
+        floor: asPayloadId(data.floorId),
+        fromNode: asPayloadId(data.fromNodeId),
+        toNode: asPayloadId(data.toNodeId),
         type: data.type,
         distanceMeters: data.distanceMeters,
         bidirectional: data.bidirectional,
@@ -45,12 +46,12 @@ export async function updatePathEdgeAdapter(
 
     const updateData: Partial<PathEdgeData> = {};
     if (data.buildingId !== undefined) updateData.buildingId = data.buildingId;
-    if (data.floorId !== undefined) updateData.floor = Number(data.floorId);
+    if (data.floorId !== undefined) updateData.floor = asPayloadId(data.floorId);
     if (data.fromNodeId !== undefined) {
-      updateData.fromNode = Number(data.fromNodeId);
+      updateData.fromNode = asPayloadId(data.fromNodeId);
     }
     if (data.toNodeId !== undefined) {
-      updateData.toNode = Number(data.toNodeId);
+      updateData.toNode = asPayloadId(data.toNodeId);
     }
     if (data.type !== undefined) updateData.type = data.type;
     if (data.distanceMeters !== undefined) {
@@ -65,7 +66,7 @@ export async function updatePathEdgeAdapter(
 
     const doc = await payload.update({
       collection: "path-edges",
-      id: Number(id),
+      id: asPayloadId(id),
       data: updateData,
     });
     return normalizePathEdge(doc);
@@ -77,7 +78,7 @@ export async function deletePathEdgeAdapter(id: string) {
     const payload = await getPayloadClient();
     await payload.delete({
       collection: "path-edges",
-      id: Number(id),
+      id: asPayloadId(id),
     });
     return { success: true };
   });

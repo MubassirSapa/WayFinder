@@ -7,6 +7,7 @@ import type {
 } from "@/payload-types";
 import { getPayload } from "payload";
 import { tryCatchResponse } from "@/lib/responses";
+import { asPayloadId } from "@/lib/payload-id";
 
 import {
   normalizeFloor,
@@ -29,7 +30,7 @@ export async function getFloorEditorDataAdapter(floorId: string) {
     const [floorDoc, objectsResult, nodesResult, edgesResult] = await Promise.all([
       payload.findByID({
         collection: "floors",
-        id: Number(floorId),
+        id: asPayloadId(floorId),
         depth: 1,
         overrideAccess: true,
       }),
@@ -40,7 +41,7 @@ export async function getFloorEditorDataAdapter(floorId: string) {
         overrideAccess: true,
         where: {
           floor: {
-            equals: Number(floorId),
+            equals: asPayloadId(floorId),
           },
         },
       }),
@@ -51,7 +52,7 @@ export async function getFloorEditorDataAdapter(floorId: string) {
         overrideAccess: true,
         where: {
           floor: {
-            equals: Number(floorId),
+            equals: asPayloadId(floorId),
           },
         },
       }),
@@ -62,7 +63,7 @@ export async function getFloorEditorDataAdapter(floorId: string) {
         overrideAccess: true,
         where: {
           floor: {
-            equals: Number(floorId),
+            equals: asPayloadId(floorId),
           },
         },
       }),
@@ -96,7 +97,7 @@ export async function updateFloorAdapter(id: string, data: Partial<EditorFloor>)
     }
     if (data.backgroundImageId !== undefined) {
       updateData.backgroundImage = data.backgroundImageId
-        ? Number(data.backgroundImageId)
+        ? asPayloadId(data.backgroundImageId)
         : null;
       updateData.backgroundImageUrl = null;
     } else if (data.backgroundImageUrl !== undefined) {
@@ -130,7 +131,7 @@ export async function updateFloorAdapter(id: string, data: Partial<EditorFloor>)
 
     const doc = await payload.update({
       collection: "floors",
-      id: Number(id),
+      id: asPayloadId(id),
       depth: 1,
       data: updateData,
       overrideAccess: true,

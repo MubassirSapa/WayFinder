@@ -6,6 +6,7 @@ import type {
 } from "@/payload-types";
 import { getPayloadClient } from "@/lib/getPayloadClient";
 import { resolveOrganizationNamesByBuildingId } from "@/lib/organizationBuilding";
+import { asPayloadId } from "@/lib/payload-id";
 
 import type {
   MapViewerData,
@@ -168,7 +169,7 @@ export async function getMapViewerData(floorId?: string): Promise<MapViewerData>
           sort: "name",
           where: {
             floor: {
-              equals: Number(floor.id),
+              equals: asPayloadId(floor.id),
             },
           },
         }),
@@ -179,7 +180,7 @@ export async function getMapViewerData(floorId?: string): Promise<MapViewerData>
           overrideAccess: true,
           where: {
             floor: {
-              equals: Number(floor.id),
+              equals: asPayloadId(floor.id),
             },
           },
         }),
@@ -190,7 +191,7 @@ export async function getMapViewerData(floorId?: string): Promise<MapViewerData>
           overrideAccess: true,
           where: {
             floor: {
-              equals: Number(floor.id),
+              equals: asPayloadId(floor.id),
             },
           },
         }),

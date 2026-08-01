@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [0.1.4] - 2026-07-31
+
+### Fixed
+- Preserved Payload document IDs in their native SQL or MongoDB form instead of coercing route and relationship IDs with `Number(...)`, preventing Mongo ObjectId values from becoming `NaN` in production.
+
 ## [0.1.3] - 2026-07-31
 
 ### Changed

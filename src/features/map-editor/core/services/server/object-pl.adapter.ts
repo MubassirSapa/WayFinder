@@ -4,6 +4,7 @@ import config from "@payload-config";
 import type { MapObject as PayloadMapObject } from "@/payload-types";
 import { getPayload } from "payload";
 import { tryCatchResponse } from "@/lib/responses";
+import { asPayloadId } from "@/lib/payload-id";
 
 import { normalizeMapObject } from "../../lib/normalizeEditorData";
 import type { EditorMapObject } from "../../types/map.types";
@@ -23,8 +24,8 @@ export async function createMapObjectAdapter(
       collection: "map-objects",
       data: {
         buildingId: data.buildingId,
-        floor: Number(data.floorId),
-        parentObject: data.parentObjectId ? Number(data.parentObjectId) : null,
+        floor: asPayloadId(data.floorId),
+        parentObject: data.parentObjectId ? asPayloadId(data.parentObjectId) : null,
         type: data.type,
         name: data.name,
         label: data.label,
@@ -52,10 +53,10 @@ export async function updateMapObjectAdapter(
 
     const updateData: Partial<MapObjectData> = {};
     if (data.buildingId !== undefined) updateData.buildingId = data.buildingId;
-    if (data.floorId !== undefined) updateData.floor = Number(data.floorId);
+    if (data.floorId !== undefined) updateData.floor = asPayloadId(data.floorId);
     if (data.parentObjectId !== undefined) {
       updateData.parentObject = data.parentObjectId
-        ? Number(data.parentObjectId)
+        ? asPayloadId(data.parentObjectId)
         : null;
     }
     if (data.type !== undefined) updateData.type = data.type;
@@ -77,7 +78,7 @@ export async function updateMapObjectAdapter(
 
     const doc = await payload.update({
       collection: "map-objects",
-      id: Number(id),
+      id: asPayloadId(id),
       data: updateData,
     });
     return normalizeMapObject(doc);
@@ -89,7 +90,7 @@ export async function deleteMapObjectAdapter(id: string) {
     const payload = await getPayloadClient();
     await payload.delete({
       collection: "map-objects",
-      id: Number(id),
+      id: asPayloadId(id),
     });
     return { success: true };
   });

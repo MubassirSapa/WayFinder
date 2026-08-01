@@ -4,6 +4,7 @@ import config from "@payload-config";
 import type { MapNode as PayloadMapNode } from "@/payload-types";
 import { getPayload } from "payload";
 import { tryCatchResponse } from "@/lib/responses";
+import { asPayloadId } from "@/lib/payload-id";
 
 import { normalizeMapNode } from "../../lib/normalizeEditorData";
 import type { EditorMapNode } from "../../types/map.types";
@@ -21,8 +22,8 @@ export async function createMapNodeAdapter(
     const payload = await getPayloadClient();
     const createData: MapNodeData = {
       buildingId: data.buildingId,
-      floor: Number(data.floorId),
-      object: data.objectId ? Number(data.objectId) : null,
+      floor: asPayloadId(data.floorId),
+      object: data.objectId ? asPayloadId(data.objectId) : null,
       role: data.role,
       label: data.label,
       x: data.x,
@@ -55,9 +56,9 @@ export async function updateMapNodeAdapter(id: string, data: Partial<EditorMapNo
 
     const updateData: Partial<MapNodeData> = {};
     if (data.buildingId !== undefined) updateData.buildingId = data.buildingId;
-    if (data.floorId !== undefined) updateData.floor = Number(data.floorId);
+    if (data.floorId !== undefined) updateData.floor = asPayloadId(data.floorId);
     if (data.objectId !== undefined) {
-      updateData.object = data.objectId ? Number(data.objectId) : null;
+      updateData.object = data.objectId ? asPayloadId(data.objectId) : null;
     }
     if (data.role !== undefined) updateData.role = data.role;
     if (data.label !== undefined) updateData.label = data.label;
@@ -81,7 +82,7 @@ export async function updateMapNodeAdapter(id: string, data: Partial<EditorMapNo
 
     const doc = await payload.update({
       collection: "map-nodes",
-      id: Number(id),
+      id: asPayloadId(id),
       data: updateData,
     });
     return normalizeMapNode(doc);
@@ -101,12 +102,12 @@ export async function deleteMapNodeAdapter(id: string) {
         or: [
           {
             fromNode: {
-              equals: Number(id),
+              equals: asPayloadId(id),
             },
           },
           {
             toNode: {
-              equals: Number(id),
+              equals: asPayloadId(id),
             },
           },
         ],
@@ -116,13 +117,13 @@ export async function deleteMapNodeAdapter(id: string) {
     for (const edge of linkedEdges.docs) {
       await payload.delete({
         collection: "path-edges",
-        id: Number(edge.id),
+        id: asPayloadId(edge.id),
       });
     }
 
     await payload.delete({
       collection: "map-nodes",
-      id: Number(id),
+      id: asPayloadId(id),
     });
     return { success: true };
   });

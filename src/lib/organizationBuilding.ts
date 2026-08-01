@@ -3,17 +3,18 @@ import "server-only";
 import type { Organization } from "@/payload-types";
 
 import { getPayloadClient } from "./getPayloadClient";
+import { asPayloadId } from "./payload-id";
 
 const BUILDING_ID_PREFIX = "building-";
 
 // Until buildings have their own collection, dashboard floors encode the organization ID here.
-export function parseOrganizationIdFromBuildingId(buildingId: string): number | null {
+export function parseOrganizationIdFromBuildingId(buildingId: string) {
   if (!buildingId.startsWith(BUILDING_ID_PREFIX)) {
     return null;
   }
 
-  const id = Number(buildingId.slice(BUILDING_ID_PREFIX.length));
-  return Number.isFinite(id) ? id : null;
+  const id = buildingId.slice(BUILDING_ID_PREFIX.length);
+  return id ? asPayloadId(id) : null;
 }
 
 export async function resolveOrganizationNamesByBuildingId(
@@ -34,7 +35,7 @@ export type OrganizationBuildingSummary = Pick<Organization, "name" | "type">;
 export async function resolveOrganizationsByBuildingId(
   buildingIds: string[],
 ): Promise<Record<string, OrganizationBuildingSummary>> {
-  const orgIdByBuildingId = new Map<string, number>();
+  const orgIdByBuildingId = new Map<string, ReturnType<typeof asPayloadId>>();
 
   for (const buildingId of new Set(buildingIds)) {
     const organizationId = parseOrganizationIdFromBuildingId(buildingId);
@@ -60,14 +61,14 @@ export async function resolveOrganizationsByBuildingId(
 
   const organizationById = new Map(
     result.docs.map((organization) => [
-      organization.id,
+      String(organization.id),
       { name: organization.name, type: organization.type },
     ]),
   );
   const organizationsByBuildingId: Record<string, OrganizationBuildingSummary> = {};
 
   for (const [buildingId, organizationId] of orgIdByBuildingId) {
-    const organization = organizationById.get(organizationId);
+    const organization = organizationById.get(String(organizationId));
     if (organization) {
       organizationsByBuildingId[buildingId] = organization;
     }

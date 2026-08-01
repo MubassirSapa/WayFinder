@@ -1,6 +1,7 @@
 import type { Floor, MapNode as PayloadMapNode, PathEdge as PayloadPathEdge } from "@/payload-types";
 import { payloadSdk } from "@/lib/payload-sdk";
 import { tryCatchResponse } from "@/lib/responses";
+import { asPayloadId } from "@/lib/payload-id";
 
 import { CONNECTOR_NODE_ROLES, type ConnectorNodeRole, type CrossFloorEdgeType } from "../../lib/crossFloorConnect";
 import type { CrossFloorLink, LinkableFloorLinkNode } from "../../types/floorLink.types";
@@ -18,7 +19,7 @@ export async function listLinkableNodesClient(
         and: [
           { buildingId: { equals: buildingId } },
           { role: { in: CONNECTOR_NODE_ROLES } },
-          { floor: { not_equals: Number(excludeFloorId) } },
+          { floor: { not_equals: asPayloadId(excludeFloorId) } },
         ],
       },
     });
