@@ -2,11 +2,13 @@
 
 ## [Unreleased]
 
+## [0.1.8] - 2026-08-02
+
 ### Added
 - Added the Wayfinder web app manifest with installable-app identity, standalone display behavior, brand colors, navigation categories, and favicon metadata.
 
 ### Changed
-- Replaced the shared compass placeholder in navigation, footer, map header, and not-found branding with the white-background WayFinder PNG mark.
+- Replaced the shared compass placeholder in navigation, footer, map header, and not-found branding with the transparent WayFinder PNG mark, allowing its semantic wrapper background to follow or override the active theme.
 
 ## [0.1.7] - 2026-08-02
 

@@ -21,16 +21,16 @@ export function WayfinderBrand({
     <>
       <span
         className={cn(
-          "relative block size-8 overflow-hidden rounded-md bg-background shadow-[0_0_22px_color-mix(in_oklch,var(--primary),transparent_60%)]",
+          "relative block size-8 overflow-hidden rounded-md bg-primary/10 shadow-[0_0_22px_color-mix(in_oklch,var(--primary),transparent_60%)]",
           iconClassName,
         )}
       >
         <Image
           alt=""
-          className="object-cover"
+          className="object-contain p-1"
           fill
           sizes="32px"
-          src="/icon1.png"
+          src="/icon/wayfinder-no-bg.png"
         />
       </span>
       <span
