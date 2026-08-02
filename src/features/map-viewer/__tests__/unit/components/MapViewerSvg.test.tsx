@@ -3,6 +3,7 @@ import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
 import { MapViewerSvg } from "@/features/map-viewer/components/MapViewerSvg";
 import type {
+  ConnectorDirection,
   ConnectorTargetInfo,
   ViewerFloor,
   ViewerMapNode,
@@ -80,6 +81,7 @@ const stairsNode: ViewerMapNode = {
 };
 
 const stairsTarget: ConnectorTargetInfo = {
+  direction: "up",
   floorId: "floor-2",
   floorName: "Upper Floor",
   targetNode: { ...stairsNode, id: "node-stairs-upper", floorId: "floor-2" },
@@ -89,6 +91,8 @@ function renderSvg({
   objects,
   nodes = [],
   connectorTargetsByNodeId = {},
+  routeConnectorDirection = null,
+  routeConnectorNodeId = null,
   onObjectPan = vi.fn(),
   onObjectSelect = vi.fn(),
   onConnectorActivate = vi.fn(),
@@ -99,6 +103,8 @@ function renderSvg({
   onConnectorActivate?: ReturnType<typeof vi.fn>;
   onObjectPan?: ReturnType<typeof vi.fn>;
   onObjectSelect?: ReturnType<typeof vi.fn>;
+  routeConnectorDirection?: ConnectorDirection | null;
+  routeConnectorNodeId?: string | null;
 }) {
   render(
     <MapViewerSvg
@@ -114,6 +120,8 @@ function renderSvg({
       onPointerDown={vi.fn()}
       onPointerMove={vi.fn()}
       onPointerUp={vi.fn()}
+      routeConnectorDirection={routeConnectorDirection}
+      routeConnectorNodeId={routeConnectorNodeId}
       routePoints={undefined}
       selectedObjectId={null}
       showGrid={false}
@@ -251,5 +259,160 @@ describe("MapViewerSvg connector objects", () => {
     expect(onObjectPan).toHaveBeenCalledWith(10, 0);
     expect(onObjectSelect).not.toHaveBeenCalled();
     expect(onConnectorActivate).not.toHaveBeenCalled();
+  });
+});
+
+describe("MapViewerSvg route-connector highlight", () => {
+  it("outlines the connector's object shape in the route color when it's the segment's exit connector", () => {
+    renderSvg({
+      objects: [stairsObject],
+      nodes: [stairsNode],
+      routeConnectorNodeId: stairsNode.id,
+    });
+
+    const group = getObjectGroup("Stairs A");
+    const shape = group.querySelector("rect, polygon, ellipse") as SVGElement;
+    expect(shape.getAttribute("stroke")).toBe("var(--map-viewer-route-line)");
+    expect(shape.getAttribute("stroke-width")).toBe("2.4");
+  });
+
+  it("adds a pulsing beacon ring on the connector's node marker", () => {
+    renderSvg({
+      objects: [stairsObject],
+      nodes: [stairsNode],
+      routeConnectorNodeId: stairsNode.id,
+    });
+
+    const beacon = document.querySelector(".animate-\\[wf-pulse_1\\.6s_ease-out_infinite\\]");
+    expect(beacon).toBeTruthy();
+    expect(beacon?.getAttribute("fill")).toBe("var(--map-viewer-route-line)");
+  });
+
+  it("leaves other objects and connectors unstyled when they're not the route's exit connector", () => {
+    renderSvg({
+      objects: [roomObject, stairsObject],
+      nodes: [stairsNode],
+      routeConnectorNodeId: "some-other-node-id",
+    });
+
+    const roomShape = getObjectGroup("Room A").querySelector("rect, polygon, ellipse") as SVGElement;
+    const stairsShape = getObjectGroup("Stairs A").querySelector("rect, polygon, ellipse") as SVGElement;
+    expect(roomShape.getAttribute("stroke")).not.toBe("var(--map-viewer-route-line)");
+    expect(stairsShape.getAttribute("stroke")).not.toBe("var(--map-viewer-route-line)");
+    expect(document.querySelector(".animate-\\[wf-pulse_1\\.6s_ease-out_infinite\\]")).toBeNull();
+  });
+
+  it("lets an explicit selection still take visual priority over the route highlight", () => {
+    render(
+      <MapViewerSvg
+        activeFloor={activeFloor}
+        connectorTargetsByNodeId={{}}
+        edges={[]}
+        nodes={[stairsNode]}
+        objects={[stairsObject]}
+        onBackgroundClick={vi.fn()}
+        onConnectorActivate={vi.fn()}
+        onObjectPan={vi.fn()}
+        onObjectSelect={vi.fn()}
+        onPointerDown={vi.fn()}
+        onPointerMove={vi.fn()}
+        onPointerUp={vi.fn()}
+        routeConnectorDirection="up"
+        routeConnectorNodeId={stairsNode.id}
+        routePoints={undefined}
+        selectedObjectId={stairsObject.id}
+        showGrid={false}
+      />,
+    );
+
+    const shape = getObjectGroup("Stairs A").querySelector("rect, polygon, ellipse") as SVGElement;
+    expect(shape.getAttribute("stroke")).toBe("var(--primary)");
+  });
+});
+
+const stairsTargetDown: ConnectorTargetInfo = {
+  direction: "down",
+  floorId: "floor-0",
+  floorName: "Lower Floor",
+  targetNode: { ...stairsNode, id: "node-stairs-lower", floorId: "floor-0" },
+};
+
+const UP_BADGE_PATH = "M0,-3.5 L2.8,1.5 L-2.8,1.5 Z";
+const DOWN_BADGE_PATH = "M0,3.5 L2.8,-1.5 L-2.8,-1.5 Z";
+
+describe("MapViewerSvg connector direction badge", () => {
+  it("shows only the up triangle for a connector with a single up target", () => {
+    renderSvg({
+      objects: [stairsObject],
+      nodes: [stairsNode],
+      connectorTargetsByNodeId: { [stairsNode.id]: [stairsTarget] },
+    });
+
+    expect(document.querySelector(`path[d="${UP_BADGE_PATH}"]`)).toBeTruthy();
+    expect(document.querySelector(`path[d="${DOWN_BADGE_PATH}"]`)).toBeNull();
+  });
+
+  it("shows only the down triangle for a connector with a single down target", () => {
+    renderSvg({
+      objects: [stairsObject],
+      nodes: [stairsNode],
+      connectorTargetsByNodeId: { [stairsNode.id]: [stairsTargetDown] },
+    });
+
+    expect(document.querySelector(`path[d="${DOWN_BADGE_PATH}"]`)).toBeTruthy();
+    expect(document.querySelector(`path[d="${UP_BADGE_PATH}"]`)).toBeNull();
+  });
+
+  it("shows both triangles for a connector that goes both up and down", () => {
+    renderSvg({
+      objects: [stairsObject],
+      nodes: [stairsNode],
+      connectorTargetsByNodeId: { [stairsNode.id]: [stairsTarget, stairsTargetDown] },
+    });
+
+    expect(document.querySelector(`path[d="${UP_BADGE_PATH}"]`)).toBeTruthy();
+    expect(document.querySelector(`path[d="${DOWN_BADGE_PATH}"]`)).toBeTruthy();
+  });
+
+  it("shows no badge for a connector with no cross-floor targets", () => {
+    renderSvg({ objects: [stairsObject], nodes: [stairsNode] });
+
+    expect(document.querySelector(`path[d="${UP_BADGE_PATH}"]`)).toBeNull();
+    expect(document.querySelector(`path[d="${DOWN_BADGE_PATH}"]`)).toBeNull();
+  });
+
+  it("uses the route's own direction for the highlighted connector, even when the connector also serves the opposite direction", () => {
+    renderSvg({
+      objects: [stairsObject],
+      nodes: [stairsNode],
+      connectorTargetsByNodeId: { [stairsNode.id]: [stairsTarget, stairsTargetDown] },
+      routeConnectorDirection: "down",
+      routeConnectorNodeId: stairsNode.id,
+    });
+
+    // The connector serves both directions, but this specific route continues
+    // down — the badge should reflect that, not the generic "both" summary.
+    expect(document.querySelector(`path[d="${DOWN_BADGE_PATH}"]`)).toBeTruthy();
+    expect(document.querySelector(`path[d="${UP_BADGE_PATH}"]`)).toBeNull();
+  });
+
+  it("shows a second direction triangle inside the double-press hint for a single-target connector", () => {
+    renderSvg({
+      objects: [stairsObject],
+      nodes: [stairsNode],
+      connectorTargetsByNodeId: { [stairsNode.id]: [stairsTarget] },
+    });
+
+    // One "up" triangle already from the persistent per-marker badge.
+    expect(document.querySelectorAll(`path[d="${UP_BADGE_PATH}"]`).length).toBe(1);
+
+    const group = getObjectGroup("Stairs A");
+    fireEvent.pointerDown(group, { clientX: 100, clientY: 100, pointerId: 1 });
+    fireEvent.pointerUp(group, { clientX: 100, clientY: 100, pointerId: 1 });
+    fireEvent.click(group);
+
+    expect(screen.getByText("Tap again for Upper Floor")).toBeTruthy();
+    // A second "up" triangle appears inside the hint itself while pending.
+    expect(document.querySelectorAll(`path[d="${UP_BADGE_PATH}"]`).length).toBe(2);
   });
 });

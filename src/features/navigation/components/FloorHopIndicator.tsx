@@ -1,17 +1,20 @@
 "use client";
 
-import { ArrowUpRight } from "lucide-react";
+import { ArrowDown, ArrowUp } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import type { ConnectorDirection } from "@/features/map-viewer/types/map-viewer.types";
 
 interface FloorHopIndicatorProps {
+  direction: ConnectorDirection;
   edgeType?: "stairs" | "elevator" | "escalator" | "walkway" | "ramp";
   floorName: string;
   onAdvance: () => void;
 }
 
-export function FloorHopIndicator({ edgeType, floorName, onAdvance }: FloorHopIndicatorProps) {
+export function FloorHopIndicator({ direction, edgeType, floorName, onAdvance }: FloorHopIndicatorProps) {
   const via = edgeType === "elevator" || edgeType === "escalator" ? edgeType : "stairs";
+  const DirectionIcon = direction === "up" ? ArrowUp : ArrowDown;
 
   return (
     // Bottom offset clears the collapsed mobile sidebar sheet (which docks
@@ -24,7 +27,7 @@ export function FloorHopIndicator({ edgeType, floorName, onAdvance }: FloorHopIn
         onClick={onAdvance}
         size="sm"
       >
-        <ArrowUpRight className="h-3.5 w-3.5" />
+        <DirectionIcon className="h-3.5 w-3.5" />
         {`Continue via ${via} to ${floorName}`}
       </Button>
     </div>

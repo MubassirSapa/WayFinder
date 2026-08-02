@@ -32,6 +32,8 @@ const stableProps = {
   onPointerDown: vi.fn(),
   onPointerMove: vi.fn(),
   onPointerUp: vi.fn(),
+  routeConnectorDirection: null,
+  routeConnectorNodeId: null,
   showGrid: false,
 };
 

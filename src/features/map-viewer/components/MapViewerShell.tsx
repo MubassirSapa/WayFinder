@@ -145,6 +145,17 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
   const routePointsForActiveFloor = activeSegment?.floorId === activeFloorId ? routePoints : undefined;
   const nextSegment = segments[activeSegmentIndex + 1] ?? null;
   const nextFloor = nextSegment ? floors.find((floor) => floor.id === nextSegment.floorId) ?? null : null;
+  // The connector (stairs/elevator/escalator) this floor's segment exits
+  // through — same condition FloorHopIndicator uses ("there's a next floor
+  // to continue to from here") — highlighted on the map itself so the right
+  // connector is obvious without reading the indicator text or tracing the
+  // route line to its end.
+  const routeConnectorNodeId = activeSegment?.floorId === activeFloorId && nextSegment
+    ? activeSegment.nodeIds.at(-1) ?? null
+    : null;
+  const routeConnectorDirection = routeConnectorNodeId && nextFloor && activeFloor
+    ? (nextFloor.level > activeFloor.level ? "up" as const : "down" as const)
+    : null;
   // Directions search spans the whole building — a destination on another
   // floor is exactly the case multi-floor routing exists for.
   const allSearchableObjects = Object.values(data.objectsByFloorId)
@@ -171,6 +182,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
       map[node.id] = targets.map((target) => {
         const floor = floors.find((candidate) => candidate.id === target.floorId);
         return {
+          direction: (floor?.level ?? 0) > (activeFloor?.level ?? 0) ? "up" as const : "down" as const,
           floorId: target.floorId,
           floorName: floor?.name ?? "another floor",
           targetNode: target.node,
@@ -179,7 +191,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
     }
 
     return map;
-  }, [nodes, allEdges, nodesById, floors]);
+  }, [nodes, allEdges, nodesById, floors, activeFloor]);
 
   // The one place "current floor" changes when the caller doesn't already
   // know a specific route segment index (header, sidebar, canvas connector
@@ -412,6 +424,8 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
               onSvgPointerDown={handleSvgPointerDown}
               onSvgPointerMove={handleSvgPointerMove}
               onSvgPointerUp={handleSvgPointerUp}
+              routeConnectorDirection={routeConnectorDirection}
+              routeConnectorNodeId={routeConnectorNodeId}
               routePoints={routePointsForActiveFloor}
               selectedObjectId={selectedObjectId}
               showGrid={showGrid}
@@ -426,6 +440,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
             ) : null}
             {nextSegment && nextFloor ? (
               <FloorHopIndicator
+                direction={routeConnectorDirection ?? "up"}
                 edgeType={nextSegment.enterViaEdgeType}
                 floorName={nextFloor.name}
                 onAdvance={() => handleJumpToSegment(activeSegmentIndex + 1)}

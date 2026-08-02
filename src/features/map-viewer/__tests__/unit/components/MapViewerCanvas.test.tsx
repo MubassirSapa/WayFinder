@@ -46,6 +46,8 @@ function renderCanvas() {
         onSvgPointerDown={vi.fn()}
         onSvgPointerMove={vi.fn()}
         onSvgPointerUp={vi.fn()}
+        routeConnectorDirection={null}
+        routeConnectorNodeId={null}
         selectedObjectId={null}
         showGrid={false}
         viewportRef={viewportRef}
@@ -144,6 +146,8 @@ describe("MapViewerCanvas re-render isolation", () => {
             onSvgPointerDown={vi.fn()}
             onSvgPointerMove={vi.fn()}
             onSvgPointerUp={vi.fn()}
+            routeConnectorDirection={null}
+            routeConnectorNodeId={null}
             selectedObjectId={null}
             showGrid={false}
             viewportRef={viewportRef}

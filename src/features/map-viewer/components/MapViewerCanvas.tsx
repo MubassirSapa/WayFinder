@@ -8,6 +8,7 @@ import { useAppStore } from "@/store";
 import { buildPanZoomTransform } from "../lib/mapViewerTransform";
 import { getRenderedFloorSize } from "../lib/mapViewerViewport";
 import type {
+  ConnectorDirection,
   ConnectorTargetInfo,
   ViewerFloor,
   ViewerMapNode,
@@ -23,6 +24,8 @@ interface MapViewerCanvasProps {
   edges: ViewerPathEdge[];
   nodes: ViewerMapNode[];
   objects: ViewerMapObject[];
+  routeConnectorDirection: ConnectorDirection | null;
+  routeConnectorNodeId: string | null;
   routePoints?: { x: number; y: number }[];
   selectedObjectId: string | null;
   showGrid: boolean;
@@ -46,6 +49,8 @@ export function MapViewerCanvas({
   edges,
   nodes,
   objects,
+  routeConnectorDirection,
+  routeConnectorNodeId,
   routePoints,
   selectedObjectId,
   showGrid,
@@ -119,6 +124,8 @@ export function MapViewerCanvas({
               onPointerDown={onSvgPointerDown}
               onPointerMove={onSvgPointerMove}
               onPointerUp={onSvgPointerUp}
+              routeConnectorDirection={routeConnectorDirection}
+              routeConnectorNodeId={routeConnectorNodeId}
               routePoints={routePoints}
               selectedObjectId={selectedObjectId}
               showGrid={showGrid}

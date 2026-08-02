@@ -11,6 +11,7 @@ import {
 } from "../lib/mapStyles";
 import { getRenderedFloorSize } from "../lib/mapViewerViewport";
 import type {
+  ConnectorDirection,
   ConnectorTargetInfo,
   ViewerFloor,
   ViewerMapNode,
@@ -18,12 +19,20 @@ import type {
   ViewerPathEdge,
 } from "../types/map-viewer.types";
 
+// Shared by the always-visible marker badge and the double-press hint, so
+// both draw the exact same up/down triangle rather than two similar-but-
+// slightly-different shapes.
+const CONNECTOR_UP_TRIANGLE_PATH = "M0,-3.5 L2.8,1.5 L-2.8,1.5 Z";
+const CONNECTOR_DOWN_TRIANGLE_PATH = "M0,3.5 L2.8,-1.5 L-2.8,-1.5 Z";
+
 interface MapViewerSvgProps {
   activeFloor: ViewerFloor;
   connectorTargetsByNodeId: Record<string, ConnectorTargetInfo[]>;
   edges: ViewerPathEdge[];
   nodes: ViewerMapNode[];
   objects: ViewerMapObject[];
+  routeConnectorDirection: ConnectorDirection | null;
+  routeConnectorNodeId: string | null;
   routePoints?: { x: number; y: number }[];
   selectedObjectId: string | null;
   showGrid: boolean;
@@ -47,6 +56,8 @@ export const MapViewerSvg = memo(function MapViewerSvg({
   edges,
   nodes,
   objects,
+  routeConnectorDirection,
+  routeConnectorNodeId,
   routePoints,
   selectedObjectId,
   showGrid,
@@ -141,6 +152,8 @@ export const MapViewerSvg = memo(function MapViewerSvg({
         onConnectorActivate={onConnectorActivate}
         onObjectPan={onObjectPan}
         onObjectSelect={onObjectSelect}
+        routeConnectorDirection={routeConnectorDirection}
+        routeConnectorNodeId={routeConnectorNodeId}
         routePoints={routePoints}
         selectedObjectId={selectedObjectId}
       />
@@ -156,6 +169,8 @@ function ViewerFloorContent({
   onConnectorActivate,
   onObjectPan,
   onObjectSelect,
+  routeConnectorDirection,
+  routeConnectorNodeId,
   routePoints,
   selectedObjectId,
 }: {
@@ -166,6 +181,8 @@ function ViewerFloorContent({
   onConnectorActivate: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
   onObjectPan: (deltaX: number, deltaY: number) => void;
   onObjectSelect: (object: ViewerMapObject) => void;
+  routeConnectorDirection: ConnectorDirection | null;
+  routeConnectorNodeId: string | null;
   routePoints?: { x: number; y: number }[];
   selectedObjectId: string | null;
 }) {
@@ -187,6 +204,7 @@ function ViewerFloorContent({
         onConnectorPress={handlePress}
         onPan={onObjectPan}
         onSelect={onObjectSelect}
+        routeConnectorNodeId={routeConnectorNodeId}
         selectedObjectId={selectedObjectId}
       />
       <ViewerNodes
@@ -194,6 +212,8 @@ function ViewerFloorContent({
         nodes={nodes}
         onConnectorPress={handlePress}
         pendingNodeId={pendingNodeId}
+        routeConnectorDirection={routeConnectorDirection}
+        routeConnectorNodeId={routeConnectorNodeId}
       />
       {routePoints && routePoints.length > 1 ? <RoutePolyline points={routePoints} /> : null}
     </g>
@@ -248,6 +268,7 @@ function ViewerObjects({
   onConnectorPress,
   onPan,
   onSelect,
+  routeConnectorNodeId,
   selectedObjectId,
 }: {
   connectorTargetsByNodeId: Record<string, ConnectorTargetInfo[]>;
@@ -256,6 +277,7 @@ function ViewerObjects({
   onConnectorPress: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
   onPan: (deltaX: number, deltaY: number) => void;
   onSelect: (object: ViewerMapObject) => void;
+  routeConnectorNodeId: string | null;
   selectedObjectId: string | null;
 }) {
   return (
@@ -273,6 +295,7 @@ function ViewerObjects({
           <ViewerObjectItem
             connectorNode={connectorNode}
             connectorTargets={connectorTargets}
+            isOnRoute={connectorNode?.id === routeConnectorNodeId}
             isSelected={selectedObjectId === object.id}
             key={object.id}
             object={object}
@@ -289,6 +312,7 @@ function ViewerObjects({
 function ViewerObjectItem({
   connectorNode,
   connectorTargets,
+  isOnRoute,
   isSelected,
   object,
   onConnectorPress,
@@ -297,6 +321,7 @@ function ViewerObjectItem({
 }: {
   connectorNode: ViewerMapNode | undefined;
   connectorTargets: ConnectorTargetInfo[] | undefined;
+  isOnRoute: boolean;
   isSelected: boolean;
   object: ViewerMapObject;
   onConnectorPress: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
@@ -306,6 +331,15 @@ function ViewerObjectItem({
   const palette = getViewerObjectPalette(object.type);
   const centerX = object.width / 2;
   const centerY = object.height / 2;
+  // Selection (an explicit click) always wins visually over "this is the
+  // connector your route uses" — the two can be true at once (route-planning
+  // often starts by selecting the connector itself).
+  const outlineColor = isSelected
+    ? "var(--primary)"
+    : isOnRoute
+      ? "var(--map-viewer-route-line)"
+      : palette.stroke;
+  const outlineWidth = isSelected || isOnRoute ? 2.4 : 1.2;
 
   // A press that turns into a real drag should pan the map exactly like
   // starting the drag on empty canvas would — objects aren't draggable in
@@ -393,8 +427,8 @@ function ViewerObjectItem({
           )
             .map((point) => `${point.x},${point.y}`)
             .join(" ")}
-          stroke={isSelected ? "var(--primary)" : palette.stroke}
-          strokeWidth={isSelected ? 2.4 : 1.2}
+          stroke={outlineColor}
+          strokeWidth={outlineWidth}
           vectorEffect="non-scaling-stroke"
         />
       ) : object.shape === "ellipse" ? (
@@ -404,16 +438,16 @@ function ViewerObjectItem({
           fill={palette.fill}
           rx={centerX}
           ry={centerY}
-          stroke={isSelected ? "var(--primary)" : palette.stroke}
-          strokeWidth={isSelected ? 2.4 : 1.2}
+          stroke={outlineColor}
+          strokeWidth={outlineWidth}
           vectorEffect="non-scaling-stroke"
         />
       ) : (
         <rect
           fill={palette.fill}
           height={object.height}
-          stroke={isSelected ? "var(--primary)" : palette.stroke}
-          strokeWidth={isSelected ? 2.4 : 1.2}
+          stroke={outlineColor}
+          strokeWidth={outlineWidth}
           vectorEffect="non-scaling-stroke"
           width={object.width}
         />
@@ -437,16 +471,34 @@ function ViewerObjectItem({
   );
 }
 
+// "both" when a connector's targets go both up and down (e.g. an elevator
+// serving several floors above and below) — the badge draws both arrows.
+// Falls back to the route's own direction for the connector currently
+// highlighted as part of an active route, since that's more precise than
+// "everywhere this connector could go" in that context.
+function summarizeConnectorDirection(targets: ConnectorTargetInfo[]): ConnectorDirection | "both" {
+  const hasUp = targets.some((target) => target.direction === "up");
+  const hasDown = targets.some((target) => target.direction === "down");
+  if (hasUp && hasDown) {
+    return "both";
+  }
+  return hasUp ? "up" : "down";
+}
+
 function ViewerNodes({
   connectorTargetsByNodeId,
   nodes,
   onConnectorPress,
   pendingNodeId,
+  routeConnectorDirection,
+  routeConnectorNodeId,
 }: {
   connectorTargetsByNodeId: Record<string, ConnectorTargetInfo[]>;
   nodes: ViewerMapNode[];
   onConnectorPress: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
   pendingNodeId: string | null;
+  routeConnectorDirection: ConnectorDirection | null;
+  routeConnectorNodeId: string | null;
 }) {
   return (
     <g>
@@ -455,6 +507,12 @@ function ViewerNodes({
         const connectorTargets = connectorTargetsByNodeId[node.id];
         const hasConnectorTargets = Boolean(connectorTargets && connectorTargets.length > 0);
         const isPending = pendingNodeId === node.id;
+        const isRouteConnector = node.id === routeConnectorNodeId;
+        const badgeDirection = isRouteConnector && routeConnectorDirection
+          ? routeConnectorDirection
+          : connectorTargets
+            ? summarizeConnectorDirection(connectorTargets)
+            : null;
 
         return (
           <g
@@ -467,16 +525,30 @@ function ViewerNodes({
             onPointerDown={hasConnectorTargets ? (event) => event.stopPropagation() : undefined}
             transform={`translate(${node.x}, ${node.y})`}
           >
+            {isRouteConnector ? (
+              // Radar-ping beacon — the map's own answer to "which connector
+              // do I use", so it doesn't rely on the user reading the
+              // FloorHopIndicator text or tracing the route line to its end.
+              <circle
+                className="pointer-events-none animate-[wf-pulse_1.6s_ease-out_infinite]"
+                fill="var(--map-viewer-route-line)"
+                r="14"
+              />
+            ) : null}
             <circle fill={palette.ring} r="14" />
             <circle
               fill={palette.fill}
               r="5.5"
-              stroke="var(--background)"
+              stroke={isRouteConnector ? "var(--map-viewer-route-line)" : "var(--background)"}
               strokeWidth="2"
               vectorEffect="non-scaling-stroke"
             />
+            {badgeDirection ? (
+              <ConnectorDirectionBadge direction={badgeDirection} x={10} y={-10} />
+            ) : null}
             {hasConnectorTargets && isPending ? (
               <ConnectorJumpHint
+                direction={connectorTargets.length === 1 ? connectorTargets[0].direction : null}
                 label={connectorTargets.length === 1
                   ? `Tap again for ${connectorTargets[0].floorName}`
                   : "Tap again to choose a floor"}
@@ -505,8 +577,19 @@ function ViewerNodes({
   );
 }
 
-function ConnectorJumpHint({ label, x, y }: { label: string; x: number; y: number }) {
-  const width = Math.max(label.length * 5.6 + 20, 88);
+function ConnectorJumpHint({
+  direction,
+  label,
+  x,
+  y,
+}: {
+  direction: ConnectorDirection | null;
+  label: string;
+  x: number;
+  y: number;
+}) {
+  const width = Math.max(label.length * 5.6 + 20 + (direction ? 14 : 0), 88);
+  const textX = direction ? 7 : 0;
 
   return (
     <g className="pointer-events-none" transform={`translate(${x}, ${y - 18})`}>
@@ -521,16 +604,63 @@ function ConnectorJumpHint({ label, x, y }: { label: string; x: number; y: numbe
         x={-width / 2}
         y="-11"
       />
+      {direction ? (
+        <path
+          d={direction === "up" ? CONNECTOR_UP_TRIANGLE_PATH : CONNECTOR_DOWN_TRIANGLE_PATH}
+          fill="var(--popover-foreground)"
+          transform={`translate(${-width / 2 + 14}, 0)`}
+        />
+      ) : null}
       <text
         fill="var(--popover-foreground)"
         fontFamily="var(--font-sans)"
         fontSize="10"
         fontWeight="600"
         textAnchor="middle"
+        x={textX}
         y="3.5"
       >
         {label}
       </text>
+    </g>
+  );
+}
+
+// Small always-visible badge on every connector marker showing whether it
+// leads up, down, or both — so a stairwell/elevator's direction is obvious
+// before pressing it, not just during/after the double-press gesture.
+function ConnectorDirectionBadge({
+  direction,
+  x,
+  y,
+}: {
+  direction: ConnectorDirection | "both";
+  x: number;
+  y: number;
+}) {
+  return (
+    <g className="pointer-events-none" transform={`translate(${x}, ${y})`}>
+      <circle
+        fill="var(--popover)"
+        r="7"
+        stroke="var(--border)"
+        strokeWidth="1"
+        vectorEffect="non-scaling-stroke"
+      />
+      {direction !== "down" ? (
+        <path
+          d={CONNECTOR_UP_TRIANGLE_PATH}
+          fill="var(--popover-foreground)"
+          transform={direction === "both" ? "translate(0, -2)" : undefined}
+        />
+      ) : null}
+      {direction !== "up" ? (
+        <path
+          d={CONNECTOR_DOWN_TRIANGLE_PATH}
+          fill="var(--popover-foreground)"
+          transform={direction === "both" ? "translate(0, 2)" : undefined}
+        />
+      ) : null}
     </g>
   );
 }
