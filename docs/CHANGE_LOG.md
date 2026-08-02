@@ -7,6 +7,8 @@
 
 ### Changed
 - Stopped the map viewer's whole page from re-rendering on every pan/zoom tick. Viewport state (pan, zoom, dragging) now lives in a dedicated store slice that only `MapViewerCanvas` subscribes to, instead of component-local state owned by the page shell; an active drag/pinch/wheel gesture writes the transform straight to the DOM via a ref and only syncs the store at most once per animation frame, so panning and zooming are now effectively free for the rest of the page (sidebar, header, toolbar).
+- Memoized `MapViewerSvg` so `MapViewerCanvas`'s own pan/zoom-driven re-renders no longer re-run the `.map()` over every room, hallway, and connector on the active floor — none of its props depend on pan/zoom, so panning now costs nothing proportional to floor size.
+- Stopped selecting an object from re-rendering the map viewer's header and toolbar. `selectedObjectId` lives in `MapViewerShell`, so setting it re-renders the whole page; `MapViewerPageHeader` and `MapViewerToolbar` are now memoized, and the handlers `MapViewerShell` passes them (`changeZoom`, `resetView`, `focusWorldBounds`, floor/segment navigation, grid toggle) are stable across renders that don't actually change floor, zoom, or route state, so both bail out on a plain selection click.
 
 ## [0.1.4] - 2026-07-31
 

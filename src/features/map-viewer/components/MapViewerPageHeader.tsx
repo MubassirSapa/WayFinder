@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -24,7 +26,14 @@ interface MapViewerPageHeaderProps {
   onFloorChange: (floorId: string) => void;
 }
 
-export function MapViewerPageHeader({ activeFloor, floors, onFloorChange }: MapViewerPageHeaderProps) {
+// Memoized because MapViewerShell re-renders on every selection/search/route
+// change — none of which this header cares about — so without this it would
+// re-render on all of them for no visual reason.
+export const MapViewerPageHeader = memo(function MapViewerPageHeader({
+  activeFloor,
+  floors,
+  onFloorChange,
+}: MapViewerPageHeaderProps) {
   return (
     <header className="sticky top-0 z-20 border-b border-border bg-background/92 backdrop-blur-xl">
       <div className="mx-auto flex w-full max-w-[1600px] items-center justify-between gap-3 px-4 py-3 sm:px-6">
@@ -81,4 +90,4 @@ export function MapViewerPageHeader({ activeFloor, floors, onFloorChange }: MapV
       </div>
     </header>
   );
-}
+});

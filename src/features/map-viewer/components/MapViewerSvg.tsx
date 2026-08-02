@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { memo, useRef } from "react";
 import type { MouseEvent, PointerEvent, PointerEventHandler } from "react";
 
 import { MAP_VIEWER_DRAG_THRESHOLD, MAP_VIEWER_FLOOR_CONTENT_PADDING } from "../constants/mapViewer.constants";
@@ -36,7 +36,12 @@ interface MapViewerSvgProps {
   onPointerUp: PointerEventHandler<SVGSVGElement>;
 }
 
-export function MapViewerSvg({
+// Memoized because MapViewerCanvas re-renders on every committed pan/zoom
+// tick (see useMapViewerViewportGestures.ts) — none of this component's
+// props depend on pan/zoom (the transform lives one level up, on the
+// wrapping div), so without this, every one of those ticks would re-run the
+// .map() over every object/node/edge for no visual reason.
+export const MapViewerSvg = memo(function MapViewerSvg({
   activeFloor,
   connectorTargetsByNodeId,
   edges,
@@ -141,7 +146,7 @@ export function MapViewerSvg({
       />
     </svg>
   );
-}
+});
 
 function ViewerFloorContent({
   connectorTargetsByNodeId,

@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, memo } from "react";
 
 import {
   Breadcrumb,
@@ -27,7 +27,9 @@ interface MapViewerToolbarProps {
   onZoomChange: (direction: "in" | "out") => void;
 }
 
-export function MapViewerToolbar({
+// Memoized for the same reason as MapViewerPageHeader — MapViewerShell
+// re-renders on selection/search/route changes this toolbar doesn't use.
+export const MapViewerToolbar = memo(function MapViewerToolbar({
   activeFloor,
   activeSegmentIndex,
   floors,
@@ -118,4 +120,4 @@ export function MapViewerToolbar({
       </div>
     </div>
   );
-}
+});
