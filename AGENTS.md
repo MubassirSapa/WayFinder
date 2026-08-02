@@ -102,3 +102,9 @@ not just new features:
 - If no existing token fits, add a new one to `global.css` (light and dark, plus `.map-viewer-theme` if it's a map-viewer color) and use that — don't hardcode a one-off value as a workaround.
 - Keep Tailwind usage minimal: add only the classes required to achieve the requested layout, state, and responsive behavior.
 - Reuse existing variants, utilities, and component APIs before introducing custom styling or duplicated abstractions.
+
+## Testing
+
+- Add or update unit tests whenever practical for new features, behavior changes, and bug fixes — a fix with no regression test is easy to silently break again later.
+- Match the existing patterns: pure logic (`lib/`, `hooks/`) gets plain Vitest tests next to the sibling `lib`/`hooks` test folders; components get React Testing Library tests under that feature's `__tests__/unit/components/` using `render`/`fireEvent`/`screen` (see `src/features/map-viewer/__tests__/unit/components/MapViewerSvg.test.tsx` for a pointer-event drag-vs-click example, including the jsdom pointer-capture polyfill it needs).
+- Before considering a change complete, run `npx tsc --noEmit`, `npx eslint src`, and `npx vitest run`.
