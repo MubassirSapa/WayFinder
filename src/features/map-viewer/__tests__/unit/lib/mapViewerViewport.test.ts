@@ -1,12 +1,21 @@
 import { describe, it, expect } from 'vitest'
 import {
+  MAP_VIEWER_DESKTOP_MAX_ZOOM,
+  MAP_VIEWER_DESKTOP_MIN_ZOOM,
+  MAP_VIEWER_MOBILE_MAX_ZOOM,
+  MAP_VIEWER_MOBILE_MIN_ZOOM,
+} from '../../../constants/mapViewer.constants'
+import {
   clampPanToViewport,
   clampZoom,
   getDefaultViewState,
   getDistance,
   getFitBoundsView,
+  getFitZoom,
   getMidpoint,
+  getRenderedFloorSize,
   getZoomProfile,
+  resolveFloorViewOnResize,
 } from '../../../lib/mapViewerViewport'
 import type { ViewerFloor } from '../../../types/map-viewer.types'
 
@@ -63,17 +72,15 @@ describe('getFitBoundsView', () => {
 describe('getZoomProfile', () => {
   it('returns the desktop range at and above the mobile breakpoint', () => {
     expect(getZoomProfile(768)).toEqual({
-      initialZoomMultiplier: 1.18,
-      maxZoom: 2.1,
-      minZoom: 0.75,
+      maxZoom: MAP_VIEWER_DESKTOP_MAX_ZOOM,
+      minZoom: MAP_VIEWER_DESKTOP_MIN_ZOOM,
     })
   })
 
   it('returns the mobile range below the breakpoint', () => {
     expect(getZoomProfile(767)).toEqual({
-      initialZoomMultiplier: 1.28,
-      maxZoom: 2.35,
-      minZoom: 0.7,
+      maxZoom: MAP_VIEWER_MOBILE_MAX_ZOOM,
+      minZoom: MAP_VIEWER_MOBILE_MIN_ZOOM,
     })
   })
 })
@@ -84,16 +91,16 @@ describe('clampZoom', () => {
   })
 
   it('clamps below the desktop minimum', () => {
-    expect(clampZoom(0.1, 1200)).toBe(0.75)
+    expect(clampZoom(0.1, 1200)).toBe(MAP_VIEWER_DESKTOP_MIN_ZOOM)
   })
 
   it('clamps above the desktop maximum', () => {
-    expect(clampZoom(10, 1200)).toBe(2.1)
+    expect(clampZoom(10, 1200)).toBe(MAP_VIEWER_DESKTOP_MAX_ZOOM)
   })
 
   it('uses the mobile range when the viewport is narrow', () => {
-    expect(clampZoom(10, 400)).toBe(2.35)
-    expect(clampZoom(0.1, 400)).toBe(0.7)
+    expect(clampZoom(10, 400)).toBe(MAP_VIEWER_MOBILE_MAX_ZOOM)
+    expect(clampZoom(0.1, 400)).toBe(MAP_VIEWER_MOBILE_MIN_ZOOM)
   })
 })
 
@@ -158,15 +165,21 @@ describe('clampPanToViewport', () => {
 })
 
 describe('getDefaultViewState', () => {
-  it('returns a zoom within the desktop profile range and a clamped pan', () => {
+  it('starts at the fit-to-floor zoom, with no extra zoom-in applied on top', () => {
+    const viewport = { x: 1200, y: 900 }
+    const { zoom } = getDefaultViewState(floor, viewport)
+    expect(zoom).toBe(getFitZoom(floor, viewport))
+  })
+
+  it('centers the floor in the viewport', () => {
     const viewport = { x: 1200, y: 900 }
     const { pan, zoom } = getDefaultViewState(floor, viewport)
+    const renderedSize = getRenderedFloorSize(floor)
 
-    expect(zoom).toBeGreaterThanOrEqual(0.75)
-    expect(zoom).toBeLessThanOrEqual(2.1)
-    // The unclamped default pan is the fixed offset (20, 76); for a floor that
-    // fits comfortably in this viewport, clamping should leave it untouched.
-    expect(pan).toEqual({ x: 20, y: 76 })
+    // The floor's own center (in screen space, after pan+zoom) should land
+    // exactly on the viewport's center.
+    expect(pan.x + (renderedSize.width / 2) * zoom).toBeCloseTo(viewport.x / 2)
+    expect(pan.y + (renderedSize.height / 2) * zoom).toBeCloseTo(viewport.y / 2)
   })
 
   it('is finite and stable for a tiny viewport (initial mount / zero-size race)', () => {
@@ -174,5 +187,60 @@ describe('getDefaultViewState', () => {
     expect(Number.isFinite(zoom)).toBe(true)
     expect(Number.isFinite(pan.x)).toBe(true)
     expect(Number.isFinite(pan.y)).toBe(true)
+  })
+})
+
+describe('resolveFloorViewOnResize', () => {
+  const viewport = { x: 1200, y: 900 }
+
+  it('ignores a 0-size measurement in either dimension', () => {
+    const options = {
+      currentPan: { x: 10, y: 10 },
+      currentZoom: 1,
+      hasPendingFocus: false,
+      isFirstMeasurementForFloor: true,
+    }
+
+    expect(resolveFloorViewOnResize(floor, { x: 0, y: 900 }, options)).toBeNull()
+    expect(resolveFloorViewOnResize(floor, { x: 1200, y: 0 }, options)).toBeNull()
+  })
+
+  it('computes the default fit-to-floor view on the first real measurement', () => {
+    const result = resolveFloorViewOnResize(floor, viewport, {
+      currentPan: { x: 999, y: 999 },
+      currentZoom: 3,
+      hasPendingFocus: false,
+      isFirstMeasurementForFloor: true,
+    })
+
+    expect(result).toEqual(getDefaultViewState(floor, viewport))
+  })
+
+  it('keeps the current pan/zoom (re-clamped) on the first measurement when a focus is pending', () => {
+    const result = resolveFloorViewOnResize(floor, viewport, {
+      currentPan: { x: 50, y: 40 },
+      currentZoom: 1,
+      hasPendingFocus: true,
+      isFirstMeasurementForFloor: true,
+    })
+
+    expect(result).toEqual({
+      pan: clampPanToViewport({ x: 50, y: 40 }, floor, viewport, 1),
+      zoom: 1,
+    })
+  })
+
+  it('keeps the current pan/zoom on a plain resize of an already-initialized floor, regardless of pending focus', () => {
+    const result = resolveFloorViewOnResize(floor, viewport, {
+      currentPan: { x: 50, y: 40 },
+      currentZoom: 1.5,
+      hasPendingFocus: false,
+      isFirstMeasurementForFloor: false,
+    })
+
+    expect(result).toEqual({
+      pan: clampPanToViewport({ x: 50, y: 40 }, floor, viewport, 1.5),
+      zoom: 1.5,
+    })
   })
 })

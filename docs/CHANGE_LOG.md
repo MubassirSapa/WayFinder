@@ -4,6 +4,7 @@
 
 ### Fixed
 - Fixed dragging to pan the map viewer not working when the gesture started on an object (room, hallway, connector, etc.) instead of empty canvas, on both mouse and touch. Objects now track their own drag distance and forward pan deltas once past the existing drag threshold, while still keeping native click/tap-to-select fully reliable.
+- Fixed the map viewer occasionally locking onto a wrong zoom level for the rest of the session (most noticeable on a mobile hard reload). A 0×0 viewport measurement — possible on the very first layout read, before hydration settles — was being treated as real and used to compute the default view; later, correctly-sized measurements only re-clamp the existing zoom rather than recomputing it, so the bogus value never corrected itself.
 
 ### Changed
 - Replaced the hand-built demo seed blueprints with production-style exported map fixtures covering five floors, 107 objects, 163 nodes, and 178 source edges. The idempotent seeder now remaps exported relationship IDs when importing, assigns sequential floor levels, fills in missing connector objects and nodes, and links every adjacent floor with stairs, elevator, and escalator edges for repeatable multi-floor tests.
@@ -11,6 +12,7 @@
 - Memoized `MapViewerSvg` so `MapViewerCanvas`'s own pan/zoom-driven re-renders no longer re-run the `.map()` over every room, hallway, and connector on the active floor — none of its props depend on pan/zoom, so panning now costs nothing proportional to floor size.
 - Stopped selecting an object from re-rendering the map viewer's header and toolbar. `selectedObjectId` lives in `MapViewerShell`, so setting it re-renders the whole page; `MapViewerPageHeader` and `MapViewerToolbar` are now memoized, and the handlers `MapViewerShell` passes them (`changeZoom`, `resetView`, `focusWorldBounds`, floor/segment navigation, grid toggle) are stable across renders that don't actually change floor, zoom, or route state, so both bail out on a plain selection click.
 - Stopped `useRoute` from rebuilding the whole building's routing graph every time the origin or destination changes. The graph (adjacency built from every floor's nodes/edges) is now its own memo keyed only on the data and the accessible-only toggle; picking a different destination (or origin) reuses it and only reruns the shortest-path search.
+- Changed the map viewer's initial view to start zoomed out enough to show the whole floor, centered in the viewport, instead of zoomed in and offset toward the top-left corner.
 
 ## [0.1.4] - 2026-07-31
 

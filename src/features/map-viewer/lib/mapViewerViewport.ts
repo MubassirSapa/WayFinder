@@ -1,13 +1,9 @@
 import {
-  MAP_VIEWER_DESKTOP_INITIAL_ZOOM_MULTIPLIER,
   MAP_VIEWER_DESKTOP_MAX_ZOOM,
   MAP_VIEWER_DESKTOP_MIN_ZOOM,
-  MAP_VIEWER_DEFAULT_OFFSET_X,
-  MAP_VIEWER_DEFAULT_OFFSET_Y,
   MAP_VIEWER_FIT_VIEW_PADDING,
   MAP_VIEWER_FLOOR_CONTENT_PADDING,
   MAP_VIEWER_MOBILE_BREAKPOINT,
-  MAP_VIEWER_MOBILE_INITIAL_ZOOM_MULTIPLIER,
   MAP_VIEWER_MOBILE_MAX_ZOOM,
   MAP_VIEWER_MOBILE_MIN_ZOOM,
   MAP_VIEWER_PAN_OVERSCROLL,
@@ -49,9 +45,6 @@ export function getZoomProfile(viewportWidth: number) {
   const isMobile = viewportWidth < MAP_VIEWER_MOBILE_BREAKPOINT;
 
   return {
-    initialZoomMultiplier: isMobile
-      ? MAP_VIEWER_MOBILE_INITIAL_ZOOM_MULTIPLIER
-      : MAP_VIEWER_DESKTOP_INITIAL_ZOOM_MULTIPLIER,
     maxZoom: isMobile ? MAP_VIEWER_MOBILE_MAX_ZOOM : MAP_VIEWER_DESKTOP_MAX_ZOOM,
     minZoom: isMobile ? MAP_VIEWER_MOBILE_MIN_ZOOM : MAP_VIEWER_DESKTOP_MIN_ZOOM,
   };
@@ -154,18 +147,18 @@ export function getMidpoint(from: Point, to: Point): Point {
   };
 }
 
+// Starts zoomed out enough to show the whole floor, centered in the
+// viewport — getFitZoom is already exactly that zoom level, so no extra
+// zoom-in multiplier is applied on top of it.
 export function getDefaultViewState(floor: ViewerFloor, viewport: Point) {
-  const zoomProfile = getZoomProfile(viewport.x);
-  const zoom = clampZoom(
-    getFitZoom(floor, viewport) * zoomProfile.initialZoomMultiplier,
-    viewport.x,
-  );
+  const zoom = getFitZoom(floor, viewport);
+  const renderedSize = getRenderedFloorSize(floor);
 
   return {
     pan: clampPanToViewport(
       {
-        x: MAP_VIEWER_DEFAULT_OFFSET_X,
-        y: MAP_VIEWER_DEFAULT_OFFSET_Y,
+        x: viewport.x / 2 - (renderedSize.width / 2) * zoom,
+        y: viewport.y / 2 - (renderedSize.height / 2) * zoom,
       },
       floor,
       viewport,
@@ -173,5 +166,43 @@ export function getDefaultViewState(floor: ViewerFloor, viewport: Point) {
       MAP_VIEWER_PAN_OVERSCROLL,
     ),
     zoom,
+  };
+}
+
+export interface FloorViewResizeOptions {
+  currentPan: Point;
+  currentZoom: number;
+  hasPendingFocus: boolean;
+  isFirstMeasurementForFloor: boolean;
+}
+
+// Called from useMapViewerViewport's ResizeObserver callback on every
+// measurement of the viewport element. Returns null for a measurement that
+// should be ignored entirely — most importantly a 0-size read, which happens
+// on the very first effect run right after mount/hydration, before layout
+// has settled (much more likely on a hard reload than a client navigation).
+// Without this guard, that bogus 0x0 measurement would compute (and then
+// permanently lock in, since later branches only re-clamp, never recompute)
+// a wrong default zoom/pan for the rest of the session.
+export function resolveFloorViewOnResize(
+  floor: ViewerFloor,
+  viewport: Point,
+  options: FloorViewResizeOptions,
+): { pan: Point; zoom: number } | null {
+  if (viewport.x <= 0 || viewport.y <= 0) {
+    return null;
+  }
+
+  if (options.isFirstMeasurementForFloor && !options.hasPendingFocus) {
+    return getDefaultViewState(floor, viewport);
+  }
+
+  // Either a plain resize of an already-initialized floor, or the first real
+  // measurement right after a focusWorldBounds call (floor-hop / connector
+  // jump) already set an explicit pan/zoom — keep it, just re-clamp to the
+  // new viewport bounds instead of overriding it with the floor's default.
+  return {
+    pan: clampPanToViewport(options.currentPan, floor, viewport, options.currentZoom),
+    zoom: options.currentZoom,
   };
 }

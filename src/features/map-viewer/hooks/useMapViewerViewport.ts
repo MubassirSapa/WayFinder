@@ -7,6 +7,7 @@ import {
   clampZoom,
   getDefaultViewState,
   getFitBoundsView,
+  resolveFloorViewOnResize,
   type Point,
   type WorldBounds,
 } from "../lib/mapViewerViewport";
@@ -61,42 +62,38 @@ export function useMapViewerViewport({
         y: element.clientHeight,
       };
 
-      setViewportSize(nextViewport);
-
       const floor = floors.find((candidate) => candidate.id === activeFloorId);
       if (!floor) {
         initializedFloorIdRef.current = null;
         return;
       }
 
-      const { setViewportView } = useAppStore.getState();
+      const isFirstMeasurementForFloor = initializedFloorIdRef.current !== floor.id;
+      const { viewportPan, viewportZoom, setViewportView } = useAppStore.getState();
 
-      if (initializedFloorIdRef.current !== floor.id) {
-        initializedFloorIdRef.current = floor.id;
+      const nextView = resolveFloorViewOnResize(floor, nextViewport, {
+        currentPan: viewportPan,
+        currentZoom: viewportZoom,
+        hasPendingFocus: pendingFocusRef.current,
+        isFirstMeasurementForFloor,
+      });
 
-        // A route floor-hop already set an explicit pan/zoom via
-        // focusWorldBounds just before this floor change — keep it instead
-        // of overriding it with the floor's default fit-to-view.
-        if (pendingFocusRef.current) {
-          pendingFocusRef.current = false;
-          const currentPan = useAppStore.getState().viewportPan;
-          const currentZoom = useAppStore.getState().viewportZoom;
-          setViewportView({
-            pan: clampPanToViewport(currentPan, floor, nextViewport, currentZoom),
-            zoom: currentZoom,
-          });
-          return;
-        }
-
-        setViewportView(getDefaultViewState(floor, nextViewport));
+      // A 0-size viewport read (e.g. the very first effect run right after
+      // hydration, before layout has settled — much likelier on a hard
+      // reload than a client navigation) is ignored entirely: don't touch
+      // viewportSize/the store, and don't mark this floor "initialized",
+      // since later resizes only re-clamp the existing zoom rather than
+      // recomputing it — locking in a bogus zoom forever otherwise.
+      if (!nextView) {
         return;
       }
 
-      const currentZoom = useAppStore.getState().viewportZoom;
-      setViewportView({
-        pan: clampPanToViewport(useAppStore.getState().viewportPan, floor, nextViewport, currentZoom),
-        zoom: currentZoom,
-      });
+      setViewportSize(nextViewport);
+      if (isFirstMeasurementForFloor) {
+        initializedFloorIdRef.current = floor.id;
+        pendingFocusRef.current = false;
+      }
+      setViewportView(nextView);
     };
 
     updateSize();
