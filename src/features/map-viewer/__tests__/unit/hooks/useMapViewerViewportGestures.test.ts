@@ -192,6 +192,78 @@ describe("useMapViewerViewportGestures", () => {
     expect(contentEl.style.transform).toBe("translate(-50px, -50px) scale(1.5)");
   });
 
+  it("uses viewport-local pinch coordinates when the canvas is offset on a phone layout", () => {
+    vi.mocked(viewportEl.getBoundingClientRect).mockReturnValue({
+      bottom: 1000,
+      height: 800,
+      left: 80,
+      right: 1080,
+      top: 200,
+      width: 1000,
+      x: 80,
+      y: 200,
+      toJSON: () => ({}),
+    });
+    const result = setup();
+
+    act(() => {
+      result.current.handleSvgPointerDown(makeEvent(svgEl, {
+        clientX: 180,
+        clientY: 300,
+        pointerId: 1,
+        pointerType: "touch",
+      }));
+      result.current.handleSvgPointerDown(makeEvent(svgEl, {
+        clientX: 280,
+        clientY: 300,
+        pointerId: 2,
+        pointerType: "touch",
+      }));
+      result.current.handleSvgPointerMove(makeEvent(svgEl, {
+        clientX: 330,
+        clientY: 300,
+        pointerId: 2,
+        pointerType: "touch",
+      }));
+    });
+
+    // Local points are still (100,100) and (250,100), so the map has the
+    // same stable transform as a viewport positioned at window origin.
+    expect(contentEl.style.transform).toBe("translate(-50px, -50px) scale(1.5)");
+  });
+
+  it("continues smoothly as one-finger pan when one pinch pointer lifts", () => {
+    const result = setup();
+
+    act(() => {
+      result.current.handleSvgPointerDown(makeEvent(svgEl, { clientX: 100, clientY: 100, pointerId: 1, pointerType: "touch" }));
+      result.current.handleSvgPointerDown(makeEvent(svgEl, { clientX: 200, clientY: 100, pointerId: 2, pointerType: "touch" }));
+      result.current.handleSvgPointerMove(makeEvent(svgEl, { clientX: 250, clientY: 100, pointerId: 2, pointerType: "touch" }));
+      result.current.handleSvgPointerUp(makeEvent(svgEl, { clientX: 250, clientY: 100, pointerId: 2, pointerType: "touch" }));
+      result.current.handleSvgPointerMove(makeEvent(svgEl, { clientX: 120, clientY: 100, pointerId: 1, pointerType: "touch" }));
+    });
+
+    expect(contentEl.style.transform).toBe("translate(-30px, -50px) scale(1.5)");
+    expect(useAppStore.getState().isViewportDragging).toBe(true);
+  });
+
+  it("keeps click suppression armed until the final pinch pointer is lifted", () => {
+    vi.useFakeTimers();
+    const result = setup();
+
+    act(() => {
+      result.current.handleSvgPointerDown(makeEvent(svgEl, { clientX: 100, clientY: 100, pointerId: 1, pointerType: "touch" }));
+      result.current.handleSvgPointerDown(makeEvent(svgEl, { clientX: 200, clientY: 100, pointerId: 2, pointerType: "touch" }));
+      result.current.handleSvgPointerMove(makeEvent(svgEl, { clientX: 250, clientY: 100, pointerId: 2, pointerType: "touch" }));
+      result.current.handleSvgPointerUp(makeEvent(svgEl, { clientX: 250, clientY: 100, pointerId: 2, pointerType: "touch" }));
+      vi.runOnlyPendingTimers();
+      result.current.handleSvgPointerUp(makeEvent(svgEl, { clientX: 100, clientY: 100, pointerId: 1, pointerType: "touch" }));
+    });
+
+    expect(result.current.consumeSuppressedClick()).toBe(true);
+    expect(result.current.consumeSuppressedClick()).toBe(false);
+  });
+
   it("accumulates rapid panByDelta calls within the same frame instead of overwriting them", () => {
     const result = setup();
 

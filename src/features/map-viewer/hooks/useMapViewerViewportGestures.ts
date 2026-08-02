@@ -103,6 +103,45 @@ export function useMapViewerViewportGestures({
     return { pan: state.viewportPan, zoom: state.viewportZoom };
   };
 
+  // Pan values are relative to the map viewport, while PointerEvent client
+  // coordinates are relative to the browser window. Mixing those spaces
+  // makes a pinch anchor jump by the page header/sidebar offset, which is
+  // especially visible on phones. Keep every tracked pointer viewport-local.
+  const getViewportPoint = (event: PointerEvent<SVGSVGElement>): Point => {
+    const rect = viewportRef.current?.getBoundingClientRect();
+    return {
+      x: event.clientX - (rect?.left ?? 0),
+      y: event.clientY - (rect?.top ?? 0),
+    };
+  };
+
+  const beginPinch = (pointers: Point[]) => {
+    if (pointers.length < 2) {
+      return false;
+    }
+
+    const [firstPointer, secondPointer] = pointers;
+    const midpoint = getMidpoint(firstPointer, secondPointer);
+    const initialDistance = getDistance(firstPointer, secondPointer);
+    if (initialDistance <= 0) {
+      return false;
+    }
+
+    const live = getLiveView();
+    pinchStateRef.current = {
+      initialDistance,
+      initialZoom: live.zoom,
+      worldCenter: {
+        x: (midpoint.x - live.pan.x) / live.zoom,
+        y: (midpoint.y - live.pan.y) / live.zoom,
+      },
+    };
+    dragStateRef.current = null;
+    suppressClickRef.current = true;
+    useAppStore.getState().setIsViewportDragging(false);
+    return true;
+  };
+
   useEffect(() => () => flushCommit(), []);
 
   const clearGestureState = (pointerId?: number) => {
@@ -254,10 +293,8 @@ export function useMapViewerViewportGestures({
 
     dragSurfaceRef.current = event.currentTarget;
     event.currentTarget.setPointerCapture(event.pointerId);
-    activePointersRef.current.set(event.pointerId, {
-      x: event.clientX,
-      y: event.clientY,
-    });
+    const pointer = getViewportPoint(event);
+    activePointersRef.current.set(event.pointerId, pointer);
     suppressClickRef.current = false;
 
     const pointers = Array.from(activePointersRef.current.values());
@@ -268,34 +305,14 @@ export function useMapViewerViewportGestures({
         didMove: false,
         originPan: getLiveView().pan,
         pointerId: event.pointerId,
-        start: {
-          x: event.clientX,
-          y: event.clientY,
-        },
+        start: pointer,
       };
       useAppStore.getState().setIsViewportDragging(true);
       return;
     }
 
     if (pointers.length === 2) {
-      const [firstPointer, secondPointer] = pointers;
-      const midpoint = getMidpoint(firstPointer, secondPointer);
-      const initialDistance = getDistance(firstPointer, secondPointer);
-
-      if (initialDistance > 0) {
-        const live = getLiveView();
-        pinchStateRef.current = {
-          initialDistance,
-          initialZoom: live.zoom,
-          worldCenter: {
-            x: (midpoint.x - live.pan.x) / live.zoom,
-            y: (midpoint.y - live.pan.y) / live.zoom,
-          },
-        };
-        dragStateRef.current = null;
-        suppressClickRef.current = true;
-        useAppStore.getState().setIsViewportDragging(false);
-      }
+      beginPinch(pointers);
     }
   };
 
@@ -304,10 +321,12 @@ export function useMapViewerViewportGestures({
       return;
     }
 
-    activePointersRef.current.set(event.pointerId, {
-      x: event.clientX,
-      y: event.clientY,
-    });
+    if (!activePointersRef.current.has(event.pointerId)) {
+      return;
+    }
+
+    const pointer = getViewportPoint(event);
+    activePointersRef.current.set(event.pointerId, pointer);
 
     const activePointers = Array.from(activePointersRef.current.values());
     const pinchState = pinchStateRef.current;
@@ -344,8 +363,8 @@ export function useMapViewerViewportGestures({
       return;
     }
 
-    const deltaX = event.clientX - dragState.start.x;
-    const deltaY = event.clientY - dragState.start.y;
+    const deltaX = pointer.x - dragState.start.x;
+    const deltaY = pointer.y - dragState.start.y;
 
     if (!dragState.didMove && Math.hypot(deltaX, deltaY) > MAP_VIEWER_DRAG_THRESHOLD) {
       dragState.didMove = true;
@@ -384,7 +403,23 @@ export function useMapViewerViewportGestures({
       flushCommit();
     }
 
-    if (didMove || suppressClickRef.current) {
+    const remainingPointers = Array.from(activePointersRef.current.entries());
+    if (remainingPointers.length >= 2) {
+      beginPinch(remainingPointers.map(([, point]) => point));
+    } else if (remainingPointers.length === 1 && suppressClickRef.current) {
+      const [pointerId, point] = remainingPointers[0];
+      dragStateRef.current = {
+        didMove: true,
+        originPan: getLiveView().pan,
+        pointerId,
+        start: point,
+      };
+      useAppStore.getState().setIsViewportDragging(true);
+    }
+
+    // Keep suppression armed until every finger is lifted. Clearing it after
+    // the first pointer-up lets the final synthetic click select an object.
+    if (activePointersRef.current.size === 0 && (didMove || suppressClickRef.current)) {
       window.setTimeout(() => {
         suppressClickRef.current = false;
       }, 0);

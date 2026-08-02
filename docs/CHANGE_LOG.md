@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [0.1.6] - 2026-08-02
+
+### Fixed
+- Fixed mobile pinch zoom using window-relative touch coordinates against viewport-relative pan state, which made the map jump or zoom around the wrong point whenever the canvas was offset by headers or sidebars. Pinch state now remains stable when a finger lifts, continues as one-finger pan, and suppresses the final synthetic click without changing ordinary object click/drag behavior.
+
 ## [0.1.5] - 2026-08-02
 
 ### Fixed
