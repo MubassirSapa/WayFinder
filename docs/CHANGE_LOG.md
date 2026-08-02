@@ -5,6 +5,9 @@
 ### Fixed
 - Fixed dragging to pan the map viewer not working when the gesture started on an object (room, hallway, connector, etc.) instead of empty canvas, on both mouse and touch. Objects now track their own drag distance and forward pan deltas once past the existing drag threshold, while still keeping native click/tap-to-select fully reliable.
 
+### Changed
+- Stopped the map viewer's whole page from re-rendering on every pan/zoom tick. Viewport state (pan, zoom, dragging) now lives in a dedicated store slice that only `MapViewerCanvas` subscribes to, instead of component-local state owned by the page shell; an active drag/pinch/wheel gesture writes the transform straight to the DOM via a ref and only syncs the store at most once per animation frame, so panning and zooming are now effectively free for the rest of the page (sidebar, header, toolbar).
+
 ## [0.1.4] - 2026-07-31
 
 ### Fixed

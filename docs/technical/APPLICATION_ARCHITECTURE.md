@@ -60,7 +60,7 @@ flowchart LR
     subgraph browserState ["Browser state"]
         appStore["Root Zustand store"]
         editorSlices["Editor, object, node, and edge slices"]
-        extensionSlices["Smart Builder and navigation slices"]
+        extensionSlices["Smart Builder, navigation, and map-viewer viewport slices"]
         signupSlice["Signup-flow slice"]
     end
 
@@ -105,6 +105,7 @@ flowchart LR
     smartBuilder --> appStore
     floorLinks --> appStore
     navigationFeature --> appStore
+    mapViewerFeature --> appStore
     appStore --> editorSlices
     appStore --> extensionSlices
     appStore --> signupSlice

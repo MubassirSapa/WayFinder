@@ -3,6 +3,7 @@ import { createEditorSlice } from '../../../store/createEditorSlice'
 import { createNodeSlice } from '../../../store/createNodeSlice'
 import { createObjectSlice } from '../../../store/createObjectSlice'
 import { createEdgeSlice } from '../../../store/createEdgeSlice'
+import { createMapViewerViewportSlice } from '@/features/map-viewer/store/createMapViewerViewportSlice'
 import type { AppStore } from '@/store/types'
 
 export function makeStore() {
@@ -11,6 +12,7 @@ export function makeStore() {
     ...createObjectSlice(...args),
     ...createNodeSlice(...args),
     ...createEdgeSlice(...args),
+    ...createMapViewerViewportSlice(...args),
     // SmartBuilderSlice stubs — not under test here
     isSmartBuilderEnabled: false,
     autoCreateNodes: false,

@@ -3,6 +3,9 @@ import type {
   RefObject,
 } from "react";
 
+import { useAppStore } from "@/store";
+
+import { buildPanZoomTransform } from "../lib/mapViewerTransform";
 import { getRenderedFloorSize } from "../lib/mapViewerViewport";
 import type {
   ConnectorTargetInfo,
@@ -16,16 +19,14 @@ import { MapViewerSvg } from "./MapViewerSvg";
 interface MapViewerCanvasProps {
   activeFloor: ViewerFloor | null;
   connectorTargetsByNodeId: Record<string, ConnectorTargetInfo[]>;
+  contentRef: RefObject<HTMLDivElement | null>;
   edges: ViewerPathEdge[];
-  isDragging: boolean;
   nodes: ViewerMapNode[];
   objects: ViewerMapObject[];
-  pan: { x: number; y: number };
   routePoints?: { x: number; y: number }[];
   selectedObjectId: string | null;
   showGrid: boolean;
   viewportRef: RefObject<HTMLDivElement | null>;
-  zoom: number;
   onBackgroundClick: () => void;
   onConnectorActivate: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
   onObjectPan: (deltaX: number, deltaY: number) => void;
@@ -41,16 +42,14 @@ interface MapViewerCanvasProps {
 export function MapViewerCanvas({
   activeFloor,
   connectorTargetsByNodeId,
+  contentRef,
   edges,
-  isDragging,
   nodes,
   objects,
-  pan,
   routePoints,
   selectedObjectId,
   showGrid,
   viewportRef,
-  zoom,
   onBackgroundClick,
   onConnectorActivate,
   onObjectPan,
@@ -62,6 +61,15 @@ export function MapViewerCanvas({
   onSvgPointerMove,
   onSvgPointerUp,
 }: MapViewerCanvasProps) {
+  // Scoped to just this component so a pan/zoom tick only re-renders the
+  // canvas — the rest of the page (sidebar, header, toolbar) never reads
+  // these and stays untouched. During an active drag/pinch/wheel gesture the
+  // visual transform is already applied straight to contentRef's DOM node
+  // (see useMapViewerViewportGestures); this render just needs to agree with
+  // that value once React catches up, and to drive the "Zoom X%" readout.
+  const pan = useAppStore((state) => state.viewportPan);
+  const zoom = useAppStore((state) => state.viewportZoom);
+  const isDragging = useAppStore((state) => state.isViewportDragging);
   const renderedSize = activeFloor ? getRenderedFloorSize(activeFloor) : null;
 
   return (
@@ -90,9 +98,10 @@ export function MapViewerCanvas({
         ) : (
           <div
             className="absolute left-0 top-0 will-change-transform"
+            ref={contentRef}
             style={{
               height: renderedSize?.height,
-              transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+              transform: buildPanZoomTransform(pan, zoom),
               transformOrigin: "0 0",
               width: renderedSize?.width,
             }}

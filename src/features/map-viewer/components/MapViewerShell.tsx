@@ -1,6 +1,6 @@
 'use client';
 
-import { useDeferredValue, useEffect, useMemo, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useMemo, useState } from "react";
 
 import { FloorHopIndicator } from "@/features/navigation/components/FloorHopIndicator";
 import { MapSelectionBar } from "@/features/navigation/components/MapSelectionBar";
@@ -67,6 +67,12 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
   const [search, setSearch] = useState("");
   const deferredSearch = useDeferredValue(search);
   const [showGrid, setShowGrid] = useState(false);
+  // Stable reference for MapViewerToolbar (memoized) — the inline arrow this
+  // replaced was a fresh function every MapViewerShell render, which defeats
+  // memo on its own regardless of how stable the other props are.
+  const handleToggleGrid = useCallback(() => {
+    setShowGrid((current) => !current);
+  }, []);
   const floors = data.floors;
   const activeFloor = floors.find((floor) => floor.id === activeFloorId) ?? null;
   const objects = activeFloor ? data.objectsByFloorId[activeFloor.id] ?? [] : [];
@@ -78,14 +84,12 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
   const {
     changeZoom,
     consumeSuppressedClick,
+    contentRef,
     focusWorldBounds,
     focusWorldPoint,
-    isDragging,
-    pan,
     panByDelta,
     resetView,
     viewportRef,
-    zoom,
     handleSvgPointerDown,
     handleSvgPointerMove,
     handleSvgPointerUp,
@@ -182,7 +186,12 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
   // jump) — keeps activeFloorId and activeSegmentIndex from drifting apart,
   // which used to hide the route line and desync the breadcrumb/route panel
   // "you're here" highlight from whatever floor was actually on screen.
-  const goToFloor = (floorId: string) => {
+  //
+  // Wrapped in useCallback (and handleFloorChange/handleJumpToSegment below)
+  // so MapViewerPageHeader/MapViewerToolbar (both memoized) see a stable
+  // function reference across renders that don't actually change floor/route
+  // state — e.g. selecting an object — instead of re-rendering every time.
+  const goToFloor = useCallback((floorId: string) => {
     setActiveFloorId(floorId);
     setSelectedObjectId(null);
 
@@ -190,12 +199,12 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
     if (matchingSegmentIndex !== -1) {
       setActiveSegmentIndex(matchingSegmentIndex);
     }
-  };
+  }, [segments, setActiveFloorId, setActiveSegmentIndex]);
 
-  const handleFloorChange = (floorId: string) => {
+  const handleFloorChange = useCallback((floorId: string) => {
     goToFloor(floorId);
     setSearch("");
-  };
+  }, [goToFloor]);
 
   const focusConnectorTarget = (target: ConnectorTargetInfo) => {
     focusWorldBounds({
@@ -243,7 +252,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
     }
   };
 
-  const handleJumpToSegment = (index: number) => {
+  const handleJumpToSegment = useCallback((index: number) => {
     const segment = segments[index];
     if (!segment) {
       return;
@@ -256,7 +265,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
     if (bounds) {
       focusWorldBounds(bounds);
     }
-  };
+  }, [segments, setActiveSegmentIndex, setActiveFloorId, nodesById, focusWorldBounds]);
 
   const selectedObject = objects.find((object) => object.id === selectedObjectId) ?? null;
   const searchableObjects = objects
@@ -381,7 +390,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
               floors={floors}
               onJumpToSegment={handleJumpToSegment}
               onResetView={resetView}
-              onToggleGrid={() => setShowGrid((current) => !current)}
+              onToggleGrid={handleToggleGrid}
               onZoomChange={changeZoom}
               segments={segments}
               showGrid={showGrid}
@@ -389,8 +398,8 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
             <MapViewerCanvas
               activeFloor={activeFloor}
               connectorTargetsByNodeId={connectorTargetsByNodeId}
+              contentRef={contentRef}
               edges={edges}
-              isDragging={isDragging}
               nodes={nodes}
               objects={objects}
               onBackgroundClick={handleBackgroundClick}
@@ -403,12 +412,10 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
               onSvgPointerDown={handleSvgPointerDown}
               onSvgPointerMove={handleSvgPointerMove}
               onSvgPointerUp={handleSvgPointerUp}
-              pan={pan}
               routePoints={routePointsForActiveFloor}
               selectedObjectId={selectedObjectId}
               showGrid={showGrid}
               viewportRef={viewportRef}
-              zoom={zoom}
             />
             {selectedObject ? (
               <MapSelectionBar

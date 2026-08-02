@@ -1,24 +1,17 @@
-import { useEffect, useRef, useState } from "react";
-import type { PointerEvent } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-import { MAP_VIEWER_DRAG_THRESHOLD } from "../constants/mapViewer.constants";
+import { useAppStore } from "@/store";
+
 import {
   clampPanToViewport,
   clampZoom,
   getDefaultViewState,
-  getDistance,
   getFitBoundsView,
-  getMidpoint,
   type Point,
   type WorldBounds,
 } from "../lib/mapViewerViewport";
 import type { ViewerFloor } from "../types/map-viewer.types";
-
-interface PinchState {
-  initialDistance: number;
-  initialZoom: number;
-  worldCenter: Point;
-}
+import { useMapViewerViewportGestures } from "./useMapViewerViewportGestures";
 
 interface UseMapViewerViewportArgs {
   activeFloor: ViewerFloor | null;
@@ -26,6 +19,13 @@ interface UseMapViewerViewportArgs {
   floors: ViewerFloor[];
 }
 
+// Pan/zoom themselves live in the app store (see createMapViewerViewportSlice
+// and useMapViewerViewportGestures) rather than as useState here, precisely
+// so that calling this hook from MapViewerShell doesn't subscribe the whole
+// shell to every pan/zoom tick — only components that actually render pan or
+// zoom (MapViewerCanvas) read them, via their own store selector. Everything
+// in this file only reads/writes the store imperatively via getState/actions,
+// never via a reactive selector, to keep that guarantee.
 export function useMapViewerViewport({
   activeFloor,
   activeFloorId,
@@ -33,21 +33,20 @@ export function useMapViewerViewport({
 }: UseMapViewerViewportArgs) {
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const [viewportSize, setViewportSize] = useState<Point>({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
-  const [pan, setPan] = useState<Point>({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
   const initializedFloorIdRef = useRef<string | null>(null);
   const pendingFocusRef = useRef(false);
-  const suppressClickRef = useRef(false);
-  const dragSurfaceRef = useRef<SVGSVGElement | null>(null);
-  const activePointersRef = useRef<Map<number, Point>>(new Map());
-  const pinchStateRef = useRef<PinchState | null>(null);
-  const dragStateRef = useRef<{
-    didMove: boolean;
-    originPan: Point;
-    pointerId: number;
-    start: Point;
-  } | null>(null);
+
+  const {
+    consumeSuppressedClick,
+    contentRef,
+    panByDelta,
+    handleSvgPointerDown,
+    handleSvgPointerMove,
+    handleSvgPointerUp,
+    handleViewportPointerCancel,
+    handleViewportPointerLeave,
+    handleViewportPointerUp,
+  } = useMapViewerViewportGestures({ activeFloor, viewportRef, viewportSize });
 
   useEffect(() => {
     const element = viewportRef.current;
@@ -70,6 +69,8 @@ export function useMapViewerViewport({
         return;
       }
 
+      const { setViewportView } = useAppStore.getState();
+
       if (initializedFloorIdRef.current !== floor.id) {
         initializedFloorIdRef.current = floor.id;
 
@@ -78,17 +79,24 @@ export function useMapViewerViewport({
         // of overriding it with the floor's default fit-to-view.
         if (pendingFocusRef.current) {
           pendingFocusRef.current = false;
-          setPan((currentPan) => clampPanToViewport(currentPan, floor, nextViewport, zoom));
+          const currentPan = useAppStore.getState().viewportPan;
+          const currentZoom = useAppStore.getState().viewportZoom;
+          setViewportView({
+            pan: clampPanToViewport(currentPan, floor, nextViewport, currentZoom),
+            zoom: currentZoom,
+          });
           return;
         }
 
-        const defaultView = getDefaultViewState(floor, nextViewport);
-        setZoom(defaultView.zoom);
-        setPan(defaultView.pan);
+        setViewportView(getDefaultViewState(floor, nextViewport));
         return;
       }
 
-      setPan((currentPan) => clampPanToViewport(currentPan, floor, nextViewport, zoom));
+      const currentZoom = useAppStore.getState().viewportZoom;
+      setViewportView({
+        pan: clampPanToViewport(useAppStore.getState().viewportPan, floor, nextViewport, currentZoom),
+        zoom: currentZoom,
+      });
     };
 
     updateSize();
@@ -97,38 +105,29 @@ export function useMapViewerViewport({
     observer.observe(element);
 
     return () => observer.disconnect();
-  }, [activeFloorId, floors, zoom]);
+  }, [activeFloorId, floors]);
 
-  const clearGestureState = (pointerId?: number) => {
-    if (
-      pointerId !== undefined
-      && dragSurfaceRef.current?.hasPointerCapture(pointerId)
-    ) {
-      dragSurfaceRef.current.releasePointerCapture(pointerId);
-    }
-
-    activePointersRef.current.delete(pointerId ?? -1);
-    pinchStateRef.current = null;
-    dragStateRef.current = null;
-    setIsDragging(false);
-  };
-
-  const changeZoom = (direction: "in" | "out") => {
-    const nextZoom = clampZoom(direction === "in" ? zoom * 1.15 : zoom / 1.15, viewportSize.x);
+  // changeZoom/resetView/focusWorldBounds are wrapped in useCallback because
+  // they're threaded down to MapViewerToolbar (memoized — see
+  // MapViewerToolbar.tsx), which otherwise sees a "changed" prop on every
+  // MapViewerShell render (e.g. a selection click) and re-renders for no
+  // reason, even though activeFloor/viewportSize didn't actually change.
+  const changeZoom = useCallback((direction: "in" | "out") => {
+    const { viewportPan, viewportZoom, setViewportView } = useAppStore.getState();
+    const nextZoom = clampZoom(direction === "in" ? viewportZoom * 1.15 : viewportZoom / 1.15, viewportSize.x);
 
     if (!activeFloor) {
-      setZoom(nextZoom);
+      setViewportView({ pan: viewportPan, zoom: nextZoom });
       return;
     }
 
     const centerX = viewportSize.x / 2;
     const centerY = viewportSize.y / 2;
-    const worldX = (centerX - pan.x) / zoom;
-    const worldY = (centerY - pan.y) / zoom;
+    const worldX = (centerX - viewportPan.x) / viewportZoom;
+    const worldY = (centerY - viewportPan.y) / viewportZoom;
 
-    setZoom(nextZoom);
-    setPan(
-      clampPanToViewport(
+    setViewportView({
+      pan: clampPanToViewport(
         {
           x: centerX - worldX * nextZoom,
           y: centerY - worldY * nextZoom,
@@ -137,10 +136,11 @@ export function useMapViewerViewport({
         viewportSize,
         nextZoom,
       ),
-    );
-  };
+      zoom: nextZoom,
+    });
+  }, [activeFloor, viewportSize]);
 
-  const resetView = () => {
+  const resetView = useCallback(() => {
     const nextViewport = viewportRef.current
       ? {
           x: viewportRef.current.clientWidth,
@@ -152,294 +152,44 @@ export function useMapViewerViewport({
       return;
     }
 
-    const defaultView = getDefaultViewState(activeFloor, nextViewport);
-    setZoom(defaultView.zoom);
-    setPan(defaultView.pan);
-  };
+    useAppStore.getState().setViewportView(getDefaultViewState(activeFloor, nextViewport));
+  }, [activeFloor, viewportSize]);
 
   const focusWorldPoint = (worldPoint: Point) => {
     if (!activeFloor) {
       return;
     }
 
+    const { viewportZoom, setViewportView } = useAppStore.getState();
     const nextPan = {
-      x: viewportSize.x / 2 - worldPoint.x * zoom,
-      y: viewportSize.y / 2 - worldPoint.y * zoom,
+      x: viewportSize.x / 2 - worldPoint.x * viewportZoom,
+      y: viewportSize.y / 2 - worldPoint.y * viewportZoom,
     };
 
-    setPan(clampPanToViewport(nextPan, activeFloor, viewportSize, zoom));
+    setViewportView({
+      pan: clampPanToViewport(nextPan, activeFloor, viewportSize, viewportZoom),
+      zoom: viewportZoom,
+    });
   };
 
-  const focusWorldBounds = (bounds: WorldBounds) => {
+  const focusWorldBounds = useCallback((bounds: WorldBounds) => {
     if (viewportSize.x === 0 || viewportSize.y === 0) {
       return;
     }
 
     pendingFocusRef.current = true;
-    const fitView = getFitBoundsView(bounds, viewportSize);
-    setZoom(fitView.zoom);
-    setPan(fitView.pan);
-  };
-
-  // Lets a drag that starts on an object (which keeps its own pointer
-  // capture — see MapViewerSvg.tsx's ViewerObjects — so its native click
-  // stays reliable) still pan the map, by applying the same delta this
-  // hook's own background-drag handling would have applied.
-  const panByDelta = (deltaX: number, deltaY: number) => {
-    if (!activeFloor) {
-      return;
-    }
-
-    setPan((current) =>
-      clampPanToViewport(
-        { x: current.x + deltaX, y: current.y + deltaY },
-        activeFloor,
-        viewportSize,
-        zoom,
-      ),
-    );
-  };
-
-  const consumeSuppressedClick = () => {
-    if (!suppressClickRef.current) {
-      return false;
-    }
-
-    suppressClickRef.current = false;
-    return true;
-  };
-
-  const handleViewportPointerCancel = () => {
-    const didMove = dragStateRef.current?.didMove;
-    const pointerId = dragStateRef.current?.pointerId;
-    if (pointerId !== undefined) {
-      clearGestureState(pointerId);
-    } else {
-      pinchStateRef.current = null;
-      dragStateRef.current = null;
-      setIsDragging(false);
-    }
-    activePointersRef.current.clear();
-    if (didMove) {
-      window.setTimeout(() => {
-        suppressClickRef.current = false;
-      }, 0);
-    }
-  };
-
-  const handleViewportPointerLeave = () => {
-    if (!dragSurfaceRef.current || !dragStateRef.current) {
-      return;
-    }
-
-    if (!dragSurfaceRef.current.hasPointerCapture(dragStateRef.current.pointerId)) {
-      dragStateRef.current = null;
-      setIsDragging(false);
-    }
-  };
-
-  const handleViewportPointerUp = (event: PointerEvent<HTMLDivElement>) => {
-    if (dragStateRef.current?.pointerId === event.pointerId) {
-      clearGestureState(event.pointerId);
-    }
-  };
-
-  // Registered as a native, non-passive listener (not a React onWheel prop)
-  // deliberately: React attaches wheel listeners at the root as passive by
-  // default, which silently blocks event.preventDefault() from working —
-  // the map would zoom, but the browser's own page zoom/scroll would fire
-  // right alongside it. A real addEventListener with { passive: false } is
-  // the only way to actually suppress the native behavior.
-  useEffect(() => {
-    const element = viewportRef.current;
-    if (!element) {
-      return;
-    }
-
-    const handleWheel = (event: globalThis.WheelEvent) => {
-      event.preventDefault();
-
-      const nextZoom = clampZoom(
-        event.deltaY > 0 ? zoom / 1.08 : zoom * 1.08,
-        viewportSize.x,
-      );
-      const viewportRect = element.getBoundingClientRect();
-
-      if (!activeFloor) {
-        setZoom(nextZoom);
-        return;
-      }
-
-      const pointerX = event.clientX - viewportRect.left;
-      const pointerY = event.clientY - viewportRect.top;
-      const worldX = (pointerX - pan.x) / zoom;
-      const worldY = (pointerY - pan.y) / zoom;
-
-      setZoom(nextZoom);
-      setPan(
-        clampPanToViewport(
-          {
-            x: pointerX - worldX * nextZoom,
-            y: pointerY - worldY * nextZoom,
-          },
-          activeFloor,
-          viewportSize,
-          nextZoom,
-        ),
-      );
-    };
-
-    element.addEventListener("wheel", handleWheel, { passive: false });
-    return () => element.removeEventListener("wheel", handleWheel);
-  }, [activeFloor, pan, viewportSize, zoom]);
-
-  const handleSvgPointerDown = (event: PointerEvent<SVGSVGElement>) => {
-    if (
-      !activeFloor
-      || (event.pointerType === "mouse" && event.button !== 0)
-    ) {
-      return;
-    }
-
-    dragSurfaceRef.current = event.currentTarget;
-    event.currentTarget.setPointerCapture(event.pointerId);
-    activePointersRef.current.set(event.pointerId, {
-      x: event.clientX,
-      y: event.clientY,
-    });
-    suppressClickRef.current = false;
-
-    const pointers = Array.from(activePointersRef.current.values());
-
-    if (pointers.length === 1) {
-      pinchStateRef.current = null;
-      dragStateRef.current = {
-        didMove: false,
-        originPan: pan,
-        pointerId: event.pointerId,
-        start: {
-          x: event.clientX,
-          y: event.clientY,
-        },
-      };
-      setIsDragging(true);
-      return;
-    }
-
-    if (pointers.length === 2) {
-      const [firstPointer, secondPointer] = pointers;
-      const midpoint = getMidpoint(firstPointer, secondPointer);
-      const initialDistance = getDistance(firstPointer, secondPointer);
-
-      if (initialDistance > 0) {
-        pinchStateRef.current = {
-          initialDistance,
-          initialZoom: zoom,
-          worldCenter: {
-            x: (midpoint.x - pan.x) / zoom,
-            y: (midpoint.y - pan.y) / zoom,
-          },
-        };
-        dragStateRef.current = null;
-        suppressClickRef.current = true;
-        setIsDragging(false);
-      }
-    }
-  };
-
-  const handleSvgPointerMove = (event: PointerEvent<SVGSVGElement>) => {
-    if (!activeFloor) {
-      return;
-    }
-
-    activePointersRef.current.set(event.pointerId, {
-      x: event.clientX,
-      y: event.clientY,
-    });
-
-    const activePointers = Array.from(activePointersRef.current.values());
-    const pinchState = pinchStateRef.current;
-
-    if (pinchState && activePointers.length >= 2) {
-      const [firstPointer, secondPointer] = activePointers;
-      const currentDistance = getDistance(firstPointer, secondPointer);
-
-      if (currentDistance > 0) {
-        const midpoint = getMidpoint(firstPointer, secondPointer);
-        const nextZoom = clampZoom(
-          pinchState.initialZoom * (currentDistance / pinchState.initialDistance),
-          viewportSize.x,
-        );
-        const nextPan = {
-          x: midpoint.x - pinchState.worldCenter.x * nextZoom,
-          y: midpoint.y - pinchState.worldCenter.y * nextZoom,
-        };
-
-        setZoom(nextZoom);
-        setPan(clampPanToViewport(nextPan, activeFloor, viewportSize, nextZoom));
-      }
-      return;
-    }
-
-    const dragState = dragStateRef.current;
-
-    if (!dragState) {
-      return;
-    }
-
-    const deltaX = event.clientX - dragState.start.x;
-    const deltaY = event.clientY - dragState.start.y;
-
-    if (!dragState.didMove && Math.hypot(deltaX, deltaY) > MAP_VIEWER_DRAG_THRESHOLD) {
-      dragState.didMove = true;
-      suppressClickRef.current = true;
-    }
-
-    setPan(
-      clampPanToViewport(
-        {
-          x: dragState.originPan.x + deltaX,
-          y: dragState.originPan.y + deltaY,
-        },
-        activeFloor,
-        viewportSize,
-        zoom,
-      ),
-    );
-  };
-
-  const handleSvgPointerUp = (event: PointerEvent<SVGSVGElement>) => {
-    const didMove = dragStateRef.current?.didMove;
-    activePointersRef.current.delete(event.pointerId);
-    pinchStateRef.current = null;
-
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
-
-    if (dragStateRef.current?.pointerId === event.pointerId) {
-      dragStateRef.current = null;
-      setIsDragging(false);
-    }
-
-    if (didMove || suppressClickRef.current) {
-      window.setTimeout(() => {
-        suppressClickRef.current = false;
-      }, 0);
-    }
-  };
+    useAppStore.getState().setViewportView(getFitBoundsView(bounds, viewportSize));
+  }, [viewportSize]);
 
   return {
     changeZoom,
     consumeSuppressedClick,
+    contentRef,
     focusWorldBounds,
     focusWorldPoint,
-    isDragging,
-    pan,
     panByDelta,
     resetView,
     viewportRef,
-    zoom,
     handleSvgPointerDown,
     handleSvgPointerMove,
     handleSvgPointerUp,

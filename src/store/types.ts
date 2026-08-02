@@ -6,6 +6,7 @@ import type {
 } from "@/features/map-editor/core/store/types";
 import type { SmartBuilderSlice } from "@/features/map-editor/smart-builder/store/createSmartBuilderSlice";
 import type { SignupFlowSlice } from "@/features/auth/store/createSignupFlowSlice";
+import type { MapViewerViewportSlice } from "@/features/map-viewer/store/createMapViewerViewportSlice";
 import type { NavigationSlice } from "@/features/navigation/store/createNavigationSlice";
 
 export type AppStore =
@@ -15,11 +16,13 @@ export type AppStore =
   & EdgeSlice
   & SmartBuilderSlice
   & NavigationSlice
-  & SignupFlowSlice;
+  & SignupFlowSlice
+  & MapViewerViewportSlice;
 
 export type {
   EdgeSlice,
   EditorSlice,
+  MapViewerViewportSlice,
   NavigationSlice,
   NodeSlice,
   ObjectSlice,
