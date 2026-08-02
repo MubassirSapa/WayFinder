@@ -9,7 +9,7 @@
   "orientation": "any",
   "background_color": "#0c7564",
   "theme_color": "#000201",
-  "categories": ["navigation", "travel", "utilities"],
+  "categories": ["navigation", "travel", "utilities", "indoor"],
   "lang": "en",
   "dir": "ltr",
   "icons": [

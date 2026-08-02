@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [0.1.9] - 2026-08-02
+
+### Changed
+- Locked the application viewport to device width at 1× scale to prevent browser-level page zoom, declared Apple web-app capable metadata with the WayFinder install title and device-specific startup screens, and synchronized browser chrome with the light/dark application color schemes.
+
 ## [0.1.8] - 2026-08-02
 
 ### Added
