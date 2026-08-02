@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Added
+- Added the Wayfinder web app manifest with installable-app identity, standalone display behavior, brand colors, navigation categories, and favicon metadata.
+
 ## [0.1.7] - 2026-08-02
 
 ### Fixed
