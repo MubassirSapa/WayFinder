@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Fixed
+- Fixed the map canvas route-floor selector overlapping its trigger on wide screens instead of opening below it.
 - Fixed dragging to pan the map viewer not working when the gesture started on an object (room, hallway, connector, etc.) instead of empty canvas, on both mouse and touch. Objects now track their own drag distance and forward pan deltas once past the existing drag threshold, while still keeping native click/tap-to-select fully reliable.
 - Fixed the map viewer occasionally locking onto a wrong zoom level for the rest of the session (most noticeable on a mobile hard reload). A 0×0 viewport measurement — possible on the very first layout read, before hydration settles — was being treated as real and used to compute the default view; later, correctly-sized measurements only re-clamp the existing zoom rather than recomputing it, so the bogus value never corrected itself.
 
@@ -10,6 +11,7 @@
 - Added a route-connector highlight to the map viewer: the specific stairs/elevator/escalator a multi-floor route continues through on the active floor now gets a route-colored outline on its object shape and a pulsing beacon ring on its marker, so it's obvious at a glance which connector to use when a floor has more than one. An explicit selection still visually takes priority over the highlight.
 
 ### Changed
+- Replaced the map canvas's unbounded route breadcrumb with a responsive floor-route selector. The compact floating trigger shows the active floor and route position, while its keyboard-accessible popup lists connector context and caps its height at approximately six floors before scrolling, preventing long routes from covering the map on mobile or desktop.
 - Replaced the hand-built demo seed blueprints with production-style exported map fixtures covering five floors, 107 objects, 163 nodes, and 178 source edges. The idempotent seeder now remaps exported relationship IDs when importing, assigns sequential floor levels, fills in missing connector objects and nodes, and links every adjacent floor with stairs, elevator, and escalator edges for repeatable multi-floor tests.
 - Stopped the map viewer's whole page from re-rendering on every pan/zoom tick. Viewport state (pan, zoom, dragging) now lives in a dedicated store slice that only `MapViewerCanvas` subscribes to, instead of component-local state owned by the page shell; an active drag/pinch/wheel gesture writes the transform straight to the DOM via a ref and only syncs the store at most once per animation frame, so panning and zooming are now effectively free for the rest of the page (sidebar, header, toolbar).
 - Memoized `MapViewerSvg` so `MapViewerCanvas`'s own pan/zoom-driven re-renders no longer re-run the `.map()` over every room, hallway, and connector on the active floor — none of its props depend on pan/zoom, so panning now costs nothing proportional to floor size.

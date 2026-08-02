@@ -1,19 +1,12 @@
-import { Fragment, memo } from "react";
+import { memo } from "react";
 
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Grid2x2, Minus, Move, Plus } from "lucide-react";
 
 import { formatFloorLabel } from "../lib/mapViewerViewport";
 import type { RouteFloorSegment } from "@/features/navigation/types/navigation.types";
 import type { ViewerFloor } from "../types/map-viewer.types";
+import { RouteFloorSelect } from "./RouteFloorSelect";
 
 interface MapViewerToolbarProps {
   activeFloor: ViewerFloor | null;
@@ -43,35 +36,16 @@ export const MapViewerToolbar = memo(function MapViewerToolbar({
   return (
     <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between gap-3 border-b border-border bg-card/85 px-3 py-2.5 backdrop-blur-xl sm:px-4 sm:py-3">
       {segments.length > 1 ? (
-        <Breadcrumb className="min-w-0">
-          <BreadcrumbList className="flex-nowrap text-sm">
-            {segments.map((segment, index) => {
-              const segmentFloor = floors.find((floor) => floor.id === segment.floorId);
-              const label = segmentFloor?.name ?? "Floor";
-              const isActive = index === activeSegmentIndex;
-
-              return (
-                <Fragment key={segment.floorId + index}>
-                  {index > 0 ? <BreadcrumbSeparator /> : null}
-                  <BreadcrumbItem>
-                    {isActive ? (
-                      <BreadcrumbPage className="font-semibold text-foreground">{label}</BreadcrumbPage>
-                    ) : (
-                      <BreadcrumbLink
-                        onClick={() => onJumpToSegment(index)}
-                        render={<button type="button" />}
-                      >
-                        {label}
-                      </BreadcrumbLink>
-                    )}
-                  </BreadcrumbItem>
-                </Fragment>
-              );
-            })}
-          </BreadcrumbList>
-        </Breadcrumb>
+        <div className="min-w-0 flex-1">
+          <RouteFloorSelect
+            activeSegmentIndex={activeSegmentIndex}
+            floors={floors}
+            onJumpToSegment={onJumpToSegment}
+            segments={segments}
+          />
+        </div>
       ) : (
-        <p className="text-sm font-medium">
+        <p className="min-w-0 flex-1 truncate text-sm font-medium">
           {activeFloor
             ? `${activeFloor.name} • ${formatFloorLabel(activeFloor)}`
             : "No published floor"}
