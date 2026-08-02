@@ -27,7 +27,12 @@ export function WayfinderBrand({
       >
         <Compass className="size-4" aria-hidden />
       </span>
-      <span className={cn("text-lg font-semibold tracking-normal text-foreground", textClassName)}>
+      <span
+        className={cn(
+          "text-lg font-semibold tracking-normal text-foreground",
+          textClassName,
+        )}
+      >
         {BRAND.NAME}
       </span>
     </>
@@ -35,11 +40,18 @@ export function WayfinderBrand({
 
   if (href) {
     return (
-      <Link className={cn("inline-flex items-center gap-3", className)} href={href}>
+      <Link
+        className={cn("inline-flex items-center gap-3", className)}
+        href={href}
+      >
         {content}
       </Link>
     );
   }
 
-  return <div className={cn("inline-flex items-center gap-3", className)}>{content}</div>;
+  return (
+    <div className={cn("inline-flex items-center gap-3", className)}>
+      {content}
+    </div>
+  );
 }
