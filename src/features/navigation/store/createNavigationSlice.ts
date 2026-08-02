@@ -24,7 +24,7 @@ export const createNavigationSlice: StateCreator<AppStore, [], [], NavigationSli
   accessibleOnly: false,
   activeFloorId: null,
   activeSegmentIndex: 0,
-  clearRoute: () => set({ activeSegmentIndex: 0, destinationNodeId: null }),
+  clearRoute: () => set({ activeSegmentIndex: 0, destinationNodeId: null, originNodeId: null }),
   destinationNodeId: null,
   originNodeId: null,
   resetNavigation: () => set({

@@ -168,27 +168,6 @@ export function useMapViewerViewportGestures({
     return true;
   };
 
-  // Lets a drag that starts on an object (which keeps its own pointer
-  // capture — see MapViewerSvg.tsx's ViewerObjectItem, so its native click
-  // stays reliable) still pan the map, through the same fast path a
-  // background drag uses.
-  const panByDelta = (deltaX: number, deltaY: number) => {
-    if (!activeFloor) {
-      return;
-    }
-
-    const live = getLiveView();
-    const nextPan = clampPanToViewport(
-      { x: live.pan.x + deltaX, y: live.pan.y + deltaY },
-      activeFloor,
-      viewportSize,
-      live.zoom,
-    );
-
-    applyTransform(nextPan, live.zoom);
-    scheduleCommit(nextPan, live.zoom);
-  };
-
   const handleViewportPointerCancel = () => {
     const didMove = dragStateRef.current?.didMove;
     const pointerId = dragStateRef.current?.pointerId;
@@ -429,7 +408,6 @@ export function useMapViewerViewportGestures({
   return {
     consumeSuppressedClick,
     contentRef,
-    panByDelta,
     handleSvgPointerDown,
     handleSvgPointerMove,
     handleSvgPointerUp,

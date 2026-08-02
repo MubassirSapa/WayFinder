@@ -40,7 +40,6 @@ export function useMapViewerViewport({
   const {
     consumeSuppressedClick,
     contentRef,
-    panByDelta,
     handleSvgPointerDown,
     handleSvgPointerMove,
     handleSvgPointerUp,
@@ -184,7 +183,6 @@ export function useMapViewerViewport({
     contentRef,
     focusWorldBounds,
     focusWorldPoint,
-    panByDelta,
     resetView,
     viewportRef,
     handleSvgPointerDown,

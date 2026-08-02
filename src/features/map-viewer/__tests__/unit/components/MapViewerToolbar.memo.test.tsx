@@ -27,6 +27,7 @@ const emptySegments: RouteFloorSegment[] = [];
 // for each floor option. That stable call count is a
 // reliable proxy for "did this component subtree execute again".
 const stableHandlers = {
+  onClearRoute: vi.fn(),
   onFloorChange: vi.fn(),
   onJumpToSegment: vi.fn(),
   onResetView: vi.fn(),

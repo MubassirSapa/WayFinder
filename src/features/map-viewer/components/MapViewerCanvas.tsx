@@ -26,13 +26,14 @@ interface MapViewerCanvasProps {
   objects: ViewerMapObject[];
   routeConnectorDirection: ConnectorDirection | null;
   routeConnectorNodeId: string | null;
+  routeHasDestination?: boolean;
+  routeHasStart?: boolean;
   routePoints?: { x: number; y: number }[];
   selectedObjectId: string | null;
   showGrid: boolean;
   viewportRef: RefObject<HTMLDivElement | null>;
   onBackgroundClick: () => void;
   onConnectorActivate: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
-  onObjectPan: (deltaX: number, deltaY: number) => void;
   onObjectSelect: (object: ViewerMapObject) => void;
   onPointerCancel: PointerEventHandler<HTMLDivElement>;
   onPointerLeave: PointerEventHandler<HTMLDivElement>;
@@ -51,13 +52,14 @@ export function MapViewerCanvas({
   objects,
   routeConnectorDirection,
   routeConnectorNodeId,
+  routeHasDestination,
+  routeHasStart,
   routePoints,
   selectedObjectId,
   showGrid,
   viewportRef,
   onBackgroundClick,
   onConnectorActivate,
-  onObjectPan,
   onObjectSelect,
   onPointerCancel,
   onPointerLeave,
@@ -119,13 +121,14 @@ export function MapViewerCanvas({
               objects={objects}
               onBackgroundClick={onBackgroundClick}
               onConnectorActivate={onConnectorActivate}
-              onObjectPan={onObjectPan}
               onObjectSelect={onObjectSelect}
               onPointerDown={onSvgPointerDown}
               onPointerMove={onSvgPointerMove}
               onPointerUp={onSvgPointerUp}
               routeConnectorDirection={routeConnectorDirection}
               routeConnectorNodeId={routeConnectorNodeId}
+              routeHasDestination={routeHasDestination}
+              routeHasStart={routeHasStart}
               routePoints={routePoints}
               selectedObjectId={selectedObjectId}
               showGrid={showGrid}

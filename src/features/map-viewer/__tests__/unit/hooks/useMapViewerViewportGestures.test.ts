@@ -264,39 +264,6 @@ describe("useMapViewerViewportGestures", () => {
     expect(result.current.consumeSuppressedClick()).toBe(false);
   });
 
-  it("accumulates rapid panByDelta calls within the same frame instead of overwriting them", () => {
-    const result = setup();
-
-    act(() => {
-      result.current.panByDelta(10, 5);
-    });
-    expect(contentEl.style.transform).toBe("translate(10px, 5px) scale(1)");
-
-    act(() => {
-      result.current.panByDelta(10, 5);
-    });
-    expect(contentEl.style.transform).toBe("translate(20px, 10px) scale(1)");
-    // Still not committed — proves the accumulation happened off the pending
-    // ref value, not by re-reading the (still stale) store each call.
-    expect(useAppStore.getState().viewportPan).toEqual({ x: 0, y: 0 });
-  });
-
-  it("self-flushes an accumulated panByDelta to the store within one animation frame", () => {
-    vi.useFakeTimers({ toFake: ["requestAnimationFrame"] });
-    const result = setup();
-
-    act(() => {
-      result.current.panByDelta(15, 5);
-    });
-    expect(useAppStore.getState().viewportPan).toEqual({ x: 0, y: 0 });
-
-    act(() => {
-      vi.runOnlyPendingTimers();
-    });
-
-    expect(useAppStore.getState().viewportPan).toEqual({ x: 15, y: 5 });
-  });
-
   it("wheel-zooms around the cursor position, applying the transform immediately", () => {
     const result = setup();
     void result;

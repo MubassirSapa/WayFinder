@@ -33,12 +33,13 @@ interface MapViewerSvgProps {
   objects: ViewerMapObject[];
   routeConnectorDirection: ConnectorDirection | null;
   routeConnectorNodeId: string | null;
+  routeHasDestination?: boolean;
+  routeHasStart?: boolean;
   routePoints?: { x: number; y: number }[];
   selectedObjectId: string | null;
   showGrid: boolean;
   onBackgroundClick: () => void;
   onConnectorActivate: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
-  onObjectPan: (deltaX: number, deltaY: number) => void;
   onObjectSelect: (object: ViewerMapObject) => void;
   onPointerDown: PointerEventHandler<SVGSVGElement>;
   onPointerMove: PointerEventHandler<SVGSVGElement>;
@@ -58,12 +59,13 @@ export const MapViewerSvg = memo(function MapViewerSvg({
   objects,
   routeConnectorDirection,
   routeConnectorNodeId,
+  routeHasDestination,
+  routeHasStart,
   routePoints,
   selectedObjectId,
   showGrid,
   onBackgroundClick,
   onConnectorActivate,
-  onObjectPan,
   onObjectSelect,
   onPointerDown,
   onPointerMove,
@@ -150,10 +152,14 @@ export const MapViewerSvg = memo(function MapViewerSvg({
         nodes={nodes}
         objects={objects}
         onConnectorActivate={onConnectorActivate}
-        onObjectPan={onObjectPan}
         onObjectSelect={onObjectSelect}
+        onViewportPointerDown={onPointerDown}
+        onViewportPointerMove={onPointerMove}
+        onViewportPointerUp={onPointerUp}
         routeConnectorDirection={routeConnectorDirection}
         routeConnectorNodeId={routeConnectorNodeId}
+        routeHasDestination={routeHasDestination}
+        routeHasStart={routeHasStart}
         routePoints={routePoints}
         selectedObjectId={selectedObjectId}
       />
@@ -167,10 +173,14 @@ function ViewerFloorContent({
   nodes,
   objects,
   onConnectorActivate,
-  onObjectPan,
   onObjectSelect,
+  onViewportPointerDown,
+  onViewportPointerMove,
+  onViewportPointerUp,
   routeConnectorDirection,
   routeConnectorNodeId,
+  routeHasDestination,
+  routeHasStart,
   routePoints,
   selectedObjectId,
 }: {
@@ -179,10 +189,14 @@ function ViewerFloorContent({
   nodes: ViewerMapNode[];
   objects: ViewerMapObject[];
   onConnectorActivate: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
-  onObjectPan: (deltaX: number, deltaY: number) => void;
   onObjectSelect: (object: ViewerMapObject) => void;
+  onViewportPointerDown: PointerEventHandler<SVGSVGElement>;
+  onViewportPointerMove: PointerEventHandler<SVGSVGElement>;
+  onViewportPointerUp: PointerEventHandler<SVGSVGElement>;
   routeConnectorDirection: ConnectorDirection | null;
   routeConnectorNodeId: string | null;
+  routeHasDestination?: boolean;
+  routeHasStart?: boolean;
   routePoints?: { x: number; y: number }[];
   selectedObjectId: string | null;
 }) {
@@ -202,8 +216,10 @@ function ViewerFloorContent({
         nodes={nodes}
         objects={objects}
         onConnectorPress={handlePress}
-        onPan={onObjectPan}
         onSelect={onObjectSelect}
+        onViewportPointerDown={onViewportPointerDown}
+        onViewportPointerMove={onViewportPointerMove}
+        onViewportPointerUp={onViewportPointerUp}
         routeConnectorNodeId={routeConnectorNodeId}
         selectedObjectId={selectedObjectId}
       />
@@ -215,12 +231,50 @@ function ViewerFloorContent({
         routeConnectorDirection={routeConnectorDirection}
         routeConnectorNodeId={routeConnectorNodeId}
       />
-      {routePoints && routePoints.length > 1 ? <RoutePolyline points={routePoints} /> : null}
+      {routePoints && routePoints.length > 1 ? (
+        <RoutePolyline
+          hasDestination={Boolean(routeHasDestination)}
+          hasStart={Boolean(routeHasStart)}
+          points={routePoints}
+        />
+      ) : null}
     </g>
   );
 }
 
-function RoutePolyline({ points }: { points: { x: number; y: number }[] }) {
+function RouteEndpointMarker({
+  label,
+  point,
+  token,
+}: {
+  label: "Destination" | "Start";
+  point: { x: number; y: number };
+  token: "var(--map-viewer-route-destination)" | "var(--map-viewer-route-origin)";
+}) {
+  const labelWidth = label === "Destination" ? 76 : 42;
+
+  return (
+    <g aria-label={`Route ${label.toLowerCase()}`} role="img">
+      <circle cx={point.x} cy={point.y} fill={token} r="7" stroke="var(--background)" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+      <g transform={`translate(${point.x + 10} ${point.y - 13})`}>
+        <rect fill="var(--card)" height="20" rx="10" stroke={token} width={labelWidth} x="0" y="0" vectorEffect="non-scaling-stroke" />
+        <text fill="var(--foreground)" fontSize="9" fontWeight="700" textAnchor="middle" x={labelWidth / 2} y="13">
+          {label}
+        </text>
+      </g>
+    </g>
+  );
+}
+
+function RoutePolyline({
+  hasDestination,
+  hasStart,
+  points,
+}: {
+  hasDestination: boolean;
+  hasStart: boolean;
+  points: { x: number; y: number }[];
+}) {
   const origin = points[0];
   const destination = points[points.length - 1];
 
@@ -255,8 +309,8 @@ function RoutePolyline({ points }: { points: { x: number; y: number }[] }) {
         strokeWidth={4}
         vectorEffect="non-scaling-stroke"
       />
-      <circle cx={origin.x} cy={origin.y} fill="var(--map-viewer-route-origin)" r="7" stroke="var(--background)" strokeWidth="2" vectorEffect="non-scaling-stroke" />
-      <circle cx={destination.x} cy={destination.y} fill="var(--map-viewer-route-destination)" r="7" stroke="var(--background)" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+      {hasStart ? <RouteEndpointMarker label="Start" point={origin} token="var(--map-viewer-route-origin)" /> : null}
+      {hasDestination ? <RouteEndpointMarker label="Destination" point={destination} token="var(--map-viewer-route-destination)" /> : null}
     </g>
   );
 }
@@ -266,8 +320,10 @@ function ViewerObjects({
   nodes,
   objects,
   onConnectorPress,
-  onPan,
   onSelect,
+  onViewportPointerDown,
+  onViewportPointerMove,
+  onViewportPointerUp,
   routeConnectorNodeId,
   selectedObjectId,
 }: {
@@ -275,8 +331,10 @@ function ViewerObjects({
   nodes: ViewerMapNode[];
   objects: ViewerMapObject[];
   onConnectorPress: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
-  onPan: (deltaX: number, deltaY: number) => void;
   onSelect: (object: ViewerMapObject) => void;
+  onViewportPointerDown: PointerEventHandler<SVGSVGElement>;
+  onViewportPointerMove: PointerEventHandler<SVGSVGElement>;
+  onViewportPointerUp: PointerEventHandler<SVGSVGElement>;
   routeConnectorNodeId: string | null;
   selectedObjectId: string | null;
 }) {
@@ -300,8 +358,10 @@ function ViewerObjects({
             key={object.id}
             object={object}
             onConnectorPress={onConnectorPress}
-            onPan={onPan}
             onSelect={onSelect}
+            onViewportPointerDown={onViewportPointerDown}
+            onViewportPointerMove={onViewportPointerMove}
+            onViewportPointerUp={onViewportPointerUp}
           />
         );
       })}
@@ -316,8 +376,10 @@ function ViewerObjectItem({
   isSelected,
   object,
   onConnectorPress,
-  onPan,
   onSelect,
+  onViewportPointerDown,
+  onViewportPointerMove,
+  onViewportPointerUp,
 }: {
   connectorNode: ViewerMapNode | undefined;
   connectorTargets: ConnectorTargetInfo[] | undefined;
@@ -325,8 +387,10 @@ function ViewerObjectItem({
   isSelected: boolean;
   object: ViewerMapObject;
   onConnectorPress: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
-  onPan: (deltaX: number, deltaY: number) => void;
   onSelect: (object: ViewerMapObject) => void;
+  onViewportPointerDown: PointerEventHandler<SVGSVGElement>;
+  onViewportPointerMove: PointerEventHandler<SVGSVGElement>;
+  onViewportPointerUp: PointerEventHandler<SVGSVGElement>;
 }) {
   const palette = getViewerObjectPalette(object.type);
   const centerX = object.width / 2;
@@ -351,38 +415,43 @@ function ViewerObjectItem({
   // instead), the browser retargets the resulting click there too — so an
   // object press would silently stop selecting anything.
   const dragStartRef = useRef<{ x: number; y: number } | null>(null);
+  const activePointerIdsRef = useRef<Set<number>>(new Set());
   const hasDraggedRef = useRef(false);
 
   const handlePointerDown = (event: PointerEvent<SVGGElement>) => {
     event.stopPropagation();
-    event.currentTarget.setPointerCapture(event.pointerId);
-    dragStartRef.current = { x: event.clientX, y: event.clientY };
-    hasDraggedRef.current = false;
+    if (activePointerIdsRef.current.size === 0) {
+      dragStartRef.current = { x: event.clientX, y: event.clientY };
+      hasDraggedRef.current = false;
+    }
+    activePointerIdsRef.current.add(event.pointerId);
+    if (activePointerIdsRef.current.size > 1) {
+      hasDraggedRef.current = true;
+    }
+    onViewportPointerDown(event as unknown as PointerEvent<SVGSVGElement>);
   };
 
   const handlePointerMove = (event: PointerEvent<SVGGElement>) => {
+    event.stopPropagation();
     const start = dragStartRef.current;
-    if (!start) {
-      return;
-    }
 
-    if (!hasDraggedRef.current) {
+    if (start && !hasDraggedRef.current) {
       const distance = Math.hypot(event.clientX - start.x, event.clientY - start.y);
       if (distance > MAP_VIEWER_DRAG_THRESHOLD) {
         hasDraggedRef.current = true;
       }
     }
 
-    if (hasDraggedRef.current) {
-      onPan(event.movementX, event.movementY);
-    }
+    onViewportPointerMove(event as unknown as PointerEvent<SVGSVGElement>);
   };
 
   const handlePointerEnd = (event: PointerEvent<SVGGElement>) => {
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
+    event.stopPropagation();
+    onViewportPointerUp(event as unknown as PointerEvent<SVGSVGElement>);
+    activePointerIdsRef.current.delete(event.pointerId);
+    if (activePointerIdsRef.current.size === 0) {
+      dragStartRef.current = null;
     }
-    dragStartRef.current = null;
   };
 
   const handleClick = (event: MouseEvent<SVGGElement>) => {

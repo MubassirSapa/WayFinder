@@ -27,7 +27,6 @@ const stableProps = {
   objects: [],
   onBackgroundClick: vi.fn(),
   onConnectorActivate: vi.fn(),
-  onObjectPan: vi.fn(),
   onObjectSelect: vi.fn(),
   onPointerDown: vi.fn(),
   onPointerMove: vi.fn(),

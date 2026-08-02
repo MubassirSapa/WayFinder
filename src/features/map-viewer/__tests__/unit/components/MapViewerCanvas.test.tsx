@@ -38,7 +38,6 @@ function renderCanvas() {
         objects={[]}
         onBackgroundClick={vi.fn()}
         onConnectorActivate={vi.fn()}
-        onObjectPan={vi.fn()}
         onObjectSelect={vi.fn()}
         onPointerCancel={vi.fn()}
         onPointerLeave={vi.fn()}
@@ -137,7 +136,6 @@ describe("MapViewerCanvas re-render isolation", () => {
             objects={[]}
             onBackgroundClick={vi.fn()}
             onConnectorActivate={vi.fn()}
-            onObjectPan={vi.fn()}
             onObjectSelect={vi.fn()}
             onPointerCancel={vi.fn()}
             onPointerLeave={vi.fn()}

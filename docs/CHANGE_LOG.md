@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+## [0.1.7] - 2026-08-02
+
+### Fixed
+- Fixed rooms and other map objects intercepting touch pointers before they reached the shared viewport gesture coordinator. Object-originated gestures now use the same pan/pinch pipeline as empty canvas while retaining local tap-vs-drag classification, selection suppression after movement, and connector click behavior.
+
+### Added
+- Added clear-navigation actions to both the floating route-floor control and directions panel, restoring unrestricted floor selection on mobile as soon as guidance is cancelled.
+- Added one-tap, level-aware previous/next floor arrows to the floating multi-floor route navigator plus explicit green Start and destination-colored Destination labels on the map and in the directions panel, without implying the start is the user’s live location.
+
 ## [0.1.6] - 2026-08-02
 
 ### Fixed

@@ -87,7 +87,6 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
     contentRef,
     focusWorldBounds,
     focusWorldPoint,
-    panByDelta,
     resetView,
     viewportRef,
     handleSvgPointerDown,
@@ -115,6 +114,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
   const setActiveSegmentIndex = useAppStore((state) => state.setActiveSegmentIndex);
   const originNodeId = useAppStore((state) => state.originNodeId);
   const destinationNodeId = useAppStore((state) => state.destinationNodeId);
+  const clearRoute = useAppStore((state) => state.clearRoute);
   const accessibleOnly = useAppStore((state) => state.accessibleOnly);
   const setOrigin = useAppStore((state) => state.setOrigin);
 
@@ -400,6 +400,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
               activeFloor={activeFloor}
               activeSegmentIndex={activeSegmentIndex}
               floors={floors}
+              onClearRoute={clearRoute}
               onFloorChange={handleFloorChange}
               onJumpToSegment={handleJumpToSegment}
               onResetView={resetView}
@@ -417,7 +418,6 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
               objects={objects}
               onBackgroundClick={handleBackgroundClick}
               onConnectorActivate={handleConnectorJump}
-              onObjectPan={panByDelta}
               onObjectSelect={handleObjectSelect}
               onPointerCancel={handleViewportPointerCancel}
               onPointerLeave={handleViewportPointerLeave}
@@ -427,6 +427,8 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
               onSvgPointerUp={handleSvgPointerUp}
               routeConnectorDirection={routeConnectorDirection}
               routeConnectorNodeId={routeConnectorNodeId}
+              routeHasDestination={Boolean(routePointsForActiveFloor) && activeSegmentIndex === segments.length - 1}
+              routeHasStart={Boolean(routePointsForActiveFloor) && activeSegmentIndex === 0}
               routePoints={routePointsForActiveFloor}
               selectedObjectId={selectedObjectId}
               showGrid={showGrid}

@@ -31,6 +31,7 @@ describe("RouteFloorSelect", () => {
       <RouteFloorSelect
         activeSegmentIndex={3}
         floors={floors}
+        onClearRoute={vi.fn()}
         onJumpToSegment={vi.fn()}
         segments={segments}
       />,
@@ -50,6 +51,7 @@ describe("RouteFloorSelect", () => {
       <RouteFloorSelect
         activeSegmentIndex={0}
         floors={floors}
+        onClearRoute={vi.fn()}
         onJumpToSegment={vi.fn()}
         segments={segments}
       />,
@@ -73,6 +75,7 @@ describe("RouteFloorSelect", () => {
       <RouteFloorSelect
         activeSegmentIndex={0}
         floors={floors}
+        onClearRoute={vi.fn()}
         onJumpToSegment={onJumpToSegment}
         segments={segments}
       />,
@@ -85,5 +88,52 @@ describe("RouteFloorSelect", () => {
     fireEvent.click(option);
 
     expect(onJumpToSegment).toHaveBeenCalledWith(6);
+  });
+
+  it("cancels navigation from the floating floor control", () => {
+    const onClearRoute = vi.fn();
+    render(
+      <RouteFloorSelect
+        activeSegmentIndex={0}
+        floors={floors}
+        onClearRoute={onClearRoute}
+        onJumpToSegment={vi.fn()}
+        segments={segments}
+      />,
+    );
+
+    expect(screen.getByRole("button", { name: "No previous route floor" }).hasAttribute("disabled")).toBe(true);
+    expect(screen.getByRole("button", { name: "Go up to Floor 2" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Cancel navigation" }));
+    expect(onClearRoute).toHaveBeenCalledOnce();
+  });
+
+  it("moves between route floors with one-tap direction arrows", () => {
+    const onJumpToSegment = vi.fn();
+    const { rerender } = render(
+      <RouteFloorSelect
+        activeSegmentIndex={3}
+        floors={floors}
+        onClearRoute={vi.fn()}
+        onJumpToSegment={onJumpToSegment}
+        segments={segments}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Go down to Floor 3" }));
+    fireEvent.click(screen.getByRole("button", { name: "Go up to Floor 5" }));
+    expect(onJumpToSegment).toHaveBeenNthCalledWith(1, 2);
+    expect(onJumpToSegment).toHaveBeenNthCalledWith(2, 4);
+
+    rerender(
+      <RouteFloorSelect
+        activeSegmentIndex={7}
+        floors={floors}
+        onClearRoute={vi.fn()}
+        onJumpToSegment={onJumpToSegment}
+        segments={segments}
+      />,
+    );
+    expect(screen.getByRole("button", { name: "No next route floor" }).hasAttribute("disabled")).toBe(true);
   });
 });

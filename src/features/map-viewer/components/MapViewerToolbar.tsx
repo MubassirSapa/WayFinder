@@ -14,6 +14,7 @@ interface MapViewerToolbarProps {
   segments: RouteFloorSegment[];
   showGrid: boolean;
   onFloorChange: (floorId: string) => void;
+  onClearRoute: () => void;
   onJumpToSegment: (index: number) => void;
   onResetView: () => void;
   onToggleGrid: () => void;
@@ -29,6 +30,7 @@ export const MapViewerToolbar = memo(function MapViewerToolbar({
   segments,
   showGrid,
   onFloorChange,
+  onClearRoute,
   onJumpToSegment,
   onResetView,
   onToggleGrid,
@@ -42,6 +44,7 @@ export const MapViewerToolbar = memo(function MapViewerToolbar({
             <RouteFloorSelect
               activeSegmentIndex={activeSegmentIndex}
               floors={floors}
+              onClearRoute={onClearRoute}
               onJumpToSegment={onJumpToSegment}
               segments={segments}
             />

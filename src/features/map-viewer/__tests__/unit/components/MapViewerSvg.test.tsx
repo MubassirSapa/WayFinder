@@ -93,16 +93,20 @@ function renderSvg({
   connectorTargetsByNodeId = {},
   routeConnectorDirection = null,
   routeConnectorNodeId = null,
-  onObjectPan = vi.fn(),
   onObjectSelect = vi.fn(),
   onConnectorActivate = vi.fn(),
+  onViewportPointerDown = vi.fn(),
+  onViewportPointerMove = vi.fn(),
+  onViewportPointerUp = vi.fn(),
 }: {
   connectorTargetsByNodeId?: Record<string, ConnectorTargetInfo[]>;
   nodes?: ViewerMapNode[];
   objects: ViewerMapObject[];
   onConnectorActivate?: ReturnType<typeof vi.fn>;
-  onObjectPan?: ReturnType<typeof vi.fn>;
   onObjectSelect?: ReturnType<typeof vi.fn>;
+  onViewportPointerDown?: ReturnType<typeof vi.fn>;
+  onViewportPointerMove?: ReturnType<typeof vi.fn>;
+  onViewportPointerUp?: ReturnType<typeof vi.fn>;
   routeConnectorDirection?: ConnectorDirection | null;
   routeConnectorNodeId?: string | null;
 }) {
@@ -115,11 +119,10 @@ function renderSvg({
       objects={objects}
       onBackgroundClick={vi.fn()}
       onConnectorActivate={onConnectorActivate}
-      onObjectPan={onObjectPan}
       onObjectSelect={onObjectSelect}
-      onPointerDown={vi.fn()}
-      onPointerMove={vi.fn()}
-      onPointerUp={vi.fn()}
+      onPointerDown={onViewportPointerDown}
+      onPointerMove={onViewportPointerMove}
+      onPointerUp={onViewportPointerUp}
       routeConnectorDirection={routeConnectorDirection}
       routeConnectorNodeId={routeConnectorNodeId}
       routePoints={undefined}
@@ -128,7 +131,13 @@ function renderSvg({
     />,
   );
 
-  return { onConnectorActivate, onObjectPan, onObjectSelect };
+  return {
+    onConnectorActivate,
+    onObjectSelect,
+    onViewportPointerDown,
+    onViewportPointerMove,
+    onViewportPointerUp,
+  };
 }
 
 function getObjectGroup(label: string) {
@@ -137,7 +146,7 @@ function getObjectGroup(label: string) {
 
 describe("MapViewerSvg object drag vs. click", () => {
   it("selects the object on a plain press with no movement", () => {
-    const { onObjectPan, onObjectSelect } = renderSvg({ objects: [roomObject] });
+    const { onObjectSelect, onViewportPointerDown, onViewportPointerMove, onViewportPointerUp } = renderSvg({ objects: [roomObject] });
     const group = getObjectGroup("Room A");
 
     fireEvent.pointerDown(group, { clientX: 100, clientY: 100, pointerId: 1 });
@@ -146,11 +155,13 @@ describe("MapViewerSvg object drag vs. click", () => {
 
     expect(onObjectSelect).toHaveBeenCalledTimes(1);
     expect(onObjectSelect).toHaveBeenCalledWith(roomObject);
-    expect(onObjectPan).not.toHaveBeenCalled();
+    expect(onViewportPointerDown).toHaveBeenCalledTimes(1);
+    expect(onViewportPointerMove).not.toHaveBeenCalled();
+    expect(onViewportPointerUp).toHaveBeenCalledTimes(1);
   });
 
   it("treats sub-threshold jitter as a click, not a drag", () => {
-    const { onObjectPan, onObjectSelect } = renderSvg({ objects: [roomObject] });
+    const { onObjectSelect, onViewportPointerMove } = renderSvg({ objects: [roomObject] });
     const group = getObjectGroup("Room A");
 
     fireEvent.pointerDown(group, { clientX: 100, clientY: 100, pointerId: 1 });
@@ -158,12 +169,12 @@ describe("MapViewerSvg object drag vs. click", () => {
     fireEvent.pointerUp(group, { clientX: 103, clientY: 101, pointerId: 1 });
     fireEvent.click(group);
 
-    expect(onObjectPan).not.toHaveBeenCalled();
+    expect(onViewportPointerMove).toHaveBeenCalledTimes(1);
     expect(onObjectSelect).toHaveBeenCalledTimes(1);
   });
 
   it("pans without selecting once the drag threshold is crossed", () => {
-    const { onObjectPan, onObjectSelect } = renderSvg({ objects: [roomObject] });
+    const { onObjectSelect, onViewportPointerMove } = renderSvg({ objects: [roomObject] });
     const group = getObjectGroup("Room A");
 
     fireEvent.pointerDown(group, { clientX: 100, clientY: 100, pointerId: 1 });
@@ -171,12 +182,12 @@ describe("MapViewerSvg object drag vs. click", () => {
     fireEvent.pointerUp(group, { clientX: 110, clientY: 100, pointerId: 1 });
     fireEvent.click(group);
 
-    expect(onObjectPan).toHaveBeenCalledWith(10, 0);
+    expect(onViewportPointerMove).toHaveBeenCalledTimes(1);
     expect(onObjectSelect).not.toHaveBeenCalled();
   });
 
   it("keeps forwarding pan deltas for every move after the threshold is crossed", () => {
-    const { onObjectPan } = renderSvg({ objects: [roomObject] });
+    const { onViewportPointerMove } = renderSvg({ objects: [roomObject] });
     const group = getObjectGroup("Room A");
 
     fireEvent.pointerDown(group, { clientX: 100, clientY: 100, pointerId: 1 });
@@ -184,12 +195,33 @@ describe("MapViewerSvg object drag vs. click", () => {
     fireEvent.pointerMove(group, { clientX: 112, clientY: 101, movementX: 2, movementY: 1, pointerId: 1 });
     fireEvent.pointerUp(group, { clientX: 112, clientY: 101, pointerId: 1 });
 
-    expect(onObjectPan).toHaveBeenNthCalledWith(1, 10, 0);
-    expect(onObjectPan).toHaveBeenNthCalledWith(2, 2, 1);
+    expect(onViewportPointerMove).toHaveBeenCalledTimes(2);
+  });
+
+  it("forwards both touch pointers from a room to viewport pinch handling without selecting", () => {
+    const {
+      onObjectSelect,
+      onViewportPointerDown,
+      onViewportPointerMove,
+      onViewportPointerUp,
+    } = renderSvg({ objects: [roomObject] });
+    const group = getObjectGroup("Room A");
+
+    fireEvent.pointerDown(group, { clientX: 100, clientY: 100, pointerId: 1, pointerType: "touch" });
+    fireEvent.pointerDown(group, { clientX: 200, clientY: 100, pointerId: 2, pointerType: "touch" });
+    fireEvent.pointerMove(group, { clientX: 250, clientY: 100, pointerId: 2, pointerType: "touch" });
+    fireEvent.pointerUp(group, { clientX: 250, clientY: 100, pointerId: 2, pointerType: "touch" });
+    fireEvent.pointerUp(group, { clientX: 100, clientY: 100, pointerId: 1, pointerType: "touch" });
+    fireEvent.click(group);
+
+    expect(onViewportPointerDown).toHaveBeenCalledTimes(2);
+    expect(onViewportPointerMove).toHaveBeenCalledTimes(1);
+    expect(onViewportPointerUp).toHaveBeenCalledTimes(2);
+    expect(onObjectSelect).not.toHaveBeenCalled();
   });
 
   it("resets drag state on pointer cancel so a later plain click still selects", () => {
-    const { onObjectPan, onObjectSelect } = renderSvg({ objects: [roomObject] });
+    const { onObjectSelect, onViewportPointerMove } = renderSvg({ objects: [roomObject] });
     const group = getObjectGroup("Room A");
 
     fireEvent.pointerDown(group, { clientX: 100, clientY: 100, pointerId: 1 });
@@ -201,7 +233,61 @@ describe("MapViewerSvg object drag vs. click", () => {
     fireEvent.click(group);
 
     expect(onObjectSelect).toHaveBeenCalledTimes(1);
-    expect(onObjectPan).toHaveBeenCalledTimes(1);
+    expect(onViewportPointerMove).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("MapViewerSvg route endpoints", () => {
+  it("labels only the real route start and destination", () => {
+    const { rerender } = render(
+      <MapViewerSvg
+        activeFloor={activeFloor}
+        connectorTargetsByNodeId={{}}
+        edges={[]}
+        nodes={[]}
+        objects={[]}
+        onBackgroundClick={vi.fn()}
+        onConnectorActivate={vi.fn()}
+        onObjectSelect={vi.fn()}
+        onPointerDown={vi.fn()}
+        onPointerMove={vi.fn()}
+        onPointerUp={vi.fn()}
+        routeConnectorDirection={null}
+        routeConnectorNodeId={null}
+        routeHasStart
+        routePoints={[{ x: 20, y: 20 }, { x: 80, y: 80 }]}
+        selectedObjectId={null}
+        showGrid={false}
+      />,
+    );
+
+    expect(screen.getByRole("img", { name: "Route start" })).toBeTruthy();
+    expect(screen.queryByRole("img", { name: "Route destination" })).toBeNull();
+
+    rerender(
+      <MapViewerSvg
+        activeFloor={activeFloor}
+        connectorTargetsByNodeId={{}}
+        edges={[]}
+        nodes={[]}
+        objects={[]}
+        onBackgroundClick={vi.fn()}
+        onConnectorActivate={vi.fn()}
+        onObjectSelect={vi.fn()}
+        onPointerDown={vi.fn()}
+        onPointerMove={vi.fn()}
+        onPointerUp={vi.fn()}
+        routeConnectorDirection={null}
+        routeConnectorNodeId={null}
+        routeHasDestination
+        routePoints={[{ x: 20, y: 20 }, { x: 80, y: 80 }]}
+        selectedObjectId={null}
+        showGrid={false}
+      />,
+    );
+
+    expect(screen.queryByRole("img", { name: "Route start" })).toBeNull();
+    expect(screen.getByRole("img", { name: "Route destination" })).toBeTruthy();
   });
 });
 
@@ -244,7 +330,7 @@ describe("MapViewerSvg connector objects", () => {
   });
 
   it("suppresses both selection and the floor-jump press when the gesture was a drag", () => {
-    const { onConnectorActivate, onObjectPan, onObjectSelect } = renderSvg({
+    const { onConnectorActivate, onObjectSelect, onViewportPointerMove } = renderSvg({
       objects: [stairsObject],
       nodes: [stairsNode],
       connectorTargetsByNodeId: { [stairsNode.id]: [stairsTarget] },
@@ -256,7 +342,7 @@ describe("MapViewerSvg connector objects", () => {
     fireEvent.pointerUp(group, { clientX: 110, clientY: 100, pointerId: 1 });
     fireEvent.click(group);
 
-    expect(onObjectPan).toHaveBeenCalledWith(10, 0);
+    expect(onViewportPointerMove).toHaveBeenCalledTimes(1);
     expect(onObjectSelect).not.toHaveBeenCalled();
     expect(onConnectorActivate).not.toHaveBeenCalled();
   });
@@ -312,7 +398,6 @@ describe("MapViewerSvg route-connector highlight", () => {
         objects={[stairsObject]}
         onBackgroundClick={vi.fn()}
         onConnectorActivate={vi.fn()}
-        onObjectPan={vi.fn()}
         onObjectSelect={vi.fn()}
         onPointerDown={vi.fn()}
         onPointerMove={vi.fn()}

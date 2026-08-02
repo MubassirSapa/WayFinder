@@ -151,6 +151,16 @@ export function RoutePanel({
       <div className="flex items-center gap-2">
         <Navigation className="h-4 w-4 text-muted-foreground" />
         <h3 className="text-sm font-semibold">Get directions</h3>
+        {originNodeId || destinationNodeId ? (
+          <button
+            aria-label="Clear navigation"
+            className="ml-auto rounded-full px-2 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            onClick={clearRoute}
+            type="button"
+          >
+            Clear
+          </button>
+        ) : null}
       </div>
 
       <div className="mt-3 space-y-2">
@@ -270,6 +280,18 @@ export function RoutePanel({
             </p>
           ) : route ? (
             <>
+              <div className="grid gap-2 rounded-2xl border border-border bg-background p-3">
+                <div className="flex min-w-0 items-center gap-2.5">
+                  <span className="size-2.5 shrink-0 rounded-full bg-[var(--map-viewer-route-origin)]" />
+                  <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Start</span>
+                  <span className="truncate font-medium">{originLabel ?? "Route start"}</span>
+                </div>
+                <div className="flex min-w-0 items-center gap-2.5">
+                  <span className="size-2.5 shrink-0 rounded-full bg-[var(--map-viewer-route-destination)]" />
+                  <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Destination</span>
+                  <span className="truncate font-medium">{destinationLabel ?? "Route destination"}</span>
+                </div>
+              </div>
               <Badge className="font-semibold" variant="outline">
                 {route.totalDistanceMeters.toFixed(1)} m
                 {segments.length > 1
@@ -318,11 +340,14 @@ export function RoutePanel({
                           <span className="truncate">
                             {segmentFloor?.name ?? "Floor"}
                           </span>
-                          {isActive ? (
-                            <span className="ml-auto shrink-0 text-[10px] font-bold uppercase tracking-wide text-primary">
-                              You&apos;re here
-                            </span>
-                          ) : null}
+                          <span className="ml-auto flex shrink-0 items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide">
+                            {index === 0 ? (
+                              <><span className="size-2 rounded-full bg-[var(--map-viewer-route-origin)]" />Start</>
+                            ) : null}
+                            {index === segments.length - 1 ? (
+                              <><span className="size-2 rounded-full bg-[var(--map-viewer-route-destination)]" />Destination</>
+                            ) : null}
+                          </span>
                         </button>
                       </div>
                     );
