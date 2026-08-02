@@ -1,0 +1,135 @@
+[{
+  "_id": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:33:59.340Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:54:10.939Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "name": "Floor 1",
+  "level": 1,
+  "width": 1200,
+  "height": 800,
+  "metersPerPixel": 0.05,
+  "backgroundImageRotation": 0,
+  "backgroundImageScale": 1,
+  "backgroundImageOpacity": 0.3,
+  "backgroundImageLocked": false,
+  "backgroundImageVisible": true,
+  "backgroundImageOffsetX": 0,
+  "backgroundImageOffsetY": 0,
+  "backgroundImageFit": "fill",
+  "status": "published",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:34:24.151Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:34:44.646Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "name": "Imagine",
+  "level": 1,
+  "width": 1200,
+  "height": 800,
+  "metersPerPixel": 0.05,
+  "backgroundImageRotation": 0,
+  "backgroundImageScale": 1,
+  "backgroundImageOpacity": 0.3,
+  "backgroundImageLocked": false,
+  "backgroundImageVisible": true,
+  "backgroundImageOffsetX": 0,
+  "backgroundImageOffsetY": 0,
+  "backgroundImageFit": "fill",
+  "status": "published",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:16:07.579Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:16:07.579Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "name": "Level 2",
+  "level": 2,
+  "width": 1200,
+  "height": 800,
+  "metersPerPixel": 0.05,
+  "backgroundImageRotation": 0,
+  "backgroundImageScale": 1,
+  "backgroundImageOpacity": 0.3,
+  "backgroundImageLocked": false,
+  "backgroundImageVisible": true,
+  "backgroundImageOffsetX": 0,
+  "backgroundImageOffsetY": 0,
+  "backgroundImageFit": "fill",
+  "status": "published",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d52dee1a38d71e419b800"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:58:54.592Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:30:50.287Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "name": "level 3",
+  "level": 1,
+  "width": 1200,
+  "height": 800,
+  "metersPerPixel": 0.05,
+  "backgroundImageRotation": 0,
+  "backgroundImageScale": 1,
+  "backgroundImageOpacity": 0.3,
+  "backgroundImageLocked": false,
+  "backgroundImageVisible": true,
+  "backgroundImageOffsetX": 0,
+  "backgroundImageOffsetY": 0,
+  "backgroundImageFit": "fill",
+  "status": "published",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:29:31.946Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:47:55.350Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "name": "Floor 2",
+  "level": 1,
+  "width": 1200,
+  "height": 800,
+  "metersPerPixel": 0.05,
+  "backgroundImageRotation": 0,
+  "backgroundImageScale": 1,
+  "backgroundImageOpacity": 0.3,
+  "backgroundImageLocked": false,
+  "backgroundImageVisible": true,
+  "backgroundImageOffsetX": 0,
+  "backgroundImageOffsetY": 0,
+  "backgroundImageFit": "fill",
+  "status": "draft",
+  "__v": 0
+}]

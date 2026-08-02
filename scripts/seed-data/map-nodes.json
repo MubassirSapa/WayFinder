@@ -1,0 +1,4251 @@
+[{
+  "_id": {
+    "$oid": "6a6d41d9c0ea1fb774f7cbeb"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:17.935Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:17.935Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d41d8c0ea1fb774f7cbd6"
+  },
+  "role": "entrance",
+  "label": "Room 1",
+  "x": 160,
+  "y": 180,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d41dac0ea1fb774f7cbf0"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:18.322Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:18.322Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d41d8c0ea1fb774f7cbdc"
+  },
+  "role": "entrance",
+  "label": "Room 2",
+  "x": 160,
+  "y": 260,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d41dac0ea1fb774f7cbf5"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:18.633Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:18.633Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d41d8c0ea1fb774f7cbd9"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 160,
+  "y": 220,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d41dac0ea1fb774f7cbfa"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:18.940Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:18.940Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d41d9c0ea1fb774f7cbdf"
+  },
+  "role": "entrance",
+  "label": "Room 3",
+  "x": 260,
+  "y": 180,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d41dbc0ea1fb774f7cbff"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:19.231Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:19.231Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d41d8c0ea1fb774f7cbd9"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 260,
+  "y": 220,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d41dbc0ea1fb774f7cc04"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:19.441Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:19.441Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d41d9c0ea1fb774f7cbe2"
+  },
+  "role": "entrance",
+  "label": "Room 4",
+  "x": 340,
+  "y": 260,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d41dbc0ea1fb774f7cc09"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:19.673Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:19.674Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d41d8c0ea1fb774f7cbd9"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 340,
+  "y": 220,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d41dbc0ea1fb774f7cc0e"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:19.885Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:19.886Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d41d9c0ea1fb774f7cbe5"
+  },
+  "role": "entrance",
+  "label": "Room 5",
+  "x": 420,
+  "y": 180,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d41dcc0ea1fb774f7cc13"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:20.100Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:11:44.139Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d41d9c0ea1fb774f7cbe8"
+  },
+  "role": "stairs_entry",
+  "label": "Stairs 1",
+  "x": 380,
+  "y": 180,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": false,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d41dcc0ea1fb774f7cc1d"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:20.604Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:20.604Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d41d8c0ea1fb774f7cbd9"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 380,
+  "y": 220,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d421dc0ea1fb774f7cc67"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:47:25.044Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:47:25.044Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d421cc0ea1fb774f7cc64"
+  },
+  "role": "escalator_entry",
+  "label": "Escalator 1",
+  "x": 100,
+  "y": 220,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4220c0ea1fb774f7cc72"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:47:28.044Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:47:28.044Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d41d8c0ea1fb774f7cbd9"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 100,
+  "y": 220,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4332b247f604ae15e980"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:02.054Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:02.054Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d43303e3e41d7087278a3"
+  },
+  "role": "entrance",
+  "label": "Room 6",
+  "x": 500,
+  "y": 260,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4332b247f604ae15e985"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:02.269Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:02.269Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d41d8c0ea1fb774f7cbd9"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 500,
+  "y": 220,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4332b247f604ae15e98a"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:02.482Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:02.482Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d4331b247f604ae15e971"
+  },
+  "role": "entrance",
+  "label": "Room 7",
+  "x": 740,
+  "y": 220,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4332b247f604ae15e98f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:02.696Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:02.696Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d41d8c0ea1fb774f7cbd9"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 660,
+  "y": 220,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4332b247f604ae15e994"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:02.913Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:11:43.777Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d4331b247f604ae15e974"
+  },
+  "role": "stairs_entry",
+  "label": "Stairs 2",
+  "x": 580,
+  "y": 180,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": false,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d4333b247f604ae15e999"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:03.124Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:03.124Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d41d8c0ea1fb774f7cbd9"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 580,
+  "y": 220,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4333b247f604ae15e99e"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:03.342Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:03.343Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d4331b247f604ae15e977"
+  },
+  "role": "entrance",
+  "label": "Room 8",
+  "x": 700,
+  "y": 180,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4333b247f604ae15e9a3"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:03.605Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:03.605Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d41d8c0ea1fb774f7cbd9"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 700,
+  "y": 220,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4333b247f604ae15e9a8"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:03.818Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:03.818Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d41d8c0ea1fb774f7cbd9"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 740,
+  "y": 220,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4334b247f604ae15e9ad"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:04.040Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:04.040Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d4331b247f604ae15e97a"
+  },
+  "role": "entrance",
+  "label": "Door 1",
+  "x": 240,
+  "y": 260,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4334b247f604ae15e9b2"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:04.247Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:04.248Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d41d8c0ea1fb774f7cbd9"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 240,
+  "y": 220,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d43a1c0ea1fb774f7cca6"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:53:53.831Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:53:53.832Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d43a0c0ea1fb774f7cc97"
+  },
+  "role": "entrance",
+  "label": "Room 9",
+  "x": 420,
+  "y": 620,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d43a2c0ea1fb774f7ccb0"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:53:54.266Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:53:54.266Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d43a1c0ea1fb774f7cc9a"
+  },
+  "role": "entrance",
+  "label": "Room 10",
+  "x": 500,
+  "y": 510,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d43a2c0ea1fb774f7ccba"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:53:54.700Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:53:54.700Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d43a1c0ea1fb774f7cc9d"
+  },
+  "role": "entrance",
+  "label": "Room 11",
+  "x": 420,
+  "y": 530,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d43a3c0ea1fb774f7cccb"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:53:55.245Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:53:55.245Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d43a1c0ea1fb774f7cca0"
+  },
+  "role": "entrance",
+  "label": "Room 12",
+  "x": 420,
+  "y": 400,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d43a3c0ea1fb774f7ccd8"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:53:55.861Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:53:55.861Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d43a1c0ea1fb774f7cca3"
+  },
+  "role": "elevator_entry",
+  "label": "Elevator 1",
+  "x": 500,
+  "y": 420,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d475d65d5509d4588782a"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:09:49.824Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:09:49.824Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d4331b247f604ae15e97d"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 2",
+  "x": 459,
+  "y": 530,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d475e65d5509d4588782f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:09:50.170Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:09:50.170Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d4331b247f604ae15e97d"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 2",
+  "x": 459,
+  "y": 510,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d475e65d5509d45887834"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:09:50.420Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:09:50.420Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d4331b247f604ae15e97d"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 2",
+  "x": 459,
+  "y": 620,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d478e65d5509d4588787b"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:10:38.515Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:10:38.515Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d478e65d5509d45887878"
+  },
+  "role": "entrance",
+  "label": "Room 13",
+  "x": 660,
+  "y": 260,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d48a665d5509d45887928"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:15:18.766Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:15:18.766Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": null,
+  "role": "hallway_point",
+  "label": "Hallway Point 16",
+  "x": 460,
+  "y": 220,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d48ae65d5509d45887931"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:15:26.497Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:15:26.497Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d4331b247f604ae15e97d"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 2",
+  "x": 459,
+  "y": 420,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d48ae65d5509d45887936"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:15:26.802Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:15:26.802Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d4331b247f604ae15e97d"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 2",
+  "x": 459,
+  "y": 400,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d48af65d5509d4588793b"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:15:27.019Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:15:27.019Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "object": {
+    "$oid": "6a6d41d8c0ea1fb774f7cbd9"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 420,
+  "y": 220,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4afcd9cab80255fafd34"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:25:16.349Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:12:31.295Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4afbd9cab80255fafd28"
+  },
+  "role": "stairs_entry",
+  "label": "Stairs 1",
+  "x": 80,
+  "y": 660,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": false,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d4afcd9cab80255fafd39"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:25:16.623Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:25:16.623Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4a41d9cab80255fafd1b"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 8",
+  "x": 120,
+  "y": 660,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4afcd9cab80255fafd3e"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:25:16.843Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:25:16.843Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4afbd9cab80255fafd2b"
+  },
+  "role": "entrance",
+  "label": "Room 1",
+  "x": 200,
+  "y": 630,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4afdd9cab80255fafd43"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:25:17.080Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:25:17.080Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4afbd9cab80255fafd2e"
+  },
+  "role": "entrance",
+  "label": "Room 2",
+  "x": 400,
+  "y": 640,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4afdd9cab80255fafd48"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:25:17.328Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:12:31.022Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4afcd9cab80255fafd31"
+  },
+  "role": "stairs_entry",
+  "label": "Stairs 2",
+  "x": 500,
+  "y": 600,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": false,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d4afdd9cab80255fafd4d"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:25:17.553Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:25:17.553Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4a41d9cab80255fafd1e"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 9",
+  "x": 540,
+  "y": 600,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4afdd9cab80255fafd52"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:25:17.897Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:25:17.897Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4a41d9cab80255fafd1b"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 8",
+  "x": 200,
+  "y": 670,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4afed9cab80255fafd57"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:25:18.271Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:25:18.271Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4a41d9cab80255fafd1b"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 8",
+  "x": 400,
+  "y": 670,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4b64d9cab80255fafdc3"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:27:00.061Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:27:00.061Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4b63d9cab80255fafdba"
+  },
+  "role": "entrance",
+  "label": "Room 3",
+  "x": 200,
+  "y": 700,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4b64d9cab80255fafdc8"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:27:00.265Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:27:00.265Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4b63d9cab80255fafdbd"
+  },
+  "role": "entrance",
+  "label": "Room 4",
+  "x": 480,
+  "y": 700,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4b64d9cab80255fafdcd"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:27:00.491Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:27:00.491Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4b63d9cab80255fafdc0"
+  },
+  "role": "entrance",
+  "label": "Room 5",
+  "x": 660,
+  "y": 600,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4b64d9cab80255fafdd2"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:27:00.724Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:27:00.724Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4a40d9cab80255fafd15"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 6",
+  "x": 660,
+  "y": 570,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4b64d9cab80255fafdd7"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:27:00.978Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:27:00.978Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4a41d9cab80255fafd1b"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 8",
+  "x": 480,
+  "y": 670,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4b78d9cab80255fafdfa"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:27:20.919Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:27:20.919Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": null,
+  "role": "hallway_point",
+  "label": "Hallway Point 7",
+  "x": 540,
+  "y": 680,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4baad9cab80255fafe12"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:28:10.310Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:28:10.310Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4baad9cab80255fafe0f"
+  },
+  "role": "entrance",
+  "label": "Hallway Point 8",
+  "x": 540,
+  "y": 500,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4c06d9cab80255fafe3f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:29:42.684Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:29:42.684Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4c06d9cab80255fafe3c"
+  },
+  "role": "escalator_entry",
+  "label": "Escalator 1",
+  "x": 100,
+  "y": 150,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4c06d9cab80255fafe44"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:29:42.985Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:29:42.985Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d496865d5509d458879c5"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 140,
+  "y": 150,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4c08d9cab80255fafe55"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:29:44.800Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:29:44.800Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d496865d5509d458879c5"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 100,
+  "y": 150,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4c587bf1ec07ac839110"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:31:04.972Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:31:04.972Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4c577bf1ec07ac8390df"
+  },
+  "role": "entrance",
+  "label": "Room 6",
+  "x": 160,
+  "y": 120,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4c597bf1ec07ac839115"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:31:05.203Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:42:37.586Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4c587bf1ec07ac839100"
+  },
+  "role": "entrance",
+  "label": "Room 7",
+  "x": 200,
+  "y": 220,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d4c597bf1ec07ac83911a"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:31:05.618Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:36:35.944Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d49c465d5509d458879d1"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 5",
+  "x": 220,
+  "y": 220,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d4c597bf1ec07ac83911f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:31:05.922Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:31:05.922Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4c587bf1ec07ac83910a"
+  },
+  "role": "entrance",
+  "label": "Room 8",
+  "x": 280,
+  "y": 120,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4c5a7bf1ec07ac839130"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:31:06.762Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:31:06.762Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4c587bf1ec07ac83910d"
+  },
+  "role": "entrance",
+  "label": "Room 9",
+  "x": 440,
+  "y": 120,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4c864b2723567e98953a"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:31:50.717Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:12:16.522Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4c864b2723567e989537"
+  },
+  "role": "stairs_entry",
+  "label": "Stairs 3",
+  "x": 500,
+  "y": 120,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": false,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d4c864b2723567e98953f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:31:50.934Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:31:50.934Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d496865d5509d458879c5"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 500,
+  "y": 160,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4ce14b2723567e98955c"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:33:21.768Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:33:54.735Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4ce14b2723567e989559"
+  },
+  "role": "entrance",
+  "label": "Room 10",
+  "x": 420,
+  "y": 420,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d4d495c07b1f14e5c295b"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:35:05.636Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:35:05.637Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d496865d5509d458879c5"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 160,
+  "y": 150,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4d4a5c07b1f14e5c2982"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:35:06.268Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:35:06.268Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": null,
+  "role": "hallway_point",
+  "label": "Hallway Point 16",
+  "x": 220,
+  "y": 160,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4d4a5c07b1f14e5c2988"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:35:06.434Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:35:06.435Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d496865d5509d458879c5"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 280,
+  "y": 150,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4d4a5c07b1f14e5c298d"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:35:06.653Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:35:06.653Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d496865d5509d458879c5"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 440,
+  "y": 150,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4d84e1a38d71e419b64f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:36:04.488Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:36:04.488Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4d84e1a38d71e419b649"
+  },
+  "role": "entrance",
+  "label": "Room 11",
+  "x": 700,
+  "y": 343,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4d84e1a38d71e419b654"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:36:04.827Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:36:04.827Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4a41d9cab80255fafd18"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 7",
+  "x": 700,
+  "y": 380,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4d85e1a38d71e419b659"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:36:05.049Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:36:05.049Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4d84e1a38d71e419b64c"
+  },
+  "role": "entrance",
+  "label": "Room 12",
+  "x": 800,
+  "y": 340,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4d85e1a38d71e419b65e"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:36:05.336Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:36:05.336Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4a41d9cab80255fafd18"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 7",
+  "x": 800,
+  "y": 380,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4e217bf1ec07ac839165"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:38:41.650Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:38:41.651Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": null,
+  "role": "entrance",
+  "label": "",
+  "x": 560,
+  "y": 120,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4e217bf1ec07ac839168"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:38:41.820Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:12:16.198Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4e217bf1ec07ac839162"
+  },
+  "role": "stairs_entry",
+  "label": "Stairs 4",
+  "x": 640,
+  "y": 120,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": false,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d4e227bf1ec07ac83916d"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:38:42.036Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:38:42.036Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d496965d5509d458879c8"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 2",
+  "x": 630,
+  "y": 160,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4e227bf1ec07ac839172"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:38:42.309Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:38:42.309Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": null,
+  "role": "hallway_point",
+  "label": "Hallway Point 20",
+  "x": 560,
+  "y": 160,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4e4e7bf1ec07ac839198"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:39:26.369Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:39:26.369Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4e4d7bf1ec07ac83918c"
+  },
+  "role": "entrance",
+  "label": "Room 13",
+  "x": 580,
+  "y": 200,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4e4e7bf1ec07ac83919d"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:39:26.625Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:39:26.625Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d496965d5509d458879c8"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 2",
+  "x": 630,
+  "y": 200,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4e4e7bf1ec07ac8391a2"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:39:26.906Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:39:26.906Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4e4d7bf1ec07ac83918f"
+  },
+  "role": "entrance",
+  "label": "Room 14",
+  "x": 600,
+  "y": 300,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4e4f7bf1ec07ac8391a7"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:39:27.147Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:39:27.147Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d496965d5509d458879c8"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 2",
+  "x": 640,
+  "y": 300,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4e76e1a38d71e419b68e"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:40:06.669Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:40:06.669Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": null,
+  "role": "hallway_point",
+  "label": "Hallway Point 24",
+  "x": 640,
+  "y": 380,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4e9fe1a38d71e419b6ea"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:40:47.346Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:40:47.346Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4baad9cab80255fafe0f"
+  },
+  "role": "entrance",
+  "label": "",
+  "x": 540,
+  "y": 420,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4ed6e1a38d71e419b70d"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:41:42.989Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:41:42.989Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": null,
+  "role": "hallway_point",
+  "label": "Hallway Point 24",
+  "x": 540,
+  "y": 380,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4ed7e1a38d71e419b710"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:41:43.162Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:41:43.162Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": null,
+  "role": "hallway_point",
+  "label": "Hallway Point 25",
+  "x": 420,
+  "y": 380,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4f2be1a38d71e419b755"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:43:07.852Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:43:07.853Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4f2be1a38d71e419b752"
+  },
+  "role": "entrance",
+  "label": "Room 15",
+  "x": 200,
+  "y": 300,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4f2ce1a38d71e419b75a"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:43:08.073Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:43:08.074Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d49c465d5509d458879d1"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 5",
+  "x": 220,
+  "y": 300,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4fa84b2723567e989608"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:45:12.974Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:47:31.280Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4fa84b2723567e9895ff"
+  },
+  "role": "entrance",
+  "label": "Room 16",
+  "x": 260,
+  "y": 220,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d50334b2723567e98962a"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:47:31.522Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:47:31.522Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d50324b2723567e98961e"
+  },
+  "role": "entrance",
+  "label": "Room 17",
+  "x": 129,
+  "y": 370,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d50334b2723567e98962f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:47:31.741Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:48:05.769Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d49c465d5509d458879ce"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 4",
+  "x": 220,
+  "y": 360,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d50334b2723567e989634"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:47:31.967Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:47:31.967Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d50334b2723567e989621"
+  },
+  "role": "entrance",
+  "label": "Room 18",
+  "x": 128,
+  "y": 470,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d50344b2723567e989639"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:47:32.200Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:48:05.432Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d49c465d5509d458879ce"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 4",
+  "x": 220,
+  "y": 460,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d50504b2723567e989674"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:48:00.669Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:56:11.624Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d504f4b2723567e989662"
+  },
+  "role": "entrance",
+  "label": "Room 4",
+  "x": 360,
+  "y": 320,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d50a54b2723567e98968e"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:49:25.245Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:49:25.245Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d50a54b2723567e98968b"
+  },
+  "role": "entrance",
+  "label": "Room 19",
+  "x": 840,
+  "y": 180,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d50a54b2723567e989693"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:49:25.470Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:49:25.470Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d4a41d9cab80255fafd18"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 7",
+  "x": 880,
+  "y": 180,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d50a54b2723567e989698"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:49:25.680Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:49:25.680Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": {
+    "$oid": "6a6d50a54b2723567e98968b"
+  },
+  "role": "entrance",
+  "label": "Hallway Point 29",
+  "x": 660,
+  "y": 180,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d50c24b2723567e9896a9"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:49:54.661Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:49:54.661Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": null,
+  "role": "hallway_point",
+  "label": "Hallway Point 29",
+  "x": 860,
+  "y": 380,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d50cd4b2723567e9896be"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:50:05.884Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:50:05.884Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "object": null,
+  "role": "hallway_point",
+  "label": "Hallway Point 30",
+  "x": 880,
+  "y": 560,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d539017353ec9b297601b"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:01:52.905Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:01:52.905Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d52dee1a38d71e419b800"
+  },
+  "object": {
+    "$oid": "6a6d538f17353ec9b2976009"
+  },
+  "role": "entrance",
+  "label": "Room 1",
+  "x": 200,
+  "y": 200,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d539117353ec9b2976020"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:01:53.122Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:01:53.122Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d52dee1a38d71e419b800"
+  },
+  "object": {
+    "$oid": "6a6d539017353ec9b297600f"
+  },
+  "role": "entrance",
+  "label": "Room 2",
+  "x": 180,
+  "y": 260,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d539117353ec9b2976025"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:01:53.335Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:01:53.335Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d52dee1a38d71e419b800"
+  },
+  "object": {
+    "$oid": "6a6d539017353ec9b2976012"
+  },
+  "role": "entrance",
+  "label": "Room 3",
+  "x": 220,
+  "y": 220,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d539117353ec9b297602a"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:01:53.552Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:05:54.214Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d52dee1a38d71e419b800"
+  },
+  "object": {
+    "$oid": "6a6d539017353ec9b2976018"
+  },
+  "role": "entrance",
+  "label": "Room 4",
+  "x": 280,
+  "y": 180,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d53d017353ec9b297609b"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:02:56.653Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:02:56.653Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d52dee1a38d71e419b800"
+  },
+  "object": {
+    "$oid": "6a6d539017353ec9b2976012"
+  },
+  "role": "hallway_point",
+  "label": "Hallway Point 4",
+  "x": 360,
+  "y": 340,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d548217353ec9b2976147"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:05:54.430Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:05:54.430Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d52dee1a38d71e419b800"
+  },
+  "object": {
+    "$oid": "6a6d538f17353ec9b297600c"
+  },
+  "role": "entrance",
+  "label": "Hallway Point 5",
+  "x": 140,
+  "y": 240,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d548217353ec9b297614c"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:05:54.686Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:05:54.686Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d52dee1a38d71e419b800"
+  },
+  "object": {
+    "$oid": "6a6d539017353ec9b2976015"
+  },
+  "role": "hallway_point",
+  "label": "Hallway Point 2",
+  "x": 180,
+  "y": 232,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d549b4b2723567e989795"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:06:19.937Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:29:06.305Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d504f4b2723567e98965c"
+  },
+  "role": "entrance",
+  "label": "Hallway Point 2",
+  "x": 120,
+  "y": 120,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d549c4b2723567e989798"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:06:20.112Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:40:54.349Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d671a4ac61a222ae21456"
+  },
+  "role": "entrance",
+  "label": "Women",
+  "x": 100,
+  "y": 160,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d549c4b2723567e98979b"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:06:20.293Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:29:56.987Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d50e04b2723567e9896d7"
+  },
+  "role": "entrance",
+  "label": "Hallway Point 4",
+  "x": 120,
+  "y": 180,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d583163d8b84c81e17c46"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:21:37.637Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:12:18.813Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d583163d8b84c81e17c43"
+  },
+  "role": "hallway_point",
+  "label": "Hallway Point 6",
+  "x": 480,
+  "y": 160,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d58aa63d8b84c81e17c4c"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:23:38.361Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:28:27.942Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d58aa63d8b84c81e17c49"
+  },
+  "role": "entrance",
+  "label": "Room 5",
+  "x": 580,
+  "y": 120,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d59068f06b7db355c3f14"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:25:10.650Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:28:05.026Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d58fc63d8b84c81e17c58"
+  },
+  "role": "entrance",
+  "label": "Hallway Point 7",
+  "x": 720,
+  "y": 120,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d59568f06b7db355c3f32"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:26:30.514Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:28:05.293Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d594c8f06b7db355c3f2f"
+  },
+  "role": "entrance",
+  "label": "Hallway Point 8",
+  "x": 740,
+  "y": 160,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d5a3663d8b84c81e17d03"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:30:14.193Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:56:11.352Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d58bf63d8b84c81e17c51"
+  },
+  "role": "entrance",
+  "label": "Hallway Point 3",
+  "x": 480,
+  "y": 320,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d5ade5770659d3498d5f5"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:33:02.017Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:33:57.607Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d5a825770659d3498d5dd"
+  },
+  "role": "stairs_entry",
+  "label": "Hallway Point 3",
+  "x": 360,
+  "y": 420,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d5b3e5770659d3498d622"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:34:38.402Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:35:27.838Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d5b3e5770659d3498d61f"
+  },
+  "role": "stairs_entry",
+  "label": "Stairs 2",
+  "x": 480,
+  "y": 420,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d5d1463d8b84c81e17d6c"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:42:28.143Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:50:28.882Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d5d1363d8b84c81e17d69"
+  },
+  "role": "entrance",
+  "label": "Room 9",
+  "x": 480,
+  "y": 520,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d5d1463d8b84c81e17d71"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:42:28.374Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:50:28.583Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d5bd463d8b84c81e17d45"
+  },
+  "role": "entrance",
+  "label": "Hallway Point 3",
+  "x": 360,
+  "y": 520,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d5f1e5770659d3498d677"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:51:10.452Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:53:21.648Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d5f1e5770659d3498d674"
+  },
+  "role": "entrance",
+  "label": "Room 10",
+  "x": 260,
+  "y": 700,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d5f4b5770659d3498d68a"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:51:55.573Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:53:22.255Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d5f4b5770659d3498d687"
+  },
+  "role": "entrance",
+  "label": "Room 11",
+  "x": 580,
+  "y": 700,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d5fe65770659d3498d6cd"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:54:30.553Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:54:30.554Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d5fe55770659d3498d6c7"
+  },
+  "role": "entrance",
+  "label": "Room 12",
+  "x": 120,
+  "y": 700,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d5fe65770659d3498d6d2"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:54:30.777Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:54:30.777Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d5fe65770659d3498d6ca"
+  },
+  "role": "entrance",
+  "label": "Room 13",
+  "x": 700,
+  "y": 700,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61c33fff391f06231d6c"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:27.298Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:27.298Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d568917353ec9b2976191"
+  },
+  "role": "hallway_point",
+  "label": "Hallway Point 4",
+  "x": 120,
+  "y": 160,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61c33fff391f06231d71"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:27.634Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:27.634Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d568917353ec9b2976191"
+  },
+  "role": "hallway_point",
+  "label": "Hallway Point 5",
+  "x": 260,
+  "y": 160,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61c43fff391f06231d76"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:28.160Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:28.160Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d504f4b2723567e98965f"
+  },
+  "role": "entrance",
+  "label": "Hallway Point 6",
+  "x": 260,
+  "y": 120,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61c53fff391f06231d8a"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:29.336Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:29.336Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d583163d8b84c81e17c43"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 3",
+  "x": 580,
+  "y": 160,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61c53fff391f06231d8f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:29.668Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:29.668Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d5ef45770659d3498d659"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 4",
+  "x": 580,
+  "y": 670,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61c63fff391f06231d94"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:30.069Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:30.069Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d5ef45770659d3498d659"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 4",
+  "x": 120,
+  "y": 670,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61c63fff391f06231d99"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:30.478Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:30.478Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d5ef45770659d3498d659"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 4",
+  "x": 700,
+  "y": 670,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61c63fff391f06231d9e"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:30.796Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:06:05.743Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d604a56d12b1da131c9ac"
+  },
+  "role": "entrance",
+  "label": "Hallway 4",
+  "x": 740,
+  "y": 670,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d61c73fff391f06231da3"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:31.535Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:06:06.070Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d604a56d12b1da131c9cd"
+  },
+  "role": "entrance",
+  "label": "Hallway 4",
+  "x": 100,
+  "y": 670,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d61c73fff391f06231da8"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:31.798Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:31.799Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d583163d8b84c81e17c43"
+  },
+  "role": "hallway_point",
+  "label": "Hallway Point 15",
+  "x": 720,
+  "y": 160,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61c83fff391f06231dad"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:32.345Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:52.240Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d51214b2723567e989712"
+  },
+  "role": "hallway_point",
+  "label": "Hallway Point 16",
+  "x": 420,
+  "y": 160,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d629e3fff391f06231e8e"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:06:06.495Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:06:06.495Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d5ef45770659d3498d659"
+  },
+  "role": "hallway_point",
+  "label": "Hallway Point 14",
+  "x": 260,
+  "y": 671,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d629e3fff391f06231e93"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:06:06.722Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:06:06.722Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d5ef45770659d3498d659"
+  },
+  "role": "hallway_point",
+  "label": "Hallway Point 15",
+  "x": 420,
+  "y": 671,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64133fff391f06231f20"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:12:19.581Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:12:19.581Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d568917353ec9b2976191"
+  },
+  "role": "hallway_point",
+  "label": "Hallway Point 15",
+  "x": 360,
+  "y": 160,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64703fff391f06231fba"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:13:52.469Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:52.469Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d5ef45770659d3498d659"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 4",
+  "x": 100,
+  "y": 670,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64703fff391f06231fbf"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:13:52.694Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:52.694Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d5ef45770659d3498d659"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 4",
+  "x": 740,
+  "y": 670,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64703fff391f06231fc4"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:13:52.903Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:52.903Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d51214b2723567e989712"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 417.50000000000006,
+  "y": 520,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64713fff391f06231fc9"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:13:53.124Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:53.124Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d51214b2723567e989712"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 417.5,
+  "y": 420,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64713fff391f06231fce"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:13:53.342Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:53.342Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d51214b2723567e989712"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 417.5,
+  "y": 320,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d659d4ac61a222ae213e0"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:18:53.951Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:18:53.952Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d659c4ac61a222ae213af"
+  },
+  "role": "elevator_entry",
+  "label": "Elevator 1",
+  "x": 420,
+  "y": 700,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d659e4ac61a222ae213e5"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:18:54.301Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:18:54.301Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d659d4ac61a222ae213d7"
+  },
+  "role": "elevator_entry",
+  "label": "Elevator 2",
+  "x": 420,
+  "y": 80,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d65dc4ac61a222ae213f9"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:19:56.528Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:28:34.522Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": null,
+  "role": "exit",
+  "label": "Hallway Point 18",
+  "x": 700,
+  "y": 271,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d65f14ac61a222ae2140a"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:20:17.024Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:29:09.031Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d65f04ac61a222ae21407"
+  },
+  "role": "escalator_entry",
+  "label": "Escalator 1",
+  "x": 900,
+  "y": 270,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d65f74ac61a222ae2141d"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:20:23.610Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:29:12.769Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d65f74ac61a222ae2141a"
+  },
+  "role": "escalator_entry",
+  "label": "Escalator 2",
+  "x": 900,
+  "y": 550,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d66024ac61a222ae21422"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:20:34.760Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:28:34.753Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": null,
+  "role": "exit",
+  "label": "Hallway Point 18",
+  "x": 700,
+  "y": 551,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d67764ac61a222ae21477"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:26:46.030Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:40:53.968Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d504f4b2723567e989659"
+  },
+  "role": "entrance",
+  "label": "Men",
+  "x": 100,
+  "y": 140,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d67764ac61a222ae2147c"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:26:46.255Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:26:46.255Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": null,
+  "role": "hallway_point",
+  "label": "Hallway Point 19",
+  "x": 120,
+  "y": 140,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d679dd49d3f7650bb408b"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:27:25.406Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:27:25.406Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": null,
+  "role": "hallway_point",
+  "label": "Hallway Point 19",
+  "x": 600,
+  "y": 300,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d679dd49d3f7650bb408e"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:27:25.628Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:27:25.628Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": null,
+  "role": "hallway_point",
+  "label": "Hallway Point 20",
+  "x": 600,
+  "y": 540,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d692a4ac61a222ae214ac"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:34:02.606Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:34:56.994Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d692a4ac61a222ae214a6"
+  },
+  "role": "entrance",
+  "label": "Room 14",
+  "x": 780,
+  "y": 420,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d692a4ac61a222ae214b1"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:34:02.857Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:36:36.694Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d692a4ac61a222ae214a9"
+  },
+  "role": "entrance",
+  "label": "Door 1",
+  "x": 1080,
+  "y": 420,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d698a4ac61a222ae214d6"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:35:38.790Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:35:38.791Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "object": {
+    "$oid": "6a6d698a4ac61a222ae214d3"
+  },
+  "role": "entrance",
+  "label": "Room 15",
+  "x": 120,
+  "y": 640,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d69ffbd93c91d1a735e90"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:37:35.262Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:44:00.567Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "object": {
+    "$oid": "6a6d69febd93c91d1a735e62"
+  },
+  "role": "elevator_entry",
+  "label": "Elevator 1",
+  "x": 740,
+  "y": 400,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d69ffbd93c91d1a735e95"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:37:35.496Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:44:00.291Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "object": {
+    "$oid": "6a6d69febd93c91d1a735e83"
+  },
+  "role": "stairs_entry",
+  "label": "Stairs 1",
+  "x": 760,
+  "y": 320,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d69ffbd93c91d1a735e9a"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:37:35.722Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:43:59.997Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "object": {
+    "$oid": "6a6d69ffbd93c91d1a735e8d"
+  },
+  "role": "stairs_entry",
+  "label": "Stairs 2",
+  "x": 660,
+  "y": 500,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d6a1bbd93c91d1a735ed0"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:38:03.223Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:43:59.693Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "object": {
+    "$oid": "6a6d6a1abd93c91d1a735ec7"
+  },
+  "role": "entrance",
+  "label": "Room 1",
+  "x": 560,
+  "y": 520,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d6a5cbd93c91d1a735ef3"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:39:08.704Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:43:59.404Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "object": {
+    "$oid": "6a6d6a5cbd93c91d1a735eea"
+  },
+  "role": "elevator_entry",
+  "label": "Elevator 2",
+  "x": 350,
+  "y": 440,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d6b80bd93c91d1a735fdb"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:44:00.799Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:44:00.799Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "object": {
+    "$oid": "6a6d6b7ebd93c91d1a735fa3"
+  },
+  "role": "entrance",
+  "label": "Room 2",
+  "x": 400,
+  "y": 270,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b81bd93c91d1a735fe0"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:44:01.021Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:44:01.021Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "object": {
+    "$oid": "6a6d6b7ebd93c91d1a735f9d"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 520,
+  "y": 410,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b81bd93c91d1a735fe5"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:44:01.251Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:44:01.251Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "object": {
+    "$oid": "6a6d6b7fbd93c91d1a735fa6"
+  },
+  "role": "entrance",
+  "label": "Room 3",
+  "x": 780,
+  "y": 470,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b81bd93c91d1a735fea"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:44:01.470Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:44:01.470Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "object": {
+    "$oid": "6a6d6b7ebd93c91d1a735f9d"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 660,
+  "y": 410,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b81bd93c91d1a735fef"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:44:01.699Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:44:01.699Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "object": {
+    "$oid": "6a6d6b7ebd93c91d1a735fa0"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 2",
+  "x": 440,
+  "y": 250,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b81bd93c91d1a735ff4"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:44:01.926Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:44:01.926Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "object": {
+    "$oid": "6a6d6b7ebd93c91d1a735f9d"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 420,
+  "y": 410,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b82bd93c91d1a735ff9"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:44:02.157Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:44:02.158Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "object": {
+    "$oid": "6a6d6b7ebd93c91d1a735f9d"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 1",
+  "x": 560,
+  "y": 410,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b82bd93c91d1a735ffe"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:44:02.535Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:44:02.535Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "object": {
+    "$oid": "6a6d6b7ebd93c91d1a735fa0"
+  },
+  "role": "hallway_point",
+  "label": "Hallway 2",
+  "x": 680,
+  "y": 250,
+  "rotation": 0,
+  "geometryType": "icon",
+  "isAccessible": true,
+  "__v": 0
+}]
