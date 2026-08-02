@@ -42,14 +42,24 @@ export function useRoute(data: MapViewerData) {
     ?? findDefaultOriginNode(data.floors, data.nodesByFloorId)?.id
     ?? null;
 
+  // Split from the route lookup below: the graph only depends on the
+  // building's nodes/edges and the accessible-only filter — not on which
+  // origin/destination is currently picked. Without this split, trying a
+  // different destination (or origin) with the same accessibility setting
+  // would rebuild the whole building's adjacency graph from scratch just to
+  // change Dijkstra's start/end points.
+  const graph = useMemo(
+    () => buildRouteGraph(allNodes, allEdges, { accessibleOnly }),
+    [allNodes, allEdges, accessibleOnly],
+  );
+
   const route = useMemo(() => {
     if (!effectiveOriginId || !destinationNodeId) {
       return null;
     }
 
-    const graph = buildRouteGraph(allNodes, allEdges, { accessibleOnly });
     return findShortestPath(graph, effectiveOriginId, destinationNodeId);
-  }, [effectiveOriginId, destinationNodeId, allNodes, allEdges, accessibleOnly]);
+  }, [graph, effectiveOriginId, destinationNodeId]);
 
   const segments = useMemo(() => {
     if (!route) {
