@@ -181,6 +181,25 @@ export function useMapViewerViewport({
     setPan(fitView.pan);
   };
 
+  // Lets a drag that starts on an object (which keeps its own pointer
+  // capture — see MapViewerSvg.tsx's ViewerObjects — so its native click
+  // stays reliable) still pan the map, by applying the same delta this
+  // hook's own background-drag handling would have applied.
+  const panByDelta = (deltaX: number, deltaY: number) => {
+    if (!activeFloor) {
+      return;
+    }
+
+    setPan((current) =>
+      clampPanToViewport(
+        { x: current.x + deltaX, y: current.y + deltaY },
+        activeFloor,
+        viewportSize,
+        zoom,
+      ),
+    );
+  };
+
   const consumeSuppressedClick = () => {
     if (!suppressClickRef.current) {
       return false;
@@ -417,6 +436,7 @@ export function useMapViewerViewport({
     focusWorldPoint,
     isDragging,
     pan,
+    panByDelta,
     resetView,
     viewportRef,
     zoom,

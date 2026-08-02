@@ -4,7 +4,6 @@ import type {
 } from "react";
 
 import { getRenderedFloorSize } from "../lib/mapViewerViewport";
-import { isNodePublicMarker } from "../lib/mapStyles";
 import type {
   ConnectorTargetInfo,
   ViewerFloor,
@@ -29,6 +28,7 @@ interface MapViewerCanvasProps {
   zoom: number;
   onBackgroundClick: () => void;
   onConnectorActivate: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
+  onObjectPan: (deltaX: number, deltaY: number) => void;
   onObjectSelect: (object: ViewerMapObject) => void;
   onPointerCancel: PointerEventHandler<HTMLDivElement>;
   onPointerLeave: PointerEventHandler<HTMLDivElement>;
@@ -53,6 +53,7 @@ export function MapViewerCanvas({
   zoom,
   onBackgroundClick,
   onConnectorActivate,
+  onObjectPan,
   onObjectSelect,
   onPointerCancel,
   onPointerLeave,
@@ -104,6 +105,7 @@ export function MapViewerCanvas({
               objects={objects}
               onBackgroundClick={onBackgroundClick}
               onConnectorActivate={onConnectorActivate}
+              onObjectPan={onObjectPan}
               onObjectSelect={onObjectSelect}
               onPointerDown={onSvgPointerDown}
               onPointerMove={onSvgPointerMove}
@@ -118,7 +120,7 @@ export function MapViewerCanvas({
 
       {activeFloor ? (
         <div className="absolute bottom-4 left-4 right-[5.25rem] rounded-2xl border border-border bg-card/88 px-3 py-2 text-xs text-muted-foreground shadow-sm backdrop-blur-xl sm:right-auto">
-          Zoom {(zoom * 100).toFixed(0)}% • {objects.length} objects • {nodes.filter(isNodePublicMarker).length} markers
+          Zoom {(zoom * 100).toFixed(0)}%
         </div>
       ) : null}
     </>

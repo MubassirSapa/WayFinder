@@ -82,6 +82,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
     focusWorldPoint,
     isDragging,
     pan,
+    panByDelta,
     resetView,
     viewportRef,
     zoom,
@@ -394,6 +395,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
               objects={objects}
               onBackgroundClick={handleBackgroundClick}
               onConnectorActivate={handleConnectorJump}
+              onObjectPan={panByDelta}
               onObjectSelect={handleObjectSelect}
               onPointerCancel={handleViewportPointerCancel}
               onPointerLeave={handleViewportPointerLeave}

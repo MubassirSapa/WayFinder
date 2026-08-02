@@ -1,6 +1,7 @@
-import type { PointerEventHandler } from "react";
+import { useRef } from "react";
+import type { MouseEvent, PointerEvent, PointerEventHandler } from "react";
 
-import { MAP_VIEWER_FLOOR_CONTENT_PADDING } from "../constants/mapViewer.constants";
+import { MAP_VIEWER_DRAG_THRESHOLD, MAP_VIEWER_FLOOR_CONTENT_PADDING } from "../constants/mapViewer.constants";
 import { useConnectorDoublePress } from "../hooks/useConnectorDoublePress";
 import {
   getViewerEdgePalette,
@@ -28,6 +29,7 @@ interface MapViewerSvgProps {
   showGrid: boolean;
   onBackgroundClick: () => void;
   onConnectorActivate: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
+  onObjectPan: (deltaX: number, deltaY: number) => void;
   onObjectSelect: (object: ViewerMapObject) => void;
   onPointerDown: PointerEventHandler<SVGSVGElement>;
   onPointerMove: PointerEventHandler<SVGSVGElement>;
@@ -45,6 +47,7 @@ export function MapViewerSvg({
   showGrid,
   onBackgroundClick,
   onConnectorActivate,
+  onObjectPan,
   onObjectSelect,
   onPointerDown,
   onPointerMove,
@@ -131,6 +134,7 @@ export function MapViewerSvg({
         nodes={nodes}
         objects={objects}
         onConnectorActivate={onConnectorActivate}
+        onObjectPan={onObjectPan}
         onObjectSelect={onObjectSelect}
         routePoints={routePoints}
         selectedObjectId={selectedObjectId}
@@ -145,6 +149,7 @@ function ViewerFloorContent({
   nodes,
   objects,
   onConnectorActivate,
+  onObjectPan,
   onObjectSelect,
   routePoints,
   selectedObjectId,
@@ -154,6 +159,7 @@ function ViewerFloorContent({
   nodes: ViewerMapNode[];
   objects: ViewerMapObject[];
   onConnectorActivate: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
+  onObjectPan: (deltaX: number, deltaY: number) => void;
   onObjectSelect: (object: ViewerMapObject) => void;
   routePoints?: { x: number; y: number }[];
   selectedObjectId: string | null;
@@ -174,6 +180,7 @@ function ViewerFloorContent({
         nodes={nodes}
         objects={objects}
         onConnectorPress={handlePress}
+        onPan={onObjectPan}
         onSelect={onObjectSelect}
         selectedObjectId={selectedObjectId}
       />
@@ -234,6 +241,7 @@ function ViewerObjects({
   nodes,
   objects,
   onConnectorPress,
+  onPan,
   onSelect,
   selectedObjectId,
 }: {
@@ -241,17 +249,13 @@ function ViewerObjects({
   nodes: ViewerMapNode[];
   objects: ViewerMapObject[];
   onConnectorPress: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
+  onPan: (deltaX: number, deltaY: number) => void;
   onSelect: (object: ViewerMapObject) => void;
   selectedObjectId: string | null;
 }) {
   return (
     <g>
       {objects.map((object) => {
-        const palette = getViewerObjectPalette(object.type);
-        const isSelected = selectedObjectId === object.id;
-        const centerX = object.width / 2;
-        const centerY = object.height / 2;
-
         // Stairs/elevator/escalator objects are a much bigger, easier target
         // than their connector node marker — clicking anywhere on the shape
         // triggers the same double-press-to-jump instead of only working on
@@ -261,86 +265,169 @@ function ViewerObjects({
         const connectorTargets = connectorNode ? connectorTargetsByNodeId[connectorNode.id] : undefined;
 
         return (
-          <g
+          <ViewerObjectItem
+            connectorNode={connectorNode}
+            connectorTargets={connectorTargets}
+            isSelected={selectedObjectId === object.id}
             key={object.id}
-            onClick={(event) => {
-              event.stopPropagation();
-              // A connector is a routable object like any other — select it
-              // first (so "Start here"/"Route here" works) — and, if it has
-              // a cross-floor edge, also feed the same click into the
-              // double-press-to-jump tracker.
-              onSelect(object);
-              if (connectorNode && connectorTargets && connectorTargets.length > 0) {
-                onConnectorPress(connectorNode, connectorTargets);
-              }
-            }}
-            // Without this, a press on an object also reaches the SVG's own
-            // pointerdown handler and starts a pan-drag gesture. Any tiny
-            // amount of pointer movement between down and up (extremely
-            // common on a trackpad) then crosses the drag threshold and the
-            // click gets silently suppressed as "that was a pan, not a
-            // click" — objects became effectively unclickable.
-            onPointerDown={(event) => event.stopPropagation()}
-            transform={`translate(${object.x}, ${object.y}) rotate(${object.rotation}, ${centerX}, ${centerY})`}
-          >
-            {object.shape === "polygon" ? (
-              <polygon
-                fill={palette.fill}
-                points={(
-                  (object.points?.length ?? 0) >= 3
-                    ? object.points!
-                    : [
-                        { x: 0, y: 0 },
-                        { x: object.width, y: 0 },
-                        { x: object.width, y: object.height },
-                        { x: 0, y: object.height },
-                      ]
-                )
-                  .map((point) => `${point.x},${point.y}`)
-                  .join(" ")}
-                stroke={isSelected ? "var(--primary)" : palette.stroke}
-                strokeWidth={isSelected ? 2.4 : 1.2}
-                vectorEffect="non-scaling-stroke"
-              />
-            ) : object.shape === "ellipse" ? (
-              <ellipse
-                cx={centerX}
-                cy={centerY}
-                fill={palette.fill}
-                rx={centerX}
-                ry={centerY}
-                stroke={isSelected ? "var(--primary)" : palette.stroke}
-                strokeWidth={isSelected ? 2.4 : 1.2}
-                vectorEffect="non-scaling-stroke"
-              />
-            ) : (
-              <rect
-                fill={palette.fill}
-                height={object.height}
-                stroke={isSelected ? "var(--primary)" : palette.stroke}
-                strokeWidth={isSelected ? 2.4 : 1.2}
-                vectorEffect="non-scaling-stroke"
-                width={object.width}
-              />
-            )}
-
-            {object.type !== "wall" && object.type !== "aisle" && object.width > 52 && object.height > 26 ? (
-              <text
-                fill={palette.label}
-                fontFamily="var(--font-sans)"
-                fontSize="11"
-                fontWeight="600"
-                opacity={0.92}
-                textAnchor="middle"
-                x={centerX}
-                y={centerY}
-              >
-                {object.label || object.name}
-              </text>
-            ) : null}
-          </g>
+            object={object}
+            onConnectorPress={onConnectorPress}
+            onPan={onPan}
+            onSelect={onSelect}
+          />
         );
       })}
+    </g>
+  );
+}
+
+function ViewerObjectItem({
+  connectorNode,
+  connectorTargets,
+  isSelected,
+  object,
+  onConnectorPress,
+  onPan,
+  onSelect,
+}: {
+  connectorNode: ViewerMapNode | undefined;
+  connectorTargets: ConnectorTargetInfo[] | undefined;
+  isSelected: boolean;
+  object: ViewerMapObject;
+  onConnectorPress: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
+  onPan: (deltaX: number, deltaY: number) => void;
+  onSelect: (object: ViewerMapObject) => void;
+}) {
+  const palette = getViewerObjectPalette(object.type);
+  const centerX = object.width / 2;
+  const centerY = object.height / 2;
+
+  // A press that turns into a real drag should pan the map exactly like
+  // starting the drag on empty canvas would — objects aren't draggable in
+  // the public viewer, so there's nothing else that gesture could mean. This
+  // is tracked locally (not left to the SVG's own background-drag handling)
+  // because this element keeps its own pointer capture below specifically so
+  // its native click stays reliable: once a pointer is captured by a
+  // different element (like the SVG, if its pan handler had captured it
+  // instead), the browser retargets the resulting click there too — so an
+  // object press would silently stop selecting anything.
+  const dragStartRef = useRef<{ x: number; y: number } | null>(null);
+  const hasDraggedRef = useRef(false);
+
+  const handlePointerDown = (event: PointerEvent<SVGGElement>) => {
+    event.stopPropagation();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    dragStartRef.current = { x: event.clientX, y: event.clientY };
+    hasDraggedRef.current = false;
+  };
+
+  const handlePointerMove = (event: PointerEvent<SVGGElement>) => {
+    const start = dragStartRef.current;
+    if (!start) {
+      return;
+    }
+
+    if (!hasDraggedRef.current) {
+      const distance = Math.hypot(event.clientX - start.x, event.clientY - start.y);
+      if (distance > MAP_VIEWER_DRAG_THRESHOLD) {
+        hasDraggedRef.current = true;
+      }
+    }
+
+    if (hasDraggedRef.current) {
+      onPan(event.movementX, event.movementY);
+    }
+  };
+
+  const handlePointerEnd = (event: PointerEvent<SVGGElement>) => {
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    dragStartRef.current = null;
+  };
+
+  const handleClick = (event: MouseEvent<SVGGElement>) => {
+    event.stopPropagation();
+
+    if (hasDraggedRef.current) {
+      // That press turned into a pan, not a tap — don't also select.
+      hasDraggedRef.current = false;
+      return;
+    }
+
+    // A connector is a routable object like any other — select it first (so
+    // "Start here"/"Route here" works) — and, if it has a cross-floor edge,
+    // also feed the same click into the double-press-to-jump tracker.
+    onSelect(object);
+    if (connectorNode && connectorTargets && connectorTargets.length > 0) {
+      onConnectorPress(connectorNode, connectorTargets);
+    }
+  };
+
+  return (
+    <g
+      onClick={handleClick}
+      onPointerCancel={handlePointerEnd}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerEnd}
+      transform={`translate(${object.x}, ${object.y}) rotate(${object.rotation}, ${centerX}, ${centerY})`}
+    >
+      {object.shape === "polygon" ? (
+        <polygon
+          fill={palette.fill}
+          points={(
+            (object.points?.length ?? 0) >= 3
+              ? object.points!
+              : [
+                  { x: 0, y: 0 },
+                  { x: object.width, y: 0 },
+                  { x: object.width, y: object.height },
+                  { x: 0, y: object.height },
+                ]
+          )
+            .map((point) => `${point.x},${point.y}`)
+            .join(" ")}
+          stroke={isSelected ? "var(--primary)" : palette.stroke}
+          strokeWidth={isSelected ? 2.4 : 1.2}
+          vectorEffect="non-scaling-stroke"
+        />
+      ) : object.shape === "ellipse" ? (
+        <ellipse
+          cx={centerX}
+          cy={centerY}
+          fill={palette.fill}
+          rx={centerX}
+          ry={centerY}
+          stroke={isSelected ? "var(--primary)" : palette.stroke}
+          strokeWidth={isSelected ? 2.4 : 1.2}
+          vectorEffect="non-scaling-stroke"
+        />
+      ) : (
+        <rect
+          fill={palette.fill}
+          height={object.height}
+          stroke={isSelected ? "var(--primary)" : palette.stroke}
+          strokeWidth={isSelected ? 2.4 : 1.2}
+          vectorEffect="non-scaling-stroke"
+          width={object.width}
+        />
+      )}
+
+      {object.type !== "wall" && object.type !== "aisle" && object.width > 52 && object.height > 26 ? (
+        <text
+          fill={palette.label}
+          fontFamily="var(--font-sans)"
+          fontSize="11"
+          fontWeight="600"
+          opacity={0.92}
+          textAnchor="middle"
+          x={centerX}
+          y={centerY}
+        >
+          {object.label || object.name}
+        </text>
+      ) : null}
     </g>
   );
 }
