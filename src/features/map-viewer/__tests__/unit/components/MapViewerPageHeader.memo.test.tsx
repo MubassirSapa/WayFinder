@@ -19,8 +19,6 @@ const activeFloor: ViewerFloor = {
   height: 300,
   status: "published",
 };
-const floors = [activeFloor];
-
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
@@ -29,8 +27,6 @@ afterEach(() => {
 describe("MapViewerPageHeader memoization", () => {
   it("does not re-render when the parent re-renders with referentially unchanged props", () => {
     const formatSpy = vi.spyOn(mapViewerViewportLib, "formatOrganizationName");
-    const onFloorChange = vi.fn();
-
     function Harness() {
       const [tick, setTick] = useState(0);
       return (
@@ -38,7 +34,7 @@ describe("MapViewerPageHeader memoization", () => {
           <button onClick={() => setTick((current) => current + 1)} type="button">
             tick: {tick}
           </button>
-          <MapViewerPageHeader activeFloor={activeFloor} floors={floors} onFloorChange={onFloorChange} />
+          <MapViewerPageHeader activeFloor={activeFloor} />
         </div>
       );
     }
@@ -60,8 +56,6 @@ describe("MapViewerPageHeader memoization", () => {
   it("still re-renders when activeFloor changes, proving memo isn't over-suppressing updates", () => {
     const formatSpy = vi.spyOn(mapViewerViewportLib, "formatOrganizationName");
     const otherFloor: ViewerFloor = { ...activeFloor, id: "floor-2", name: "Upper Floor" };
-    const onFloorChange = vi.fn();
-
     function Harness() {
       const [floor, setFloor] = useState(activeFloor);
       return (
@@ -69,7 +63,7 @@ describe("MapViewerPageHeader memoization", () => {
           <button onClick={() => setFloor(otherFloor)} type="button">
             switch
           </button>
-          <MapViewerPageHeader activeFloor={floor} floors={floors} onFloorChange={onFloorChange} />
+          <MapViewerPageHeader activeFloor={floor} />
         </div>
       );
     }
@@ -82,5 +76,12 @@ describe("MapViewerPageHeader memoization", () => {
     });
 
     expect(formatSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it("shows floor context without duplicating the canvas floor selector", () => {
+    const { queryByRole, getByText } = render(<MapViewerPageHeader activeFloor={activeFloor} />);
+
+    expect(getByText("Ground Floor")).toBeTruthy();
+    expect(queryByRole("combobox")).toBeNull();
   });
 });

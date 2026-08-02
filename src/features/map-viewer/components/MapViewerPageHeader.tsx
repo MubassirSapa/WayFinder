@@ -7,13 +7,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { WayfinderBrand } from "@/components/shared/brand/WayfinderBrand";
 import { ModeToggle } from "@/components/shared/theme/ModeToggle";
 
@@ -22,8 +15,6 @@ import type { ViewerFloor } from "../types/map-viewer.types";
 
 interface MapViewerPageHeaderProps {
   activeFloor: ViewerFloor | null;
-  floors: ViewerFloor[];
-  onFloorChange: (floorId: string) => void;
 }
 
 // Memoized because MapViewerShell re-renders on every selection/search/route
@@ -31,8 +22,6 @@ interface MapViewerPageHeaderProps {
 // re-render on all of them for no visual reason.
 export const MapViewerPageHeader = memo(function MapViewerPageHeader({
   activeFloor,
-  floors,
-  onFloorChange,
 }: MapViewerPageHeaderProps) {
   return (
     <header className="sticky top-0 z-20 border-b border-border bg-background/92 backdrop-blur-xl">
@@ -49,31 +38,10 @@ export const MapViewerPageHeader = memo(function MapViewerPageHeader({
                   </BreadcrumbPage>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <Select
-                    items={floors.map((floor) => ({ label: floor.name, value: floor.id }))}
-                    onValueChange={(value) => {
-                      if (value) {
-                        onFloorChange(String(value));
-                      }
-                    }}
-                    value={activeFloor.id}
-                  >
-                    <SelectTrigger
-                      aria-label="Switch floor"
-                      className="h-8 gap-1 border-none bg-transparent px-1.5 text-sm font-semibold text-foreground shadow-none hover:bg-muted/60 sm:h-7 sm:text-base"
-                      size="sm"
-                    >
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {floors.map((floor) => (
-                        <SelectItem key={floor.id} value={floor.id}>
-                          {floor.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                <BreadcrumbItem className="min-w-0">
+                  <BreadcrumbPage className="truncate text-sm font-medium text-muted-foreground sm:text-base">
+                    {activeFloor.name}
+                  </BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>

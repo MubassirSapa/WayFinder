@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { act, cleanup, render } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { MapViewerCanvas } from "@/features/map-viewer/components/MapViewerCanvas";
@@ -68,12 +68,11 @@ describe("MapViewerCanvas store subscription", () => {
     useAppStore.setState(INITIAL_VIEWPORT_STATE);
   });
 
-  it("renders the transform and zoom readout from the store's committed pan/zoom", () => {
+  it("renders the transform from the store's committed pan/zoom", () => {
     useAppStore.setState({ viewportPan: { x: 42, y: -17 }, viewportZoom: 1.5 });
 
     renderCanvas();
 
-    expect(screen.getByText("Zoom 150%")).toBeTruthy();
     const contentNode = document.querySelector(".will-change-transform") as HTMLElement;
     expect(contentNode.style.transform).toBe("translate(42px, -17px) scale(1.5)");
   });

@@ -344,7 +344,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
       className={["h-dvh overflow-hidden bg-background text-foreground", MAP_VIEWER_THEME_CLASSNAMES].join(" ")}
     >
       <div className="flex h-full min-h-0 flex-col">
-        <MapViewerPageHeader activeFloor={activeFloor} floors={floors} onFloorChange={handleFloorChange} />
+        <MapViewerPageHeader activeFloor={activeFloor} />
 
         {/* Below md, the sidebar is a fixed bottom sheet that docks as a
             collapsed handle (map fully visible above it) and expands over
@@ -400,6 +400,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
               activeFloor={activeFloor}
               activeSegmentIndex={activeSegmentIndex}
               floors={floors}
+              onFloorChange={handleFloorChange}
               onJumpToSegment={handleJumpToSegment}
               onResetView={resetView}
               onToggleGrid={handleToggleGrid}

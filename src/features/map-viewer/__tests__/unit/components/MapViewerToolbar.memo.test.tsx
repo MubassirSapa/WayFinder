@@ -23,10 +23,11 @@ const floors = [activeFloor];
 // memo regardless of what this test is trying to prove.
 const emptySegments: RouteFloorSegment[] = [];
 
-// segments.length <= 1 forces the plain-label branch (not the breadcrumb
-// branch), which calls formatFloorLabel unconditionally on every render —
-// a reliable proxy for "did this component's body actually execute again".
+// segments.length <= 1 renders FloorNavigator, which calls formatFloorLabel
+// for each floor option. That stable call count is a
+// reliable proxy for "did this component subtree execute again".
 const stableHandlers = {
+  onFloorChange: vi.fn(),
   onJumpToSegment: vi.fn(),
   onResetView: vi.fn(),
   onToggleGrid: vi.fn(),
@@ -39,6 +40,26 @@ afterEach(() => {
 });
 
 describe("MapViewerToolbar memoization", () => {
+  it("positions floor navigation bottom-left and map controls bottom-right", () => {
+    const { getByRole } = render(
+      <MapViewerToolbar
+        activeFloor={activeFloor}
+        activeSegmentIndex={0}
+        floors={floors}
+        segments={emptySegments}
+        showGrid={false}
+        {...stableHandlers}
+      />,
+    );
+
+    const cornerDock = getByRole("group", { name: "Floor navigation" }).closest('[data-testid="map-corner-controls"]');
+    expect(cornerDock?.className).toContain("bottom-20");
+    expect(cornerDock?.className).toContain("inset-x-3");
+    expect(cornerDock?.className).toContain("grid-cols-[minmax(0,1fr)_auto]");
+    expect(cornerDock?.className).toContain("md:bottom-4");
+    expect(getByRole("group", { name: "Map view controls" })).toBeTruthy();
+  });
+
   it("does not re-render when the parent re-renders with referentially unchanged props", () => {
     const formatSpy = vi.spyOn(mapViewerViewportLib, "formatFloorLabel");
 

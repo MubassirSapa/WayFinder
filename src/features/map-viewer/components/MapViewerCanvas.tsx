@@ -134,11 +134,6 @@ export function MapViewerCanvas({
         )}
       </div>
 
-      {activeFloor ? (
-        <div className="absolute bottom-4 left-4 right-[5.25rem] rounded-2xl border border-border bg-card/88 px-3 py-2 text-xs text-muted-foreground shadow-sm backdrop-blur-xl sm:right-auto">
-          Zoom {(zoom * 100).toFixed(0)}%
-        </div>
-      ) : null}
     </>
   );
 }

@@ -2,15 +2,24 @@
 
 ## [Unreleased]
 
+## [0.1.5] - 2026-08-02
+
 ### Fixed
+- Tightened the floor navigator's visual rhythm: both arrow buttons now use equal 40px hit areas, the center selector has a fixed 64px width, and the island uses compact symmetric padding instead of stretching its middle control at viewport-based breakpoints.
+- Reworked responsive map overlays into separate collision zones: the room-selection bar now sits close to the top, floor and zoom controls share a gap-enforced bottom-corner grid, route cards sit in their own row above those islands, and the mobile-sidebar clearance remains active through the correct `md` breakpoint.
 - Fixed the map canvas route-floor selector overlapping its trigger on wide screens instead of opening below it.
 - Fixed dragging to pan the map viewer not working when the gesture started on an object (room, hallway, connector, etc.) instead of empty canvas, on both mouse and touch. Objects now track their own drag distance and forward pan deltas once past the existing drag threshold, while still keeping native click/tap-to-select fully reliable.
 - Fixed the map viewer occasionally locking onto a wrong zoom level for the rest of the session (most noticeable on a mobile hard reload). A 0×0 viewport measurement — possible on the very first layout read, before hydration settles — was being treated as real and used to compute the default view; later, correctly-sized measurements only re-clamp the existing zoom rather than recomputing it, so the bogus value never corrected itself.
 
 ### Added
+- Added a persistent canvas floor navigator for free exploration outside an active multi-floor route. Its responsive floating island provides one-tap previous/next floor controls plus a bounded, scrollable all-floors selector with 44px mobile targets, floor levels, route-independent labels, disabled boundary states, and keyboard navigation.
 - Added a route-connector highlight to the map viewer: the specific stairs/elevator/escalator a multi-floor route continues through on the active floor now gets a route-colored outline on its object shape and a pulsing beacon ring on its marker, so it's obvious at a glance which connector to use when a floor has more than one. An explicit selection still visually takes priority over the highlight.
 
 ### Changed
+- Kept the map-view Reset action visible in the compact mobile zoom island; only the less essential Grid control and numeric zoom percentage remain hidden at the narrowest breakpoint.
+- Reorganized canvas controls into separate bottom-corner islands: floor navigation is docked flush bottom-left and zoom controls bottom-right in a collision-aware grid. Very narrow screens retain a clean horizontal floor control and show only essential zoom buttons; secondary zoom controls and the live percentage appear as space increases.
+- Simplified the closed canvas floor navigator to show only the active floor name; level and position details remain in its accessible label and expanded floor list.
+- Removed the duplicate floor selector from the map viewer page header. The header now provides read-only building and floor context, while all interactive floor switching lives in the canvas floor navigator.
 - Replaced the map canvas's unbounded route breadcrumb with a responsive floor-route selector. The compact floating trigger shows the active floor and route position, while its keyboard-accessible popup lists connector context and caps its height at approximately six floors before scrolling, preventing long routes from covering the map on mobile or desktop.
 - Replaced the hand-built demo seed blueprints with production-style exported map fixtures covering five floors, 107 objects, 163 nodes, and 178 source edges. The idempotent seeder now remaps exported relationship IDs when importing, assigns sequential floor levels, fills in missing connector objects and nodes, and links every adjacent floor with stairs, elevator, and escalator edges for repeatable multi-floor tests.
 - Stopped the map viewer's whole page from re-rendering on every pan/zoom tick. Viewport state (pan, zoom, dragging) now lives in a dedicated store slice that only `MapViewerCanvas` subscribes to, instead of component-local state owned by the page shell; an active drag/pinch/wheel gesture writes the transform straight to the DOM via a ref and only syncs the store at most once per animation frame, so panning and zooming are now effectively free for the rest of the page (sidebar, header, toolbar).

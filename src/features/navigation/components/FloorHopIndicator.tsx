@@ -21,7 +21,7 @@ export function FloorHopIndicator({ direction, edgeType, floorName, onAdvance }:
     // fixed at the bottom of the screen and would otherwise sit on top of
     // this) — back to a plain bottom-4 at md+, where the sidebar is a normal
     // grid column instead.
-    <div className="pointer-events-none absolute inset-x-0 bottom-20 z-10 flex justify-center px-4 md:bottom-4">
+    <div className="pointer-events-none absolute inset-x-0 bottom-36 z-10 flex justify-center px-4 md:bottom-20">
       <Button
         className="pointer-events-auto shadow-lg"
         onClick={onAdvance}

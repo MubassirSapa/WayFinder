@@ -17,7 +17,7 @@ export function RouteStatusIndicator({ accessibleOnly, distanceMeters, found }: 
   return (
     // Bottom offset clears the collapsed mobile sidebar sheet, same reason
     // as FloorHopIndicator — back to bottom-4 at md+.
-    <div className="pointer-events-none absolute inset-x-0 bottom-20 z-10 flex justify-center px-4 md:bottom-4">
+    <div className="pointer-events-none absolute inset-x-0 bottom-36 z-10 flex justify-center px-4 md:bottom-20">
       <div
         className={[
           "pointer-events-auto flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium shadow-lg",
