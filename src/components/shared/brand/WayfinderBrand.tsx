@@ -1,5 +1,5 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Compass } from "lucide-react";
 
 import { BRAND } from "@/constants/brand";
 import { cn } from "@/lib/utils";
@@ -21,11 +21,17 @@ export function WayfinderBrand({
     <>
       <span
         className={cn(
-          "flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-[0_0_22px_color-mix(in_oklch,var(--primary),transparent_60%)]",
+          "relative block size-8 overflow-hidden rounded-md bg-background shadow-[0_0_22px_color-mix(in_oklch,var(--primary),transparent_60%)]",
           iconClassName,
         )}
       >
-        <Compass className="size-4" aria-hidden />
+        <Image
+          alt=""
+          className="object-cover"
+          fill
+          sizes="32px"
+          src="/icon1.png"
+        />
       </span>
       <span
         className={cn(
