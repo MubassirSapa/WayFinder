@@ -1,11 +1,12 @@
 import type {
+  Building,
   Floor,
   MapNode,
   MapObject,
+  Organization,
   PathEdge,
 } from "@/payload-types";
 import { getPayloadClient } from "@/lib/getPayloadClient";
-import { resolveOrganizationNamesByBuildingId } from "@/lib/organizationBuilding";
 import { asPayloadId } from "@/lib/payload-id";
 
 import type {
@@ -14,7 +15,7 @@ import type {
   ViewerMapNode,
   ViewerMapObject,
   ViewerPathEdge,
-} from "../types/map-viewer.types";
+} from "../../types/map-viewer.types";
 
 type RelationValue = number | string | { id: number | string } | null | undefined;
 
@@ -38,13 +39,23 @@ function getRequiredRelationId(relation: Exclude<RelationValue, null | undefined
   return String(relation);
 }
 
-function normalizeFloor(doc: Floor, organizationName: string | null): ViewerFloor {
+function organizationNameFromFloor(doc: Floor): string | null {
+  const building = doc.building as Building | number;
+  if (!building || typeof building !== "object") return null;
+
+  const organization = building.organization as Organization | number | null | undefined;
+  if (!organization || typeof organization !== "object") return null;
+
+  return organization.name ?? null;
+}
+
+function normalizeFloor(doc: Floor): ViewerFloor {
   const floorDoc = doc as Floor & { metersPerPixel?: number | null };
 
   return {
     id: String(doc.id),
-    buildingId: doc.buildingId,
-    organizationName,
+    buildingId: getRequiredRelationId(doc.building),
+    organizationName: organizationNameFromFloor(doc),
     name: doc.name,
     level: doc.level ?? 0,
     width: doc.width ?? 1200,
@@ -58,7 +69,7 @@ function normalizeObject(doc: MapObject): ViewerMapObject {
   return {
     id: String(doc.id),
     floorId: getRequiredRelationId(doc.floor),
-    buildingId: doc.buildingId,
+    buildingId: getRequiredRelationId(doc.building),
     parentObjectId: getRelationId(doc.parentObject),
     type: doc.type,
     name: doc.name,
@@ -79,7 +90,7 @@ function normalizeNode(doc: MapNode): ViewerMapNode {
   return {
     id: String(doc.id),
     floorId: getRequiredRelationId(doc.floor),
-    buildingId: doc.buildingId,
+    buildingId: getRequiredRelationId(doc.building),
     objectId: getRelationId(doc.object),
     role: doc.role,
     label: doc.label ?? "",
@@ -102,7 +113,7 @@ function normalizeEdge(doc: PathEdge): ViewerPathEdge {
   return {
     id: String(doc.id),
     floorId: getRequiredRelationId(doc.floor),
-    buildingId: doc.buildingId,
+    buildingId: getRequiredRelationId(doc.building),
     fromNodeId: getRequiredRelationId(doc.fromNode),
     toNodeId: getRequiredRelationId(doc.toNode),
     type: doc.type ?? "walkway",
@@ -121,32 +132,30 @@ export async function getMapViewerData(floorId?: string): Promise<MapViewerData>
       .findByID({
         id: floorId,
         collection: "floors",
+        depth: 0,
         overrideAccess: true,
       })
       .catch(() => null);
-    buildingId = requestedFloor?.buildingId ?? undefined;
+    buildingId = getRelationId(requestedFloor?.building) ?? undefined;
   }
 
   const floorsResult = await payload.find({
     collection: "floors",
-    depth: 0,
+    // depth 2: floor -> building -> building.organization, so the venue name
+    // resolves without a second round trip.
+    depth: 2,
     limit: 100,
     overrideAccess: true,
     sort: "level",
     where: {
       and: [
         { status: { equals: "published" } },
-        ...(buildingId ? [{ buildingId: { equals: buildingId } }] : []),
+        ...(buildingId ? [{ building: { equals: buildingId } }] : []),
       ],
     },
   });
 
-  const organizationNamesByBuildingId = await resolveOrganizationNamesByBuildingId(
-    floorsResult.docs.map((doc) => doc.buildingId),
-  );
-  const floors = floorsResult.docs.map((doc) =>
-    normalizeFloor(doc, organizationNamesByBuildingId[doc.buildingId] ?? null),
-  );
+  const floors = floorsResult.docs.map((doc) => normalizeFloor(doc));
 
   if (floors.length === 0) {
     return {
@@ -158,66 +167,74 @@ export async function getMapViewerData(floorId?: string): Promise<MapViewerData>
     };
   }
 
-  const floorsWithData = await Promise.all(
-    floors.map(async (floor) => {
-      const [objectsResult, nodesResult, edgesResult] = await Promise.all([
-        payload.find({
-          collection: "map-objects",
-          depth: 0,
-          limit: 1000,
-          overrideAccess: true,
-          sort: "name",
-          where: {
-            floor: {
-              equals: asPayloadId(floor.id),
-            },
-          },
-        }),
-        payload.find({
-          collection: "map-nodes",
-          depth: 0,
-          limit: 1000,
-          overrideAccess: true,
-          where: {
-            floor: {
-              equals: asPayloadId(floor.id),
-            },
-          },
-        }),
-        payload.find({
-          collection: "path-edges",
-          depth: 0,
-          limit: 1000,
-          overrideAccess: true,
-          where: {
-            floor: {
-              equals: asPayloadId(floor.id),
-            },
-          },
-        }),
-      ]);
+  const floorIds = floors.map((floor) => asPayloadId(floor.id));
 
-      return {
-        edgeList: edgesResult.docs.map(normalizeEdge),
-        floorId: floor.id,
-        nodeList: nodesResult.docs.map(normalizeNode),
-        objectList: objectsResult.docs.map(normalizeObject),
-      };
+  // One query per collection across every floor being loaded (typically a
+  // handful, for one building), instead of three queries per floor.
+  const [objectsResult, nodesResult, edgesResult] = await Promise.all([
+    payload.find({
+      collection: "map-objects",
+      depth: 0,
+      limit: 0,
+      pagination: false,
+      overrideAccess: true,
+      sort: "name",
+      where: {
+        floor: {
+          in: floorIds,
+        },
+      },
     }),
-  );
+    payload.find({
+      collection: "map-nodes",
+      depth: 0,
+      limit: 0,
+      pagination: false,
+      overrideAccess: true,
+      where: {
+        floor: {
+          in: floorIds,
+        },
+      },
+    }),
+    payload.find({
+      collection: "path-edges",
+      depth: 0,
+      limit: 0,
+      pagination: false,
+      overrideAccess: true,
+      where: {
+        floor: {
+          in: floorIds,
+        },
+      },
+    }),
+  ]);
+
+  const objectsByFloorId: Record<string, ViewerMapObject[]> = {};
+  for (const doc of objectsResult.docs) {
+    const object = normalizeObject(doc);
+    (objectsByFloorId[object.floorId] ??= []).push(object);
+  }
+
+  const nodesByFloorId: Record<string, ViewerMapNode[]> = {};
+  for (const doc of nodesResult.docs) {
+    const node = normalizeNode(doc);
+    (nodesByFloorId[node.floorId] ??= []).push(node);
+  }
+
+  const edgesByFloorId: Record<string, ViewerPathEdge[]> = {};
+  for (const doc of edgesResult.docs) {
+    const edge = normalizeEdge(doc);
+    (edgesByFloorId[edge.floorId] ??= []).push(edge);
+  }
 
   return {
-    edgesByFloorId: Object.fromEntries(
-      floorsWithData.map(({ floorId, edgeList }) => [floorId, edgeList]),
-    ),
+    edgesByFloorId,
     floors,
     initialFloorId: floors[0]?.id ?? null,
-    nodesByFloorId: Object.fromEntries(
-      floorsWithData.map(({ floorId, nodeList }) => [floorId, nodeList]),
-    ),
-    objectsByFloorId: Object.fromEntries(
-      floorsWithData.map(({ floorId, objectList }) => [floorId, objectList]),
-    ),
+    nodesByFloorId,
+    objectsByFloorId,
   };
 }
 

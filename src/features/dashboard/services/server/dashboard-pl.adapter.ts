@@ -4,6 +4,7 @@ import { getPayload } from "payload";
 
 import config from "@payload-config";
 import { tryCatchResponse } from "@/lib/responses/trycatch-response";
+import { asPayloadId } from "@/lib/payload-id";
 import { NEW_FLOOR_DEFAULTS } from "@/features/dashboard/constants/dashboard.constants";
 import type { TCreateFloor, TSetFloorStatus } from "./dashboard.types";
 
@@ -19,7 +20,7 @@ export async function createFloorAdapter(data: TCreateFloor) {
       collection: "floors",
       overrideAccess: true,
       data: {
-        buildingId: data.buildingId,
+        building: asPayloadId(data.buildingId),
         name: data.name,
         level: data.level,
         width: NEW_FLOOR_DEFAULTS.width,

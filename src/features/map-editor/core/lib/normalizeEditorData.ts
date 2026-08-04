@@ -52,7 +52,7 @@ export function normalizeFloor(doc: Floor): EditorFloor {
 
   return {
     id: String(doc.id),
-    buildingId: doc.buildingId,
+    buildingId: getRequiredRelationId(doc.building),
     name: doc.name,
     level: doc.level ?? 0,
     width: doc.width ?? 1200,
@@ -88,7 +88,7 @@ export function normalizeMapObject(doc: PayloadMapObject): EditorMapObject {
   return {
     id: String(doc.id),
     floorId: getRequiredRelationId(doc.floor),
-    buildingId: doc.buildingId,
+    buildingId: getRequiredRelationId(doc.building),
     parentObjectId: getRelationId(doc.parentObject),
     type: doc.type,
     name: doc.name,
@@ -109,7 +109,7 @@ export function normalizeMapNode(doc: PayloadMapNode): EditorMapNode {
   return {
     id: String(doc.id),
     floorId: getRequiredRelationId(doc.floor),
-    buildingId: doc.buildingId,
+    buildingId: getRequiredRelationId(doc.building),
     objectId: getRelationId(doc.object),
     role: doc.role,
     label: doc.label ?? '',
@@ -132,7 +132,7 @@ export function normalizePathEdge(doc: PayloadPathEdge): EditorPathEdge {
   return {
     id: String(doc.id),
     floorId: getRequiredRelationId(doc.floor),
-    buildingId: doc.buildingId,
+    buildingId: getRequiredRelationId(doc.building),
     fromNodeId: getRequiredRelationId(doc.fromNode),
     toNodeId: getRequiredRelationId(doc.toNode),
     type: doc.type ?? 'walkway',

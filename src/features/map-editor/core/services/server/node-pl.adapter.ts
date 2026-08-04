@@ -21,7 +21,7 @@ export async function createMapNodeAdapter(
   return tryCatchResponse(async () => {
     const payload = await getPayloadClient();
     const createData: MapNodeData = {
-      buildingId: data.buildingId,
+      building: asPayloadId(data.buildingId),
       floor: asPayloadId(data.floorId),
       object: data.objectId ? asPayloadId(data.objectId) : null,
       role: data.role,
@@ -55,7 +55,7 @@ export async function updateMapNodeAdapter(id: string, data: Partial<EditorMapNo
     const payload = await getPayloadClient();
 
     const updateData: Partial<MapNodeData> = {};
-    if (data.buildingId !== undefined) updateData.buildingId = data.buildingId;
+    if (data.buildingId !== undefined) updateData.building = asPayloadId(data.buildingId);
     if (data.floorId !== undefined) updateData.floor = asPayloadId(data.floorId);
     if (data.objectId !== undefined) {
       updateData.object = data.objectId ? asPayloadId(data.objectId) : null;
@@ -93,10 +93,10 @@ export async function deleteMapNodeAdapter(id: string) {
   return tryCatchResponse(async () => {
     const payload = await getPayloadClient();
 
-    const linkedEdges = await payload.find({
+    // Bulk delete-by-where in one call instead of finding linked edges and
+    // deleting each one individually.
+    await payload.delete({
       collection: "path-edges",
-      depth: 0,
-      limit: 1000,
       overrideAccess: true,
       where: {
         or: [
@@ -113,13 +113,6 @@ export async function deleteMapNodeAdapter(id: string) {
         ],
       },
     });
-
-    for (const edge of linkedEdges.docs) {
-      await payload.delete({
-        collection: "path-edges",
-        id: asPayloadId(edge.id),
-      });
-    }
 
     await payload.delete({
       collection: "map-nodes",

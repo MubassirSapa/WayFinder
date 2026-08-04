@@ -2,17 +2,36 @@
 
 ## [Unreleased]
 
-### Added
-- Added a compact, centered translucent visitor handoff below the organization header that takes people directly to the public venue directory without mixing visitor destinations into organization navigation.
-
 ### Fixed
-- Fixed the organization visitor handoff's two adjacent text spans concatenating into a single run-on accessible name ("Visiting a venue?Find its public map") for assistive technology, by adding the whitespace an ordinary space-separated sentence needs between them.
+- Fixed SQLite relationship updates rejecting serialized numeric IDs for buildings, media, floors, map objects, and map nodes while continuing to preserve string-based MongoDB ObjectIds.
+- Removed the unreferenced `/editor` index route, which listed floors across every organization by calling the Payload Local API directly (bypassing the `services/server` layer and, since it never identified the requesting user, effectively unscoped by building/organization). `/editor/[floorId]` — the only entry point actually linked from the dashboard — is unaffected and remains correctly building-scoped.
+
+### Added
+- Added an opt-in `DATABASE_LOGGER` env var (SQLite only) that prints every SQL query Drizzle runs — set it to `true` in `.env.local` to verify query counts and field selection instead of hardcoding `logger: true` in `database.ts`. See `docs/technical/QUERY_OPTIMIZATION.md`.
 
 ### Changed
+- Moved `getDashboardData` and `getMapViewerData` out of `lib/` (reserved for pure, stateless helpers) into `services/server/`, matching how `docs/project/PROJECT_STRUCTURE.md` already described them.
+- Reduced over-fetching from relationship population: `syncFloorCount` now uses `payload.count()` instead of fetching every matching floor, the building-relationship validation hook only selects the one field it checks, `accessibleBuildingIds` (run on nearly every access-control check) now selects nothing but `id`, and `Organizations`/`Buildings`/`Floors` now declare `defaultPopulate` so populating them (e.g. the public map viewer's floor → building → organization lookup) returns only the handful of fields every caller actually reads instead of the full document.
+- Fixed two N+1 query patterns: deleting a map node used to fetch its linked path-edges and delete them one at a time, now a single bulk delete; the public map viewer used to query map objects/nodes/edges separately per floor, now one query per collection across every floor in the building. See `docs/technical/QUERY_OPTIMIZATION.md`.
+- Sped up saving in the map editor: dirty/new objects, then nodes, then edges are now saved in parallel within each of those three phases (previously one sequential request at a time for every changed item), while keeping the phases themselves sequential since nodes need objects' real ids and edges need nodes' real ids.
+
+## [0.2.0] - 2026-08-04
+
+### Added
+- Added a real `Buildings` collection (organization 1-to-many buildings, each with name/address/contact metadata and a cached floor count) and a `users.buildings` many-to-many membership, replacing the free-text `buildingId` convention that previously faked one building per organization.
+- Added a compact, centered translucent visitor handoff below the organization header that takes people directly to the public venue directory without mixing visitor destinations into organization navigation.
+
+### Changed
+- Renamed the `users.role` values from `admin`/`user` to `owner`/`manager`/`member` — owners and managers manage every building in their organization, while members are read-only and limited to assigned buildings. This also resolves the naming collision with the separate `admins` collection (the platform team).
+- `floors`, `map-objects`, `map-nodes`, and `path-edges` now carry a real `building` relationship instead of a free-text `buildingId`; access control for those collections and for `buildings` is now scoped by building/organization membership instead of a blanket logged-in check.
+- Signup now assigns the new organization's creator the `owner` role (previously `user`, leaving no one marked as an org's admin).
 - Changed the public venue promotion's "Join now" action to introduce the organization experience before registration.
 - Kept the organization-site navbar focused on organization journeys by removing its public-map link and showing registration as a prominent "Get started" action on organization subpages while leaving the landing page's existing hero actions to handle registration.
 - Made the shared Wayfinder brand glow invert with the active theme, using a dark glow on light surfaces and a light glow on dark surfaces.
 - Separated the organization landing page's benefit cards from its closing registration prompt, replacing adjacent duplicate calls to action with a benefits-first flow, a responsive green closing band, and a stacked account prompt.
+
+### Fixed
+- Fixed the organization visitor handoff's two adjacent text spans concatenating into a single run-on accessible name ("Visiting a venue?Find its public map") for assistive technology, by adding the whitespace an ordinary space-separated sentence needs between them.
 
 ## [0.1.9] - 2026-08-02
 

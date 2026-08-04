@@ -19,10 +19,10 @@ export const Admins: CollectionConfig = {
   },
 
   access: {
-    create: access.isAdmin,
-    read: access.isAdmin,
-    update: access.isAdmin,
-    delete: access.isAdmin,
+    create: access.isPlatformAdmin,
+    read: access.isPlatformAdmin,
+    update: access.isPlatformAdmin,
+    delete: access.isPlatformAdmin,
   },
 
   fields: [

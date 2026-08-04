@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
 import { access } from "../access";
+import { validateMapNodeBuilding } from "./validateBuildingRelationships";
 
 export const MapNodes: CollectionConfig = {
   slug: "map-nodes",
@@ -9,16 +10,20 @@ export const MapNodes: CollectionConfig = {
     group: "Indoor Map",
   },
   access: {
-    read: access.isLoggedIn,
-    create: access.isLoggedIn,
-    update: access.isLoggedIn,
-    delete: access.isLoggedIn,
+    read: access.buildingContentRead,
+    create: access.buildingContentCreate,
+    update: access.buildingContentUpdateDelete,
+    delete: access.buildingContentUpdateDelete,
   },
+  hooks: { beforeValidate: [validateMapNodeBuilding] },
   fields: [
     {
-      name: "buildingId",
-      type: "text",
+      name: "building",
+      type: "relationship",
+      relationTo: "buildings",
       required: true,
+      index: true,
+      access: { update: ({ req }) => req.user?.collection === "admins" },
     },
     {
       name: "floor",

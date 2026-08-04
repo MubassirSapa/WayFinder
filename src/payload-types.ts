@@ -71,6 +71,7 @@ export interface Config {
     admins: Admin;
     users: User;
     organizations: Organization;
+    buildings: Building;
     media: Media;
     floors: Floor;
     'map-objects': MapObject;
@@ -86,6 +87,7 @@ export interface Config {
     admins: AdminsSelect<false> | AdminsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     organizations: OrganizationsSelect<false> | OrganizationsSelect<true>;
+    buildings: BuildingsSelect<false> | BuildingsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     floors: FloorsSelect<false> | FloorsSelect<true>;
     'map-objects': MapObjectsSelect<false> | MapObjectsSelect<true>;
@@ -181,8 +183,12 @@ export interface Admin {
 export interface User {
   id: number;
   name: string;
-  role: 'admin' | 'user';
-  organization?: (number | null) | Organization;
+  role: 'owner' | 'manager' | 'member';
+  organization: number | Organization;
+  /**
+   * Buildings this member can read. Owners and managers implicitly access every building in their organization.
+   */
+  buildings?: (number | Building)[] | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -217,6 +223,25 @@ export interface Organization {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "buildings".
+ */
+export interface Building {
+  id: number;
+  name: string;
+  organization: number | Organization;
+  address?: string | null;
+  contactEmail?: string | null;
+  contactPhone?: string | null;
+  website?: string | null;
+  /**
+   * Cached count of floors in this building, kept in sync from the Floors collection.
+   */
+  floorCount?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
@@ -240,7 +265,7 @@ export interface Media {
  */
 export interface Floor {
   id: number;
-  buildingId: string;
+  building: number | Building;
   name: string;
   level: number;
   width: number;
@@ -266,7 +291,7 @@ export interface Floor {
  */
 export interface MapObject {
   id: number;
-  buildingId: string;
+  building: number | Building;
   floor: number | Floor;
   parentObject?: (number | null) | MapObject;
   type:
@@ -309,7 +334,7 @@ export interface MapObject {
  */
 export interface MapNode {
   id: number;
-  buildingId: string;
+  building: number | Building;
   floor: number | Floor;
   object?: (number | null) | MapObject;
   role: 'entrance' | 'exit' | 'hallway_point' | 'stairs_entry' | 'elevator_entry' | 'escalator_entry' | 'shelf_access';
@@ -337,7 +362,7 @@ export interface MapNode {
  */
 export interface PathEdge {
   id: number;
-  buildingId: string;
+  building: number | Building;
   floor: number | Floor;
   fromNode: number | MapNode;
   toNode: number | MapNode;
@@ -383,6 +408,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'organizations';
         value: number | Organization;
+      } | null)
+    | ({
+        relationTo: 'buildings';
+        value: number | Building;
       } | null)
     | ({
         relationTo: 'media';
@@ -487,6 +516,7 @@ export interface UsersSelect<T extends boolean = true> {
   name?: T;
   role?: T;
   organization?: T;
+  buildings?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -518,6 +548,21 @@ export interface OrganizationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "buildings_select".
+ */
+export interface BuildingsSelect<T extends boolean = true> {
+  name?: T;
+  organization?: T;
+  address?: T;
+  contactEmail?: T;
+  contactPhone?: T;
+  website?: T;
+  floorCount?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
@@ -539,7 +584,7 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "floors_select".
  */
 export interface FloorsSelect<T extends boolean = true> {
-  buildingId?: T;
+  building?: T;
   name?: T;
   level?: T;
   width?: T;
@@ -564,7 +609,7 @@ export interface FloorsSelect<T extends boolean = true> {
  * via the `definition` "map-objects_select".
  */
 export interface MapObjectsSelect<T extends boolean = true> {
-  buildingId?: T;
+  building?: T;
   floor?: T;
   parentObject?: T;
   type?: T;
@@ -593,7 +638,7 @@ export interface MapObjectsSelect<T extends boolean = true> {
  * via the `definition` "map-nodes_select".
  */
 export interface MapNodesSelect<T extends boolean = true> {
-  buildingId?: T;
+  building?: T;
   floor?: T;
   object?: T;
   role?: T;
@@ -620,7 +665,7 @@ export interface MapNodesSelect<T extends boolean = true> {
  * via the `definition` "path-edges_select".
  */
 export interface PathEdgesSelect<T extends boolean = true> {
-  buildingId?: T;
+  building?: T;
   floor?: T;
   fromNode?: T;
   toNode?: T;

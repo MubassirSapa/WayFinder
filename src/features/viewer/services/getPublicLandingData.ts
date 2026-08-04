@@ -1,22 +1,19 @@
 import "server-only";
 
 import config from "@payload-config";
-import type { Floor } from "@/payload-types";
+import type { Building, Floor } from "@/payload-types";
 import { getPayload } from "payload";
 
-import { formatBuildingName } from "@/features/viewer/lib/format";
 import type {
   LandingFloor,
   LandingVenue,
   PublicLandingData,
 } from "@/features/viewer/types";
-import {
-  resolveOrganizationsByBuildingId,
-  type OrganizationBuildingSummary,
-} from "@/lib/organizationBuilding";
+import { relationId } from "@/lib/payload-id";
 
 type VenueGroup = {
   buildingId: string;
+  buildingName: string;
   floors: Floor[];
 };
 
@@ -30,7 +27,9 @@ export async function getPublicLandingData(): Promise<PublicLandingData> {
 
     const floorsResult = await payload.find({
       collection: "floors",
-      depth: 0,
+      // depth 1: floor -> building, so the venue name resolves without a
+      // second round trip.
+      depth: 1,
       overrideAccess: true,
       pagination: false,
       sort: "-updatedAt",
@@ -45,25 +44,27 @@ export async function getPublicLandingData(): Promise<PublicLandingData> {
     const groups = new Map<string, VenueGroup>();
 
     for (const floor of floors) {
-      const existing = groups.get(floor.buildingId);
+      const building = floor.building as Building | number;
+      const buildingId = relationId(building);
+      if (buildingId === null) continue;
+
+      const key = String(buildingId);
+      const existing = groups.get(key);
 
       if (existing) {
         existing.floors.push(floor);
         continue;
       }
 
-      groups.set(floor.buildingId, {
-        buildingId: floor.buildingId,
+      groups.set(key, {
+        buildingId: key,
+        buildingName: typeof building === "object" ? building.name : key,
         floors: [floor],
       });
     }
 
-    const organizationsByBuildingId = await resolveOrganizationsByBuildingId(
-      floors.map((floor) => floor.buildingId),
-    );
-
     const venues = Array.from(groups.values())
-      .map((group) => toLandingVenue(group, organizationsByBuildingId))
+      .map(toLandingVenue)
       .sort((a, b) => a.name.localeCompare(b.name));
 
     return {
@@ -80,10 +81,7 @@ export async function getPublicLandingData(): Promise<PublicLandingData> {
   }
 }
 
-function toLandingVenue(
-  group: VenueGroup,
-  organizationsByBuildingId: Record<string, OrganizationBuildingSummary>,
-): LandingVenue {
+function toLandingVenue(group: VenueGroup): LandingVenue {
   const floors = [...group.floors]
     .sort((a, b) => a.level - b.level || a.name.localeCompare(b.name))
     .map(toLandingFloor);
@@ -93,11 +91,10 @@ function toLandingVenue(
   const newestFloor = [...group.floors].sort(
     (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt),
   )[0];
-  const organization = organizationsByBuildingId[group.buildingId];
 
   return {
     id: group.buildingId,
-    name: organization?.name ?? formatBuildingName(group.buildingId),
+    name: group.buildingName,
     backgroundImageUrl: primaryFloor.backgroundImageUrl ?? null,
     addedAt: newestFloor.createdAt,
     href: floors[0].href,

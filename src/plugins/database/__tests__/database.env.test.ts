@@ -14,6 +14,7 @@ describe("requireDatabaseEnv", () => {
     expect(requireDatabaseEnv()).toEqual({
       engine: "sql",
       url: "file:./test.db",
+      logger: false,
     });
   });
 
@@ -24,7 +25,27 @@ describe("requireDatabaseEnv", () => {
     expect(requireDatabaseEnv()).toEqual({
       engine: "mongo",
       url: "mongodb://localhost:27017/wayfinder",
+      logger: false,
     });
+  });
+
+  it("defaults the query logger to off", () => {
+    vi.stubEnv("DATABASE_ENGINE", "sql");
+    vi.stubEnv("DATABASE_URL", "file:./test.db");
+    vi.stubEnv("DATABASE_LOGGER", "");
+
+    expect(requireDatabaseEnv().logger).toBe(false);
+  });
+
+  it("enables the query logger only when DATABASE_LOGGER is exactly \"true\"", () => {
+    vi.stubEnv("DATABASE_ENGINE", "sql");
+    vi.stubEnv("DATABASE_URL", "file:./test.db");
+
+    vi.stubEnv("DATABASE_LOGGER", "true");
+    expect(requireDatabaseEnv().logger).toBe(true);
+
+    vi.stubEnv("DATABASE_LOGGER", "1");
+    expect(requireDatabaseEnv().logger).toBe(false);
   });
 
   it("rejects an unsupported database engine", () => {

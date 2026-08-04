@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
 import { access } from "../access";
+import { validateMapObjectBuilding } from "./validateBuildingRelationships";
 
 export const MapObjects: CollectionConfig = {
   slug: "map-objects",
@@ -10,17 +11,22 @@ export const MapObjects: CollectionConfig = {
   },
 
   access: {
-    read: access.isLoggedIn,
-    create: access.isLoggedIn,
-    update: access.isLoggedIn,
-    delete: access.isLoggedIn,
+    read: access.buildingContentRead,
+    create: access.buildingContentCreate,
+    update: access.buildingContentUpdateDelete,
+    delete: access.buildingContentUpdateDelete,
   },
+
+  hooks: { beforeValidate: [validateMapObjectBuilding] },
 
   fields: [
     {
-      name: "buildingId",
-      type: "text",
+      name: "building",
+      type: "relationship",
+      relationTo: "buildings",
       required: true,
+      index: true,
+      access: { update: ({ req }) => req.user?.collection === "admins" },
     },
     {
       name: "floor",

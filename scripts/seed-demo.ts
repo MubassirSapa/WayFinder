@@ -193,7 +193,7 @@ async function upsertUser(payload: Payload, demo: DemoSeed, organizationId: Payl
   const data = {
     ...demo.user,
     password: DEMO_PASSWORD,
-    role: "user" as const,
+    role: "owner" as const,
     organization: organizationId,
     _verified: true,
   };
@@ -216,12 +216,34 @@ async function upsertUser(payload: Payload, demo: DemoSeed, organizationId: Payl
   });
 }
 
-async function clearBuilding(payload: Payload, buildingId: string) {
+async function upsertBuilding(payload: Payload, demo: DemoSeed, organizationId: PayloadId) {
+  const existing = await payload.find({
+    collection: "buildings",
+    limit: 1,
+    overrideAccess: true,
+    where: { organization: { equals: organizationId } },
+  });
+
+  return existing.docs[0]
+    ? payload.update({
+        collection: "buildings",
+        id: existing.docs[0].id,
+        overrideAccess: true,
+        data: { name: demo.organization.name },
+      })
+    : payload.create({
+        collection: "buildings",
+        overrideAccess: true,
+        data: { name: demo.organization.name, organization: organizationId },
+      });
+}
+
+async function clearBuilding(payload: Payload, buildingId: PayloadId) {
   for (const collection of ["path-edges", "map-nodes", "map-objects", "floors"] as const) {
     await payload.delete({
       collection,
       overrideAccess: true,
-      where: { buildingId: { equals: buildingId } },
+      where: { building: { equals: buildingId } },
     });
   }
 }
@@ -234,8 +256,9 @@ async function seedDemo(payload: Payload, demo: DemoSeed, fixtures: {
 }) {
   const organization = await upsertOrganization(payload, demo);
   await upsertUser(payload, demo, organization.id);
+  const building = await upsertBuilding(payload, demo, organization.id);
 
-  const buildingId = `building-${organization.id}`;
+  const buildingId = building.id;
   await clearBuilding(payload, buildingId);
 
   const floorIds = new Map<string, PayloadId>();
@@ -253,7 +276,7 @@ async function seedDemo(payload: Payload, demo: DemoSeed, fixtures: {
       overrideAccess: true,
       data: {
         ...withoutExportMetadata(source),
-        buildingId,
+        building: buildingId,
         name: `Floor ${index + 1}`,
         level: index + 1,
         status: "published",
@@ -270,7 +293,7 @@ async function seedDemo(payload: Payload, demo: DemoSeed, fixtures: {
       overrideAccess: true,
       data: {
         ...data,
-        buildingId,
+        building: buildingId,
         floor: requireMappedId(floorIds, floor, "floor"),
         ...(parentObject ? { parentObject: requireMappedId(objectIds, parentObject, "parent object") } : {}),
       },
@@ -286,7 +309,7 @@ async function seedDemo(payload: Payload, demo: DemoSeed, fixtures: {
       overrideAccess: true,
       data: {
         ...data,
-        buildingId,
+        building: buildingId,
         floor: requireMappedId(floorIds, floor, "floor"),
         ...(object ? { object: requireMappedId(objectIds, object, "map object") } : {}),
       },
@@ -307,7 +330,7 @@ async function seedDemo(payload: Payload, demo: DemoSeed, fixtures: {
       overrideAccess: true,
       data: {
         ...data,
-        buildingId,
+        building: buildingId,
         floor: requireMappedId(floorIds, floor, "floor"),
         fromNode: requireMappedId(nodeIds, fromNode, "from node"),
         toNode: requireMappedId(nodeIds, toNode, "to node"),
@@ -328,7 +351,7 @@ async function seedDemo(payload: Payload, demo: DemoSeed, fixtures: {
         collection: "map-objects",
         overrideAccess: true,
         data: {
-          buildingId,
+          building: buildingId,
           floor: floor.id,
           type: connector.objectType,
           name: connector.label,
@@ -348,7 +371,7 @@ async function seedDemo(payload: Payload, demo: DemoSeed, fixtures: {
         collection: "map-nodes",
         overrideAccess: true,
         data: {
-          buildingId,
+          building: buildingId,
           floor: floor.id,
           object: object.id,
           role: connector.role,
@@ -373,7 +396,7 @@ async function seedDemo(payload: Payload, demo: DemoSeed, fixtures: {
         collection: "path-edges",
         overrideAccess: true,
         data: {
-          buildingId,
+          building: buildingId,
           floor: floor.id,
           fromNode: node.id,
           toNode: routeNode.id,
@@ -400,7 +423,7 @@ async function seedDemo(payload: Payload, demo: DemoSeed, fixtures: {
         collection: "path-edges",
         overrideAccess: true,
         data: {
-          buildingId,
+          building: buildingId,
           floor: fromFloor.id,
           fromNode: fromNode.id,
           toNode: toNode.id,
