@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
 import { access } from "../access";
+import { validatePathEdgeBuilding } from "./validateBuildingRelationships";
 
 export const PathEdges: CollectionConfig = {
   slug: "path-edges",
@@ -10,10 +11,11 @@ export const PathEdges: CollectionConfig = {
   },
   access: {
     read: access.buildingContentRead,
-    create: access.buildingContentWrite,
-    update: access.buildingContentWrite,
-    delete: access.buildingContentWrite,
+    create: access.buildingContentCreate,
+    update: access.buildingContentUpdateDelete,
+    delete: access.buildingContentUpdateDelete,
   },
+  hooks: { beforeValidate: [validatePathEdgeBuilding] },
   fields: [
     {
       name: "building",
@@ -21,6 +23,7 @@ export const PathEdges: CollectionConfig = {
       relationTo: "buildings",
       required: true,
       index: true,
+      access: { update: ({ req }) => req.user?.collection === "admins" },
     },
     {
       name: "floor",

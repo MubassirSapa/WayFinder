@@ -48,9 +48,9 @@ export const Floors: CollectionConfig = {
 
   access: {
     read: (args) => (args.req.user ? access.buildingContentRead(args) : { status: { equals: "published" } }),
-    create: access.buildingContentWrite,
-    update: access.buildingContentWrite,
-    delete: access.buildingContentWrite,
+    create: access.buildingContentCreate,
+    update: access.buildingContentUpdateDelete,
+    delete: access.buildingContentUpdateDelete,
   },
 
   hooks: {
@@ -65,6 +65,9 @@ export const Floors: CollectionConfig = {
       relationTo: "buildings",
       required: true,
       index: true,
+      access: {
+        update: ({ req }) => req.user?.collection === "admins",
+      },
     },
     {
       name: "name",

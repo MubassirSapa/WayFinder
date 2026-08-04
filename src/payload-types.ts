@@ -186,7 +186,7 @@ export interface User {
   role: 'owner' | 'manager' | 'member';
   organization: number | Organization;
   /**
-   * Buildings this user can access. Owners implicitly have access to every building in their organization.
+   * Buildings this member can read. Owners and managers implicitly access every building in their organization.
    */
   buildings?: (number | Building)[] | null;
   updatedAt: string;

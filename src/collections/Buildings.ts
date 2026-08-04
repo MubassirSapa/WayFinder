@@ -11,10 +11,10 @@ export const Buildings: CollectionConfig = {
   },
 
   access: {
-    create: access.buildingManage,
+    create: access.buildingCreate,
     read: access.buildingRead,
-    update: access.buildingManage,
-    delete: access.buildingManage,
+    update: access.buildingUpdateDelete,
+    delete: access.buildingUpdateDelete,
   },
 
   fields: [
@@ -29,6 +29,9 @@ export const Buildings: CollectionConfig = {
       relationTo: "organizations",
       required: true,
       index: true,
+      access: {
+        update: ({ req }) => req.user?.collection === "admins",
+      },
     },
     {
       name: "address",

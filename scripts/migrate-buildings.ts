@@ -28,6 +28,12 @@ const LEGACY_DATA_KEY: Record<MapCollection, keyof LegacyData> = {
 
 type OrganizationDoc = { id: number; name: string };
 
+function isNotFoundError(error: unknown) {
+  if (!error || typeof error !== "object") return false;
+  const candidate = error as { status?: unknown; statusCode?: unknown };
+  return candidate.status === 404 || candidate.statusCode === 404;
+}
+
 async function loadLegacyData(): Promise<LegacyData> {
   const fileUrl = new URL("./migration-data/legacy-building-ids.json", import.meta.url);
   return JSON.parse(await readFile(fileUrl, "utf8")) as LegacyData;
@@ -98,8 +104,14 @@ async function migrateCollection(
         data: { building: buildingId },
       });
       repointed += 1;
-    } catch {
-      alreadyGone += 1;
+    } catch (error) {
+      if (isNotFoundError(error)) {
+        alreadyGone += 1;
+        continue;
+      }
+
+      payload.logger.error({ err: error, msg: `${collection} #${row.id}: migration failed` });
+      throw error;
     }
   }
 

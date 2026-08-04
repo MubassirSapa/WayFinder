@@ -69,21 +69,30 @@ export const Users: CollectionConfig = {
       defaultValue: ROLES.MEMBER,
       required: true,
       options: [...ROLE_OPTIONS],
+      access: {
+        update: ({ req }) => req.user?.collection === "admins",
+      },
     },
     {
       name: "organization",
       type: "relationship",
       relationTo: "organizations",
       required: true,
+      access: {
+        update: ({ req }) => req.user?.collection === "admins",
+      },
     },
     {
       name: "buildings",
       type: "relationship",
       relationTo: "buildings",
       hasMany: true,
+      access: {
+        update: ({ req }) => req.user?.collection === "admins",
+      },
       admin: {
-        condition: (data) => data?.role !== ROLES.OWNER,
-        description: "Buildings this user can access. Owners implicitly have access to every building in their organization.",
+        condition: (data) => data?.role === ROLES.MEMBER,
+        description: "Buildings this member can read. Owners and managers implicitly access every building in their organization.",
       },
     },
   ],

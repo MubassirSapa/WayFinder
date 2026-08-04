@@ -54,8 +54,8 @@ export const isPlatformAdminOrSelf: Access = ({ req: { user }, id }) => {
  * Org/building scoping
  *
  * Roles live on the `users` collection: `owner` (one per org, implicitly
- * manages the whole org and every building in it), `manager` (elevated
- * permissions on the buildings they're assigned to), `member` (read-only,
+ * manages the whole org and every building in it), `manager` (the same
+ * organization-wide management access), `member` (read-only,
  * only on the buildings they're assigned to).
  */
 export async function accessibleBuildingIds(
@@ -64,7 +64,7 @@ export async function accessibleBuildingIds(
   const user = req.user;
   if (!user || user.collection !== "users") return [];
 
-  if (user.role === ROLES.OWNER) {
+  if (user.role === ROLES.OWNER || user.role === ROLES.MANAGER) {
     const organizationId = relationId(user.organization);
     if (organizationId === null) return [];
 
@@ -92,20 +92,30 @@ export const buildingRead: Access = async ({ req }) => {
   return { id: { in: await accessibleBuildingIds(req) } };
 };
 
-/** Create/update/delete on the `buildings` collection itself: owners only, scoped to their own org. */
-export const buildingManage: Access = async ({ req, data }) => {
+/** Create buildings: owners/managers, only inside their own organization. */
+export const buildingCreate: Access = async ({ req, data }) => {
   if (req.user?.collection === "admins") return true;
-  if (!req.user || req.user.collection !== "users" || req.user.role !== ROLES.OWNER) return false;
+  if (
+    !req.user ||
+    req.user.collection !== "users" ||
+    (req.user.role !== ROLES.OWNER && req.user.role !== ROLES.MANAGER)
+  ) return false;
 
   const userOrganizationId = relationId(req.user.organization);
   if (userOrganizationId === null) return false;
 
-  // Create: no existing document yet, validate the target org directly.
-  if (data && "organization" in data) {
-    return relationId(data.organization) === userOrganizationId;
-  }
+  return Boolean(data && "organization" in data && relationId(data.organization) === userOrganizationId);
+};
 
-  // Update/delete: scope to buildings already inside the owner's own org.
+/** Update/delete buildings: constrain the existing record, never trust replacement data. */
+export const buildingUpdateDelete: Access = async ({ req }) => {
+  if (req.user?.collection === "admins") return true;
+  if (
+    !req.user ||
+    req.user.collection !== "users" ||
+    (req.user.role !== ROLES.OWNER && req.user.role !== ROLES.MANAGER)
+  ) return false;
+
   return { id: { in: await accessibleBuildingIds(req) } };
 };
 
@@ -117,8 +127,8 @@ export const buildingContentRead: Access = async ({ req }) => {
   return { building: { in: await accessibleBuildingIds(req) } };
 };
 
-/** Write access to building-owned content: owners and managers only, scoped to their accessible buildings. */
-export const buildingContentWrite: Access = async ({ req, data }) => {
+/** Create building-owned content: validate the submitted building. */
+export const buildingContentCreate: Access = async ({ req, data }) => {
   if (req.user?.collection === "admins") return true;
   if (!req.user || req.user.collection !== "users" || req.user.role === ROLES.MEMBER) return false;
 
@@ -129,7 +139,15 @@ export const buildingContentWrite: Access = async ({ req, data }) => {
     return targetBuildingId !== null && ids.some((id) => String(id) === String(targetBuildingId));
   }
 
-  return { building: { in: ids } };
+  return false;
+};
+
+/** Update/delete building content: constrain the existing record, never trust replacement data. */
+export const buildingContentUpdateDelete: Access = async ({ req }) => {
+  if (req.user?.collection === "admins") return true;
+  if (!req.user || req.user.collection !== "users" || req.user.role === ROLES.MEMBER) return false;
+
+  return { building: { in: await accessibleBuildingIds(req) } };
 };
 
 /**
@@ -147,7 +165,9 @@ export const access = {
 
   accessibleBuildingIds,
   buildingRead,
-  buildingManage,
+  buildingCreate,
+  buildingUpdateDelete,
   buildingContentRead,
-  buildingContentWrite,
+  buildingContentCreate,
+  buildingContentUpdateDelete,
 };
