@@ -16,5 +16,8 @@ export function requireDatabaseEnv() {
   return {
     engine: engine as DatabaseEngine,
     url: requireEnv("DATABASE_URL"),
+    // Prints every SQL statement Drizzle runs (SQLite only) — verbose, so it
+    // stays opt-in via env instead of a hardcoded true.
+    logger: process.env.DATABASE_LOGGER === "true",
   };
 }

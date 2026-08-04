@@ -6,6 +6,9 @@
 - Fixed SQLite relationship updates rejecting serialized numeric IDs for buildings, media, floors, map objects, and map nodes while continuing to preserve string-based MongoDB ObjectIds.
 - Removed the unreferenced `/editor` index route, which listed floors across every organization by calling the Payload Local API directly (bypassing the `services/server` layer and, since it never identified the requesting user, effectively unscoped by building/organization). `/editor/[floorId]` — the only entry point actually linked from the dashboard — is unaffected and remains correctly building-scoped.
 
+### Added
+- Added an opt-in `DATABASE_LOGGER` env var (SQLite only) that prints every SQL query Drizzle runs — set it to `true` in `.env.local` to verify query counts and field selection instead of hardcoding `logger: true` in `database.ts`. See `docs/technical/QUERY_OPTIMIZATION.md`.
+
 ### Changed
 - Moved `getDashboardData` and `getMapViewerData` out of `lib/` (reserved for pure, stateless helpers) into `services/server/`, matching how `docs/project/PROJECT_STRUCTURE.md` already described them.
 - Reduced over-fetching from relationship population: `syncFloorCount` now uses `payload.count()` instead of fetching every matching floor, the building-relationship validation hook only selects the one field it checks, `accessibleBuildingIds` (run on nearly every access-control check) now selects nothing but `id`, and `Organizations`/`Buildings`/`Floors` now declare `defaultPopulate` so populating them (e.g. the public map viewer's floor → building → organization lookup) returns only the handful of fields every caller actually reads instead of the full document.

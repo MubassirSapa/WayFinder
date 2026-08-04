@@ -237,18 +237,20 @@ has no bulk-create API, so there's no batched alternative there).
 Don't trust field lists or query counts from reading the code — check the
 real thing.
 
-### See the actual SQL: `logger: true`
+### See the actual SQL: `DATABASE_LOGGER=true`
 
 Payload's SQLite adapter is a thin wrapper over Drizzle, which supports a
-`logger` option that prints every SQL statement it runs. Temporarily add it
-in `src/plugins/database/database.ts`:
+`logger` option that prints every SQL statement it runs. This is wired to an
+env var (`src/plugins/database/database.env.ts` /
+`src/plugins/database/database.ts`) instead of being hardcoded, so it's a
+one-line toggle rather than a code edit: set `DATABASE_LOGGER=true` in your
+`.env.local` (SQLite only; unset or anything other than the literal string
+`"true"` keeps it off — see `requireDatabaseEnv`'s tests for the exact
+matching rule).
 
-```ts
-: sqliteAdapter({ client: { url: databaseEnv.url }, logger: true });
-```
-
-Then write a one-off script (delete it when done) and run it with `payload
-run` — no dev server needed:
+With that set, write a one-off script (delete it when done) and run it with
+`payload run` — no dev server needed, and this way you get a clean process
+rather than digging through a running dev server's full startup log:
 
 ```ts
 // scripts/verify-query-count.ts
@@ -272,8 +274,13 @@ read the `select ...` column lists directly to confirm `select`/
 `defaultPopulate` are actually trimming fields — e.g. this is exactly how the
 `Buildings`/`Organizations` `defaultPopulate` fix in this document was
 confirmed: the logged query was `select "id", "name", "organization_id" from
-"buildings"`, not every column. **Always revert `logger: true` afterward** —
-it's extremely noisy and shouldn't ship in normal dev output or a commit.
+"buildings"`, not every column.
+
+Turn `DATABASE_LOGGER` back off when you're done — it's extremely noisy for
+normal dev use. (If a running dev server already had a database connection
+open before you flipped the env var, it won't pick up the change — that
+connection was already established; run your verify script as its own
+process instead of relying on the dev server picking it up live.)
 
 ### Browser DevTools Network tab: for anything client-triggered
 

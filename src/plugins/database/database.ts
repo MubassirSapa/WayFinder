@@ -8,4 +8,4 @@ const databaseEnv = requireDatabaseEnv();
 export const databaseAdapter =
   databaseEnv.engine === "mongo"
     ? mongooseAdapter({ url: databaseEnv.url })
-    : sqliteAdapter({ client: { url: databaseEnv.url } });
+    : sqliteAdapter({ client: { url: databaseEnv.url }, logger: databaseEnv.logger });
