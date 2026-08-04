@@ -1,9 +1,19 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { Loader2Icon, Trash2Icon } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -29,6 +39,7 @@ type UserRowProps = {
 export function UserRow({ user, buildingOptions }: UserRowProps) {
   const [isUpdatingRole, startRoleUpdate] = useTransition();
   const [isRemoving, startRemove] = useTransition();
+  const [isRemoveOpen, setIsRemoveOpen] = useState(false);
 
   const canManageThisRow = user.role !== "owner" && !user.isSelf;
 
@@ -39,13 +50,13 @@ export function UserRow({ user, buildingOptions }: UserRowProps) {
   };
 
   const onRemove = () => {
-    if (!window.confirm(USER_MANAGEMENT_CLIENT.REMOVE_CONFIRM)) return;
     startRemove(async () => {
       await deleteOrgUserAction(user.id);
     });
   };
 
   return (
+    <>
     <TableRow>
       <TableCell>
         <div className="flex items-center gap-2.5">
@@ -101,12 +112,34 @@ export function UserRow({ user, buildingOptions }: UserRowProps) {
 
       <TableCell className="text-end">
         {canManageThisRow ? (
-          <Button variant="ghost" size="sm" onClick={onRemove} disabled={isRemoving}>
+          <Button variant="destructive" size="sm" onClick={() => setIsRemoveOpen(true)} disabled={isRemoving}>
             {isRemoving ? <Loader2Icon className="animate-spin" /> : <Trash2Icon />}
             {USER_MANAGEMENT_CLIENT.REMOVE_USER}
           </Button>
         ) : null}
       </TableCell>
     </TableRow>
+      <AlertDialog open={isRemoveOpen} onOpenChange={setIsRemoveOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{USER_MANAGEMENT_CLIENT.REMOVE_TITLE}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {USER_MANAGEMENT_CLIENT.REMOVE_CONFIRM_PREFIX} {user.name}? {USER_MANAGEMENT_CLIENT.REMOVE_CONFIRM_SUFFIX}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isRemoving}>{USER_MANAGEMENT_CLIENT.CANCEL}</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={isRemoving}
+              onClick={onRemove}
+            >
+              {isRemoving ? <Loader2Icon className="animate-spin" /> : <Trash2Icon />}
+              {USER_MANAGEMENT_CLIENT.REMOVE_USER}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }

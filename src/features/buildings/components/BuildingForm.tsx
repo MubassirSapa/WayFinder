@@ -3,15 +3,16 @@
 import { useRef, useState, useTransition } from "react";
 import Image from "next/image";
 import { useRouter } from "nextjs-toploader/app";
-import { Building2Icon, Loader2Icon, UploadIcon } from "lucide-react";
+import { Building2Icon, GlobeIcon, Loader2Icon, MailIcon, MapPinIcon, PencilIcon, PhoneIcon, UploadIcon } from "lucide-react";
 
 import FormAlert from "@/components/shared/form/FormAlert";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
 import { BUILDINGS_CLIENT } from "../constants/buildings.constants";
+import { EntitySummaryCard } from "@/features/dashboard/components/EntitySummaryCard";
 import { updateBuildingAction } from "../actions/server/update-building";
 import type { BuildingEditData } from "../types/buildings.types";
 
@@ -34,6 +35,7 @@ export function BuildingForm({ building }: BuildingFormProps) {
   const [removeLogo, setRemoveLogo] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const readOnly = !building.canEdit;
 
@@ -82,20 +84,71 @@ export function BuildingForm({ building }: BuildingFormProps) {
       setLogoFile(null);
       setRemoveLogo(false);
       setSuccess(true);
+      setIsEditing(false);
       router.refresh();
     });
   };
 
+  const cancelEditing = () => {
+    setName(building.name);
+    setAddress(building.address ?? "");
+    setContactEmail(building.contactEmail ?? "");
+    setContactPhone(building.contactPhone ?? "");
+    setWebsite(building.website ?? "");
+    setLogoFile(null);
+    setLogoPreviewUrl(building.logoUrl);
+    setRemoveLogo(false);
+    setError("");
+    setSuccess(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    setIsEditing(false);
+  };
+
+  if (!isEditing) {
+    const details = [
+      { icon: MapPinIcon, label: BUILDINGS_CLIENT.FIELD_ADDRESS_LABEL, value: address },
+      { icon: MailIcon, label: BUILDINGS_CLIENT.FIELD_CONTACT_EMAIL_LABEL, value: contactEmail },
+      { icon: PhoneIcon, label: BUILDINGS_CLIENT.FIELD_CONTACT_PHONE_LABEL, value: contactPhone },
+      { icon: GlobeIcon, label: BUILDINGS_CLIENT.FIELD_WEBSITE_LABEL, value: website },
+    ];
+
+    return (
+      <EntitySummaryCard
+        visual={<div className="relative flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-primary/20 bg-primary/15">
+            {logoPreviewUrl ? (
+              <Image alt={name} src={logoPreviewUrl} fill sizes="80px" className="object-cover" />
+            ) : (
+              <Building2Icon className="size-8 text-primary" />
+            )}
+          </div>}
+        title={name}
+        meta={building.organizationName}
+        action={building.canEdit ? (
+            <Button type="button" variant="outline" onClick={() => setIsEditing(true)} className="self-start sm:self-auto">
+              <PencilIcon />
+              {BUILDINGS_CLIENT.EDIT}
+            </Button>
+          ) : null}
+      >
+        <dl className="grid gap-4 sm:grid-cols-2">
+          {details.map(({ icon: Icon, label, value }) => (
+            <div key={label} className="flex min-w-0 gap-3">
+              <Icon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+              <div className="min-w-0">
+                <dt className="text-xs font-medium text-muted-foreground">{label}</dt>
+                <dd className="mt-0.5 break-words text-sm">{value || BUILDINGS_CLIENT.INFO_NOT_SET}</dd>
+              </div>
+            </div>
+          ))}
+        </dl>
+      </EntitySummaryCard>
+    );
+  }
+
   return (
-    <div>
+    <Card className="p-6 sm:p-8">
       <h1 className="font-heading text-xl font-semibold tracking-tight">{BUILDINGS_CLIENT.FORM_TITLE}</h1>
       <p className="mt-1 text-sm text-muted-foreground">{BUILDINGS_CLIENT.FORM_DESC}</p>
-
-      {readOnly ? (
-        <Alert className="mt-4 rounded-xl">
-          <AlertDescription>{BUILDINGS_CLIENT.READ_ONLY_NOTICE}</AlertDescription>
-        </Alert>
-      ) : null}
 
       <form
         onSubmit={(event) => {
@@ -203,13 +256,18 @@ export function BuildingForm({ building }: BuildingFormProps) {
           <FormAlert errorMessage={error} />
 
           {!readOnly ? (
+            <div className="flex justify-end gap-2">
+              <Button type="button" variant="outline" onClick={cancelEditing} disabled={isPending}>
+                {BUILDINGS_CLIENT.CANCEL}
+              </Button>
             <Button type="submit" size="lg" disabled={isPending || name.trim().length < 2}>
               {isPending ? <Loader2Icon className="animate-spin" /> : null}
               {isPending ? BUILDINGS_CLIENT.SAVING : BUILDINGS_CLIENT.SAVE}
             </Button>
+            </div>
           ) : null}
         </FieldGroup>
       </form>
-    </div>
+    </Card>
   );
 }

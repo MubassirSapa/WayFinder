@@ -5,6 +5,7 @@ import { Building2Icon } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { PRIVATE_ROUTES } from "@/constants/routes";
+import { DashboardPageHeader } from "@/features/dashboard/components/DashboardPageHeader";
 
 import { BUILDINGS_CLIENT } from "../constants/buildings.constants";
 import { CreateBuildingDialog } from "./CreateBuildingDialog";
@@ -18,15 +19,11 @@ type BuildingsListProps = {
 export function BuildingsList({ buildings, canManage }: BuildingsListProps) {
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <h2 className="font-heading text-2xl font-semibold tracking-tight">{BUILDINGS_CLIENT.LIST_TITLE}</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {canManage ? BUILDINGS_CLIENT.LIST_DESC : BUILDINGS_CLIENT.LIST_DESC_MEMBER}
-          </p>
-        </div>
-        {canManage ? <CreateBuildingDialog /> : null}
-      </div>
+      <DashboardPageHeader
+        title={BUILDINGS_CLIENT.LIST_TITLE}
+        description={canManage ? BUILDINGS_CLIENT.LIST_DESC : BUILDINGS_CLIENT.LIST_DESC_MEMBER}
+        action={canManage ? <CreateBuildingDialog /> : null}
+      />
 
       {buildings.length === 0 ? (
         <Card className="items-center px-6 py-14 text-center">

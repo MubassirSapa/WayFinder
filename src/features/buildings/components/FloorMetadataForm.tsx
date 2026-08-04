@@ -6,6 +6,7 @@ import { Loader2Icon } from "lucide-react";
 
 import FormAlert from "@/components/shared/form/FormAlert";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -58,7 +59,7 @@ export function FloorMetadataForm({ floor }: FloorMetadataFormProps) {
   };
 
   return (
-    <div>
+    <Card className="p-6 sm:p-8">
       <h1 className="font-heading text-xl font-semibold tracking-tight">{BUILDINGS_CLIENT.FLOOR_FORM_TITLE}</h1>
       <p className="mt-1 text-sm text-muted-foreground">{BUILDINGS_CLIENT.FLOOR_FORM_DESC}</p>
 
@@ -151,6 +152,6 @@ export function FloorMetadataForm({ floor }: FloorMetadataFormProps) {
           </Button>
         </FieldGroup>
       </form>
-    </div>
+    </Card>
   );
 }

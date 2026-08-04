@@ -2,9 +2,8 @@
 
 import { useRef, useState, useTransition } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "nextjs-toploader/app";
-import { ArrowLeftIcon, Building2Icon, Loader2Icon, UploadIcon } from "lucide-react";
+import { Building2Icon, Loader2Icon, PencilIcon, UploadIcon } from "lucide-react";
 
 import FormAlert from "@/components/shared/form/FormAlert";
 import { Button } from "@/components/ui/button";
@@ -12,8 +11,8 @@ import { Card } from "@/components/ui/card";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PRIVATE_ROUTES } from "@/constants/routes";
 import { ORGANIZATION_TYPES } from "@/features/auth/constants/register-organization";
+import { OrganizationInfoCard } from "@/features/dashboard/components/OrganizationInfoCard";
 
 import { ORGANIZATION_SETTINGS_CLIENT } from "../constants/organization-settings.constants";
 import { updateOrganizationAction } from "../actions/server/update-organization";
@@ -35,6 +34,7 @@ export function OrganizationForm({ organization }: OrganizationFormProps) {
   const [removeLogo, setRemoveLogo] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const onSelectLogo = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
@@ -78,20 +78,43 @@ export function OrganizationForm({ organization }: OrganizationFormProps) {
       setLogoFile(null);
       setRemoveLogo(false);
       setSuccess(true);
+      setIsEditing(false);
       router.refresh();
     });
   };
 
-  return (
-    <Card className="mx-auto w-full max-w-xl p-6 sm:p-8">
-      <Link
-        href={PRIVATE_ROUTES.DASHBOARD}
-        className="mb-6 inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
-      >
-        <ArrowLeftIcon className="size-3.5" />
-        {ORGANIZATION_SETTINGS_CLIENT.BACK_TO_DASHBOARD}
-      </Link>
+  const cancelEditing = () => {
+    setName(organization.name);
+    setType(organization.type);
+    setLogoFile(null);
+    setLogoPreviewUrl(organization.logoUrl);
+    setRemoveLogo(false);
+    setError("");
+    setSuccess(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    setIsEditing(false);
+  };
 
+  const typeLabel = ORGANIZATION_TYPES.find((option) => option.value === type)?.label ?? type;
+
+  if (!isEditing) {
+    return (
+      <OrganizationInfoCard
+        name={name}
+        typeLabel={typeLabel}
+        logoUrl={logoPreviewUrl}
+        action={
+          <Button type="button" variant="outline" onClick={() => setIsEditing(true)}>
+            <PencilIcon />
+            {ORGANIZATION_SETTINGS_CLIENT.EDIT}
+          </Button>
+        }
+      />
+    );
+  }
+
+  return (
+    <Card className="p-6 sm:p-8">
       <h1 className="font-heading text-xl font-semibold tracking-tight">{ORGANIZATION_SETTINGS_CLIENT.FORM_TITLE}</h1>
       <p className="mt-1 text-sm text-muted-foreground">{ORGANIZATION_SETTINGS_CLIENT.FORM_DESC}</p>
 
@@ -182,10 +205,15 @@ export function OrganizationForm({ organization }: OrganizationFormProps) {
           {success ? <FormAlert successMessage={ORGANIZATION_SETTINGS_CLIENT.SUCCESS_UPDATED} /> : null}
           <FormAlert errorMessage={error} />
 
-          <Button type="submit" size="lg" disabled={isPending || name.trim().length < 2}>
-            {isPending ? <Loader2Icon className="animate-spin" /> : null}
-            {isPending ? ORGANIZATION_SETTINGS_CLIENT.SAVING : ORGANIZATION_SETTINGS_CLIENT.SAVE}
-          </Button>
+          <div className="flex justify-end gap-2">
+            <Button type="button" variant="outline" onClick={cancelEditing} disabled={isPending}>
+              {ORGANIZATION_SETTINGS_CLIENT.CANCEL}
+            </Button>
+            <Button type="submit" size="lg" disabled={isPending || name.trim().length < 2}>
+              {isPending ? <Loader2Icon className="animate-spin" /> : null}
+              {isPending ? ORGANIZATION_SETTINGS_CLIENT.SAVING : ORGANIZATION_SETTINGS_CLIENT.SAVE}
+            </Button>
+          </div>
         </FieldGroup>
       </form>
     </Card>

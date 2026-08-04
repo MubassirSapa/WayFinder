@@ -8,6 +8,7 @@ import { getCurrentUser } from "@/features/auth/services/server/auth.ports";
 import { USER_MANAGEMENT_CLIENT } from "@/features/user-management/constants/user-management.constants";
 import { UserManagementTable } from "@/features/user-management/components/UserManagementTable";
 import { listOrgBuildingOptions, listOrgUsers } from "@/features/user-management/services/server/user-management.ports";
+import { DashboardPageContainer } from "@/features/dashboard/components/DashboardPageHeader";
 
 export const metadata: Metadata = {
   title: `${USER_MANAGEMENT_CLIENT.PAGE_TITLE} | ${BRAND.NAME}`,
@@ -29,8 +30,8 @@ export default async function UsersPage() {
   const users = usersResult.isSuccess ? usersResult.data : [];
 
   return (
-    <main className="mx-auto flex w-full max-w-270 flex-1 flex-col px-4 pb-16 pt-8 sm:px-6 sm:pt-10 lg:px-8">
+    <DashboardPageContainer>
       <UserManagementTable users={users} buildingOptions={buildingOptions} />
-    </main>
+    </DashboardPageContainer>
   );
 }

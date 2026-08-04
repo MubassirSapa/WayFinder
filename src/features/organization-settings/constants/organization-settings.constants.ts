@@ -3,6 +3,8 @@ export const ORGANIZATION_SETTINGS_CLIENT = {
 
   FORM_TITLE: "Organization info",
   FORM_DESC: "This information is shown across your dashboard and public pages.",
+  EDIT: "Edit organization",
+  CANCEL: "Cancel",
 
   FIELD_NAME_LABEL: "Organization name",
   FIELD_NAME_PLACEHOLDER: "e.g. St. Jude General Hospital",

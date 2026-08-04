@@ -2,6 +2,8 @@ export const PROFILE_CLIENT = {
   PAGE_TITLE: "Profile",
   FORM_TITLE: "Your profile",
   FORM_DESC: "Update how you appear across the dashboard.",
+  EDIT: "Edit profile",
+  CANCEL: "Cancel",
 
   FIELD_AVATAR_LABEL: "Photo",
   FIELD_AVATAR_DESC: "PNG or JPG, up to 5MB.",
@@ -13,8 +15,6 @@ export const PROFILE_CLIENT = {
   FIELD_EMAIL_LABEL: "Email",
   FIELD_ROLE_LABEL: "Role",
   FIELD_PASSWORD_LABEL: "Password",
-  COMING_SOON: "Coming soon — changing email and password will be available in a future update.",
-
   BACK_TO_DASHBOARD: "Back to dashboard",
   SAVE: "Save changes",
   SAVING: "Saving...",

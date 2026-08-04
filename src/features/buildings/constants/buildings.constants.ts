@@ -20,10 +20,12 @@ export const BUILDINGS_CLIENT = {
   CREATE_DIALOG_TITLE: "Add a building",
   CREATE_DIALOG_DESC: "You can add contact details and a logo after creating it.",
 
-  EDIT_PAGE_TITLE: "Edit building",
+  EDIT_PAGE_TITLE: "Building",
   FORM_TITLE: "Building info",
   FORM_DESC: "Shown to managers and members assigned to this building.",
   READ_ONLY_NOTICE: "You can view this building's info, but only an owner or manager can edit it.",
+  EDIT: "Edit building",
+  INFO_NOT_SET: "Not provided",
 
   FIELD_NAME_LABEL: "Building name",
   FIELD_NAME_PLACEHOLDER: "e.g. Main Campus",

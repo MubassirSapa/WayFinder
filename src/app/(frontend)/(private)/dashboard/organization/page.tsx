@@ -8,6 +8,9 @@ import { getCurrentUser } from "@/features/auth/services/server/auth.ports";
 import { ORGANIZATION_SETTINGS_CLIENT } from "@/features/organization-settings/constants/organization-settings.constants";
 import { OrganizationForm } from "@/features/organization-settings/components/OrganizationForm";
 import { getOrganizationForEdit } from "@/features/organization-settings/services/server/organization-settings.ports";
+import { BuildingsList } from "@/features/buildings/components/BuildingsList";
+import { listBuildings } from "@/features/buildings/services/server/buildings.ports";
+import { DashboardPageContainer } from "@/features/dashboard/components/DashboardPageHeader";
 
 export const metadata: Metadata = {
   title: `${ORGANIZATION_SETTINGS_CLIENT.PAGE_TITLE} | ${BRAND.NAME}`,
@@ -24,10 +27,13 @@ export default async function OrganizationPage() {
 
   const result = await getOrganizationForEdit(user);
   if (!result.isSuccess) redirect(PRIVATE_ROUTES.DASHBOARD);
+  const buildingsResult = await listBuildings(user);
+  const buildings = buildingsResult.isSuccess ? buildingsResult.data : [];
 
   return (
-    <main className="mx-auto flex w-full max-w-270 flex-1 flex-col px-4 pb-16 pt-8 sm:px-6 sm:pt-10 lg:px-8">
+    <DashboardPageContainer>
       <OrganizationForm organization={result.data} />
-    </main>
+      <BuildingsList buildings={buildings} canManage />
+    </DashboardPageContainer>
   );
 }

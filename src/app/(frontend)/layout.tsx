@@ -19,7 +19,8 @@ const fontHeading = IBM_Plex_Sans({
   weight: ["400", "500", "600", "700"],
 });
 
-const routeLoaderTemplate = '<div class="wayfinder-route-loader" role="bar"></div>';
+// const routeLoaderTemplate =
+//   '<div class="wayfinder-route-loader" role="bar"></div>';
 
 export const metadata: Metadata = {
   appleWebApp: {
@@ -60,7 +61,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
           shadow={false}
           showForHashAnchor={false}
           showSpinner={false}
-          template={routeLoaderTemplate}
+          // template={routeLoaderTemplate}
         />
         <ThemeProvider
           attribute="class"

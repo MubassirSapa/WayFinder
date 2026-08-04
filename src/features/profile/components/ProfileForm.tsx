@@ -1,19 +1,17 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
-import Link from "next/link";
 import { useRouter } from "nextjs-toploader/app";
-import { ArrowLeftIcon, Loader2Icon, UploadIcon, UserIcon } from "lucide-react";
+import { Loader2Icon, PencilIcon, UploadIcon, UserIcon } from "lucide-react";
 
 import FormAlert from "@/components/shared/form/FormAlert";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { PRIVATE_ROUTES } from "@/constants/routes";
+import { EntitySummaryCard } from "@/features/dashboard/components/EntitySummaryCard";
 
 import { PROFILE_CLIENT } from "../constants/profile.constants";
 import { updateProfileAction } from "../actions/server/update-profile";
@@ -40,6 +38,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
   const [removeAvatar, setRemoveAvatar] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const initial = (name.trim()[0] ?? profile.email.trim()[0] ?? "A").toUpperCase();
 
@@ -84,20 +83,52 @@ export function ProfileForm({ profile }: ProfileFormProps) {
       setAvatarFile(null);
       setRemoveAvatar(false);
       setSuccess(true);
+      setIsEditing(false);
       router.refresh();
     });
   };
 
-  return (
-    <Card className="mx-auto w-full max-w-xl p-6 sm:p-8">
-      <Link
-        href={PRIVATE_ROUTES.DASHBOARD}
-        className="mb-6 inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
-      >
-        <ArrowLeftIcon className="size-3.5" />
-        {PROFILE_CLIENT.BACK_TO_DASHBOARD}
-      </Link>
+  const cancelEditing = () => {
+    setName(profile.name);
+    setAvatarFile(null);
+    setAvatarPreviewUrl(profile.avatarUrl);
+    setRemoveAvatar(false);
+    setError("");
+    setSuccess(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    setIsEditing(false);
+  };
 
+  if (!isEditing) {
+    return (
+      <EntitySummaryCard
+        visual={
+          <Avatar className="size-28 sm:size-32">
+            {avatarPreviewUrl ? <AvatarImage src={avatarPreviewUrl} alt={name} /> : null}
+            <AvatarFallback className="text-3xl font-semibold">
+              {avatarPreviewUrl ? initial : <UserIcon className="size-10" />}
+            </AvatarFallback>
+          </Avatar>
+        }
+        title={name}
+        meta={
+          <div className="flex flex-wrap items-center gap-2">
+            <span>{profile.email}</span>
+            <Badge variant="outline">{ROLE_LABELS[profile.role]}</Badge>
+          </div>
+        }
+        action={
+          <Button type="button" variant="outline" onClick={() => setIsEditing(true)}>
+            <PencilIcon />
+            {PROFILE_CLIENT.EDIT}
+          </Button>
+        }
+      />
+    );
+  }
+
+  return (
+    <Card className="p-6 sm:p-8">
       <h1 className="font-heading text-xl font-semibold tracking-tight">{PROFILE_CLIENT.FORM_TITLE}</h1>
       <p className="mt-1 text-sm text-muted-foreground">{PROFILE_CLIENT.FORM_DESC}</p>
 
@@ -172,17 +203,18 @@ export function ProfileForm({ profile }: ProfileFormProps) {
             </Field>
           </div>
 
-          <Alert className="rounded-xl">
-            <AlertDescription>{PROFILE_CLIENT.COMING_SOON}</AlertDescription>
-          </Alert>
-
           {success ? <FormAlert successMessage={PROFILE_CLIENT.SUCCESS_UPDATED} /> : null}
           <FormAlert errorMessage={error} />
 
-          <Button type="submit" size="lg" disabled={isPending || name.trim().length < 2}>
-            {isPending ? <Loader2Icon className="animate-spin" /> : null}
-            {isPending ? PROFILE_CLIENT.SAVING : PROFILE_CLIENT.SAVE}
-          </Button>
+          <div className="flex justify-end gap-2">
+            <Button type="button" variant="outline" onClick={cancelEditing} disabled={isPending}>
+              {PROFILE_CLIENT.CANCEL}
+            </Button>
+            <Button type="submit" size="lg" disabled={isPending || name.trim().length < 2}>
+              {isPending ? <Loader2Icon className="animate-spin" /> : null}
+              {isPending ? PROFILE_CLIENT.SAVING : PROFILE_CLIENT.SAVE}
+            </Button>
+          </div>
         </FieldGroup>
       </form>
     </Card>

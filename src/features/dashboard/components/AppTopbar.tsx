@@ -1,12 +1,21 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-import { ArrowUpRightIcon, Building2Icon, LogOutIcon, MoonIcon, SunIcon, UserIcon, UsersIcon } from "lucide-react";
+import { Building2Icon, LogOutIcon, MoonIcon, UserIcon } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { WayfinderBrand } from "@/components/shared/brand/WayfinderBrand";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,76 +26,66 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { applyTheme, useIsDarkTheme } from "@/components/shared/theme/ModeToggle";
-import { BRAND } from "@/constants/brand";
-import { PRIVATE_ROUTES, PUBLIC_ROUTES } from "@/constants/routes";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Switch } from "@/components/ui/switch";
+import { PRIVATE_ROUTES } from "@/constants/routes";
 import { logoutAction } from "@/features/auth/actions/server/logout";
 
 import { DASHBOARD_CLIENT } from "../constants/dashboard.constants";
 import type { TopbarUser } from "../types/dashboard.types";
+import { UserAvatar } from "./UserAvatar";
 
 type AppTopbarProps = {
   user: TopbarUser;
 };
 
 export function AppTopbar({ user }: AppTopbarProps) {
-  const pathname = usePathname();
   const { setTheme } = useTheme();
   const isDark = useIsDarkTheme();
+  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
   const [isLoggingOut, startLogout] = useTransition();
   const canManage = user.role === "owner" || user.role === "manager";
 
-  const navLinks = canManage
-    ? [{ href: PRIVATE_ROUTES.USERS, label: DASHBOARD_CLIENT.NAV_USERS, icon: UsersIcon }]
-    : [];
+  const logout = () => {
+    startLogout(async () => {
+      await logoutAction();
+    });
+  };
 
   return (
-    <header className="sticky top-0 z-20 border-b border-border bg-background/90 backdrop-blur-md">
-      <div className="flex w-full items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-10">
-        <Link href={PRIVATE_ROUTES.DASHBOARD} className="shrink-0 font-heading text-lg font-semibold tracking-tight text-foreground">
-          {BRAND.NAME}
-        </Link>
+    <>
+      <header className="sticky top-0 z-20 border-b border-border bg-background/90 backdrop-blur-md">
+        <div className="flex h-16 w-full items-center justify-between gap-4 px-4 sm:px-6">
+          <div className="flex items-center gap-2">
+            <SidebarTrigger />
+            <WayfinderBrand
+              href={PRIVATE_ROUTES.DASHBOARD}
+              className="md:hidden"
+              iconClassName="size-7"
+              textClassName="text-base"
+            />
+          </div>
 
-        <nav className="hidden items-center gap-1 md:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={
-                pathname === link.href || pathname.startsWith(`${link.href}/`)
-                  ? "inline-flex items-center gap-1.5 rounded-md bg-muted px-3 py-1.5 text-sm font-medium text-foreground"
-                  : "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-              }
-            >
-              <link.icon className="size-3.5" />
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="flex items-center gap-3 sm:gap-4">
-          <Link
-            href={PUBLIC_ROUTES.HOME}
-            className="hidden items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
-          >
-            <ArrowUpRightIcon className="size-3.5" />
-            {DASHBOARD_CLIENT.VIEW_PUBLIC}
-          </Link>
-          <span className="hidden h-6 w-px bg-border sm:block" aria-hidden="true" />
-
-          <DropdownMenu>
+          <div className="flex items-center">
+            <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-2.5 rounded-full outline-none">
-              <Avatar>
-                {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt={user.name} /> : null}
-                <AvatarFallback>{user.initial}</AvatarFallback>
-              </Avatar>
+              <UserAvatar user={user} />
               <span className="hidden leading-tight sm:block">
                 <span className="block text-sm font-medium text-foreground">{user.name}</span>
                 <span className="block text-xs capitalize text-muted-foreground">{user.role}</span>
               </span>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="w-72 max-w-[calc(100vw-2rem)]">
               <DropdownMenuGroup>
-                <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
+                <DropdownMenuLabel className="flex min-w-0 items-center gap-3 p-3">
+                  <UserAvatar user={user} className="size-10" />
+                  <span className="min-w-0 leading-tight">
+                    <span className="block truncate text-sm font-medium text-foreground">{user.name}</span>
+                    <span className="block truncate text-xs font-normal text-muted-foreground" title={user.email}>
+                      {user.email}
+                    </span>
+                  </span>
+                </DropdownMenuLabel>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
@@ -100,26 +99,49 @@ export function AppTopbar({ user }: AppTopbarProps) {
                   <UserIcon />
                   {DASHBOARD_CLIENT.NAV_PROFILE}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => applyTheme(isDark ? "light" : "dark", setTheme)}>
-                  {isDark ? <SunIcon /> : <MoonIcon />}
-                  {isDark ? DASHBOARD_CLIENT.THEME_LIGHT : DASHBOARD_CLIENT.THEME_DARK}
-                </DropdownMenuItem>
+                <div className="flex items-center justify-between gap-3 px-2 py-1.5 text-sm">
+                  <span className="flex items-center gap-2">
+                    <MoonIcon className="size-4" />
+                    {DASHBOARD_CLIENT.THEME_DARK}
+                  </span>
+                  <Switch
+                    aria-label={DASHBOARD_CLIENT.THEME_DARK}
+                    checked={isDark}
+                    onCheckedChange={(checked) => applyTheme(checked ? "dark" : "light", setTheme)}
+                  />
+                </div>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem
                   variant="destructive"
                   disabled={isLoggingOut}
-                  onClick={() => startLogout(async () => { await logoutAction(); })}
+                  onClick={() => setIsLogoutOpen(true)}
                 >
                   <LogOutIcon />
                   {DASHBOARD_CLIENT.LOG_OUT}
                 </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
-          </DropdownMenu>
+            </DropdownMenu>
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+      <AlertDialog open={isLogoutOpen} onOpenChange={setIsLogoutOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{DASHBOARD_CLIENT.LOG_OUT_TITLE}</AlertDialogTitle>
+            <AlertDialogDescription>{DASHBOARD_CLIENT.LOG_OUT_DESCRIPTION}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isLoggingOut}>{DASHBOARD_CLIENT.CANCEL}</AlertDialogCancel>
+            <AlertDialogAction disabled={isLoggingOut} onClick={logout}>
+              <LogOutIcon />
+              {DASHBOARD_CLIENT.LOG_OUT}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }

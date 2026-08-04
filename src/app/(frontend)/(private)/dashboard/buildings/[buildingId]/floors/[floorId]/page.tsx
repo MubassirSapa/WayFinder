@@ -9,6 +9,7 @@ import { getCurrentUser } from "@/features/auth/services/server/auth.ports";
 import { BUILDINGS_CLIENT } from "@/features/buildings/constants/buildings.constants";
 import { FloorMetadataForm } from "@/features/buildings/components/FloorMetadataForm";
 import { getFloorForEdit } from "@/features/buildings/services/server/buildings.ports";
+import { DashboardPageContainer } from "@/features/dashboard/components/DashboardPageHeader";
 
 export const metadata: Metadata = {
   title: `${BUILDINGS_CLIENT.FLOOR_EDIT_PAGE_TITLE} | ${BRAND.NAME}`,
@@ -30,7 +31,8 @@ export default async function FloorEditPage({ params }: FloorEditPageProps) {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-xl flex-1 flex-col px-4 pb-16 pt-8 sm:px-6 sm:pt-10 lg:px-8">
+    <DashboardPageContainer>
+      <div className="mx-auto w-full max-w-xl">
       <Link
         href={`${PRIVATE_ROUTES.BUILDINGS}/${buildingId}`}
         className="mb-6 inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
@@ -40,6 +42,7 @@ export default async function FloorEditPage({ params }: FloorEditPageProps) {
       </Link>
 
       <FloorMetadataForm floor={floorResult.data} />
-    </main>
+      </div>
+    </DashboardPageContainer>
   );
 }

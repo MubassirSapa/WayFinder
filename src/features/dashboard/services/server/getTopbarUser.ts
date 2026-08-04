@@ -16,14 +16,20 @@ export async function getTopbarUser(): Promise<TopbarUser> {
   const { user } = await payload.auth({ headers });
   if (!user) redirect(PUBLIC_ROUTES.SIGNIN);
 
-  const currentUser = user as User;
+  const currentUser = await payload.findByID({
+    collection: "users",
+    id: (user as User).id,
+    depth: 1,
+    overrideAccess: true,
+  });
   const name = currentUser.name ?? "";
   const email = currentUser.email ?? "";
   const initial = (name.trim()[0] ?? email.trim()[0] ?? "A").toUpperCase();
 
+  const populatedAvatar = typeof currentUser.avatar === "object" ? currentUser.avatar : null;
+  let avatarUrl = populatedAvatar?.url ?? null;
   const avatarId = relationId(currentUser.avatar);
-  let avatarUrl: string | null = null;
-  if (avatarId !== null) {
+  if (!avatarUrl && avatarId !== null) {
     try {
       const avatar = await payload.findByID({
         collection: "media",

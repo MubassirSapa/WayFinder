@@ -79,7 +79,7 @@ export function FloorRow({ floor, buildingId }: FloorRowProps) {
             <Button
               nativeButton={false}
               render={<Link href={`${PRIVATE_ROUTES.BUILDINGS}/${buildingId}/floors/${floor.id}`} />}
-              variant="ghost"
+              variant="outline"
               size="lg"
               className="h-10 w-full sm:w-auto"
             >
@@ -89,7 +89,7 @@ export function FloorRow({ floor, buildingId }: FloorRowProps) {
             <Button
               nativeButton={false}
               render={<Link href={buildEditorHref(floor.id)} />}
-              variant="outline"
+              variant="default"
               size="lg"
               className="h-10 w-full sm:w-auto"
             >

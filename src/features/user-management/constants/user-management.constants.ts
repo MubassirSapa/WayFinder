@@ -20,7 +20,9 @@ export const USER_MANAGEMENT_CLIENT = {
   SAVE_BUILDINGS: "Save",
 
   REMOVE_USER: "Remove",
-  REMOVE_CONFIRM: "Remove this user from your organization? This can't be undone.",
+  REMOVE_TITLE: "Remove user?",
+  REMOVE_CONFIRM_PREFIX: "Remove",
+  REMOVE_CONFIRM_SUFFIX: "They will lose access to this organization. This cannot be undone.",
 
   CREATE_SHEET_TITLE: "Add a user",
   CREATE_SHEET_DESC: "They'll be able to sign in with this email and password right away.",
