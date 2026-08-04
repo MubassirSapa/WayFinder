@@ -1,6 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 
-import { asPayloadId } from "../payload-id";
+import { asPayloadId, type PayloadDocumentId } from "../payload-id";
 
 describe("asPayloadId", () => {
   it("preserves MongoDB ObjectId strings", () => {
@@ -11,5 +11,13 @@ describe("asPayloadId", () => {
 
   it("preserves numeric SQL IDs", () => {
     expect(asPayloadId(42)).toBe(42);
+  });
+
+  it("converts serialized SQL relationship IDs to numbers", () => {
+    expect(asPayloadId("42")).toBe(42);
+  });
+
+  it("infers its return type from the generated Payload collection types", () => {
+    expectTypeOf(asPayloadId("42")).toEqualTypeOf<PayloadDocumentId>();
   });
 });

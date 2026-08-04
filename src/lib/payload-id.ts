@@ -1,8 +1,15 @@
-import type { DefaultDocumentIDType } from "payload";
+import type { Config } from "@/payload-types";
 
-/** Preserve the runtime ID value and let the active Payload adapter cast it. */
-export function asPayloadId(id: number | string): DefaultDocumentIDType {
-  return id as DefaultDocumentIDType;
+type PayloadCollection = Config["collections"][keyof Config["collections"]];
+export type PayloadDocumentId = PayloadCollection extends { id: infer Id } ? Id : never;
+
+/** Convert serialized SQL IDs while preserving string IDs such as MongoDB ObjectIds. */
+export function asPayloadId(id: PayloadDocumentId | string): PayloadDocumentId {
+  if (typeof id === "string" && /^\d+$/.test(id)) {
+    return Number(id) as PayloadDocumentId;
+  }
+
+  return id as PayloadDocumentId;
 }
 
 /** Extract an id from a Payload relationship value, whether populated or not. */

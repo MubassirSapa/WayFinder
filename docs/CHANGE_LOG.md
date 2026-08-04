@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Fixed
+- Fixed SQLite relationship updates rejecting serialized numeric IDs for buildings, media, floors, map objects, and map nodes while continuing to preserve string-based MongoDB ObjectIds.
 - Removed the unreferenced `/editor` index route, which listed floors across every organization by calling the Payload Local API directly (bypassing the `services/server` layer and, since it never identified the requesting user, effectively unscoped by building/organization). `/editor/[floorId]` — the only entry point actually linked from the dashboard — is unaffected and remains correctly building-scoped.
 
 ### Changed
