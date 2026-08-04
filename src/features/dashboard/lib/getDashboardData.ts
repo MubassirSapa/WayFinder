@@ -3,7 +3,9 @@ import { redirect } from "next/navigation";
 import { getPayload } from "payload";
 
 import config from "@payload-config";
+import { access } from "@/collections/access";
 import { PUBLIC_ROUTES } from "@/constants/routes";
+import { relationId } from "@/lib/payload-id";
 import type { Floor, MapObject, Organization, User } from "@/payload-types";
 
 import { DASHBOARD_CLIENT } from "../constants/dashboard.constants";
@@ -16,15 +18,6 @@ import {
   organizationTypeLabel,
 } from "./floorPresentation";
 
-function getRelationId(relation: unknown): string | null {
-  if (relation === null || relation === undefined) return null;
-  if (typeof relation === "object" && "id" in relation) {
-    const id = (relation as { id: unknown }).id;
-    return id === null || id === undefined ? null : String(id);
-  }
-  return String(relation);
-}
-
 export async function getDashboardData(): Promise<DashboardData> {
   const headers = await getHeaders();
   const payload = await getPayload({ config });
@@ -33,7 +26,7 @@ export async function getDashboardData(): Promise<DashboardData> {
   if (!user) redirect(PUBLIC_ROUTES.SIGNIN);
 
   const currentUser = user as User;
-  const organizationId = getRelationId(currentUser.organization);
+  const organizationId = relationId(currentUser.organization);
 
   let organization: Organization | null = null;
   if (organizationId) {
@@ -48,36 +41,45 @@ export async function getDashboardData(): Promise<DashboardData> {
     }
   }
 
-  const buildingId = organizationId ? `building-${organizationId}` : "building-default";
+  // Building-switcher UI doesn't exist yet — default to the user's first
+  // accessible building (owner: oldest building in their org; manager/
+  // member: their first assigned building).
+  const accessibleBuildings = await access.accessibleBuildingIds({ user, payload });
+  const buildingId = accessibleBuildings[0] !== undefined ? String(accessibleBuildings[0]) : "";
 
-  const floorsResult = await payload.find({
-    collection: "floors",
-    depth: 0,
-    limit: 100,
-    overrideAccess: true,
-    sort: "-level",
-    where: { buildingId: { equals: buildingId } },
-  });
-  const floors = floorsResult.docs as Floor[];
+  const floorsResult = buildingId
+    ? await payload.find({
+        collection: "floors",
+        depth: 0,
+        limit: 100,
+        overrideAccess: true,
+        sort: "-level",
+        where: { building: { equals: buildingId } },
+      })
+    : null;
+  const floors = (floorsResult?.docs ?? []) as Floor[];
 
-  const objectsResult = await payload.find({
-    collection: "map-objects",
-    depth: 0,
-    limit: 5000,
-    overrideAccess: true,
-    select: { type: true, floor: true },
-    where: { buildingId: { equals: buildingId } },
-  });
+  const objectsResult = buildingId
+    ? await payload.find({
+        collection: "map-objects",
+        depth: 0,
+        limit: 5000,
+        overrideAccess: true,
+        select: { type: true, floor: true },
+        where: { building: { equals: buildingId } },
+      })
+    : null;
 
   const roomCounts = new Map<string, number>();
   const poiCounts = new Map<string, number>();
-  for (const object of objectsResult.docs as MapObject[]) {
-    const floorId = getRelationId(object.floor);
-    if (!floorId) continue;
+  for (const object of (objectsResult?.docs ?? []) as MapObject[]) {
+    const floorId = relationId(object.floor);
+    if (floorId === null) continue;
+    const floorIdKey = String(floorId);
     if (object.type === "room") {
-      roomCounts.set(floorId, (roomCounts.get(floorId) ?? 0) + 1);
+      roomCounts.set(floorIdKey, (roomCounts.get(floorIdKey) ?? 0) + 1);
     } else if (object.type === "poi") {
-      poiCounts.set(floorId, (poiCounts.get(floorId) ?? 0) + 1);
+      poiCounts.set(floorIdKey, (poiCounts.get(floorIdKey) ?? 0) + 1);
     }
   }
 
@@ -111,7 +113,7 @@ export async function getDashboardData(): Promise<DashboardData> {
       initial,
     },
     organization: {
-      id: organizationId,
+      id: organizationId === null ? null : String(organizationId),
       name: organization?.name ?? DASHBOARD_CLIENT.ORG_FALLBACK_NAME,
       initials: organizationInitials(organization?.name ?? DASHBOARD_CLIENT.ORG_FALLBACK_NAME),
       typeLabel: organizationTypeLabel(organization?.type),

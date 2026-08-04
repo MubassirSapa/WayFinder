@@ -86,17 +86,35 @@ export async function signupAdapter(data: TSignup) {
     });
 
     try {
-      return await payload.create({
-        collection: "users",
+      const building = await payload.create({
+        collection: "buildings",
         overrideAccess: true,
         data: {
-          name: data.name.trim(),
-          email,
-          password: data.password,
-          role: ROLES.USER,
+          name: data.organization.name.trim(),
           organization: organization.id,
         },
       });
+
+      try {
+        return await payload.create({
+          collection: "users",
+          overrideAccess: true,
+          data: {
+            name: data.name.trim(),
+            email,
+            password: data.password,
+            role: ROLES.OWNER,
+            organization: organization.id,
+          },
+        });
+      } catch (error) {
+        await payload.delete({
+          collection: "buildings",
+          id: building.id,
+          overrideAccess: true,
+        });
+        throw error;
+      }
     } catch (error) {
       await payload.delete({
         collection: "organizations",

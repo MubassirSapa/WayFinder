@@ -74,7 +74,7 @@ Risk = Likelihood (1–3) × Impact (1–3).
 
 - Payload's built-in local auth on the `users` collection (`src/collections/Users.ts`): email/password, email verification required, forgot/reset-password flow, JWT stored in an httpOnly `payload-token` cookie (`sameSite: "Lax"`, `secure` tied to `NODE_ENV === "production"`), 30-day token expiration.
 - Route gating in `src/proxy.ts` (Next middleware): redirects anonymous users away from `/dashboard` and `/editor`, and redirects already-authenticated users away from auth pages. **Note:** this middleware only checks for the *presence* of the `payload-token` cookie for `isPrivateRoute` and calls `/api/users/me` to confirm identity for the auth-page redirect — it is a UX convenience, not the authorization boundary. The real authorization boundary is each collection's `access` config, which is why §3.3 matters.
-- Account separation: Payload administrators authenticate through `admins`; organization accounts authenticate through `users` with application-level `admin` / `user` roles. Payload administration is determined by auth collection, never by the user role (`src/collections/access/index.ts`).
+- Account separation: Payload administrators authenticate through `admins`; organization accounts authenticate through `users` with application-level `owner` / `manager` / `member` roles. Payload administration is determined by auth collection, never by the user role (`src/collections/access/index.ts`).
 
 ### 3.2 Password entropy check
 

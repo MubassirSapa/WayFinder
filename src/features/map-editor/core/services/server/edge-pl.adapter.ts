@@ -23,7 +23,7 @@ export async function createPathEdgeAdapter(
     const doc = await payload.create({
       collection: "path-edges",
       data: {
-        buildingId: data.buildingId,
+        building: asPayloadId(data.buildingId),
         floor: asPayloadId(data.floorId),
         fromNode: asPayloadId(data.fromNodeId),
         toNode: asPayloadId(data.toNodeId),
@@ -45,7 +45,7 @@ export async function updatePathEdgeAdapter(
     const payload = await getPayloadClient();
 
     const updateData: Partial<PathEdgeData> = {};
-    if (data.buildingId !== undefined) updateData.buildingId = data.buildingId;
+    if (data.buildingId !== undefined) updateData.building = asPayloadId(data.buildingId);
     if (data.floorId !== undefined) updateData.floor = asPayloadId(data.floorId);
     if (data.fromNodeId !== undefined) {
       updateData.fromNode = asPayloadId(data.fromNodeId);

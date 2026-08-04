@@ -5,7 +5,7 @@ import type { Floor, MapObject } from '@/payload-types'
 function makeFloorDoc(overrides: Partial<Floor> = {}): Floor {
   return {
     id: 1,
-    buildingId: 'b1',
+    building: 1,
     name: 'Ground Floor',
     level: 0,
     width: 1200,
@@ -20,7 +20,7 @@ function makeFloorDoc(overrides: Partial<Floor> = {}): Floor {
 function makeObjectDoc(overrides: Partial<MapObject> = {}): MapObject {
   return {
     id: 1,
-    buildingId: 'b1',
+    building: 1,
     floor: 1,
     type: 'room',
     name: 'Room 1',

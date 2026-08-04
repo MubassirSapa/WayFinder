@@ -87,7 +87,7 @@ export async function updateFloorAdapter(id: string, data: Partial<EditorFloor>)
       metersPerPixel?: null | number;
     } = {};
 
-    if (data.buildingId !== undefined) updateData.buildingId = data.buildingId;
+    if (data.buildingId !== undefined) updateData.building = asPayloadId(data.buildingId);
     if (data.name !== undefined) updateData.name = data.name;
     if (data.level !== undefined) updateData.level = data.level;
     if (data.width !== undefined) updateData.width = data.width;

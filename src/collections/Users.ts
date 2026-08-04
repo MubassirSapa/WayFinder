@@ -51,10 +51,10 @@ export const Users: CollectionConfig = {
   },
 
   access: {
-    create: access.isAdmin,
-    read: access.isAdminOrSelf,
-    update: access.isAdminOrSelf,
-    delete: access.isAdmin,
+    create: access.isPlatformAdmin,
+    read: access.isPlatformAdminOrSelf,
+    update: access.isPlatformAdminOrSelf,
+    delete: access.isPlatformAdmin,
   },
 
   fields: [
@@ -66,7 +66,7 @@ export const Users: CollectionConfig = {
     {
       name: "role",
       type: "select",
-      defaultValue: ROLES.USER,
+      defaultValue: ROLES.MEMBER,
       required: true,
       options: [...ROLE_OPTIONS],
     },
@@ -74,6 +74,17 @@ export const Users: CollectionConfig = {
       name: "organization",
       type: "relationship",
       relationTo: "organizations",
+      required: true,
+    },
+    {
+      name: "buildings",
+      type: "relationship",
+      relationTo: "buildings",
+      hasMany: true,
+      admin: {
+        condition: (data) => data?.role !== ROLES.OWNER,
+        description: "Buildings this user can access. Owners implicitly have access to every building in their organization.",
+      },
     },
   ],
 };

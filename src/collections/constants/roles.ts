@@ -1,9 +1,11 @@
 export const ROLES = {
-  ADMIN: "admin",
-  USER: "user",
+  OWNER: "owner",
+  MANAGER: "manager",
+  MEMBER: "member",
 } as const;
 
 export const ROLE_OPTIONS = [
-  { value: ROLES.ADMIN, label: "Admin" },
-  { value: ROLES.USER, label: "User" },
+  { value: ROLES.OWNER, label: "Owner" },
+  { value: ROLES.MANAGER, label: "Manager" },
+  { value: ROLES.MEMBER, label: "Member" },
 ] as const;

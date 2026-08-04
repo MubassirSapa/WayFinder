@@ -21,7 +21,7 @@ export async function createMapNodeAdapter(
   return tryCatchResponse(async () => {
     const payload = await getPayloadClient();
     const createData: MapNodeData = {
-      buildingId: data.buildingId,
+      building: asPayloadId(data.buildingId),
       floor: asPayloadId(data.floorId),
       object: data.objectId ? asPayloadId(data.objectId) : null,
       role: data.role,
@@ -55,7 +55,7 @@ export async function updateMapNodeAdapter(id: string, data: Partial<EditorMapNo
     const payload = await getPayloadClient();
 
     const updateData: Partial<MapNodeData> = {};
-    if (data.buildingId !== undefined) updateData.buildingId = data.buildingId;
+    if (data.buildingId !== undefined) updateData.building = asPayloadId(data.buildingId);
     if (data.floorId !== undefined) updateData.floor = asPayloadId(data.floorId);
     if (data.objectId !== undefined) {
       updateData.object = data.objectId ? asPayloadId(data.objectId) : null;

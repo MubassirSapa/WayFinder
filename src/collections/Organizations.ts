@@ -13,10 +13,10 @@ export const Organizations: CollectionConfig = {
 
   access: {
     // Created during public signup (via overrideAccess in the auth adapter).
-    create: access.isAdmin,
+    create: access.isPlatformAdmin,
     read: access.isLoggedIn,
-    update: access.isAdmin,
-    delete: access.isAdmin,
+    update: access.isPlatformAdmin,
+    delete: access.isPlatformAdmin,
   },
 
   fields: [

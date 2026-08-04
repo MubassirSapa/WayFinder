@@ -23,7 +23,7 @@ export async function createMapObjectAdapter(
     const doc = await payload.create({
       collection: "map-objects",
       data: {
-        buildingId: data.buildingId,
+        building: asPayloadId(data.buildingId),
         floor: asPayloadId(data.floorId),
         parentObject: data.parentObjectId ? asPayloadId(data.parentObjectId) : null,
         type: data.type,
@@ -52,7 +52,7 @@ export async function updateMapObjectAdapter(
     const payload = await getPayloadClient();
 
     const updateData: Partial<MapObjectData> = {};
-    if (data.buildingId !== undefined) updateData.buildingId = data.buildingId;
+    if (data.buildingId !== undefined) updateData.building = asPayloadId(data.buildingId);
     if (data.floorId !== undefined) updateData.floor = asPayloadId(data.floorId);
     if (data.parentObjectId !== undefined) {
       updateData.parentObject = data.parentObjectId

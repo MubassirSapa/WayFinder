@@ -3,16 +3,20 @@
 ## [Unreleased]
 
 ### Added
+- Added a real `Buildings` collection (organization 1-to-many buildings, each with name/address/contact metadata and a cached floor count) and a `users.buildings` many-to-many membership, replacing the free-text `buildingId` convention that previously faked one building per organization.
 - Added a compact, centered translucent visitor handoff below the organization header that takes people directly to the public venue directory without mixing visitor destinations into organization navigation.
 
-### Fixed
-- Fixed the organization visitor handoff's two adjacent text spans concatenating into a single run-on accessible name ("Visiting a venue?Find its public map") for assistive technology, by adding the whitespace an ordinary space-separated sentence needs between them.
-
 ### Changed
+- Renamed the `users.role` values from `admin`/`user` to `owner`/`manager`/`member` — `owner` is the organization's creator and implicitly manages every building in the org, `manager` gets elevated permissions on their assigned buildings, and `member` is read-only. This also resolves the naming collision with the separate `admins` collection (the platform team).
+- `floors`, `map-objects`, `map-nodes`, and `path-edges` now carry a real `building` relationship instead of a free-text `buildingId`; access control for those collections and for `buildings` is now scoped by building/organization membership instead of a blanket logged-in check.
+- Signup now assigns the new organization's creator the `owner` role (previously `user`, leaving no one marked as an org's admin).
 - Changed the public venue promotion's "Join now" action to introduce the organization experience before registration.
 - Kept the organization-site navbar focused on organization journeys by removing its public-map link and showing registration as a prominent "Get started" action on organization subpages while leaving the landing page's existing hero actions to handle registration.
 - Made the shared Wayfinder brand glow invert with the active theme, using a dark glow on light surfaces and a light glow on dark surfaces.
 - Separated the organization landing page's benefit cards from its closing registration prompt, replacing adjacent duplicate calls to action with a benefits-first flow, a responsive green closing band, and a stacked account prompt.
+
+### Fixed
+- Fixed the organization visitor handoff's two adjacent text spans concatenating into a single run-on accessible name ("Visiting a venue?Find its public map") for assistive technology, by adding the whitespace an ordinary space-separated sentence needs between them.
 
 ## [0.1.9] - 2026-08-02
 

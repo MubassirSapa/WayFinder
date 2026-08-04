@@ -24,12 +24,26 @@ class Admin {
   datetime updatedAt
 }
 
+class Building {
+  number id
+  string name
+  number organizationId
+  string address
+  string contactEmail
+  string contactPhone
+  string website
+  number floorCount
+  datetime createdAt
+  datetime updatedAt
+}
+
 class User {
   number id
   string name
   string email
   enum role
   number organizationId
+  number[] buildingIds
   boolean verified
   datetime createdAt
   datetime updatedAt
@@ -50,7 +64,7 @@ class Media {
 
 class Floor {
   number id
-  string buildingId
+  number buildingId
   string name
   number level
   number width
@@ -73,7 +87,7 @@ class Floor {
 
 class MapObject {
   number id
-  string buildingId
+  number buildingId
   number floorId
   number parentObjectId
   enum type
@@ -94,7 +108,7 @@ class MapObject {
 
 class MapNode {
   number id
-  string buildingId
+  number buildingId
   number floorId
   number objectId
   enum role
@@ -113,7 +127,7 @@ class MapNode {
 
 class PathEdge {
   number id
-  string buildingId
+  number buildingId
   number floorId
   number fromNodeId
   number toNodeId
@@ -125,8 +139,11 @@ class PathEdge {
   datetime updatedAt
 }
 
-Organization "0..1" --> "0..*" User : has users
+Organization "1" --> "0..*" User : has users
+Organization "1" --> "0..*" Building : has buildings
+User "0..*" --> "0..*" Building : member of
 Media "0..1" --> "0..*" Floor : background image for
+Building "1" --> "0..*" Floor : contains
 Floor "1" --> "0..*" MapObject : contains
 Floor "1" --> "0..*" MapNode : contains
 Floor "1" --> "0..*" PathEdge : owns
@@ -140,9 +157,10 @@ MapNode "1" --> "0..*" PathEdge : toNode
 
 | Payload slug | Purpose |
 | --- | --- |
-| `admins` | Payload Admin accounts, separate from organization users |
-| `users` | Organization accounts, application roles, and organization membership |
+| `admins` | Payload Admin accounts — the platform team. Separate from organization accounts and unrelated to any organization. |
+| `users` | Organization accounts, application roles, organization membership, and building membership |
 | `organizations` | Organization name and organization type |
+| `buildings` | Buildings belonging to an organization — name, contact/address metadata, and a cached floor count |
 | `media` | Uploaded files, including floor reference images |
 | `floors` | Floor dimensions, scale, status, and background-image settings |
 | `map-objects` | Rooms, walls, doors, hallways, connectors, and other visible map geometry |
@@ -163,28 +181,62 @@ objects are used as destinations in the viewer.
 hospital | university | mall | office | airport | library | other
 ```
 
+One organization can have many `users` and many `buildings`.
+
+### Building
+
+`organization` is a required relationship — every building belongs to
+exactly one organization, and an organization can have many buildings.
+
+`floorCount` is a denormalized cache of how many floors belong to the
+building, kept in sync by an `afterChange`/`afterDelete` hook on `Floors`
+(`src/collections/map/Floors.ts`) — it exists so dashboards can read a
+building summary without a separate floor-count query. It is not an
+authoritative source; it is always derived from `floors.building`.
+
+`address`, `contactEmail`, `contactPhone`, and `website` are optional
+metadata fields for the building's location and contact info.
+
 ### User
 
 `role` can be:
 
 ```text
-admin | user
+owner | manager | member
 ```
+
+- **owner** — the organization's creator (assigned automatically on signup).
+  There is one owner per organization. An owner implicitly has access to
+  every building in their organization — no explicit `buildings` membership
+  is needed or stored for them.
+- **manager** — has elevated permissions (can create/update/delete floors,
+  map objects, map nodes, and path edges) on the buildings listed in their
+  `buildings` field.
+- **member** — read-only access to the buildings listed in their `buildings`
+  field. Cannot create, update, or delete map data.
 
 Payload adds authentication fields to the user collection, including email,
 password hashes, verification data, password-reset data, login-attempt data,
 and sessions. Sensitive authentication fields are managed by Payload and are
 not ordinary editor fields.
 
-The `organization` relationship is optional. One organization can be linked to
-many users.
+The `organization` relationship is required — every user belongs to exactly
+one organization (one email = one user = one organization). One organization
+can have many users.
+
+The `buildings` relationship (`hasMany`) is the many-to-many membership
+between users and buildings. It only applies to `manager`/`member` roles; the
+admin UI hides it for `owner` since ownership already implies full org-wide
+building access.
 
 ### Admin
 
 The separate `admins` authentication collection is the only collection allowed
-to sign in to Payload Admin. Admin accounts are not organization users and do
-not use the application user role field. The `admin` role on a `users` record is
-an application role only and does not grant access to Payload Admin.
+to sign in to Payload Admin. Admin accounts represent the platform team, are
+not organization users, are not linked to any organization, and do not use
+the application user role field. The `owner`/`manager`/`member` roles on a
+`users` record are application-level roles only and do not grant access to
+Payload Admin.
 
 ### Floor
 
@@ -208,8 +260,11 @@ A floor can reference an uploaded `media` record through `backgroundImage`.
 scale, opacity, visibility, lock state, offsets, and fit are stored alongside
 the floor.
 
-There is currently no separate Building collection. `buildingId` is stored as
-required text on floors, map objects, map nodes, and path edges.
+`building` is a required relationship to the `buildings` collection. Every
+floor belongs to exactly one building; a building can have many floors.
+`map-objects`, `map-nodes`, and `path-edges` each carry their own `building`
+relationship too (rather than only deriving it through their `floor`), so
+building-scoped access control can filter each of those collections directly.
 
 ### Map object
 
@@ -271,9 +326,31 @@ Cross-floor stairs, elevators, escalators, and ramps still use path-edge
 records. The edge is stored under its origin floor and can point to a node on a
 different floor.
 
+## Access control
+
+`src/collections/access/index.ts` defines the reusable access functions:
+
+- `isPlatformAdmin` / `isPlatformAdminOrSelf` — true only for the `admins`
+  auth collection (the platform team). Used to gate `admins`, `organizations`,
+  and the non-self paths of `users`.
+- `accessibleBuildingIds(req)` — resolves the set of building IDs a `users`
+  account can act on: every building in their organization for `owner`, or
+  their own `buildings` relationship for `manager`/`member`. Platform admins
+  bypass this entirely.
+- `buildingRead` / `buildingManage` — read/write access for the `buildings`
+  collection itself. Reading is scoped to accessible buildings for any role;
+  creating/updating/deleting a building is restricted to the `owner` of its
+  organization.
+- `buildingContentRead` / `buildingContentWrite` — read/write access for
+  `floors`, `map-objects`, `map-nodes`, and `path-edges`, scoped by their own
+  `building` field. Write access excludes `member` (read-only role).
+
 ## How the records rebuild a map
 
 ```text
+Building groups an organization's floors
+                 |
+                 v
 Floor dimensions and image settings
                  |
                  v
@@ -290,8 +367,8 @@ Floor dimensions and image settings
 ```
 
 The database stores structured values rather than a screenshot. Loading the
-floor, objects, nodes, and edges gives the editor and viewer enough information
-to redraw the map and rebuild its navigation graph.
+building, floor, objects, nodes, and edges gives the editor and viewer enough
+information to redraw the map and rebuild its navigation graph.
 
 ## Payload-managed collections
 
