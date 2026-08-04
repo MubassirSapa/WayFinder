@@ -34,7 +34,11 @@ export function DashboardTopbar({ user }: DashboardTopbarProps) {
             {DASHBOARD_CLIENT.VIEW_PUBLIC}
           </Link>
           <span className="hidden h-6 w-px bg-border sm:block" aria-hidden="true" />
-          <div className="flex items-center gap-2.5">
+          <Link
+            href={PRIVATE_ROUTES.PROFILE}
+            aria-label="Open organization profile"
+            className="flex min-h-11 items-center gap-2.5 rounded-lg px-1.5 transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30"
+          >
             <span className="grid size-9 place-content-center rounded-full bg-primary/15 text-sm font-semibold text-primary">
               {user.initial}
             </span>
@@ -44,7 +48,7 @@ export function DashboardTopbar({ user }: DashboardTopbarProps) {
                 {DASHBOARD_CLIENT.PROFILE_ROLE}
               </span>
             </span>
-          </div>
+          </Link>
         </div>
       </div>
     </header>

@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Added
+- Added a mobile-first organization profile at `/profile` for maintaining facility details, public contact information, and a structured visitor address without rich-text fields.
 - Added a compact, centered translucent visitor handoff below the organization header that takes people directly to the public venue directory without mixing visitor destinations into organization navigation.
 
 ### Fixed

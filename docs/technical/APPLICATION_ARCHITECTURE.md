@@ -51,6 +51,7 @@ flowchart LR
         navigationFeature["Navigation"]
         authFeature["Authentication"]
         dashboardFeature["Dashboard"]
+        profileFeature["Organization profile"]
         editorCore["Map editor core"]
         smartBuilder["Smart Builder extension"]
         floorLinks["Floor-links extension"]
@@ -96,6 +97,7 @@ flowchart LR
     mapViewerFeature --> navigationFeature
     authRoutes --> authFeature
     privateRoutes --> dashboardFeature
+    privateRoutes --> profileFeature
     privateRoutes --> editorCore
     editorCore --> smartBuilder
     editorCore --> floorLinks
@@ -113,6 +115,7 @@ flowchart LR
 
     authFeature --> serverActions
     dashboardFeature --> serverActions
+    profileFeature --> serverActions
     editorCore --> serverActions
     floorLinks --> clientActions
     serverActions --> ports
@@ -121,6 +124,7 @@ flowchart LR
     discoveryFeature --> serverLoaders
     mapViewerFeature --> serverLoaders
     dashboardFeature --> serverLoaders
+    profileFeature --> serverLoaders
     editorCore --> serverLoaders
 
     payloadAdapters --> payloadCms
@@ -246,7 +250,9 @@ published floors by building before rendering venue-level choices.
 
 The current dashboard loader calls the Payload Local API directly for its
 server-rendered read. Dashboard mutations still use dashboard ports and a
-Payload adapter.
+Payload adapter. The organization profile reads through its server port and
+Payload adapter, while its form sends validated updates through a server
+mutation action tied to the signed-in user's organization.
 
 ## 3. Map editor and extension modules
 
@@ -547,6 +553,7 @@ adapter sends messages through Resend.
 | --- | --- | --- |
 | Authentication | Accounts, sessions, signup flow, verification, and password recovery | Server actions, auth ports, Payload auth adapter |
 | Dashboard | Organization summary, floors, publication status, and floor creation | Server loader plus mutation ports and adapters |
+| Organization profile | Organization identity, public contact details, visitor address, and current managing account summary | Server loader plus validated mutation action, port, and Payload adapter |
 | Map editor core | Editable floor, objects, nodes, edges, selection, canvas, and persistence | Zustand slices, server actions, entity ports, Payload adapters |
 | Smart Builder | Automated node creation, auto-connect behavior, and hallway path building | Core editor store actions and pure helper functions |
 | Floor links | Cross-floor connector discovery and linking UI | Client actions, Payload REST SDK, core edge store and edge mutation action |

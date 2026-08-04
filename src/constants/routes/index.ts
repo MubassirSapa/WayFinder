@@ -24,6 +24,7 @@ const PUBLIC_ROUTES = {
 const PRIVATE_ROUTES = {
   DASHBOARD: "/dashboard",
   EDITOR: "/editor",
+  PROFILE: "/profile",
 } as const;
 
 export { PUBLIC_ROUTES, PRIVATE_ROUTES };

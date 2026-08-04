@@ -12,6 +12,15 @@ class Organization {
   number id
   string name
   enum type
+  string contact.email
+  string contact.phone
+  string contact.website
+  string address.line1
+  string address.line2
+  string address.city
+  string address.region
+  string address.postalCode
+  string address.country
   datetime createdAt
   datetime updatedAt
 }
@@ -142,7 +151,7 @@ MapNode "1" --> "0..*" PathEdge : toNode
 | --- | --- |
 | `admins` | Payload Admin accounts, separate from organization users |
 | `users` | Organization accounts, application roles, and organization membership |
-| `organizations` | Organization name and organization type |
+| `organizations` | Organization identity, public contact details, and visitor address |
 | `media` | Uploaded files, including floor reference images |
 | `floors` | Floor dimensions, scale, status, and background-image settings |
 | `map-objects` | Rooms, walls, doors, hallways, connectors, and other visible map geometry |
@@ -162,6 +171,11 @@ objects are used as destinations in the viewer.
 ```text
 hospital | university | mall | office | airport | library | other
 ```
+
+`name` and `type` are required. The grouped `contact` fields (`email`, `phone`,
+and `website`) and grouped visitor `address` fields (`line1`, `line2`, `city`,
+`region`, `postalCode`, and `country`) are optional plain-text values. The
+organization profile does not store rich-text content.
 
 ### User
 

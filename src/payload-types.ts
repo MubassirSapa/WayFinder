@@ -212,6 +212,19 @@ export interface Organization {
   id: number;
   name: string;
   type: 'hospital' | 'university' | 'mall' | 'office' | 'airport' | 'library' | 'other';
+  contact?: {
+    email?: string | null;
+    phone?: string | null;
+    website?: string | null;
+  };
+  address?: {
+    line1?: string | null;
+    line2?: string | null;
+    city?: string | null;
+    region?: string | null;
+    postalCode?: string | null;
+    country?: string | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -513,6 +526,23 @@ export interface UsersSelect<T extends boolean = true> {
 export interface OrganizationsSelect<T extends boolean = true> {
   name?: T;
   type?: T;
+  contact?:
+    | T
+    | {
+        email?: T;
+        phone?: T;
+        website?: T;
+      };
+  address?:
+    | T
+    | {
+        line1?: T;
+        line2?: T;
+        city?: T;
+        region?: T;
+        postalCode?: T;
+        country?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
