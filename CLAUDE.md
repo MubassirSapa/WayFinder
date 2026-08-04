@@ -93,6 +93,19 @@ not just new features:
   code genuinely shared across features only. Feature-specific code belongs inside
   that feature's folder, not at the root.
 
+## Payload typing
+
+- Always derive collection documents, relationship values, operation data, and
+  IDs from Payload's generated types or exported utility types. Do not recreate
+  Payload collection shapes by hand when an authoritative Payload type exists.
+- In particular, never hardcode an ID as `number` or `string`. Use the generated
+  collection `id` type or Payload's `DefaultDocumentIDType`, and keep IDs returned
+  by the Local API unchanged. Payload and the active database adapter own ID
+  generation, validation, and relationship compatibility.
+- Seed and migration scripts must build relationships from IDs returned by
+  Payload operations. Do not infer, synthesize, parse, or coerce adapter-specific
+  IDs inside a seed script.
+
 ## UI implementation
 
 - Prefer clear, reusable components instead of writing one large file. Keep each component focused, easy to understand, and maintainable.

@@ -1,15 +1,18 @@
 import { readFile } from "node:fs/promises";
 
-import { getPayload, type Payload } from "payload";
+import { getPayload, type DefaultDocumentIDType, type Payload } from "payload";
 
 import config from "../src/payload.config";
+import { relationId } from "../src/lib/payload-id";
 
-const DEMO_PASSWORD = "WayfinderDemo!2026";
+const DEMO_PASSWORD = process.env.DEMO_SEED_PASSWORD;
+if (!DEMO_PASSWORD) {
+  throw new Error("Missing DEMO_SEED_PASSWORD. Set it in the selected environment file before seeding.");
+}
 
-// Generated Payload relationship types use the configured adapter's ID type.
-// This project generates against SQLite, while Mongo IDs still pass through the
-// Local API correctly at runtime when DATABASE_ENGINE selects MongoDB.
-type PayloadId = number;
+// Payload owns adapter-specific ID creation and validation. Seeded IDs always
+// come directly from Local API results; never synthesize or coerce them here.
+type PayloadId = DefaultDocumentIDType;
 
 type MongoExportId = { $oid: string };
 
@@ -109,12 +112,12 @@ const CONNECTORS = [
 const DEMOS: DemoSeed[] = [
   {
     sourceBuildingId: "building-6a6d3e83b738407e8484c9be",
-    user: { name: "Dr. Maya Chen", email: "maya@wayfinder.demo" },
+    user: { name: "Hasan", email: "hasan.swe.dev@gmail.com" },
     organization: { name: "Northstar Medical Centre", type: "hospital" },
   },
   {
     sourceBuildingId: "building-6a6d3dfdb738407e8484c98d",
-    user: { name: "Jordan Rivera", email: "jordan@wayfinder.demo" },
+    user: { name: "Mubassir", email: "mubs4edu@gmail.com" },
     organization: { name: "Harbourfront Galleria", type: "mall" },
   },
 ];
@@ -162,6 +165,25 @@ function withoutExportMetadata<T extends ExportDocument>(document: T): Omit<T, "
 }
 
 async function upsertOrganization(payload: Payload, demo: DemoSeed) {
+  const existingUser = await payload.find({
+    collection: "users",
+    depth: 0,
+    limit: 1,
+    overrideAccess: true,
+    where: { email: { equals: demo.user.email } },
+  });
+  const existingOrganizationId = relationId(existingUser.docs[0]?.organization);
+
+  if (existingOrganizationId !== null) {
+    const organization = await payload.findByID({
+      collection: "organizations",
+      id: existingOrganizationId,
+      depth: 0,
+      overrideAccess: true,
+    });
+    return { organization, existingUser: existingUser.docs[0] };
+  }
+
   const existing = await payload.find({
     collection: "organizations",
     limit: 1,
@@ -169,7 +191,7 @@ async function upsertOrganization(payload: Payload, demo: DemoSeed) {
     where: { name: { equals: demo.organization.name } },
   });
 
-  return existing.docs[0]
+  const organization = await (existing.docs[0]
     ? payload.update({
         collection: "organizations",
         id: existing.docs[0].id,
@@ -180,16 +202,17 @@ async function upsertOrganization(payload: Payload, demo: DemoSeed) {
         collection: "organizations",
         overrideAccess: true,
         data: demo.organization,
-      });
+      }));
+
+  return { organization, existingUser: undefined };
 }
 
-async function upsertUser(payload: Payload, demo: DemoSeed, organizationId: PayloadId) {
-  const existing = await payload.find({
-    collection: "users",
-    limit: 1,
-    overrideAccess: true,
-    where: { email: { equals: demo.user.email } },
-  });
+async function upsertUser(
+  payload: Payload,
+  demo: DemoSeed,
+  organizationId: PayloadId,
+  existingUserId?: PayloadId,
+) {
   const data = {
     ...demo.user,
     password: DEMO_PASSWORD,
@@ -198,10 +221,10 @@ async function upsertUser(payload: Payload, demo: DemoSeed, organizationId: Payl
     _verified: true,
   };
 
-  if (existing.docs[0]) {
+  if (existingUserId !== undefined) {
     await payload.update({
       collection: "users",
-      id: existing.docs[0].id,
+      id: existingUserId,
       overrideAccess: true,
       data,
     });
@@ -216,7 +239,7 @@ async function upsertUser(payload: Payload, demo: DemoSeed, organizationId: Payl
   });
 }
 
-async function upsertBuilding(payload: Payload, demo: DemoSeed, organizationId: PayloadId) {
+async function upsertBuilding(payload: Payload, organizationId: PayloadId, buildingName: string) {
   const existing = await payload.find({
     collection: "buildings",
     limit: 1,
@@ -229,12 +252,12 @@ async function upsertBuilding(payload: Payload, demo: DemoSeed, organizationId: 
         collection: "buildings",
         id: existing.docs[0].id,
         overrideAccess: true,
-        data: { name: demo.organization.name },
+        data: { name: buildingName },
       })
     : payload.create({
         collection: "buildings",
         overrideAccess: true,
-        data: { name: demo.organization.name, organization: organizationId },
+        data: { name: buildingName, organization: organizationId },
       });
 }
 
@@ -254,9 +277,9 @@ async function seedDemo(payload: Payload, demo: DemoSeed, fixtures: {
   nodes: MapNodeExport[];
   edges: PathEdgeExport[];
 }) {
-  const organization = await upsertOrganization(payload, demo);
-  await upsertUser(payload, demo, organization.id);
-  const building = await upsertBuilding(payload, demo, organization.id);
+  const { organization, existingUser } = await upsertOrganization(payload, demo);
+  await upsertUser(payload, demo, organization.id, existingUser?.id);
+  const building = await upsertBuilding(payload, organization.id, organization.name);
 
   const buildingId = building.id;
   await clearBuilding(payload, buildingId);
@@ -467,7 +490,6 @@ try {
   for (const result of results) {
     payload.logger.info(`${result.organization}: ${result.floorCount} floors, ${result.objectCount} objects, ${result.nodeCount} nodes, ${result.edgeCount} edges (${result.buildingId})`);
     payload.logger.info(`  Email: ${result.email}`);
-    payload.logger.info(`  Password: ${DEMO_PASSWORD}`);
   }
 } finally {
   await payload.destroy();

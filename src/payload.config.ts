@@ -24,6 +24,9 @@ export default buildConfig({
   editor: lexicalEditor(),
   secret: requireEnv("PAYLOAD_SECRET"),
   typescript: {
+    // Keep the committed types deterministic when scripts target different
+    // adapters. Regenerate explicitly with `npm run payload:types`.
+    autoGenerate: false,
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
   db: databaseAdapter,
