@@ -7,20 +7,41 @@ import {
   buildingCreate,
   buildingUpdateDelete,
   buildingRead,
+  canManageOrgUserFields,
   isPlatformAdmin,
-  isPlatformAdminOrSelf,
+  organizationUpdate,
+  userCreate,
+  userDelete,
+  userRead,
+  userUpdate,
 } from "../index";
 import { Users } from "../../Users";
 
 describe("collection access", () => {
-  it.each(["role", "organization", "buildings"])(
-    "prevents organization users from updating their own %s field",
+  it("keeps the organization field locked to platform admins only", () => {
+    const field = Users.fields.find((candidate) => "name" in candidate && candidate.name === "organization");
+    if (!field || !("access" in field) || !field.access?.update) throw new Error("Missing organization access");
+
+    expect(field.access.update({ req: { user: { collection: "users", role: "owner" } } } as never)).toBe(false);
+    expect(field.access.update({ req: { user: { collection: "admins" } } } as never)).toBe(true);
+  });
+
+  it.each(["role", "buildings"])(
+    "lets an owner/manager manage another user's %s field but not their own",
     (fieldName) => {
       const field = Users.fields.find((candidate) => "name" in candidate && candidate.name === fieldName);
       if (!field || !("access" in field) || !field.access?.update) throw new Error(`Missing ${fieldName} access`);
 
-      expect(field.access.update({ req: { user: { collection: "users" } } } as never)).toBe(false);
       expect(field.access.update({ req: { user: { collection: "admins" } } } as never)).toBe(true);
+      expect(
+        field.access.update({ id: 8, req: { user: { collection: "users", role: "owner", id: 7 } } } as never),
+      ).toBe(true);
+      expect(
+        field.access.update({ id: 7, req: { user: { collection: "users", role: "owner", id: 7 } } } as never),
+      ).toBe(false);
+      expect(
+        field.access.update({ id: 8, req: { user: { collection: "users", role: "member", id: 7 } } } as never),
+      ).toBe(false);
     },
   );
 
@@ -36,16 +57,88 @@ describe("collection access", () => {
     ).toBe(false);
   });
 
-  it("allows a platform admin or the matching user to access a user record", () => {
-    expect(
-      isPlatformAdminOrSelf({ id: 7, req: { user: { collection: "admins", id: 1 } } } as never),
-    ).toBe(true);
-    expect(
-      isPlatformAdminOrSelf({ id: 7, req: { user: { collection: "users", id: 7 } } } as never),
-    ).toBe(true);
-    expect(
-      isPlatformAdminOrSelf({ id: 7, req: { user: { collection: "users", id: 8 } } } as never),
-    ).toBe(false);
+  describe("canManageOrgUserFields", () => {
+    it("denies anonymous and member requests", () => {
+      expect(canManageOrgUserFields({ req: { user: null } } as never)).toBe(false);
+      expect(
+        canManageOrgUserFields({ req: { user: { collection: "users", role: "member", id: 1 } } } as never),
+      ).toBe(false);
+    });
+  });
+
+  describe("organization access", () => {
+    it("lets an owner/manager update only their own organization", () => {
+      const ownerReq = { user: { collection: "users", role: "owner", organization: 5 } };
+      const managerReq = { user: { collection: "users", role: "manager", organization: 5 } };
+
+      expect(organizationUpdate({ req: ownerReq } as never)).toEqual({ id: { equals: 5 } });
+      expect(organizationUpdate({ req: managerReq } as never)).toEqual({ id: { equals: 5 } });
+    });
+
+    it("denies members and anonymous requests", () => {
+      expect(
+        organizationUpdate({ req: { user: { collection: "users", role: "member", organization: 5 } } } as never),
+      ).toBe(false);
+      expect(organizationUpdate({ req: { user: null } } as never)).toBe(false);
+    });
+  });
+
+  describe("user access", () => {
+    it("scopes reads: self only for a member, whole org for owner/manager", () => {
+      expect(
+        userRead({ req: { user: { collection: "users", role: "member", id: 7 } } } as never),
+      ).toEqual({ id: { equals: 7 } });
+      expect(
+        userRead({ req: { user: { collection: "users", role: "owner", organization: 5 } } } as never),
+      ).toEqual({ organization: { equals: 5 } });
+      expect(userRead({ req: { user: { collection: "admins" } } } as never)).toBe(true);
+    });
+
+    it("lets an owner/manager create a manager or member in their own org, never an owner", () => {
+      const req = { user: { collection: "users", role: "owner", organization: 5 } };
+
+      expect(userCreate({ req, data: { organization: 5, role: "member" } } as never)).toBe(true);
+      expect(userCreate({ req, data: { organization: 5, role: "manager" } } as never)).toBe(true);
+      expect(userCreate({ req, data: { organization: 5, role: "owner" } } as never)).toBe(false);
+      expect(userCreate({ req, data: { organization: 6, role: "member" } } as never)).toBe(false);
+    });
+
+    it("denies a member from creating any user", () => {
+      const req = { user: { collection: "users", role: "member", organization: 5 } };
+      expect(userCreate({ req, data: { organization: 5, role: "member" } } as never)).toBe(false);
+    });
+
+    it("always lets a user update themself at the document level", () => {
+      expect(
+        userUpdate({ id: 7, req: { user: { collection: "users", role: "member", id: 7 } } } as never),
+      ).toBe(true);
+    });
+
+    it("lets an owner/manager update other non-owner users in their org, never the owner's row", () => {
+      const req = { user: { collection: "users", role: "manager", id: 1, organization: 5 } };
+
+      expect(userUpdate({ id: 8, req } as never)).toEqual({
+        and: [{ organization: { equals: 5 } }, { role: { not_equals: "owner" } }],
+      });
+    });
+
+    it("denies a member from updating another user", () => {
+      const req = { user: { collection: "users", role: "member", id: 1, organization: 5 } };
+      expect(userUpdate({ id: 8, req } as never)).toBe(false);
+    });
+
+    it("lets an owner/manager delete other non-owner users in their org", () => {
+      const req = { user: { collection: "users", role: "owner", organization: 5 } };
+
+      expect(userDelete({ req } as never)).toEqual({
+        and: [{ organization: { equals: 5 } }, { role: { not_equals: "owner" } }],
+      });
+    });
+
+    it("denies a member from deleting any user", () => {
+      const req = { user: { collection: "users", role: "member", organization: 5 } };
+      expect(userDelete({ req } as never)).toBe(false);
+    });
   });
 
   describe("building scoping", () => {
@@ -94,11 +187,14 @@ describe("collection access", () => {
       await expect(buildingContentRead({ req: { user: null } } as never)).resolves.toBe(false);
     });
 
-    it("denies members write access to building content", async () => {
+    it("lets a member create content only in a building they're assigned to", async () => {
       const req = { user: { collection: "users", role: "member", buildings: [1] } };
 
       await expect(
         buildingContentCreate({ req, data: { building: 1 } } as never),
+      ).resolves.toBe(true);
+      await expect(
+        buildingContentCreate({ req, data: { building: 2 } } as never),
       ).resolves.toBe(false);
     });
 

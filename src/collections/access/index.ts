@@ -1,4 +1,4 @@
-import type { Access, Payload } from "payload";
+import type { Access, FieldAccess, Payload, Where } from "payload";
 
 import { relationId, relationIds } from "@/lib/payload-id";
 import { ROLES } from "../constants/roles";
@@ -42,14 +42,6 @@ export const isSelf: Access = ({ req: { user }, id }) => {
   return user.id === id;
 };
 
-export const isPlatformAdminOrSelf: Access = ({ req: { user }, id }) => {
-  if (!user) return false;
-
-  if (user.collection === "admins") return true;
-
-  return user.id === id;
-};
-
 /**
  * Org/building scoping
  *
@@ -75,9 +67,6 @@ export async function accessibleBuildingIds(
       limit: 0,
       pagination: false,
       depth: 0,
-      // `id` is always returned regardless of `select` — an empty include
-      // object is the correct way to fetch nothing else (verified: returns
-      // `{ id }` only, not the unrestricted document).
       select: {},
       overrideAccess: true,
     });
@@ -131,10 +120,17 @@ export const buildingContentRead: Access = async ({ req }) => {
   return { building: { in: await accessibleBuildingIds(req) } };
 };
 
-/** Create building-owned content: validate the submitted building. */
+/**
+ * Create building-owned content: validate the submitted building. Members
+ * are included here (unlike `buildingCreate`/`buildingUpdateDelete`) — a
+ * member's whole reason for being assigned to a building is to edit its
+ * floors/objects/nodes/edges. `accessibleBuildingIds` already scopes a
+ * member to exactly their assigned buildings, so no extra role check is
+ * needed beyond that scoping.
+ */
 export const buildingContentCreate: Access = async ({ req, data }) => {
   if (req.user?.collection === "admins") return true;
-  if (!req.user || req.user.collection !== "users" || req.user.role === ROLES.MEMBER) return false;
+  if (!req.user || req.user.collection !== "users") return false;
 
   const ids = await accessibleBuildingIds(req);
 
@@ -146,12 +142,108 @@ export const buildingContentCreate: Access = async ({ req, data }) => {
   return false;
 };
 
-/** Update/delete building content: constrain the existing record, never trust replacement data. */
+/** Update/delete building content: constrain the existing record, never trust replacement data. Members included, see `buildingContentCreate`. */
 export const buildingContentUpdateDelete: Access = async ({ req }) => {
   if (req.user?.collection === "admins") return true;
-  if (!req.user || req.user.collection !== "users" || req.user.role === ROLES.MEMBER) return false;
+  if (!req.user || req.user.collection !== "users") return false;
 
   return { building: { in: await accessibleBuildingIds(req) } };
+};
+
+/** Update an organization's own record: owner/manager, only their own org. */
+export const organizationUpdate: Access = ({ req }) => {
+  if (req.user?.collection === "admins") return true;
+  if (
+    !req.user ||
+    req.user.collection !== "users" ||
+    (req.user.role !== ROLES.OWNER && req.user.role !== ROLES.MANAGER)
+  ) return false;
+
+  const organizationId = relationId(req.user.organization);
+  if (organizationId === null) return false;
+
+  return { id: { equals: organizationId } };
+};
+
+/** Read user records: platform admins, any user reading themself, or an owner/manager reading users in their own organization. */
+export const userRead: Access = ({ req }) => {
+  if (req.user?.collection === "admins") return true;
+  if (!req.user || req.user.collection !== "users") return false;
+
+  if (req.user.role === ROLES.OWNER || req.user.role === ROLES.MANAGER) {
+    const organizationId = relationId(req.user.organization);
+    if (organizationId === null) return false;
+    const where: Where = { organization: { equals: organizationId } };
+    return where;
+  }
+
+  const where: Where = { id: { equals: req.user.id } };
+  return where;
+};
+
+/** Create a user: owner/manager, only inside their own organization, and never as an owner (exactly one owner per org, set at signup). */
+export const userCreate: Access = ({ req, data }) => {
+  if (req.user?.collection === "admins") return true;
+  if (
+    !req.user ||
+    req.user.collection !== "users" ||
+    (req.user.role !== ROLES.OWNER && req.user.role !== ROLES.MANAGER)
+  ) return false;
+
+  const organizationId = relationId(req.user.organization);
+  if (organizationId === null) return false;
+  if (!data || relationId(data.organization) !== organizationId) return false;
+
+  return data.role === ROLES.MANAGER || data.role === ROLES.MEMBER;
+};
+
+/** Update a user: platform admins, the user themself, or an owner/manager updating another (non-owner) user in their own organization. */
+export const userUpdate: Access = ({ req, id }) => {
+  if (req.user?.collection === "admins") return true;
+  if (!req.user || req.user.collection !== "users") return false;
+  if (id !== undefined && String(req.user.id) === String(id)) return true;
+
+  if (req.user.role !== ROLES.OWNER && req.user.role !== ROLES.MANAGER) return false;
+
+  const organizationId = relationId(req.user.organization);
+  if (organizationId === null) return false;
+
+  const where: Where = { and: [{ organization: { equals: organizationId } }, { role: { not_equals: ROLES.OWNER } }] };
+  return where;
+};
+
+/** Delete a user: platform admins, or an owner/manager removing another (non-owner) user in their own organization. */
+export const userDelete: Access = ({ req }) => {
+  if (req.user?.collection === "admins") return true;
+  if (
+    !req.user ||
+    req.user.collection !== "users" ||
+    (req.user.role !== ROLES.OWNER && req.user.role !== ROLES.MANAGER)
+  ) return false;
+
+  const organizationId = relationId(req.user.organization);
+  if (organizationId === null) return false;
+
+  const where: Where = { and: [{ organization: { equals: organizationId } }, { role: { not_equals: ROLES.OWNER } }] };
+  return where;
+};
+
+/**
+ * Field-level access for `Users.role`/`Users.buildings`: platform admins, or
+ * an owner/manager setting these on someone *other* than themself. This is
+ * what lets `userCreate`/`userUpdate` actually assign role/buildings, while
+ * the self-update path (`userUpdate` returning `true` for your own id) still
+ * can't touch these fields — preventing self-escalation.
+ */
+export const canManageOrgUserFields: FieldAccess = ({ req, id }) => {
+  if (req.user?.collection === "admins") return true;
+  if (
+    !req.user ||
+    req.user.collection !== "users" ||
+    (req.user.role !== ROLES.OWNER && req.user.role !== ROLES.MANAGER)
+  ) return false;
+
+  return id === undefined || String(req.user.id) !== String(id);
 };
 
 /**
@@ -165,7 +257,6 @@ export const access = {
   isPlatformAdmin,
 
   isSelf,
-  isPlatformAdminOrSelf,
 
   accessibleBuildingIds,
   buildingRead,
@@ -174,4 +265,12 @@ export const access = {
   buildingContentRead,
   buildingContentCreate,
   buildingContentUpdateDelete,
+
+  organizationUpdate,
+
+  userRead,
+  userCreate,
+  userUpdate,
+  userDelete,
+  canManageOrgUserFields,
 };

@@ -1,21 +1,30 @@
+import Image from "next/image";
 import Link from "next/link";
 import { PencilIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { PRIVATE_ROUTES } from "@/constants/routes";
 
-import { buildOrgAdminHref, DASHBOARD_CLIENT } from "../constants/dashboard.constants";
-import type { DashboardOrganization } from "../types/dashboard.types";
+import { DASHBOARD_CLIENT } from "../constants/dashboard.constants";
+import type { DashboardOrganization, DashboardUser } from "../types/dashboard.types";
 
 type OrganizationSummaryProps = {
   organization: DashboardOrganization;
+  userRole: DashboardUser["role"];
 };
 
-export function OrganizationSummary({ organization }: OrganizationSummaryProps) {
+export function OrganizationSummary({ organization, userRole }: OrganizationSummaryProps) {
+  const canEdit = userRole === "owner" || userRole === "manager";
+
   return (
     <section className="flex flex-col gap-6 rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-7 lg:flex-row lg:items-center">
-      <span className="grid size-16 shrink-0 place-content-center rounded-2xl border border-primary/20 bg-primary/15 font-heading text-xl font-semibold tracking-tight text-primary sm:size-18">
-        {organization.initials}
+      <span className="relative grid size-16 shrink-0 place-content-center overflow-hidden rounded-2xl border border-primary/20 bg-primary/15 font-heading text-xl font-semibold tracking-tight text-primary sm:size-18">
+        {organization.logoUrl ? (
+          <Image alt={organization.name} src={organization.logoUrl} fill sizes="72px" className="object-cover" />
+        ) : (
+          organization.initials
+        )}
       </span>
 
       <div className="min-w-0 flex-1">
@@ -27,13 +36,12 @@ export function OrganizationSummary({ organization }: OrganizationSummaryProps) 
             {organization.typeLabel}
           </Badge>
         </div>
-        <p className="mt-2 text-sm text-muted-foreground">{DASHBOARD_CLIENT.ORG_BUILDING}</p>
       </div>
 
-      {organization.id ? (
+      {canEdit ? (
         <Button
           nativeButton={false}
-          render={<Link href={buildOrgAdminHref(organization.id)} />}
+          render={<Link href={PRIVATE_ROUTES.ORGANIZATION} />}
           variant="outline"
           size="lg"
           className="h-10 self-start lg:self-auto"

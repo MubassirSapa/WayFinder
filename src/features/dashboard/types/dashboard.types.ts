@@ -1,9 +1,14 @@
-export type DashboardFloorStatus = "draft" | "published";
+import type { BuildingListItem } from "@/features/buildings/types/buildings.types";
 
 export type DashboardUser = {
   name: string;
   email: string;
   initial: string;
+  role: "owner" | "manager" | "member";
+};
+
+export type TopbarUser = DashboardUser & {
+  avatarUrl: string | null;
 };
 
 export type DashboardOrganization = {
@@ -11,24 +16,12 @@ export type DashboardOrganization = {
   name: string;
   initials: string;
   typeLabel: string;
-};
-
-export type DashboardFloor = {
-  id: string;
-  name: string;
-  level: number;
-  levelLabel: string;
-  badge: string;
-  roomCount: number;
-  poiCount: number;
-  status: DashboardFloorStatus;
-  isPublished: boolean;
-  updatedLabel: string;
+  logoUrl: string | null;
 };
 
 export type DashboardData = {
   user: DashboardUser;
   organization: DashboardOrganization;
-  floors: DashboardFloor[];
-  buildingId: string;
+  buildings: BuildingListItem[];
+  canManage: boolean;
 };

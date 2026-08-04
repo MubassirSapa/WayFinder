@@ -24,21 +24,25 @@ function getServerThemeSnapshot() {
   return false;
 }
 
+/** Reusable theme-detection hook, so any component (not just the standalone toggle button) can render theme-aware UI. */
+export function useIsDarkTheme() {
+  return useSyncExternalStore(subscribeToTheme, getThemeSnapshot, getServerThemeSnapshot);
+}
+
+/** Applies a theme both to `next-themes` and immediately to the DOM, avoiding a flash before the provider re-renders. */
+export function applyTheme(nextTheme: "light" | "dark", setTheme: (theme: string) => void) {
+  document.documentElement.classList.toggle("dark", nextTheme === "dark");
+  document.documentElement.style.colorScheme = nextTheme;
+  setTheme(nextTheme);
+}
+
 export function ModeToggle() {
   const { setTheme } = useTheme();
-  const isDark = useSyncExternalStore(
-    subscribeToTheme,
-    getThemeSnapshot,
-    getServerThemeSnapshot,
-  );
+  const isDark = useIsDarkTheme();
   const label = `Switch to ${isDark ? "light" : "dark"} mode`;
 
   function toggleTheme() {
-    const nextTheme = isDark ? "light" : "dark";
-
-    document.documentElement.classList.toggle("dark", nextTheme === "dark");
-    document.documentElement.style.colorScheme = nextTheme;
-    setTheme(nextTheme);
+    applyTheme(isDark ? "light" : "dark", setTheme);
   }
 
   return (

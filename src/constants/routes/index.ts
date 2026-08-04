@@ -23,6 +23,10 @@ const PUBLIC_ROUTES = {
 
 const PRIVATE_ROUTES = {
   DASHBOARD: "/dashboard",
+  ORGANIZATION: "/dashboard/organization",
+  BUILDINGS: "/dashboard/buildings",
+  USERS: "/dashboard/users",
+  PROFILE: "/dashboard/profile",
   EDITOR: "/editor",
 } as const;
 

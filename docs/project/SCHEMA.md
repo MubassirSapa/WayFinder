@@ -181,7 +181,9 @@ objects are used as destinations in the viewer.
 hospital | university | mall | office | airport | library | other
 ```
 
-One organization can have many `users` and many `buildings`.
+One organization can have many `users` and many `buildings`. `logo` is an
+optional relationship to `media`, editable by the organization's owner or
+manager from `/dashboard/organization`.
 
 ### Building
 
@@ -195,7 +197,11 @@ building summary without a separate floor-count query. It is not an
 authoritative source; it is always derived from `floors.building`.
 
 `address`, `contactEmail`, `contactPhone`, and `website` are optional
-metadata fields for the building's location and contact info.
+metadata fields for the building's location and contact info. `logo` is an
+optional relationship to `media`. All of these fields (name included) are
+editable only by the organization's owner or manager, from
+`/dashboard/buildings/[buildingId]` — a member assigned to the building can
+read but not edit this record (see `docs/security/RBAC.md`).
 
 ### User
 
@@ -211,8 +217,12 @@ owner | manager | member
   is needed or stored for them.
 - **manager** — has the same organization-wide building and map-management
   permissions as an owner. Managers do not need explicit building assignments.
-- **member** — read-only access to the buildings listed in their `buildings`
-  field. Cannot create, update, or delete map data.
+- **member** — full create/update/delete access to map content (floors, map
+  objects, map nodes, path edges) in the buildings listed in their
+  `buildings` field — being assigned to a building is what grants working
+  access to it. A member's access to the *building's own record* (name,
+  address, contact info, logo) is read-only; only an owner or manager can
+  edit that.
 
 Payload adds authentication fields to the user collection, including email,
 password hashes, verification data, password-reset data, login-attempt data,
@@ -226,6 +236,17 @@ can have many users.
 The `buildings` relationship (`hasMany`) stores explicit building membership
 for `member` accounts. Owners and managers implicitly access every building in
 their organization, so their authorization does not depend on this field.
+
+`avatar` is an optional relationship to `media`, editable by the user
+themself (or an owner/manager) from `/dashboard/profile`.
+
+Field-level access locks `role` and `buildings` to platform admins and to an
+owner/manager acting on a *different* user in their organization
+(`canManageOrgUserFields` in `src/collections/access/index.ts`) — a user can
+never set these fields on their own record, which is what prevents
+self-escalation from the `/dashboard/users` management page. `organization`
+stays platform-admin-only regardless of who is acting, since reassigning a
+user's org isn't a supported operation.
 
 #### Why User → Organization is many-to-one, not many-to-many
 
@@ -349,19 +370,33 @@ different floor.
 
 `src/collections/access/index.ts` defines the reusable access functions:
 
-- `isPlatformAdmin` / `isPlatformAdminOrSelf` — true only for the `admins`
-  auth collection (the platform team). Used to gate `admins`, `organizations`,
-  and the non-self paths of `users`.
+- `isPlatformAdmin` — true only for the `admins` auth collection (the
+  platform team). Used to gate `admins` and the platform-only paths of
+  `organizations`/`users`/`buildings`.
 - `accessibleBuildingIds(req)` — resolves the set of building IDs a `users`
   account can access: every building in their organization for `owner` and
   `manager`, or their explicit `buildings` relationship for `member`. Platform admins
   bypass this entirely.
 - `buildingRead` / `buildingCreate` / `buildingUpdateDelete` — read/write
   access for the `buildings` collection itself. Owners and managers can manage
-  buildings only in their organization; members only read assigned buildings.
+  buildings only in their organization; members only read assigned buildings
+  (a member never gets write access to a building's own record).
 - `buildingContentRead` / `buildingContentCreate` / `buildingContentUpdateDelete` — read/write access for
   `floors`, `map-objects`, `map-nodes`, and `path-edges`, scoped by their own
-  `building` field. Write access excludes `member` (read-only role).
+  `building` field. Unlike the `building*` functions above, these include
+  `member` in write access — a member gets full CRUD on the content of any
+  building in their `accessibleBuildingIds`.
+- `organizationUpdate` — owner/manager can update only their own
+  organization's record; create/delete stay platform-admin-only.
+- `userRead` / `userCreate` / `userUpdate` / `userDelete` — an owner/manager
+  can read and manage every non-owner user in their own organization
+  (`userCreate` also blocks assigning the `owner` role); any user can always
+  read/update their own record via the `isSelf`-style branch in
+  `userRead`/`userUpdate`, but never delete themself; the org's owner cannot
+  be updated or deleted by a manager.
+- `canManageOrgUserFields` — the field-level check backing `users.role` and
+  `users.buildings`: platform admin, or an owner/manager acting on someone
+  else. Never true when the target is the requester's own record.
 
 ## How the records rebuild a map
 

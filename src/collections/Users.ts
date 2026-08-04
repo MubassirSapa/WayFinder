@@ -51,10 +51,10 @@ export const Users: CollectionConfig = {
   },
 
   access: {
-    create: access.isPlatformAdmin,
-    read: access.isPlatformAdminOrSelf,
-    update: access.isPlatformAdminOrSelf,
-    delete: access.isPlatformAdmin,
+    create: access.userCreate,
+    read: access.userRead,
+    update: access.userUpdate,
+    delete: access.userDelete,
   },
 
   fields: [
@@ -70,7 +70,7 @@ export const Users: CollectionConfig = {
       required: true,
       options: [...ROLE_OPTIONS],
       access: {
-        update: ({ req }) => req.user?.collection === "admins",
+        update: access.canManageOrgUserFields,
       },
     },
     {
@@ -88,12 +88,17 @@ export const Users: CollectionConfig = {
       relationTo: "buildings",
       hasMany: true,
       access: {
-        update: ({ req }) => req.user?.collection === "admins",
+        update: access.canManageOrgUserFields,
       },
       admin: {
         condition: (data) => data?.role === ROLES.MEMBER,
-        description: "Buildings this member can read. Owners and managers implicitly access every building in their organization.",
+        description: "Buildings this member can access. Owners and managers implicitly access every building in their organization.",
       },
+    },
+    {
+      name: "avatar",
+      type: "relationship",
+      relationTo: "media",
     },
   ],
 };

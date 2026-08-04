@@ -10,25 +10,44 @@ grants or denies permission.
 | --- | --- | --- | --- | --- |
 | Manage platform records | Yes | No | No | No |
 | Read every building in own organization | N/A | Yes | Yes | No |
-| Create, update, and delete own-organization buildings | N/A | Yes | Yes | No |
-| Manage map content in own organization | N/A | Yes | Yes | No |
-| Read explicitly assigned buildings | N/A | Yes | Yes | Yes |
-| Change own role, organization, or assignments | No | No | No | No |
+| Create, update, and delete own-organization buildings (name, address, contact, logo) | N/A | Yes | Yes | No |
+| Read a building explicitly assigned to them | N/A | Yes | Yes | Yes |
+| Create, update, and delete map content (floors, objects, nodes, edges) in an accessible building | N/A | Yes | Yes | Yes, only on assigned buildings |
+| Edit own organization's info (name, type, logo) | N/A | Yes | Yes | No |
+| Read organization users | N/A | Yes | Yes | Only self |
+| Create a user in own organization (role: manager or member) | N/A | Yes | Yes | No |
+| Update or delete another non-owner user in own organization | N/A | Yes | Yes | No |
+| Update own profile (name, avatar) | N/A | Yes | Yes | Yes |
+| Change own role, organization, or building assignments | No | No | No | No |
 
 `admins` are platform-team accounts and are not organization users. The
 `owner`, `manager`, and `member` values belong only to authenticated `users`.
+There is exactly one `owner` per organization, set at signup; no request path
+(including this app's own user-management UI) can create or promote a second
+owner.
 
 ## Scope rules
 
 - Owners and managers implicitly access every building whose `organization`
-  matches their user record.
-- Members can read only buildings listed in their `buildings` relationship.
-- Members cannot create, update, or delete buildings or map content.
+  matches their user record, and may edit the building's own record (name,
+  address, contact fields, logo).
+- Members access only buildings listed in their `buildings` relationship.
+  Unlike owners/managers, a member's access to *their own* building is
+  read-only for the building's own record — they can view it, but only an
+  owner or manager can rename it, change its contact info, or change its logo.
+- All roles with access to a building (owner, manager, or an assigned member)
+  get full create/update/delete on that building's map content — floors, map
+  objects, map nodes, and path edges. Being assigned to a building is what
+  grants working access to its content; there is no separate read-only tier
+  for map content.
 - Organization users cannot move buildings or map content between scopes.
-  Relationship scope fields are immutable through organization-user requests.
-- A user cannot update their own `role`, `organization`, or `buildings` fields.
-  Those changes require a platform-admin request or a future trusted membership
-  workflow that performs its own authorization.
+  Relationship scope fields (`building` on map content, `organization` on
+  buildings) are immutable through organization-user requests.
+- A user cannot update their own `role`, `organization`, or `buildings`
+  fields, and cannot delete or demote the organization's owner. An owner or
+  manager can set `role`/`buildings` on any *other* non-owner user in their
+  organization, and can create new manager/member users directly (see
+  "Trusted user management" below).
 
 ## Enforcement
 
@@ -39,13 +58,25 @@ prevents a caller from gaining access to an out-of-scope record by submitting
 an in-scope replacement value.
 
 Collection rules are applied to `buildings`, `floors`, `map-objects`,
-`map-nodes`, and `path-edges`. The `users` collection additionally uses
-field-level update restrictions for authorization-bearing fields.
+`map-nodes`, `path-edges`, `organizations`, and `users`. The `users`
+collection additionally uses field-level update restrictions on `role`,
+`organization`, and `buildings` — `organization` stays platform-admin-only
+(reassigning a user's org isn't supported); `role`/`buildings` allow an
+owner/manager to set them on someone else, via `canManageOrgUserFields`,
+while the same fields stay locked when a user updates their own record
+(`userUpdate` grants self-update at the document level, but the field-level
+check still blocks self-escalation).
 
-## Adding trusted role management
+## Trusted user management
 
-A future organization membership workflow must use a dedicated server-side
-operation. Before changing a user, it must verify that the actor is authorized
-for the target organization, prevent cross-organization assignments, and
-validate every assigned building belongs to that organization. Do not relax
-self-update access on the `users` collection to implement this workflow.
+Implemented in `src/features/user-management/` (`/dashboard/users`, owner/
+manager only): create a new manager or member directly (name, email, an
+initial password, role, building assignment for members), change a non-owner
+user's role or building assignment, and remove a non-owner user from the
+organization. Every mutation goes through the Local API with the real
+authenticated user and `overrideAccess: false`, so it is authorized by the
+same `userCreate`/`userUpdate`/`userDelete`/`canManageOrgUserFields`
+functions described above — not by a bespoke check in the action layer.
+Email invitations and self-service password reset for these created accounts
+are not implemented yet; the owner/manager sets the initial password and
+shares it with the new user directly.

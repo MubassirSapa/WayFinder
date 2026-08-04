@@ -51,6 +51,10 @@ flowchart LR
         navigationFeature["Navigation"]
         authFeature["Authentication"]
         dashboardFeature["Dashboard"]
+        organizationSettingsFeature["Organization settings"]
+        buildingsFeature["Buildings and floor settings"]
+        userManagementFeature["User management"]
+        profileFeature["Profile"]
         editorCore["Map editor core"]
         smartBuilder["Smart Builder extension"]
         floorLinks["Floor-links extension"]
@@ -96,6 +100,10 @@ flowchart LR
     mapViewerFeature --> navigationFeature
     authRoutes --> authFeature
     privateRoutes --> dashboardFeature
+    privateRoutes --> organizationSettingsFeature
+    privateRoutes --> buildingsFeature
+    privateRoutes --> userManagementFeature
+    privateRoutes --> profileFeature
     privateRoutes --> editorCore
     editorCore --> smartBuilder
     editorCore --> floorLinks
@@ -113,6 +121,10 @@ flowchart LR
 
     authFeature --> serverActions
     dashboardFeature --> serverActions
+    organizationSettingsFeature --> serverActions
+    buildingsFeature --> serverActions
+    userManagementFeature --> serverActions
+    profileFeature --> serverActions
     editorCore --> serverActions
     floorLinks --> clientActions
     serverActions --> ports
@@ -121,6 +133,10 @@ flowchart LR
     discoveryFeature --> serverLoaders
     mapViewerFeature --> serverLoaders
     dashboardFeature --> serverLoaders
+    organizationSettingsFeature --> serverLoaders
+    buildingsFeature --> serverLoaders
+    userManagementFeature --> serverLoaders
+    profileFeature --> serverLoaders
     editorCore --> serverLoaders
 
     payloadAdapters --> payloadCms
@@ -245,8 +261,19 @@ map viewer uses `getMapViewerData`. Both the viewer homepage and the searchable
 published floors by building before rendering venue-level choices.
 
 The current dashboard loader calls the Payload Local API directly for its
-server-rendered read. Dashboard mutations still use dashboard ports and a
-Payload adapter.
+server-rendered read (organization lookup), and also calls the buildings
+feature's `listBuildings` port to resolve the building list — the dashboard
+itself has no mutations of its own; floor creation and publish-toggle moved
+to the buildings feature along with the rest of the floor-list UI.
+
+The organization-settings, buildings, user-management, and profile features
+follow the port-and-adapter read path in full — their page components call a
+`services/server` port directly (`getOrganizationForEdit`, `getBuildingForEdit`,
+`listOrgUsers`, `getProfileForEdit`, and so on), and every mutation passes the
+real authenticated user through the Local API with `overrideAccess: false`
+rather than bypassing collection access — so the same access functions
+described in `docs/security/RBAC.md` are the single source of truth for
+authorization on both the read and write paths.
 
 ## 3. Map editor and extension modules
 
@@ -546,7 +573,11 @@ adapter sends messages through Resend.
 | Module | Owns | Communicates through |
 | --- | --- | --- |
 | Authentication | Accounts, sessions, signup flow, verification, and password recovery | Server actions, auth ports, Payload auth adapter |
-| Dashboard | Organization summary, floors, publication status, and floor creation | Server loader plus mutation ports and adapters |
+| Dashboard | The organization summary and the list of buildings the signed-in user can access (every building for an owner/manager, assigned buildings only for a member), plus the shared `AppTopbar` (avatar menu, theme toggle, logout) rendered by the `/dashboard` layout | Server loader plus mutation ports and adapters |
+| Organization settings | Editing the current organization's name, type, and logo | Server port, mutation action, Payload adapter |
+| Buildings and floor settings | Listing and creating buildings; editing a building's own record (owner/manager) or viewing it read-only (assigned member); listing floors, creating a floor, toggling publish status, and editing floor metadata (any role with building access, including members) | Server ports, mutation actions, Payload adapter |
+| User management | Listing an organization's users, creating a manager/member with an initial password, changing role or building assignment, and removing a non-owner user | Server ports, mutation actions, Payload adapter |
+| Profile | Editing the signed-in user's own name and avatar | Server port, mutation action, Payload adapter |
 | Map editor core | Editable floor, objects, nodes, edges, selection, canvas, and persistence | Zustand slices, server actions, entity ports, Payload adapters |
 | Smart Builder | Automated node creation, auto-connect behavior, and hallway path building | Core editor store actions and pure helper functions |
 | Floor links | Cross-floor connector discovery and linking UI | Client actions, Payload REST SDK, core edge store and edge mutation action |

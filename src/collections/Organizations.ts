@@ -24,7 +24,7 @@ export const Organizations: CollectionConfig = {
     // Created during public signup (via overrideAccess in the auth adapter).
     create: access.isPlatformAdmin,
     read: access.isLoggedIn,
-    update: access.isPlatformAdmin,
+    update: access.organizationUpdate,
     delete: access.isPlatformAdmin,
   },
 
@@ -39,6 +39,11 @@ export const Organizations: CollectionConfig = {
       type: "select",
       required: true,
       options: ORGANIZATION_TYPES.map((t) => ({ value: t.value, label: t.label })),
+    },
+    {
+      name: "logo",
+      type: "relationship",
+      relationTo: "media",
     },
   ],
 };

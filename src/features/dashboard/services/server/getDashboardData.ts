@@ -3,20 +3,15 @@ import { redirect } from "next/navigation";
 import { getPayload } from "payload";
 
 import config from "@payload-config";
-import { access } from "@/collections/access";
+import { ROLES } from "@/collections/constants/roles";
 import { PUBLIC_ROUTES } from "@/constants/routes";
 import { relationId } from "@/lib/payload-id";
-import type { Floor, MapObject, Organization, User } from "@/payload-types";
+import { listBuildings } from "@/features/buildings/services/server/buildings.ports";
+import type { Organization, User } from "@/payload-types";
 
 import { DASHBOARD_CLIENT } from "../../constants/dashboard.constants";
-import type { DashboardData, DashboardFloor } from "../../types/dashboard.types";
-import {
-  formatRelativeTime,
-  levelToBadge,
-  levelToLabel,
-  organizationInitials,
-  organizationTypeLabel,
-} from "../../lib/floorPresentation";
+import { organizationInitials, organizationTypeLabel } from "../../lib/organizationPresentation";
+import type { DashboardData } from "../../types/dashboard.types";
 
 export async function getDashboardData(): Promise<DashboardData> {
   const headers = await getHeaders();
@@ -34,73 +29,19 @@ export async function getDashboardData(): Promise<DashboardData> {
       organization = await payload.findByID({
         collection: "organizations",
         id: organizationId,
-        overrideAccess: true,
+        depth: 1,
+        user: currentUser,
+        overrideAccess: false,
       });
     } catch {
       organization = null;
     }
   }
 
-  // Building-switcher UI doesn't exist yet — default to the user's first
-  // accessible building (owner: oldest building in their org; manager/
-  // member: their first assigned building).
-  const accessibleBuildings = await access.accessibleBuildingIds({ user, payload });
-  const buildingId = accessibleBuildings[0] !== undefined ? String(accessibleBuildings[0]) : "";
+  const buildingsResult = await listBuildings(currentUser);
+  const buildings = buildingsResult.isSuccess ? buildingsResult.data : [];
 
-  const floorsResult = buildingId
-    ? await payload.find({
-        collection: "floors",
-        depth: 0,
-        limit: 100,
-        overrideAccess: true,
-        sort: "-level",
-        where: { building: { equals: buildingId } },
-      })
-    : null;
-  const floors = (floorsResult?.docs ?? []) as Floor[];
-
-  const objectsResult = buildingId
-    ? await payload.find({
-        collection: "map-objects",
-        depth: 0,
-        limit: 5000,
-        overrideAccess: true,
-        select: { type: true, floor: true },
-        where: { building: { equals: buildingId } },
-      })
-    : null;
-
-  const roomCounts = new Map<string, number>();
-  const poiCounts = new Map<string, number>();
-  for (const object of (objectsResult?.docs ?? []) as MapObject[]) {
-    const floorId = relationId(object.floor);
-    if (floorId === null) continue;
-    const floorIdKey = String(floorId);
-    if (object.type === "room") {
-      roomCounts.set(floorIdKey, (roomCounts.get(floorIdKey) ?? 0) + 1);
-    } else if (object.type === "poi") {
-      poiCounts.set(floorIdKey, (poiCounts.get(floorIdKey) ?? 0) + 1);
-    }
-  }
-
-  const now = Date.now();
-  const viewFloors: DashboardFloor[] = floors.map((floor) => {
-    const id = String(floor.id);
-    const level = floor.level ?? 0;
-    const isPublished = floor.status === "published";
-    return {
-      id,
-      name: floor.name,
-      level,
-      levelLabel: levelToLabel(level),
-      badge: levelToBadge(level),
-      roomCount: roomCounts.get(id) ?? 0,
-      poiCount: poiCounts.get(id) ?? 0,
-      status: isPublished ? "published" : "draft",
-      isPublished,
-      updatedLabel: formatRelativeTime(floor.updatedAt, now),
-    };
-  });
+  const logo = organization && typeof organization.logo === "object" && organization.logo ? organization.logo : null;
 
   const name = currentUser.name ?? "";
   const email = currentUser.email ?? "";
@@ -111,14 +52,16 @@ export async function getDashboardData(): Promise<DashboardData> {
       name: name || email,
       email,
       initial,
+      role: currentUser.role,
     },
     organization: {
       id: organizationId === null ? null : String(organizationId),
       name: organization?.name ?? DASHBOARD_CLIENT.ORG_FALLBACK_NAME,
       initials: organizationInitials(organization?.name ?? DASHBOARD_CLIENT.ORG_FALLBACK_NAME),
       typeLabel: organizationTypeLabel(organization?.type),
+      logoUrl: logo?.url ?? null,
     },
-    floors: viewFloors,
-    buildingId,
+    buildings,
+    canManage: currentUser.role === ROLES.OWNER || currentUser.role === ROLES.MANAGER,
   };
 }

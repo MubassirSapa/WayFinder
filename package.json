@@ -10,7 +10,6 @@
     "test": "vitest",
     "lint": "eslint",
     "email": "email dev -d src/features/email",
-    "demo:seed": "payload run scripts/seed-demo.ts",
     "demo:seed:local": "node --env-file=.env.local node_modules/payload/bin.js run scripts/seed-demo.ts",
     "demo:seed:preview": "node --env-file=.env.preview node_modules/payload/bin.js run scripts/seed-demo.ts",
     "demo:seed:production": "node --env-file=.env.production node_modules/payload/bin.js run scripts/seed-demo.ts",

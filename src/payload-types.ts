@@ -186,9 +186,10 @@ export interface User {
   role: 'owner' | 'manager' | 'member';
   organization: number | Organization;
   /**
-   * Buildings this member can read. Owners and managers implicitly access every building in their organization.
+   * Buildings this member can access. Owners and managers implicitly access every building in their organization.
    */
   buildings?: (number | Building)[] | null;
+  avatar?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -218,25 +219,7 @@ export interface Organization {
   id: number;
   name: string;
   type: 'hospital' | 'university' | 'mall' | 'office' | 'airport' | 'library' | 'other';
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "buildings".
- */
-export interface Building {
-  id: number;
-  name: string;
-  organization: number | Organization;
-  address?: string | null;
-  contactEmail?: string | null;
-  contactPhone?: string | null;
-  website?: string | null;
-  /**
-   * Cached count of floors in this building, kept in sync from the Floors collection.
-   */
-  floorCount?: number | null;
+  logo?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -258,6 +241,26 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "buildings".
+ */
+export interface Building {
+  id: number;
+  name: string;
+  organization: number | Organization;
+  address?: string | null;
+  contactEmail?: string | null;
+  contactPhone?: string | null;
+  website?: string | null;
+  /**
+   * Cached count of floors in this building, kept in sync from the Floors collection.
+   */
+  floorCount?: number | null;
+  logo?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -517,6 +520,7 @@ export interface UsersSelect<T extends boolean = true> {
   role?: T;
   organization?: T;
   buildings?: T;
+  avatar?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -543,6 +547,7 @@ export interface UsersSelect<T extends boolean = true> {
 export interface OrganizationsSelect<T extends boolean = true> {
   name?: T;
   type?: T;
+  logo?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -558,6 +563,7 @@ export interface BuildingsSelect<T extends boolean = true> {
   contactPhone?: T;
   website?: T;
   floorCount?: T;
+  logo?: T;
   updatedAt?: T;
   createdAt?: T;
 }

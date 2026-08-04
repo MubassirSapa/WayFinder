@@ -66,5 +66,10 @@ export const Buildings: CollectionConfig = {
         description: "Cached count of floors in this building, kept in sync from the Floors collection.",
       },
     },
+    {
+      name: "logo",
+      type: "relationship",
+      relationTo: "media",
+    },
   ],
 };
