@@ -1,0 +1,4628 @@
+[{
+  "_id": {
+    "$oid": "6a6d41dcc0ea1fb774f7cc22"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:20.823Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:20.823Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d41d9c0ea1fb774f7cbeb"
+  },
+  "toNode": {
+    "$oid": "6a6d41dac0ea1fb774f7cbf5"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d41ddc0ea1fb774f7cc28"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:21.173Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:21.174Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d41dac0ea1fb774f7cbf0"
+  },
+  "toNode": {
+    "$oid": "6a6d41dac0ea1fb774f7cbf5"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d41ddc0ea1fb774f7cc2e"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:21.533Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:21.533Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d41dac0ea1fb774f7cbfa"
+  },
+  "toNode": {
+    "$oid": "6a6d41dbc0ea1fb774f7cbff"
+  },
+  "type": "walkway",
+  "distanceMeters": 2.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d41ddc0ea1fb774f7cc34"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:21.895Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:21.895Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d41dbc0ea1fb774f7cbff"
+  },
+  "toNode": {
+    "$oid": "6a6d41dac0ea1fb774f7cbf5"
+  },
+  "type": "walkway",
+  "distanceMeters": 13,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d41dec0ea1fb774f7cc3a"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:22.143Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:22.143Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d41dbc0ea1fb774f7cc04"
+  },
+  "toNode": {
+    "$oid": "6a6d41dbc0ea1fb774f7cc09"
+  },
+  "type": "walkway",
+  "distanceMeters": 4,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d41dec0ea1fb774f7cc40"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:22.417Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:22.417Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d41dbc0ea1fb774f7cc09"
+  },
+  "toNode": {
+    "$oid": "6a6d41dbc0ea1fb774f7cbff"
+  },
+  "type": "walkway",
+  "distanceMeters": 4,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d41dfc0ea1fb774f7cc52"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:23.259Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:23.259Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d41dcc0ea1fb774f7cc13"
+  },
+  "toNode": {
+    "$oid": "6a6d41dcc0ea1fb774f7cc1d"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d41dfc0ea1fb774f7cc58"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:23.493Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:23.493Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d41dcc0ea1fb774f7cc1d"
+  },
+  "toNode": {
+    "$oid": "6a6d41dbc0ea1fb774f7cc09"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d421dc0ea1fb774f7cc6c"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:47:25.497Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:47:25.497Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d421dc0ea1fb774f7cc67"
+  },
+  "toNode": {
+    "$oid": "6a6d41dac0ea1fb774f7cbf5"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4220c0ea1fb774f7cc77"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:47:28.355Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:47:28.355Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d421dc0ea1fb774f7cc67"
+  },
+  "toNode": {
+    "$oid": "6a6d4220c0ea1fb774f7cc72"
+  },
+  "type": "walkway",
+  "distanceMeters": 0,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4220c0ea1fb774f7cc7d"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:47:28.669Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:47:28.669Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d4220c0ea1fb774f7cc72"
+  },
+  "toNode": {
+    "$oid": "6a6d41dac0ea1fb774f7cbf5"
+  },
+  "type": "walkway",
+  "distanceMeters": 3,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4334b247f604ae15e9b7"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:04.464Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:04.464Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d4332b247f604ae15e980"
+  },
+  "toNode": {
+    "$oid": "6a6d4332b247f604ae15e985"
+  },
+  "type": "walkway",
+  "distanceMeters": 6.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4334b247f604ae15e9c3"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:04.957Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:04.957Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d4332b247f604ae15e98a"
+  },
+  "toNode": {
+    "$oid": "6a6d4332b247f604ae15e98f"
+  },
+  "type": "walkway",
+  "distanceMeters": 3.2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4335b247f604ae15e9c9"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:05.251Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:05.251Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d4332b247f604ae15e994"
+  },
+  "toNode": {
+    "$oid": "6a6d4333b247f604ae15e999"
+  },
+  "type": "walkway",
+  "distanceMeters": 3,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4335b247f604ae15e9cf"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:05.480Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:05.480Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d4333b247f604ae15e999"
+  },
+  "toNode": {
+    "$oid": "6a6d4332b247f604ae15e985"
+  },
+  "type": "walkway",
+  "distanceMeters": 4,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4335b247f604ae15e9d5"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:05.715Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:05.715Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d4333b247f604ae15e999"
+  },
+  "toNode": {
+    "$oid": "6a6d4332b247f604ae15e98f"
+  },
+  "type": "walkway",
+  "distanceMeters": 4,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4335b247f604ae15e9db"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:05.952Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:05.952Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d4333b247f604ae15e99e"
+  },
+  "toNode": {
+    "$oid": "6a6d4333b247f604ae15e9a3"
+  },
+  "type": "walkway",
+  "distanceMeters": 3.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4336b247f604ae15e9e1"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:06.276Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:06.276Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d4333b247f604ae15e9a3"
+  },
+  "toNode": {
+    "$oid": "6a6d4332b247f604ae15e98f"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4336b247f604ae15e9e7"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:06.544Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:06.544Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d4332b247f604ae15e98a"
+  },
+  "toNode": {
+    "$oid": "6a6d4333b247f604ae15e9a8"
+  },
+  "type": "walkway",
+  "distanceMeters": 0,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4336b247f604ae15e9ed"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:06.775Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:06.775Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d4333b247f604ae15e9a8"
+  },
+  "toNode": {
+    "$oid": "6a6d4333b247f604ae15e9a3"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4337b247f604ae15e9f3"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:07.086Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:07.086Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d4334b247f604ae15e9ad"
+  },
+  "toNode": {
+    "$oid": "6a6d4334b247f604ae15e9b2"
+  },
+  "type": "walkway",
+  "distanceMeters": 3,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4337b247f604ae15e9f9"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:07.400Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:07.400Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d4334b247f604ae15e9b2"
+  },
+  "toNode": {
+    "$oid": "6a6d41dbc0ea1fb774f7cbff"
+  },
+  "type": "walkway",
+  "distanceMeters": 1,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4337b247f604ae15e9ff"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:07.703Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:07.703Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d4334b247f604ae15e9b2"
+  },
+  "toNode": {
+    "$oid": "6a6d41dbc0ea1fb774f7cc09"
+  },
+  "type": "walkway",
+  "distanceMeters": 3,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4339b247f604ae15ea05"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:09.570Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:09.570Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d4334b247f604ae15e9b2"
+  },
+  "toNode": {
+    "$oid": "6a6d41dac0ea1fb774f7cbf5"
+  },
+  "type": "walkway",
+  "distanceMeters": 4,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d475f65d5509d4588784b"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:09:51.472Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:09:51.472Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d43a2c0ea1fb774f7ccba"
+  },
+  "toNode": {
+    "$oid": "6a6d475d65d5509d4588782a"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.95,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d476065d5509d45887857"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:09:52.054Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:09:52.054Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d43a2c0ea1fb774f7ccb0"
+  },
+  "toNode": {
+    "$oid": "6a6d475e65d5509d4588782f"
+  },
+  "type": "walkway",
+  "distanceMeters": 2.05,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d476065d5509d45887863"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:09:52.684Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:09:52.684Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d475e65d5509d4588782f"
+  },
+  "toNode": {
+    "$oid": "6a6d475d65d5509d4588782a"
+  },
+  "type": "walkway",
+  "distanceMeters": 1,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d476165d5509d45887869"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:09:53.000Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:09:53.000Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d43a1c0ea1fb774f7cca6"
+  },
+  "toNode": {
+    "$oid": "6a6d475e65d5509d45887834"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.95,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d476165d5509d4588786f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:09:53.272Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:09:53.272Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d475e65d5509d45887834"
+  },
+  "toNode": {
+    "$oid": "6a6d475d65d5509d4588782a"
+  },
+  "type": "walkway",
+  "distanceMeters": 4.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d478e65d5509d45887880"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:10:38.734Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:10:38.734Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d478e65d5509d4588787b"
+  },
+  "toNode": {
+    "$oid": "6a6d4332b247f604ae15e98f"
+  },
+  "type": "walkway",
+  "distanceMeters": 6.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d48a765d5509d4588792b"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:15:19.029Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:15:19.029Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d475e65d5509d4588782f"
+  },
+  "toNode": {
+    "$oid": "6a6d48a665d5509d45887928"
+  },
+  "type": "walkway",
+  "distanceMeters": 14.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d48af65d5509d45887940"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:15:27.322Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:15:27.322Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d43a3c0ea1fb774f7ccd8"
+  },
+  "toNode": {
+    "$oid": "6a6d48ae65d5509d45887931"
+  },
+  "type": "walkway",
+  "distanceMeters": 2.05,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d48af65d5509d45887946"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:15:27.624Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:15:27.624Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d48ae65d5509d45887931"
+  },
+  "toNode": {
+    "$oid": "6a6d48a665d5509d45887928"
+  },
+  "type": "walkway",
+  "distanceMeters": 10,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d48af65d5509d4588794c"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:15:27.935Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:15:27.935Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d48ae65d5509d45887931"
+  },
+  "toNode": {
+    "$oid": "6a6d475e65d5509d4588782f"
+  },
+  "type": "walkway",
+  "distanceMeters": 4.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d48b065d5509d45887952"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:15:28.239Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:15:28.239Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d43a3c0ea1fb774f7cccb"
+  },
+  "toNode": {
+    "$oid": "6a6d48ae65d5509d45887936"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.95,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d48b065d5509d45887958"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:15:28.539Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:15:28.539Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d48ae65d5509d45887936"
+  },
+  "toNode": {
+    "$oid": "6a6d48a665d5509d45887928"
+  },
+  "type": "walkway",
+  "distanceMeters": 9,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d48b065d5509d4588795e"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:15:28.788Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:15:28.788Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d48ae65d5509d45887936"
+  },
+  "toNode": {
+    "$oid": "6a6d48ae65d5509d45887931"
+  },
+  "type": "walkway",
+  "distanceMeters": 1,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d48b165d5509d45887964"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:15:29.053Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:15:29.053Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d4332b247f604ae15e985"
+  },
+  "toNode": {
+    "$oid": "6a6d48a665d5509d45887928"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d48b165d5509d4588796a"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:15:29.307Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:15:29.307Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d41dcc0ea1fb774f7cc1d"
+  },
+  "toNode": {
+    "$oid": "6a6d48a665d5509d45887928"
+  },
+  "type": "walkway",
+  "distanceMeters": 4,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d48b165d5509d45887970"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:15:29.574Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:15:29.574Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d41dbc0ea1fb774f7cc0e"
+  },
+  "toNode": {
+    "$oid": "6a6d48af65d5509d4588793b"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d48b165d5509d45887976"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:15:29.833Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:15:29.833Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d48af65d5509d4588793b"
+  },
+  "toNode": {
+    "$oid": "6a6d41dcc0ea1fb774f7cc1d"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d48b265d5509d4588797c"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:15:30.179Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:15:30.179Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "fromNode": {
+    "$oid": "6a6d48af65d5509d4588793b"
+  },
+  "toNode": {
+    "$oid": "6a6d48a665d5509d45887928"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4afed9cab80255fafd5f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:25:18.982Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:25:18.982Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4afcd9cab80255fafd34"
+  },
+  "toNode": {
+    "$oid": "6a6d4afcd9cab80255fafd39"
+  },
+  "type": "walkway",
+  "distanceMeters": 0.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4affd9cab80255fafd65"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:25:19.294Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:25:19.294Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4afdd9cab80255fafd48"
+  },
+  "toNode": {
+    "$oid": "6a6d4afdd9cab80255fafd4d"
+  },
+  "type": "walkway",
+  "distanceMeters": 0.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4affd9cab80255fafd6b"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:25:19.546Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:25:19.546Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4afcd9cab80255fafd3e"
+  },
+  "toNode": {
+    "$oid": "6a6d4afdd9cab80255fafd52"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4affd9cab80255fafd71"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:25:19.812Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:25:19.812Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4afdd9cab80255fafd52"
+  },
+  "toNode": {
+    "$oid": "6a6d4afcd9cab80255fafd39"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.12,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4b00d9cab80255fafd77"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:25:20.115Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:25:20.115Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4afdd9cab80255fafd43"
+  },
+  "toNode": {
+    "$oid": "6a6d4afed9cab80255fafd57"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4b00d9cab80255fafd7d"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:25:20.419Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:25:20.419Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4afed9cab80255fafd57"
+  },
+  "toNode": {
+    "$oid": "6a6d4afdd9cab80255fafd52"
+  },
+  "type": "walkway",
+  "distanceMeters": 10,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4b65d9cab80255fafddc"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:27:01.191Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:27:01.191Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4afdd9cab80255fafd52"
+  },
+  "toNode": {
+    "$oid": "6a6d4afed9cab80255fafd57"
+  },
+  "type": "walkway",
+  "distanceMeters": 10,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4b65d9cab80255fafde2"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:27:01.439Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:27:01.439Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4b64d9cab80255fafdc3"
+  },
+  "toNode": {
+    "$oid": "6a6d4afdd9cab80255fafd52"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4b65d9cab80255fafde8"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:27:01.699Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:27:01.700Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4b64d9cab80255fafdcd"
+  },
+  "toNode": {
+    "$oid": "6a6d4b64d9cab80255fafdd2"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4b66d9cab80255fafdee"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:27:02.000Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:27:02.000Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4b64d9cab80255fafdc8"
+  },
+  "toNode": {
+    "$oid": "6a6d4b64d9cab80255fafdd7"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4b66d9cab80255fafdf4"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:27:02.304Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:27:02.304Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4b64d9cab80255fafdd7"
+  },
+  "toNode": {
+    "$oid": "6a6d4afed9cab80255fafd57"
+  },
+  "type": "walkway",
+  "distanceMeters": 4,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4b79d9cab80255fafdfd"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:27:21.094Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:27:21.094Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4b64d9cab80255fafdd7"
+  },
+  "toNode": {
+    "$oid": "6a6d4b78d9cab80255fafdfa"
+  },
+  "type": "walkway",
+  "distanceMeters": 3.04,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4b79d9cab80255fafe03"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:27:21.343Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:27:21.343Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4b78d9cab80255fafdfa"
+  },
+  "toNode": {
+    "$oid": "6a6d4afdd9cab80255fafd4d"
+  },
+  "type": "walkway",
+  "distanceMeters": 4,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4b79d9cab80255fafe09"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:27:21.667Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:27:21.667Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4afdd9cab80255fafd4d"
+  },
+  "toNode": {
+    "$oid": "6a6d4b64d9cab80255fafdd2"
+  },
+  "type": "walkway",
+  "distanceMeters": 6.18,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4baad9cab80255fafe17"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:28:10.535Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:28:10.535Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4afdd9cab80255fafd4d"
+  },
+  "toNode": {
+    "$oid": "6a6d4baad9cab80255fafe12"
+  },
+  "type": "walkway",
+  "distanceMeters": 5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4c07d9cab80255fafe49"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:29:43.286Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:29:43.287Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4c06d9cab80255fafe3f"
+  },
+  "toNode": {
+    "$oid": "6a6d4c06d9cab80255fafe44"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4c07d9cab80255fafe4f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:29:43.585Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:29:43.585Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4c06d9cab80255fafe3f"
+  },
+  "toNode": {
+    "$oid": "6a6d421dc0ea1fb774f7cc67"
+  },
+  "type": "escalator",
+  "distanceMeters": 4,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4c09d9cab80255fafe5a"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:29:45.012Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:29:45.013Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4c06d9cab80255fafe3f"
+  },
+  "toNode": {
+    "$oid": "6a6d4c08d9cab80255fafe55"
+  },
+  "type": "walkway",
+  "distanceMeters": 0,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4c09d9cab80255fafe60"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:29:45.324Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:29:45.324Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4c08d9cab80255fafe55"
+  },
+  "toNode": {
+    "$oid": "6a6d4c06d9cab80255fafe44"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4c5b7bf1ec07ac83913a"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:31:07.376Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:31:07.376Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4c597bf1ec07ac839115"
+  },
+  "toNode": {
+    "$oid": "6a6d4c597bf1ec07ac83911a"
+  },
+  "type": "walkway",
+  "distanceMeters": 0.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4c874b2723567e989544"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:31:51.158Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:31:51.158Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4c864b2723567e98953a"
+  },
+  "toNode": {
+    "$oid": "6a6d4c864b2723567e98953f"
+  },
+  "type": "walkway",
+  "distanceMeters": 0.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4c874b2723567e98954a"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:31:51.425Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:31:51.425Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4c864b2723567e98953a"
+  },
+  "toNode": {
+    "$oid": "6a6d41dcc0ea1fb774f7cc13"
+  },
+  "type": "stairs",
+  "distanceMeters": 6,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4d4a5c07b1f14e5c2992"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:35:06.968Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:35:06.968Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4c587bf1ec07ac839110"
+  },
+  "toNode": {
+    "$oid": "6a6d4d495c07b1f14e5c295b"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4d4b5c07b1f14e5c2998"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:35:07.278Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:35:07.278Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4d495c07b1f14e5c295b"
+  },
+  "toNode": {
+    "$oid": "6a6d4c06d9cab80255fafe44"
+  },
+  "type": "walkway",
+  "distanceMeters": 1,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4d4b5c07b1f14e5c299e"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:35:07.525Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:35:07.527Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4d4a5c07b1f14e5c2982"
+  },
+  "toNode": {
+    "$oid": "6a6d4c597bf1ec07ac83911a"
+  },
+  "type": "walkway",
+  "distanceMeters": 4.12,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4d4b5c07b1f14e5c29a4"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:35:07.799Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:35:07.799Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4c597bf1ec07ac83911f"
+  },
+  "toNode": {
+    "$oid": "6a6d4d4a5c07b1f14e5c2988"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4d4c5c07b1f14e5c29aa"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:35:08.094Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:35:08.094Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4d4a5c07b1f14e5c2988"
+  },
+  "toNode": {
+    "$oid": "6a6d4d4a5c07b1f14e5c2982"
+  },
+  "type": "walkway",
+  "distanceMeters": 3.04,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4d4c5c07b1f14e5c29b0"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:35:08.330Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:35:08.330Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4c5a7bf1ec07ac839130"
+  },
+  "toNode": {
+    "$oid": "6a6d4d4a5c07b1f14e5c298d"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4d4c5c07b1f14e5c29b6"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:35:08.607Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:35:08.607Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4d4a5c07b1f14e5c298d"
+  },
+  "toNode": {
+    "$oid": "6a6d4d4a5c07b1f14e5c2988"
+  },
+  "type": "walkway",
+  "distanceMeters": 8,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4d4c5c07b1f14e5c29bc"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:35:08.946Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:35:08.946Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4d4a5c07b1f14e5c298d"
+  },
+  "toNode": {
+    "$oid": "6a6d4c864b2723567e98953f"
+  },
+  "type": "walkway",
+  "distanceMeters": 3.04,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4d4d5c07b1f14e5c29c2"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:35:09.242Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:35:09.242Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4d495c07b1f14e5c295b"
+  },
+  "toNode": {
+    "$oid": "6a6d4d4a5c07b1f14e5c2982"
+  },
+  "type": "walkway",
+  "distanceMeters": 3.04,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4d85e1a38d71e419b663"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:36:05.635Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:36:05.635Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4d84e1a38d71e419b64f"
+  },
+  "toNode": {
+    "$oid": "6a6d4d84e1a38d71e419b654"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4d85e1a38d71e419b669"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:36:05.951Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:36:05.951Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4d85e1a38d71e419b659"
+  },
+  "toNode": {
+    "$oid": "6a6d4d85e1a38d71e419b65e"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4d86e1a38d71e419b675"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:36:06.458Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:36:06.459Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4d84e1a38d71e419b654"
+  },
+  "toNode": {
+    "$oid": "6a6d4d85e1a38d71e419b65e"
+  },
+  "type": "walkway",
+  "distanceMeters": 5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4e227bf1ec07ac839175"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:38:42.477Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:38:42.477Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4e217bf1ec07ac839168"
+  },
+  "toNode": {
+    "$oid": "6a6d4e227bf1ec07ac83916d"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4e227bf1ec07ac83917b"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:38:42.738Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:38:42.738Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4c864b2723567e98953f"
+  },
+  "toNode": {
+    "$oid": "6a6d4e227bf1ec07ac839172"
+  },
+  "type": "walkway",
+  "distanceMeters": 3,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4e237bf1ec07ac839181"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:38:43.038Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:38:43.039Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4e227bf1ec07ac839172"
+  },
+  "toNode": {
+    "$oid": "6a6d4e227bf1ec07ac83916d"
+  },
+  "type": "walkway",
+  "distanceMeters": 3.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4e237bf1ec07ac839187"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:38:43.331Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:38:43.332Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4e227bf1ec07ac839172"
+  },
+  "toNode": {
+    "$oid": "6a6d4e217bf1ec07ac839165"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4e4f7bf1ec07ac8391ac"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:39:27.410Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:39:27.411Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4e4e7bf1ec07ac839198"
+  },
+  "toNode": {
+    "$oid": "6a6d4e4e7bf1ec07ac83919d"
+  },
+  "type": "walkway",
+  "distanceMeters": 0.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4e4f7bf1ec07ac8391b2"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:39:27.704Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:39:27.705Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4e4e7bf1ec07ac83919d"
+  },
+  "toNode": {
+    "$oid": "6a6d4e227bf1ec07ac83916d"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4e4f7bf1ec07ac8391b8"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:39:27.978Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:39:27.978Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4e4e7bf1ec07ac8391a2"
+  },
+  "toNode": {
+    "$oid": "6a6d4e4f7bf1ec07ac8391a7"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4e507bf1ec07ac8391be"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:39:28.295Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:39:28.295Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4e4f7bf1ec07ac8391a7"
+  },
+  "toNode": {
+    "$oid": "6a6d4e4e7bf1ec07ac83919d"
+  },
+  "type": "walkway",
+  "distanceMeters": 4,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4e78e1a38d71e419b6b4"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:40:08.739Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:40:08.739Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4d84e1a38d71e419b654"
+  },
+  "toNode": {
+    "$oid": "6a6d4e76e1a38d71e419b68e"
+  },
+  "type": "walkway",
+  "distanceMeters": 3,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4e79e1a38d71e419b6ba"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:40:09.053Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:40:09.053Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4e4f7bf1ec07ac8391a7"
+  },
+  "toNode": {
+    "$oid": "6a6d4e76e1a38d71e419b68e"
+  },
+  "type": "walkway",
+  "distanceMeters": 4,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4ed8e1a38d71e419b725"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:41:44.297Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:41:44.297Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4ce14b2723567e98955c"
+  },
+  "toNode": {
+    "$oid": "6a6d4ed7e1a38d71e419b710"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4ed8e1a38d71e419b72b"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:41:44.594Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:41:44.594Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4ed7e1a38d71e419b710"
+  },
+  "toNode": {
+    "$oid": "6a6d4ed6e1a38d71e419b70d"
+  },
+  "type": "walkway",
+  "distanceMeters": 6,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4ed8e1a38d71e419b730"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:41:44.860Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:41:44.860Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4ed6e1a38d71e419b70d"
+  },
+  "toNode": {
+    "$oid": "6a6d4e9fe1a38d71e419b6ea"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4ed9e1a38d71e419b736"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:41:45.089Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:41:45.089Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4ed6e1a38d71e419b70d"
+  },
+  "toNode": {
+    "$oid": "6a6d4e76e1a38d71e419b68e"
+  },
+  "type": "walkway",
+  "distanceMeters": 5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4f2ce1a38d71e419b75f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:43:08.348Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:43:08.348Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4f2be1a38d71e419b755"
+  },
+  "toNode": {
+    "$oid": "6a6d4f2ce1a38d71e419b75a"
+  },
+  "type": "walkway",
+  "distanceMeters": 2.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4f2ce1a38d71e419b765"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:43:08.657Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:43:08.657Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4f2ce1a38d71e419b75a"
+  },
+  "toNode": {
+    "$oid": "6a6d4c597bf1ec07ac83911a"
+  },
+  "type": "walkway",
+  "distanceMeters": 2.06,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4fa94b2723567e98960d"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:45:13.284Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:45:13.284Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4fa84b2723567e989608"
+  },
+  "toNode": {
+    "$oid": "6a6d4c597bf1ec07ac83911a"
+  },
+  "type": "walkway",
+  "distanceMeters": 2.24,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4fa94b2723567e989613"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:45:13.517Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:45:13.517Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4ed7e1a38d71e419b710"
+  },
+  "toNode": {
+    "$oid": "6a6d4ed6e1a38d71e419b70d"
+  },
+  "type": "walkway",
+  "distanceMeters": 6,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4fcc4b2723567e989618"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:45:48.550Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:45:48.550Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4f2ce1a38d71e419b75a"
+  },
+  "toNode": {
+    "$oid": "6a6d4c597bf1ec07ac83911a"
+  },
+  "type": "walkway",
+  "distanceMeters": 4,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d50344b2723567e98963e"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:47:32.415Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:47:32.415Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d50334b2723567e98962a"
+  },
+  "toNode": {
+    "$oid": "6a6d50334b2723567e98962f"
+  },
+  "type": "walkway",
+  "distanceMeters": 0.05,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d50344b2723567e989644"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:47:32.639Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:47:32.639Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d50334b2723567e989634"
+  },
+  "toNode": {
+    "$oid": "6a6d50344b2723567e989639"
+  },
+  "type": "walkway",
+  "distanceMeters": 4.95,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d50344b2723567e98964a"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:47:32.904Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:47:32.904Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d50344b2723567e989639"
+  },
+  "toNode": {
+    "$oid": "6a6d50334b2723567e98962f"
+  },
+  "type": "walkway",
+  "distanceMeters": 1,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d50554b2723567e989685"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:48:05.981Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:48:05.981Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d50334b2723567e98962f"
+  },
+  "toNode": {
+    "$oid": "6a6d4f2ce1a38d71e419b75a"
+  },
+  "type": "walkway",
+  "distanceMeters": 3,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d50a64b2723567e98969d"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:49:26.008Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:49:26.008Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d50a54b2723567e98968e"
+  },
+  "toNode": {
+    "$oid": "6a6d50a54b2723567e989693"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d50a64b2723567e9896a3"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:49:26.306Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:49:26.306Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d50a54b2723567e989698"
+  },
+  "toNode": {
+    "$oid": "6a6d4e227bf1ec07ac83916d"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.8,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d50c24b2723567e9896ac"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:49:54.825Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:49:54.825Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d50334b2723567e98962f"
+  },
+  "toNode": {
+    "$oid": "6a6d4ed7e1a38d71e419b710"
+  },
+  "type": "walkway",
+  "distanceMeters": 10.05,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d50c34b2723567e9896b2"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:49:55.084Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:49:55.084Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d50a54b2723567e989693"
+  },
+  "toNode": {
+    "$oid": "6a6d50c24b2723567e9896a9"
+  },
+  "type": "walkway",
+  "distanceMeters": 10.05,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d50c34b2723567e9896b8"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:49:55.399Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:49:55.399Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d50c24b2723567e9896a9"
+  },
+  "toNode": {
+    "$oid": "6a6d4d85e1a38d71e419b65e"
+  },
+  "type": "walkway",
+  "distanceMeters": 3,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d50ce4b2723567e9896c1"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:50:06.053Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:50:06.053Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d50c24b2723567e9896a9"
+  },
+  "toNode": {
+    "$oid": "6a6d50cd4b2723567e9896be"
+  },
+  "type": "walkway",
+  "distanceMeters": 9.06,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d50ce4b2723567e9896c6"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:50:06.274Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:50:06.274Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d50cd4b2723567e9896be"
+  },
+  "toNode": {
+    "$oid": "6a6d4b64d9cab80255fafdd2"
+  },
+  "type": "walkway",
+  "distanceMeters": 11.01,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d51444b2723567e989765"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:52:04.938Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:52:04.938Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "fromNode": {
+    "$oid": "6a6d4e217bf1ec07ac839168"
+  },
+  "toNode": {
+    "$oid": "6a6d4332b247f604ae15e994"
+  },
+  "type": "stairs",
+  "distanceMeters": 6,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d548217353ec9b2976151"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:05:54.899Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:05:54.899Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d52dee1a38d71e419b800"
+  },
+  "fromNode": {
+    "$oid": "6a6d548217353ec9b2976147"
+  },
+  "toNode": {
+    "$oid": "6a6d548217353ec9b297614c"
+  },
+  "type": "walkway",
+  "distanceMeters": 2.04,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d548317353ec9b2976157"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:05:55.209Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:05:55.210Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d52dee1a38d71e419b800"
+  },
+  "fromNode": {
+    "$oid": "6a6d548217353ec9b297614c"
+  },
+  "toNode": {
+    "$oid": "6a6d539117353ec9b2976020"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.4,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d548317353ec9b297615d"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:05:55.498Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:05:55.498Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d52dee1a38d71e419b800"
+  },
+  "fromNode": {
+    "$oid": "6a6d548217353ec9b297614c"
+  },
+  "toNode": {
+    "$oid": "6a6d539017353ec9b297601b"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.89,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d548317353ec9b2976163"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:05:55.816Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:05:55.816Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d52dee1a38d71e419b800"
+  },
+  "fromNode": {
+    "$oid": "6a6d548217353ec9b297614c"
+  },
+  "toNode": {
+    "$oid": "6a6d539117353ec9b2976025"
+  },
+  "type": "walkway",
+  "distanceMeters": 2.09,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d548417353ec9b2976169"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:05:56.122Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:05:56.122Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d52dee1a38d71e419b800"
+  },
+  "fromNode": {
+    "$oid": "6a6d539117353ec9b2976025"
+  },
+  "toNode": {
+    "$oid": "6a6d53d017353ec9b297609b"
+  },
+  "type": "walkway",
+  "distanceMeters": 9.22,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d548417353ec9b297616f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:05:56.436Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:05:56.436Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d52dee1a38d71e419b800"
+  },
+  "fromNode": {
+    "$oid": "6a6d539117353ec9b2976025"
+  },
+  "toNode": {
+    "$oid": "6a6d539117353ec9b297602a"
+  },
+  "type": "walkway",
+  "distanceMeters": 3.61,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61c83fff391f06231db2"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:32.764Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:32.764Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d549c4b2723567e989798"
+  },
+  "toNode": {
+    "$oid": "6a6d61c33fff391f06231d6c"
+  },
+  "type": "walkway",
+  "distanceMeters": 1,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61c93fff391f06231db8"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:33.540Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:33.540Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d61c33fff391f06231d6c"
+  },
+  "toNode": {
+    "$oid": "6a6d61c33fff391f06231d71"
+  },
+  "type": "walkway",
+  "distanceMeters": 7,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61ca3fff391f06231dc4"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:34.506Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:34.506Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d61c33fff391f06231d6c"
+  },
+  "toNode": {
+    "$oid": "6a6d549c4b2723567e98979b"
+  },
+  "type": "walkway",
+  "distanceMeters": 1,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61cd3fff391f06231df4"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:37.735Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:37.735Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d58aa63d8b84c81e17c4c"
+  },
+  "toNode": {
+    "$oid": "6a6d61c53fff391f06231d8a"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61ce3fff391f06231dfa"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:38.045Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:38.045Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d61c53fff391f06231d8a"
+  },
+  "toNode": {
+    "$oid": "6a6d583163d8b84c81e17c46"
+  },
+  "type": "walkway",
+  "distanceMeters": 5.02,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61cf3fff391f06231e0c"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:39.192Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:39.192Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d61c43fff391f06231d76"
+  },
+  "toNode": {
+    "$oid": "6a6d61c33fff391f06231d71"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61cf3fff391f06231e12"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:39.612Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:39.612Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d549b4b2723567e989795"
+  },
+  "toNode": {
+    "$oid": "6a6d61c33fff391f06231d6c"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61cf3fff391f06231e18"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:39.906Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:39.906Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d5f4b5770659d3498d68a"
+  },
+  "toNode": {
+    "$oid": "6a6d61c53fff391f06231d8f"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61d03fff391f06231e1e"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:40.430Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:40.430Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d5fe65770659d3498d6cd"
+  },
+  "toNode": {
+    "$oid": "6a6d61c63fff391f06231d94"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61d03fff391f06231e24"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:40.914Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:40.915Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d5fe65770659d3498d6d2"
+  },
+  "toNode": {
+    "$oid": "6a6d61c63fff391f06231d99"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61d13fff391f06231e2a"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:41.226Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:41.226Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d61c63fff391f06231d99"
+  },
+  "toNode": {
+    "$oid": "6a6d61c53fff391f06231d8f"
+  },
+  "type": "walkway",
+  "distanceMeters": 6,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61d23fff391f06231e36"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:42.064Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:42.064Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d61c63fff391f06231d9e"
+  },
+  "toNode": {
+    "$oid": "6a6d61c63fff391f06231d99"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61d23fff391f06231e42"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:42.720Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:42.720Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d61c73fff391f06231da3"
+  },
+  "toNode": {
+    "$oid": "6a6d61c63fff391f06231d94"
+  },
+  "type": "walkway",
+  "distanceMeters": 1,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61d33fff391f06231e48"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:43.112Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:43.112Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d59068f06b7db355c3f14"
+  },
+  "toNode": {
+    "$oid": "6a6d61c73fff391f06231da8"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61d33fff391f06231e4e"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:43.469Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:43.469Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d61c73fff391f06231da8"
+  },
+  "toNode": {
+    "$oid": "6a6d61c53fff391f06231d8a"
+  },
+  "type": "walkway",
+  "distanceMeters": 7,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d61d33fff391f06231e54"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:02:43.974Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:02:43.974Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d61c73fff391f06231da8"
+  },
+  "toNode": {
+    "$oid": "6a6d59568f06b7db355c3f32"
+  },
+  "type": "walkway",
+  "distanceMeters": 1,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d629f3fff391f06231e98"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:06:07.053Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:06:07.053Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d61c63fff391f06231d94"
+  },
+  "toNode": {
+    "$oid": "6a6d629e3fff391f06231e8e"
+  },
+  "type": "walkway",
+  "distanceMeters": 7.01,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d629f3fff391f06231e9e"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:06:07.360Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:06:07.360Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d629e3fff391f06231e8e"
+  },
+  "toNode": {
+    "$oid": "6a6d5f1e5770659d3498d677"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d629f3fff391f06231ea4"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:06:07.666Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:06:07.666Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d629e3fff391f06231e8e"
+  },
+  "toNode": {
+    "$oid": "6a6d629e3fff391f06231e93"
+  },
+  "type": "walkway",
+  "distanceMeters": 8.02,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d62a03fff391f06231eaa"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:06:08.168Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:06:08.168Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d629e3fff391f06231e93"
+  },
+  "toNode": {
+    "$oid": "6a6d61c53fff391f06231d8f"
+  },
+  "type": "walkway",
+  "distanceMeters": 8.03,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64133fff391f06231f25"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:12:19.797Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:12:19.797Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d61c33fff391f06231d71"
+  },
+  "toNode": {
+    "$oid": "6a6d64133fff391f06231f20"
+  },
+  "type": "walkway",
+  "distanceMeters": 5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64143fff391f06231f2b"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:12:20.060Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:12:20.060Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d64133fff391f06231f20"
+  },
+  "toNode": {
+    "$oid": "6a6d61c83fff391f06231dad"
+  },
+  "type": "walkway",
+  "distanceMeters": 3,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64143fff391f06231f31"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:12:20.308Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:12:20.308Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d61c83fff391f06231dad"
+  },
+  "toNode": {
+    "$oid": "6a6d583163d8b84c81e17c46"
+  },
+  "type": "walkway",
+  "distanceMeters": 3,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64713fff391f06231fd3"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:13:53.557Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:53.557Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d61c83fff391f06231dad"
+  },
+  "toNode": {
+    "$oid": "6a6d629e3fff391f06231e93"
+  },
+  "type": "walkway",
+  "distanceMeters": 25.55,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64713fff391f06231fd9"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:13:53.799Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:53.799Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d61c73fff391f06231da3"
+  },
+  "toNode": {
+    "$oid": "6a6d64703fff391f06231fba"
+  },
+  "type": "walkway",
+  "distanceMeters": 0,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64723fff391f06231fdf"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:13:54.035Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:54.035Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d64703fff391f06231fba"
+  },
+  "toNode": {
+    "$oid": "6a6d61c63fff391f06231d94"
+  },
+  "type": "walkway",
+  "distanceMeters": 1,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64723fff391f06231fe5"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:13:54.279Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:54.280Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d61c63fff391f06231d9e"
+  },
+  "toNode": {
+    "$oid": "6a6d64703fff391f06231fbf"
+  },
+  "type": "walkway",
+  "distanceMeters": 0,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64723fff391f06231feb"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:13:54.529Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:54.529Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d64703fff391f06231fbf"
+  },
+  "toNode": {
+    "$oid": "6a6d61c63fff391f06231d99"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64723fff391f06231ff1"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:13:54.763Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:54.763Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d5d1463d8b84c81e17d71"
+  },
+  "toNode": {
+    "$oid": "6a6d64703fff391f06231fc4"
+  },
+  "type": "walkway",
+  "distanceMeters": 2.88,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64733fff391f06231ff7"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:13:55.017Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:55.017Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d64703fff391f06231fc4"
+  },
+  "toNode": {
+    "$oid": "6a6d629e3fff391f06231e93"
+  },
+  "type": "walkway",
+  "distanceMeters": 7.55,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64733fff391f06231ffd"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:13:55.273Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:55.273Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d64703fff391f06231fc4"
+  },
+  "toNode": {
+    "$oid": "6a6d61c83fff391f06231dad"
+  },
+  "type": "walkway",
+  "distanceMeters": 18,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64733fff391f06232003"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:13:55.504Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:55.504Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d5d1463d8b84c81e17d6c"
+  },
+  "toNode": {
+    "$oid": "6a6d64703fff391f06231fc4"
+  },
+  "type": "walkway",
+  "distanceMeters": 3.12,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64733fff391f06232009"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:13:55.741Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:55.741Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d5b3e5770659d3498d622"
+  },
+  "toNode": {
+    "$oid": "6a6d64713fff391f06231fc9"
+  },
+  "type": "walkway",
+  "distanceMeters": 3.13,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64733fff391f0623200f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:13:55.968Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:55.968Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d64713fff391f06231fc9"
+  },
+  "toNode": {
+    "$oid": "6a6d64703fff391f06231fc4"
+  },
+  "type": "walkway",
+  "distanceMeters": 5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64743fff391f06232015"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:13:56.204Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:56.204Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d64713fff391f06231fc9"
+  },
+  "toNode": {
+    "$oid": "6a6d61c83fff391f06231dad"
+  },
+  "type": "walkway",
+  "distanceMeters": 13,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64743fff391f0623201b"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:13:56.451Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:56.451Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d5ade5770659d3498d5f5"
+  },
+  "toNode": {
+    "$oid": "6a6d64713fff391f06231fc9"
+  },
+  "type": "walkway",
+  "distanceMeters": 2.88,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64743fff391f06232021"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:13:56.690Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:56.690Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d5a3663d8b84c81e17d03"
+  },
+  "toNode": {
+    "$oid": "6a6d64713fff391f06231fce"
+  },
+  "type": "walkway",
+  "distanceMeters": 3.13,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64743fff391f06232027"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:13:56.928Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:56.928Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d64713fff391f06231fce"
+  },
+  "toNode": {
+    "$oid": "6a6d64713fff391f06231fc9"
+  },
+  "type": "walkway",
+  "distanceMeters": 5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64753fff391f0623202d"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:13:57.160Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:57.160Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d64713fff391f06231fce"
+  },
+  "toNode": {
+    "$oid": "6a6d61c83fff391f06231dad"
+  },
+  "type": "walkway",
+  "distanceMeters": 8,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d64753fff391f06232033"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:13:57.400Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:13:57.401Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d50504b2723567e989674"
+  },
+  "toNode": {
+    "$oid": "6a6d64713fff391f06231fce"
+  },
+  "type": "walkway",
+  "distanceMeters": 2.88,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d659e4ac61a222ae213ea"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:18:54.530Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:18:54.531Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d659e4ac61a222ae213e5"
+  },
+  "toNode": {
+    "$oid": "6a6d61c83fff391f06231dad"
+  },
+  "type": "walkway",
+  "distanceMeters": 4,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d659e4ac61a222ae213f0"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:18:54.882Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:18:54.883Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d659d4ac61a222ae213e0"
+  },
+  "toNode": {
+    "$oid": "6a6d629e3fff391f06231e93"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.45,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d678bd49d3f7650bb4085"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:27:07.104Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:27:07.104Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d67764ac61a222ae21477"
+  },
+  "toNode": {
+    "$oid": "6a6d67764ac61a222ae2147c"
+  },
+  "type": "walkway",
+  "distanceMeters": 1,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d67e2d49d3f7650bb4099"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:28:34.954Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:28:34.954Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d5a3663d8b84c81e17d03"
+  },
+  "toNode": {
+    "$oid": "6a6d679dd49d3f7650bb408b"
+  },
+  "type": "walkway",
+  "distanceMeters": 6.08,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d67e3d49d3f7650bb409f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:28:35.202Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:28:35.202Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d679dd49d3f7650bb408b"
+  },
+  "toNode": {
+    "$oid": "6a6d65dc4ac61a222ae213f9"
+  },
+  "type": "walkway",
+  "distanceMeters": 5.1,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d67e3d49d3f7650bb40a4"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:28:35.461Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:28:35.461Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d65dc4ac61a222ae213f9"
+  },
+  "toNode": {
+    "$oid": "6a6d65f14ac61a222ae2140a"
+  },
+  "type": "walkway",
+  "distanceMeters": 12.01,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d67e3d49d3f7650bb40aa"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:28:35.720Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:28:35.721Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d5d1463d8b84c81e17d6c"
+  },
+  "toNode": {
+    "$oid": "6a6d679dd49d3f7650bb408e"
+  },
+  "type": "walkway",
+  "distanceMeters": 6.08,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d67e3d49d3f7650bb40b0"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:28:35.966Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:28:35.966Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d679dd49d3f7650bb408e"
+  },
+  "toNode": {
+    "$oid": "6a6d66024ac61a222ae21422"
+  },
+  "type": "walkway",
+  "distanceMeters": 5.06,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d67e4d49d3f7650bb40b5"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:28:36.190Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:28:36.190Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d66024ac61a222ae21422"
+  },
+  "toNode": {
+    "$oid": "6a6d65f74ac61a222ae2141d"
+  },
+  "type": "walkway",
+  "distanceMeters": 12,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d69614ac61a222ae214c0"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:34:57.249Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:34:57.249Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d5b3e5770659d3498d622"
+  },
+  "toNode": {
+    "$oid": "6a6d692a4ac61a222ae214ac"
+  },
+  "type": "walkway",
+  "distanceMeters": 15.01,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d69614ac61a222ae214c6"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:34:57.515Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:34:57.515Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d692a4ac61a222ae214ac"
+  },
+  "toNode": {
+    "$oid": "6a6d692a4ac61a222ae214b1"
+  },
+  "type": "walkway",
+  "distanceMeters": 15.03,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d698b4ac61a222ae214db"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:35:39.127Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:35:39.127Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "fromNode": {
+    "$oid": "6a6d698a4ac61a222ae214d6"
+  },
+  "toNode": {
+    "$oid": "6a6d61c63fff391f06231d94"
+  },
+  "type": "walkway",
+  "distanceMeters": 1.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d69ffbd93c91d1a735e9f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:37:35.936Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:37:35.936Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "fromNode": {
+    "$oid": "6a6d69ffbd93c91d1a735e90"
+  },
+  "toNode": {
+    "$oid": "6a6d659d4ac61a222ae213e0"
+  },
+  "type": "elevator",
+  "distanceMeters": 3,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b82bd93c91d1a736003"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:44:02.833Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:44:02.833Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "fromNode": {
+    "$oid": "6a6d6b80bd93c91d1a735fdb"
+  },
+  "toNode": {
+    "$oid": "6a6d6b81bd93c91d1a735fe0"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b83bd93c91d1a736009"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:44:03.093Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:44:03.093Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "fromNode": {
+    "$oid": "6a6d69ffbd93c91d1a735e95"
+  },
+  "toNode": {
+    "$oid": "6a6d6b81bd93c91d1a735fea"
+  },
+  "type": "walkway",
+  "distanceMeters": 6.1,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b83bd93c91d1a73600f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:44:03.373Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:44:03.373Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "fromNode": {
+    "$oid": "6a6d6b80bd93c91d1a735fdb"
+  },
+  "toNode": {
+    "$oid": "6a6d6b81bd93c91d1a735fef"
+  },
+  "type": "walkway",
+  "distanceMeters": 4,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b83bd93c91d1a736015"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:44:03.619Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:44:03.619Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "fromNode": {
+    "$oid": "6a6d6a5cbd93c91d1a735ef3"
+  },
+  "toNode": {
+    "$oid": "6a6d6b81bd93c91d1a735ff4"
+  },
+  "type": "walkway",
+  "distanceMeters": 3.81,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b83bd93c91d1a73601b"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:44:03.883Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:44:03.883Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "fromNode": {
+    "$oid": "6a6d6b81bd93c91d1a735ff4"
+  },
+  "toNode": {
+    "$oid": "6a6d6b81bd93c91d1a735fe0"
+  },
+  "type": "walkway",
+  "distanceMeters": 5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b84bd93c91d1a736021"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:44:04.134Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:44:04.134Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "fromNode": {
+    "$oid": "6a6d6a1bbd93c91d1a735ed0"
+  },
+  "toNode": {
+    "$oid": "6a6d6b82bd93c91d1a735ff9"
+  },
+  "type": "walkway",
+  "distanceMeters": 5.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b84bd93c91d1a736027"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:44:04.385Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:44:04.385Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "fromNode": {
+    "$oid": "6a6d6b82bd93c91d1a735ff9"
+  },
+  "toNode": {
+    "$oid": "6a6d6b81bd93c91d1a735fe0"
+  },
+  "type": "walkway",
+  "distanceMeters": 2,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b84bd93c91d1a73602d"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:44:04.626Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:44:04.626Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "fromNode": {
+    "$oid": "6a6d6b82bd93c91d1a735ff9"
+  },
+  "toNode": {
+    "$oid": "6a6d6b81bd93c91d1a735fea"
+  },
+  "type": "walkway",
+  "distanceMeters": 5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b84bd93c91d1a736033"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:44:04.908Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:44:04.908Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "fromNode": {
+    "$oid": "6a6d69ffbd93c91d1a735e95"
+  },
+  "toNode": {
+    "$oid": "6a6d6b82bd93c91d1a735ffe"
+  },
+  "type": "walkway",
+  "distanceMeters": 5.32,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b85bd93c91d1a736039"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:44:05.209Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:44:05.209Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "fromNode": {
+    "$oid": "6a6d6b82bd93c91d1a735ffe"
+  },
+  "toNode": {
+    "$oid": "6a6d6b81bd93c91d1a735fef"
+  },
+  "type": "walkway",
+  "distanceMeters": 12,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b85bd93c91d1a73603f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:44:05.493Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:44:05.494Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "fromNode": {
+    "$oid": "6a6d69ffbd93c91d1a735e90"
+  },
+  "toNode": {
+    "$oid": "6a6d6b81bd93c91d1a735fea"
+  },
+  "type": "walkway",
+  "distanceMeters": 4.03,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b85bd93c91d1a736045"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:44:05.732Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:44:05.732Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "fromNode": {
+    "$oid": "6a6d69ffbd93c91d1a735e9a"
+  },
+  "toNode": {
+    "$oid": "6a6d6b81bd93c91d1a735fea"
+  },
+  "type": "walkway",
+  "distanceMeters": 4.5,
+  "bidirectional": true,
+  "isAccessible": true,
+  "__v": 0
+}]

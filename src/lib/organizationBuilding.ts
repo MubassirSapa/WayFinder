@@ -1,34 +1,41 @@
 import "server-only";
 
+import type { Organization } from "@/payload-types";
+
 import { getPayloadClient } from "./getPayloadClient";
+import { asPayloadId } from "./payload-id";
 
 const BUILDING_ID_PREFIX = "building-";
 
-// Floor.buildingId (and MapObject/MapNode/PathEdge's copies of it) is a
-// free-text field, but every value in practice is written as
-// `building-${organizationId}` by src/features/dashboard/lib/getDashboardData.ts
-// when an admin creates a floor — there's no real "building" collection,
-// one Organization maps to exactly one buildingId. This recovers that
-// numeric id so the real Organization.name can be looked up, instead of
-// just reformatting the raw "building-4" string into "Building 4".
-export function parseOrganizationIdFromBuildingId(buildingId: string): number | null {
+// Until buildings have their own collection, dashboard floors encode the organization ID here.
+export function parseOrganizationIdFromBuildingId(buildingId: string) {
   if (!buildingId.startsWith(BUILDING_ID_PREFIX)) {
     return null;
   }
 
-  const id = Number(buildingId.slice(BUILDING_ID_PREFIX.length));
-  return Number.isFinite(id) ? id : null;
+  const id = buildingId.slice(BUILDING_ID_PREFIX.length);
+  return id ? asPayloadId(id) : null;
 }
 
-// Batch-resolves real Organization names for a set of buildingId strings in
-// a single query, so callers looping over many floors/venues don't do it
-// per-item. Falls back to omitting a key entirely when a buildingId doesn't
-// encode a real organization id, or that organization no longer exists —
-// callers should fall back to their own generic label in that case.
 export async function resolveOrganizationNamesByBuildingId(
   buildingIds: string[],
 ): Promise<Record<string, string>> {
-  const orgIdByBuildingId = new Map<string, number>();
+  const organizations = await resolveOrganizationsByBuildingId(buildingIds);
+
+  return Object.fromEntries(
+    Object.entries(organizations).map(([buildingId, organization]) => [
+      buildingId,
+      organization.name,
+    ]),
+  );
+}
+
+export type OrganizationBuildingSummary = Pick<Organization, "name" | "type">;
+
+export async function resolveOrganizationsByBuildingId(
+  buildingIds: string[],
+): Promise<Record<string, OrganizationBuildingSummary>> {
+  const orgIdByBuildingId = new Map<string, ReturnType<typeof asPayloadId>>();
 
   for (const buildingId of new Set(buildingIds)) {
     const organizationId = parseOrganizationIdFromBuildingId(buildingId);
@@ -52,15 +59,20 @@ export async function resolveOrganizationNamesByBuildingId(
     },
   });
 
-  const nameById = new Map(result.docs.map((organization) => [organization.id, organization.name]));
-  const namesByBuildingId: Record<string, string> = {};
+  const organizationById = new Map(
+    result.docs.map((organization) => [
+      String(organization.id),
+      { name: organization.name, type: organization.type },
+    ]),
+  );
+  const organizationsByBuildingId: Record<string, OrganizationBuildingSummary> = {};
 
   for (const [buildingId, organizationId] of orgIdByBuildingId) {
-    const name = nameById.get(organizationId);
-    if (name) {
-      namesByBuildingId[buildingId] = name;
+    const organization = organizationById.get(String(organizationId));
+    if (organization) {
+      organizationsByBuildingId[buildingId] = organization;
     }
   }
 
-  return namesByBuildingId;
+  return organizationsByBuildingId;
 }

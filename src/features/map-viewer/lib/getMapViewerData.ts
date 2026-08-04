@@ -1,12 +1,12 @@
 import type {
   Floor,
-  Media,
   MapNode,
   MapObject,
   PathEdge,
 } from "@/payload-types";
 import { getPayloadClient } from "@/lib/getPayloadClient";
 import { resolveOrganizationNamesByBuildingId } from "@/lib/organizationBuilding";
+import { asPayloadId } from "@/lib/payload-id";
 
 import type {
   MapViewerData,
@@ -38,15 +38,8 @@ function getRequiredRelationId(relation: Exclude<RelationValue, null | undefined
   return String(relation);
 }
 
-function hasMediaDocument(value: unknown): value is Media {
-  return typeof value === "object" && value !== null && "alt" in value && "id" in value;
-}
-
 function normalizeFloor(doc: Floor, organizationName: string | null): ViewerFloor {
-  const floorDoc = doc as Floor & {
-    backgroundImage?: Media | number | null;
-    metersPerPixel?: number | null;
-  };
+  const floorDoc = doc as Floor & { metersPerPixel?: number | null };
 
   return {
     id: String(doc.id),
@@ -57,9 +50,6 @@ function normalizeFloor(doc: Floor, organizationName: string | null): ViewerFloo
     width: doc.width ?? 1200,
     height: doc.height ?? 800,
     metersPerPixel: floorDoc.metersPerPixel ?? null,
-    backgroundImageUrl: hasMediaDocument(floorDoc.backgroundImage)
-      ? floorDoc.backgroundImage.url ?? doc.backgroundImageUrl ?? null
-      : doc.backgroundImageUrl ?? null,
     status: doc.status ?? "draft",
   };
 }
@@ -78,6 +68,8 @@ function normalizeObject(doc: MapObject): ViewerMapObject {
     width: doc.width ?? 100,
     height: doc.height ?? 80,
     rotation: doc.rotation ?? 0,
+    shape: doc.shape ?? "rectangle",
+    points: doc.points?.map((point) => ({ x: point.x, y: point.y })) ?? null,
     isSearchable: doc.isSearchable ?? true,
     isAccessible: doc.isAccessible ?? true,
   };
@@ -120,19 +112,32 @@ function normalizeEdge(doc: PathEdge): ViewerPathEdge {
   };
 }
 
-export async function getMapViewerData(): Promise<MapViewerData> {
+export async function getMapViewerData(floorId?: string): Promise<MapViewerData> {
   const payload = await getPayloadClient();
+
+  let buildingId: string | undefined;
+  if (floorId) {
+    const requestedFloor = await payload
+      .findByID({
+        id: floorId,
+        collection: "floors",
+        overrideAccess: true,
+      })
+      .catch(() => null);
+    buildingId = requestedFloor?.buildingId ?? undefined;
+  }
 
   const floorsResult = await payload.find({
     collection: "floors",
-    depth: 1,
+    depth: 0,
     limit: 100,
     overrideAccess: true,
     sort: "level",
     where: {
-      status: {
-        equals: "published",
-      },
+      and: [
+        { status: { equals: "published" } },
+        ...(buildingId ? [{ buildingId: { equals: buildingId } }] : []),
+      ],
     },
   });
 
@@ -164,7 +169,7 @@ export async function getMapViewerData(): Promise<MapViewerData> {
           sort: "name",
           where: {
             floor: {
-              equals: Number(floor.id),
+              equals: asPayloadId(floor.id),
             },
           },
         }),
@@ -175,7 +180,7 @@ export async function getMapViewerData(): Promise<MapViewerData> {
           overrideAccess: true,
           where: {
             floor: {
-              equals: Number(floor.id),
+              equals: asPayloadId(floor.id),
             },
           },
         }),
@@ -186,7 +191,7 @@ export async function getMapViewerData(): Promise<MapViewerData> {
           overrideAccess: true,
           where: {
             floor: {
-              equals: Number(floor.id),
+              equals: asPayloadId(floor.id),
             },
           },
         }),

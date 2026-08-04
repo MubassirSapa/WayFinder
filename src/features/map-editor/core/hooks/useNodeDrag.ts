@@ -1,11 +1,11 @@
 import React, { useRef } from 'react';
 
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 
 import { snapToGrid } from '../lib/canvas';
 
 export function useNodeDrag() {
-  const { mode, selectEntity, moveNode } = useEditorStore();
+  const { mode, selectEntity, moveNode } = useAppStore();
   const dragInfo = useRef<{
     nodeId: string;
     startX: number;

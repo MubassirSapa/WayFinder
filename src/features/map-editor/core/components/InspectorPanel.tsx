@@ -1,13 +1,13 @@
 "use client";
 
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 import { EDITOR_UI_TEXT } from '../../constants/editorUi.constants';
 import { EdgeInspector } from "./EdgeInspector";
 import { NodeInspector } from "./NodeInspector";
 import { ObjectInspector } from "./ObjectInspector";
 
 export function InspectorPanel() {
-  const { selectedEntity } = useEditorStore();
+  const { selectedEntity } = useAppStore();
 
   return (
     <div className="w-72 h-full border-l border-editor-border bg-editor-panel/50 flex flex-col backdrop-blur-md">

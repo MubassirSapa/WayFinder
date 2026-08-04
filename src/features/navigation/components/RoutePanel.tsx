@@ -2,14 +2,32 @@
 
 import { useDeferredValue, useState } from "react";
 
+import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
-import type { ViewerFloor, ViewerMapNode, ViewerMapObject, ViewerPathEdge } from "@/features/map-viewer/types/map-viewer.types";
-import { ArrowUpDown, ArrowUpRight, Navigation, TrendingUp, Waypoints, X, type LucideIcon } from "lucide-react";
+import type {
+  ViewerFloor,
+  ViewerMapNode,
+  ViewerMapObject,
+  ViewerPathEdge,
+} from "@/features/map-viewer/types/map-viewer.types";
+import {
+  ArrowUpDown,
+  ArrowUpRight,
+  Navigation,
+  TrendingUp,
+  Waypoints,
+  X,
+  type LucideIcon,
+} from "lucide-react";
 
+import { filterRouteCandidates } from "../lib/filterRouteCandidates";
 import { findNodeIdForObject } from "../lib/findNodeForObject";
-import { useNavigationStore } from "../store/useNavigationStore";
-import type { RouteFloorSegment, ShortestPathResult } from "../types/navigation.types";
+import { useAppStore } from "@/store";
+import type {
+  RouteFloorSegment,
+  ShortestPathResult,
+} from "../types/navigation.types";
 
 interface RoutePanelProps {
   activeSegmentIndex: number;
@@ -40,7 +58,10 @@ function findObjectLabelForNode(
   return object ? object.label || object.name : null;
 }
 
-function findFloorNameForObject(object: ViewerMapObject, floors: ViewerFloor[]): string | null {
+function findFloorNameForObject(
+  object: ViewerMapObject,
+  floors: ViewerFloor[],
+): string | null {
   return floors.find((floor) => floor.id === object.floorId)?.name ?? null;
 }
 
@@ -52,25 +73,6 @@ const CONNECTOR_ICONS: Record<ViewerPathEdge["type"], LucideIcon> = {
   walkway: Waypoints,
 };
 
-// Only objects that actually resolve to a routable node are worth showing —
-// anything else was a dead click (looked like a valid result, picking it did
-// nothing, no feedback). Filtering here means every visible suggestion is
-// guaranteed to work.
-function filterCandidates(objects: ViewerMapObject[], nodes: ViewerMapNode[], query: string) {
-  const normalized = query.trim().toLowerCase();
-  if (!normalized) {
-    return [];
-  }
-
-  return objects
-    .filter((object) => (
-      object.name.toLowerCase().includes(normalized)
-      || object.label.toLowerCase().includes(normalized)
-    ))
-    .filter((object) => findNodeIdForObject(object.id, nodes) !== null)
-    .slice(0, 6);
-}
-
 export function RoutePanel({
   activeSegmentIndex,
   effectiveOriginId,
@@ -81,16 +83,24 @@ export function RoutePanel({
   searchableObjects,
   segments,
 }: RoutePanelProps) {
-  const originNodeId = useNavigationStore((state) => state.originNodeId);
-  const destinationNodeId = useNavigationStore((state) => state.destinationNodeId);
-  const accessibleOnly = useNavigationStore((state) => state.accessibleOnly);
-  const setAccessibleOnly = useNavigationStore((state) => state.setAccessibleOnly);
-  const setOrigin = useNavigationStore((state) => state.setOrigin);
-  const setDestination = useNavigationStore((state) => state.setDestination);
-  const clearRoute = useNavigationStore((state) => state.clearRoute);
+  const originNodeId = useAppStore((state) => state.originNodeId);
+  const destinationNodeId = useAppStore((state) => state.destinationNodeId);
+  const accessibleOnly = useAppStore((state) => state.accessibleOnly);
+  const setAccessibleOnly = useAppStore((state) => state.setAccessibleOnly);
+  const setOrigin = useAppStore((state) => state.setOrigin);
+  const setDestination = useAppStore((state) => state.setDestination);
+  const clearRoute = useAppStore((state) => state.clearRoute);
 
-  const originLabel = findObjectLabelForNode(originNodeId, nodes, searchableObjects);
-  const destinationLabel = findObjectLabelForNode(destinationNodeId, nodes, searchableObjects);
+  const originLabel = findObjectLabelForNode(
+    originNodeId,
+    nodes,
+    searchableObjects,
+  );
+  const destinationLabel = findObjectLabelForNode(
+    destinationNodeId,
+    nodes,
+    searchableObjects,
+  );
 
   // Only the field currently being edited needs its own state — the other
   // field's displayed value is derived straight from the store, so there's
@@ -99,9 +109,11 @@ export function RoutePanel({
   const [draftQuery, setDraftQuery] = useState("");
   const deferredDraftQuery = useDeferredValue(draftQuery);
 
-  const fromValue = focusedField === "from" ? draftQuery : originLabel ?? "";
-  const toValue = focusedField === "to" ? draftQuery : destinationLabel ?? "";
-  const candidates = focusedField ? filterCandidates(searchableObjects, nodes, deferredDraftQuery) : [];
+  const fromValue = focusedField === "from" ? draftQuery : (originLabel ?? "");
+  const toValue = focusedField === "to" ? draftQuery : (destinationLabel ?? "");
+  const candidates = focusedField
+    ? filterRouteCandidates(searchableObjects, nodes, deferredDraftQuery)
+    : [];
 
   const startEditing = (field: "from" | "to") => {
     setFocusedField(field);
@@ -139,6 +151,16 @@ export function RoutePanel({
       <div className="flex items-center gap-2">
         <Navigation className="h-4 w-4 text-muted-foreground" />
         <h3 className="text-sm font-semibold">Get directions</h3>
+        {originNodeId || destinationNodeId ? (
+          <button
+            aria-label="Clear navigation"
+            className="ml-auto rounded-full px-2 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            onClick={clearRoute}
+            type="button"
+          >
+            Clear
+          </button>
+        ) : null}
       </div>
 
       <div className="mt-3 space-y-2">
@@ -157,7 +179,12 @@ export function RoutePanel({
             value={fromValue}
           />
           {originNodeId ? (
-            <button aria-label="Clear starting point" className="shrink-0" onClick={() => setOrigin(null)} type="button">
+            <button
+              aria-label="Clear starting point"
+              className="shrink-0"
+              onClick={() => setOrigin(null)}
+              type="button"
+            >
               <X className="h-3.5 w-3.5 text-muted-foreground" />
             </button>
           ) : null}
@@ -173,9 +200,13 @@ export function RoutePanel({
                 onMouseDown={(event) => event.preventDefault()}
                 type="button"
               >
-                <span className="block truncate text-sm">{object.label || object.name}</span>
+                <span className="block truncate text-sm">
+                  {object.label || object.name}
+                </span>
                 {findFloorNameForObject(object, floors) ? (
-                  <span className="block truncate text-xs text-muted-foreground">{findFloorNameForObject(object, floors)}</span>
+                  <span className="block truncate text-xs text-muted-foreground">
+                    {findFloorNameForObject(object, floors)}
+                  </span>
                 ) : null}
               </button>
             ))}
@@ -197,7 +228,12 @@ export function RoutePanel({
             value={toValue}
           />
           {destinationNodeId ? (
-            <button aria-label="Clear destination" className="shrink-0" onClick={clearRoute} type="button">
+            <button
+              aria-label="Clear destination"
+              className="shrink-0"
+              onClick={clearRoute}
+              type="button"
+            >
               <X className="h-3.5 w-3.5 text-muted-foreground" />
             </button>
           ) : null}
@@ -213,9 +249,13 @@ export function RoutePanel({
                 onMouseDown={(event) => event.preventDefault()}
                 type="button"
               >
-                <span className="block truncate text-sm">{object.label || object.name}</span>
+                <span className="block truncate text-sm">
+                  {object.label || object.name}
+                </span>
                 {findFloorNameForObject(object, floors) ? (
-                  <span className="block truncate text-xs text-muted-foreground">{findFloorNameForObject(object, floors)}</span>
+                  <span className="block truncate text-xs text-muted-foreground">
+                    {findFloorNameForObject(object, floors)}
+                  </span>
                 ) : null}
               </button>
             ))}
@@ -240,16 +280,34 @@ export function RoutePanel({
             </p>
           ) : route ? (
             <>
-              <p className="font-semibold">
+              <div className="grid gap-2 rounded-2xl border border-border bg-background p-3">
+                <div className="flex min-w-0 items-center gap-2.5">
+                  <span className="size-2.5 shrink-0 rounded-full bg-[var(--map-viewer-route-origin)]" />
+                  <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Start</span>
+                  <span className="truncate font-medium">{originLabel ?? "Route start"}</span>
+                </div>
+                <div className="flex min-w-0 items-center gap-2.5">
+                  <span className="size-2.5 shrink-0 rounded-full bg-[var(--map-viewer-route-destination)]" />
+                  <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Destination</span>
+                  <span className="truncate font-medium">{destinationLabel ?? "Route destination"}</span>
+                </div>
+              </div>
+              <Badge className="font-semibold" variant="outline">
                 {route.totalDistanceMeters.toFixed(1)} m
-                {segments.length > 1 ? ` • crosses ${segments.length - 1} floor${segments.length > 2 ? "s" : ""}` : ""}
-              </p>
+                {segments.length > 1
+                  ? ` • crosses ${segments.length - 1} floor${segments.length > 2 ? "s" : ""}`
+                  : ""}
+              </Badge>
               {segments.length > 1 ? (
                 <div className="space-y-1 rounded-2xl border border-border bg-background p-1.5">
                   {segments.map((segment, index) => {
-                    const segmentFloor = floors.find((floor) => floor.id === segment.floorId);
+                    const segmentFloor = floors.find(
+                      (floor) => floor.id === segment.floorId,
+                    );
                     const isActive = index === activeSegmentIndex;
-                    const ConnectorIcon = segment.enterViaEdgeType ? CONNECTOR_ICONS[segment.enterViaEdgeType] : null;
+                    const ConnectorIcon = segment.enterViaEdgeType
+                      ? CONNECTOR_ICONS[segment.enterViaEdgeType]
+                      : null;
 
                     return (
                       <div key={segment.floorId + index}>
@@ -272,17 +330,24 @@ export function RoutePanel({
                           <span
                             className={cn(
                               "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold",
-                              isActive ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground",
+                              isActive
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-muted text-muted-foreground",
                             )}
                           >
                             {index + 1}
                           </span>
-                          <span className="truncate">{segmentFloor?.name ?? "Floor"}</span>
-                          {isActive ? (
-                            <span className="ml-auto shrink-0 text-[10px] font-bold uppercase tracking-wide text-primary">
-                              You&apos;re here
-                            </span>
-                          ) : null}
+                          <span className="truncate">
+                            {segmentFloor?.name ?? "Floor"}
+                          </span>
+                          <span className="ml-auto flex shrink-0 items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide">
+                            {index === 0 ? (
+                              <><span className="size-2 rounded-full bg-[var(--map-viewer-route-origin)]" />Start</>
+                            ) : null}
+                            {index === segments.length - 1 ? (
+                              <><span className="size-2 rounded-full bg-[var(--map-viewer-route-destination)]" />Destination</>
+                            ) : null}
+                          </span>
                         </button>
                       </div>
                     );

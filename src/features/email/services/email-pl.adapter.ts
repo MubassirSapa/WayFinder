@@ -5,7 +5,6 @@ import { render } from "react-email";
 import { getPayload } from "payload";
 
 import config from "@payload-config";
-import { ROLES } from "@/collections/constants/roles";
 import { BRAND } from "@/constants/brand";
 import { WelcomeEmailTemplate } from "@/features/email/templates/WelcomeEmail";
 import { tryCatchResponse } from "@/lib/responses/trycatch-response";
@@ -25,10 +24,6 @@ export async function sendOwnerWelcomeEmailAdapter(userId: string) {
       id: userId,
       overrideAccess: true,
     });
-
-    if (user.role !== ROLES.ADMIN) {
-      return null;
-    }
 
     const html = await render(
       createElement(WelcomeEmailTemplate, {

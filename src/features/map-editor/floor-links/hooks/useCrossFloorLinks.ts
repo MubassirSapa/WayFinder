@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { listCrossFloorLinks } from "../actions/floorLinkActions";
+import { listCrossFloorLinks } from "../actions/client/floor-link-client-actions";
 import type { CrossFloorLink } from "../types/floorLink.types";
 
 export function useCrossFloorLinks(buildingId: string | null) {
@@ -14,17 +14,10 @@ export function useCrossFloorLinks(buildingId: string | null) {
     }
 
     let cancelled = false;
-    listCrossFloorLinks(buildingId)
-      .then((result) => {
-        if (!cancelled) {
-          setLinks(result);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setLinks([]);
-        }
-      });
+    listCrossFloorLinks(buildingId).then((response) => {
+      if (cancelled) return;
+      setLinks(response.isSuccess ? response.data : []);
+    });
 
     return () => {
       cancelled = true;

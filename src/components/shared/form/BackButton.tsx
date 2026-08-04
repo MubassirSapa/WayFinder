@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import { ArrowLeftIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";

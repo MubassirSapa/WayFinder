@@ -1,5 +1,5 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Compass } from "lucide-react";
 
 import { BRAND } from "@/constants/brand";
 import { cn } from "@/lib/utils";
@@ -21,13 +21,24 @@ export function WayfinderBrand({
     <>
       <span
         className={cn(
-          "flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-[0_0_22px_color-mix(in_oklch,var(--primary),transparent_60%)]",
+          "relative block size-8 before:absolute before:inset-1 before:rounded-full before:bg-[var(--brand-glow)] before:blur-sm",
           iconClassName,
         )}
       >
-        <Compass className="size-4" aria-hidden />
+        <Image
+          alt=""
+          className="z-10 object-contain"
+          fill
+          sizes="32px"
+          src="/icon/wayfinder-no-bg.png"
+        />
       </span>
-      <span className={cn("text-lg font-semibold tracking-normal text-foreground", textClassName)}>
+      <span
+        className={cn(
+          "text-lg font-semibold tracking-normal text-foreground",
+          textClassName,
+        )}
+      >
         {BRAND.NAME}
       </span>
     </>
@@ -35,11 +46,18 @@ export function WayfinderBrand({
 
   if (href) {
     return (
-      <Link className={cn("inline-flex items-center gap-3", className)} href={href}>
+      <Link
+        className={cn("inline-flex items-center gap-3", className)}
+        href={href}
+      >
         {content}
       </Link>
     );
   }
 
-  return <div className={cn("inline-flex items-center gap-3", className)}>{content}</div>;
+  return (
+    <div className={cn("inline-flex items-center gap-3", className)}>
+      {content}
+    </div>
+  );
 }

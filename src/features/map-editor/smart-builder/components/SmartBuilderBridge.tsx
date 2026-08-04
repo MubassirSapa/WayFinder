@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
 import { canvasPointFromEvent, snapToGrid } from "@/features/map-editor/core/lib/canvas";
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 
 export function SmartBuilderBridge() {
   const {
@@ -18,7 +18,7 @@ export function SmartBuilderBridge() {
     addHallwayDrawingPoint,
     clearHallwayDrawingPoints,
     applySmartBuilderToObject,
-  } = useEditorStore();
+  } = useAppStore();
 
   const processedObjectIdsRef = useRef<Set<string>>(new Set());
   const activeFloorIdRef = useRef<string | null>(null);

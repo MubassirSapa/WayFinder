@@ -66,6 +66,20 @@ export function normalizeFloor(doc: Floor): EditorFloor {
       ? backgroundImage.alt
       : null,
     backgroundImageUrl,
+    backgroundImageRotation: floorDoc.backgroundImageRotation ?? 0,
+    backgroundImageScale: floorDoc.backgroundImageScale ?? 1,
+    backgroundImageOpacity: floorDoc.backgroundImageOpacity ?? 0.3,
+    backgroundImageLocked: floorDoc.backgroundImageLocked ?? false,
+    backgroundImageVisible: floorDoc.backgroundImageVisible ?? true,
+    backgroundImageOffsetX: floorDoc.backgroundImageOffsetX ?? 0,
+    backgroundImageOffsetY: floorDoc.backgroundImageOffsetY ?? 0,
+    backgroundImageFit: floorDoc.backgroundImageFit ?? 'fill',
+    backgroundImageNaturalWidth: hasMediaDocument(backgroundImage)
+      ? backgroundImage.width ?? null
+      : null,
+    backgroundImageNaturalHeight: hasMediaDocument(backgroundImage)
+      ? backgroundImage.height ?? null
+      : null,
     status: doc.status ?? 'draft',
   };
 }
@@ -84,6 +98,8 @@ export function normalizeMapObject(doc: PayloadMapObject): EditorMapObject {
     width: doc.width ?? 100,
     height: doc.height ?? 80,
     rotation: doc.rotation ?? 0,
+    shape: doc.shape ?? 'rectangle',
+    points: doc.points?.map((point) => ({ x: point.x, y: point.y })) ?? null,
     isSearchable: doc.isSearchable ?? true,
     isAccessible: doc.isAccessible ?? true,
   };

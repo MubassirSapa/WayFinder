@@ -1,11 +1,11 @@
 'use client';
 
-import React, { type ReactNode } from 'react';
-import type { FloorEditorData } from "../actions/floorEditorActions";
+import React from 'react';
+import type { FloorEditorData } from "../types/editor.types";
 import { EDITOR_UI_TEXT } from '../../constants/editorUi.constants';
 import { useFloorEditorData } from '../hooks/useFloorEditorData';
 import { EditorToolbar } from './EditorToolbar';
-import { ObjectToolbox } from './ObjectToolbox';
+import { EditorSidePanel, type EditorSidePanelTab } from './EditorSidePanel';
 import { MapCanvas } from './MapCanvas';
 import { InspectorPanel } from './InspectorPanel';
 import { EditorDesktopOnlyNotice } from './EditorDesktopOnlyNotice';
@@ -15,13 +15,13 @@ import { Loader2, AlertCircle } from 'lucide-react';
 interface MapEditorShellProps {
   initialData: FloorEditorData | null;
   initialError: string | null;
-  leftSidebarFooter?: ReactNode;
+  leftPanelTabs: EditorSidePanelTab[];
 }
 
 export function MapEditorShell({
   initialData,
   initialError,
-  leftSidebarFooter,
+  leftPanelTabs,
 }: MapEditorShellProps) {
   const { isLoading, error } = useFloorEditorData(initialData, initialError);
 
@@ -63,7 +63,7 @@ export function MapEditorShell({
           {/* Workspace body */}
           <div className="flex flex-1 overflow-hidden min-h-0">
             {/* Left Toolbox */}
-            <ObjectToolbox footer={leftSidebarFooter} />
+            <EditorSidePanel tabs={leftPanelTabs} />
 
             {/* Map canvas */}
             <div className="flex-1 h-full min-w-0">

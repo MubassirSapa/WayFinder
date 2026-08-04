@@ -2,12 +2,22 @@
 
 import { useState } from "react";
 
-import { Waypoints } from "lucide-react";
+import { Trash2, Waypoints } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { deletePathEdge } from "@/features/map-editor/core/actions/floorEditorActions";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { deletePathEdge } from "@/features/map-editor/core/actions/server/edge-actions";
+import { assertSuccess } from "@/lib/responses";
 import type { EditorMapNode } from "@/features/map-editor/core/types/map.types";
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 
 import {
   buildCrossFloorEdge,
@@ -30,10 +40,10 @@ interface FloorLinkPanelProps {
 }
 
 export function FloorLinkPanel({ node }: FloorLinkPanelProps) {
-  const floor = useEditorStore((state) => state.floor);
-  const edgesRecord = useEditorStore((state) => state.edges);
+  const floor = useAppStore((state) => state.floor);
+  const edgesRecord = useAppStore((state) => state.edges);
   const edges = Object.values(edgesRecord);
-  const addEdge = useEditorStore((state) => state.addEdge);
+  const addEdge = useAppStore((state) => state.addEdge);
 
   const [targetNodeId, setTargetNodeId] = useState<string>("");
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
@@ -80,7 +90,7 @@ export function FloorLinkPanel({ node }: FloorLinkPanelProps) {
   const handleDeleteLink = async (edgeId: string) => {
     setIsDeleting(edgeId);
     try {
-      await deletePathEdge(edgeId);
+      assertSuccess(await deletePathEdge(edgeId));
       removeLinkLocally(edgeId);
     } catch (error) {
       console.error("Error deleting floor link:", error);
@@ -105,51 +115,37 @@ export function FloorLinkPanel({ node }: FloorLinkPanelProps) {
         </div>
       </div>
 
-      {linksForNode.length > 0 ? (
-        <div className="space-y-2 rounded-2xl border border-success/20 bg-success/5 p-3">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-success">Already linked</p>
-          {linksForNode.map((link) => (
-            <div key={link.id} className="flex items-center justify-between gap-2 text-[11px] text-editor-muted-foreground">
-              <span>
-                To <span className="font-semibold">{link.fromNodeId === node.id ? link.toFloorName : link.fromFloorName}</span> ({link.distanceMeters}m)
-              </span>
-              <Button
-                disabled={isDeleting === link.id}
-                onClick={() => handleDeleteLink(link.id)}
-                size="xs"
-                variant="ghost"
-              >
-                Remove
-              </Button>
-            </div>
-          ))}
-        </div>
-      ) : null}
-
-      <div className="space-y-3">
-        <select
-          className="w-full rounded-xl border border-editor-border bg-editor-background/50 px-3 py-2 text-[11px] text-editor-foreground"
+      <div className="space-y-2">
+        <Select
           disabled={isLoading || linkableNodes.length === 0}
-          onChange={(event) => setTargetNodeId(event.target.value)}
-          value={targetNodeId}
+          onValueChange={(value) => setTargetNodeId(value ?? "")}
+          value={targetNodeId || null}
         >
-          <option value="">
-            {isLoading
-              ? "Loading nodes..."
-              : linkableNodes.length === 0
-                ? `No ${LINK_TYPE_LABELS[linkType].toLowerCase()} nodes on other floors yet`
-                : `Select a ${LINK_TYPE_LABELS[linkType].toLowerCase()} node on another floor`}
-          </option>
-          {Object.entries(linkableNodesByFloor).map(([floorName, nodes]) => (
-            <optgroup key={floorName} label={floorName}>
-              {nodes.map((candidate) => (
-                <option key={candidate.id} value={candidate.id}>
-                  {candidate.label || candidate.role}
-                </option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
+          <SelectTrigger className="w-full bg-editor-surface border-editor-border-strong text-editor-foreground">
+            <SelectValue>
+              {() =>
+                isLoading
+                  ? "Loading nodes..."
+                  : linkableNodes.length === 0
+                    ? `No ${LINK_TYPE_LABELS[linkType].toLowerCase()} nodes on other floors yet`
+                    : linkableNodes.find((candidate) => candidate.id === targetNodeId)?.label ||
+                      `Select a ${LINK_TYPE_LABELS[linkType].toLowerCase()} node`
+              }
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent className="bg-editor-surface border-editor-border text-editor-foreground">
+            {Object.entries(linkableNodesByFloor).map(([floorName, nodes]) => (
+              <SelectGroup key={floorName}>
+                <SelectLabel>{floorName}</SelectLabel>
+                {nodes.map((candidate) => (
+                  <SelectItem key={candidate.id} value={candidate.id} className="focus:bg-editor-hover">
+                    {candidate.label || candidate.role}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            ))}
+          </SelectContent>
+        </Select>
 
         <Button
           className="w-full"
@@ -161,6 +157,44 @@ export function FloorLinkPanel({ node }: FloorLinkPanelProps) {
           {`Create ${LINK_TYPE_LABELS[linkType].toLowerCase()} link (${CROSS_FLOOR_DEFAULT_DISTANCE_METERS[linkType]}m default)`}
         </Button>
       </div>
+
+      {linksForNode.length > 0 ? (
+        <div className="space-y-1.5">
+          <p className="text-[10px] font-medium text-editor-subtle-foreground">Already linked</p>
+          {linksForNode.map((link) => {
+            const isFromThisNode = link.fromNodeId === node.id;
+            const targetFloorName = isFromThisNode ? link.toFloorName : link.fromFloorName;
+            const targetNodeLabel = isFromThisNode ? link.toNodeLabel : link.fromNodeLabel;
+
+            return (
+              <div
+                key={link.id}
+                className="rounded-lg border border-editor-border px-3 py-2"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <p className="truncate text-xs font-medium text-editor-foreground">{targetNodeLabel}</p>
+                  <div className="flex shrink-0 items-center gap-2">
+                    <span className="text-[10px] text-editor-subtle-foreground">{link.distanceMeters}m</span>
+                    <Button
+                      aria-label="Remove link"
+                      disabled={isDeleting === link.id}
+                      onClick={() => handleDeleteLink(link.id)}
+                      size="icon-xs"
+                      variant="ghost"
+                      className="text-editor-subtle-foreground hover:text-destructive"
+                    >
+                      <Trash2 />
+                    </Button>
+                  </div>
+                </div>
+                <p className="mt-0.5 truncate text-[11px] text-editor-subtle-foreground">
+                  {targetFloorName} - {targetNodeLabel}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      ) : null}
     </div>
   );
 }

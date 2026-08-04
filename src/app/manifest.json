@@ -1,0 +1,29 @@
+{
+  "name": "WayFinder",
+  "short_name": "WayFinder",
+  "description": "Find indoor maps and navigate public venues and facilities across multiple floors.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0c7564",
+  "theme_color": "#000201",
+  "categories": ["navigation", "travel", "utilities", "indoor"],
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

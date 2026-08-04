@@ -8,22 +8,22 @@ import {
   selectSelectedEdge,
   selectEdgesForNode,
 } from '../../../store/selectors'
-import type { EditorStore } from '@/store/types'
+import type { AppStore } from '@/store/types'
 
 // Minimal state stub — only the fields selectors read
-function makeState(overrides: Partial<EditorStore> = {}): EditorStore {
+function makeState(overrides: Partial<AppStore> = {}): AppStore {
   return {
     objects: {},
     nodes: {},
     edges: {},
     selectedEntity: null,
     ...overrides,
-  } as EditorStore
+  } as AppStore
 }
 
-const OBJ = { id: 'o1', type: 'room' } as EditorStore['objects'][string]
-const NODE = { id: 'n1', role: 'entrance' } as EditorStore['nodes'][string]
-const EDGE = { id: 'e1', fromNodeId: 'n1', toNodeId: 'n2', bidirectional: true } as EditorStore['edges'][string]
+const OBJ = { id: 'o1', type: 'room' } as AppStore['objects'][string]
+const NODE = { id: 'n1', role: 'entrance' } as AppStore['nodes'][string]
+const EDGE = { id: 'e1', fromNodeId: 'n1', toNodeId: 'n2', bidirectional: true } as AppStore['edges'][string]
 
 describe('selectObjectsList', () => {
   it('returns empty array when no objects', () => {
@@ -116,7 +116,7 @@ describe('selectSelectedEdge', () => {
 })
 
 describe('selectEdgesForNode', () => {
-  const e2 = { id: 'e2', fromNodeId: 'n2', toNodeId: 'n3', bidirectional: true } as EditorStore['edges'][string]
+  const e2 = { id: 'e2', fromNodeId: 'n2', toNodeId: 'n3', bidirectional: true } as AppStore['edges'][string]
 
   it('returns empty array when node has no edges', () => {
     const state = makeState({ edges: { e1: EDGE } })

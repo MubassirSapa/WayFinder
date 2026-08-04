@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "@tanstack/react-form";
-import { useRouter } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import Link from "next/link";
 
 import FormCard from "@/components/shared/form/FormCard";
@@ -18,8 +18,8 @@ import { Field, FieldGroup } from "@/components/ui/field";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
-import { useSignupFlowStore } from "@/features/auth/store/useSignupFlowStore";
-import { signupAction } from "@/features/auth/server-actions/signup";
+import { useAppStore } from "@/store";
+import { signupAction } from "@/features/auth/actions/server/signup";
 import { SignupSchema } from "@/features/auth/validations/signup";
 import { SIGNUP_CLIENT as CLIENT } from "@/features/auth/constants/signup";
 import { PUBLIC_ROUTES } from "@/constants/routes";
@@ -31,8 +31,8 @@ const SignupForm = () => {
   const [isSubmitting, startTransition] = useTransition();
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const organization = useSignupFlowStore((state) => state.organization);
-  const resetFlow = useSignupFlowStore((state) => state.reset);
+  const organization = useAppStore((state) => state.organization);
+  const resetFlow = useAppStore((state) => state.resetSignupFlow);
 
   useEffect(() => {
     if (!organization) {

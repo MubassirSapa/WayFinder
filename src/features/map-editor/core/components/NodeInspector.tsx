@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useEditorStore } from "@/store";
-import { deleteMapNode } from "../actions/floorEditorActions";
+import { useAppStore } from "@/store";
+import { deleteMapNode } from "../actions/server/node-actions";
+import { assertSuccess } from "@/lib/responses";
 import { NODE_ROLE_OPTIONS } from '../lib/objectDefaults';
 import { EditorMapNode } from '../types/map.types';
 import { Input } from '@/components/ui/input';
@@ -24,7 +25,7 @@ interface NodeInspectorProps {
 }
 
 export function NodeInspector({ nodeId }: NodeInspectorProps) {
-  const { nodes, objects, updateNode, removeNode } = useEditorStore();
+  const { nodes, objects, updateNode, removeNode } = useAppStore();
   const [isDeleting, setIsDeleting] = useState(false);
   const node = nodes[nodeId];
   const objectsList = Object.values(objects);
@@ -40,7 +41,7 @@ export function NodeInspector({ nodeId }: NodeInspectorProps) {
       try {
         setIsDeleting(true);
         if (!nodeId.startsWith('temp_')) {
-          await deleteMapNode(nodeId);
+          assertSuccess(await deleteMapNode(nodeId));
         }
         removeNode(nodeId);
       } catch (err) {

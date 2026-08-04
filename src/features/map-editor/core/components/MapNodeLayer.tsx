@@ -1,10 +1,10 @@
 'use client';
 
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 import { MapNodeView } from "./MapNodeView";
 
 export function MapNodeLayer() {
-  const nodesMap = useEditorStore((state) => state.nodes);
+  const nodesMap = useAppStore((state) => state.nodes);
   const nodesList = Object.values(nodesMap);
 
   return (

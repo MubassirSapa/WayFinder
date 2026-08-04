@@ -12,13 +12,13 @@ import { findDefaultOriginNode } from "../lib/defaultOrigin";
 import { findShortestPath } from "../lib/dijkstra";
 import { buildRouteGraph } from "../lib/graph";
 import { splitRouteByFloor } from "../lib/routeSegments";
-import { useNavigationStore } from "../store/useNavigationStore";
+import { useAppStore } from "@/store";
 
 export function useRoute(data: MapViewerData) {
-  const originNodeId = useNavigationStore((state) => state.originNodeId);
-  const destinationNodeId = useNavigationStore((state) => state.destinationNodeId);
-  const accessibleOnly = useNavigationStore((state) => state.accessibleOnly);
-  const activeSegmentIndex = useNavigationStore((state) => state.activeSegmentIndex);
+  const originNodeId = useAppStore((state) => state.originNodeId);
+  const destinationNodeId = useAppStore((state) => state.destinationNodeId);
+  const accessibleOnly = useAppStore((state) => state.accessibleOnly);
+  const activeSegmentIndex = useAppStore((state) => state.activeSegmentIndex);
 
   const allNodes = useMemo(
     () => Object.values(data.nodesByFloorId).flat(),
@@ -42,14 +42,24 @@ export function useRoute(data: MapViewerData) {
     ?? findDefaultOriginNode(data.floors, data.nodesByFloorId)?.id
     ?? null;
 
+  // Split from the route lookup below: the graph only depends on the
+  // building's nodes/edges and the accessible-only filter — not on which
+  // origin/destination is currently picked. Without this split, trying a
+  // different destination (or origin) with the same accessibility setting
+  // would rebuild the whole building's adjacency graph from scratch just to
+  // change Dijkstra's start/end points.
+  const graph = useMemo(
+    () => buildRouteGraph(allNodes, allEdges, { accessibleOnly }),
+    [allNodes, allEdges, accessibleOnly],
+  );
+
   const route = useMemo(() => {
     if (!effectiveOriginId || !destinationNodeId) {
       return null;
     }
 
-    const graph = buildRouteGraph(allNodes, allEdges, { accessibleOnly });
     return findShortestPath(graph, effectiveOriginId, destinationNodeId);
-  }, [effectiveOriginId, destinationNodeId, allNodes, allEdges, accessibleOnly]);
+  }, [graph, effectiveOriginId, destinationNodeId]);
 
   const segments = useMemo(() => {
     if (!route) {

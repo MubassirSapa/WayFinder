@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { buildRouteGraph } from '../../../lib/graph'
+import { FLOOR_CHANGE_PENALTY_METERS } from '../../../constants/routing.constants'
 import type { ViewerMapNode, ViewerPathEdge } from '@/features/map-viewer/types/map-viewer.types'
 
 function makeNode(overrides: Partial<ViewerMapNode> & { id: string }): ViewerMapNode {
@@ -61,7 +62,7 @@ describe('buildRouteGraph', () => {
     expect(graph.get('n1')).toEqual([])
   })
 
-  it('includes a cross-floor edge like any other edge', () => {
+  it('adds the floor-change penalty to a cross-floor edge on top of its own distance', () => {
     const nodes = [
       makeNode({ id: 'n1', floorId: 'f1', role: 'stairs_entry' }),
       makeNode({ id: 'n2', floorId: 'f2', role: 'stairs_entry' }),
@@ -72,7 +73,18 @@ describe('buildRouteGraph', () => {
     const graph = buildRouteGraph(nodes, edges)
 
     expect(graph.get('n1')).toEqual([
-      { edgeId: 'e1', floorId: 'f2', toNodeId: 'n2', type: 'stairs', weight: 6 },
+      { edgeId: 'e1', floorId: 'f2', toNodeId: 'n2', type: 'stairs', weight: 6 + FLOOR_CHANGE_PENALTY_METERS },
     ])
+    expect(graph.get('n2')).toEqual([
+      { edgeId: 'e1', floorId: 'f1', toNodeId: 'n1', type: 'stairs', weight: 6 + FLOOR_CHANGE_PENALTY_METERS },
+    ])
+  })
+
+  it('does not penalize a same-floor edge', () => {
+    const nodes = [makeNode({ id: 'n1', floorId: 'f1' }), makeNode({ id: 'n2', floorId: 'f1' })]
+    const edges = [makeEdge({ id: 'e1', fromNodeId: 'n1', toNodeId: 'n2', distanceMeters: 6 })]
+    const graph = buildRouteGraph(nodes, edges)
+
+    expect(graph.get('n1')?.[0].weight).toBe(6)
   })
 })

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import VerifyEmailSection from "@/features/auth/pages/verify-email/sections/VerifyEmailSection";
-import { verifyEmailAction } from "@/features/auth/server-actions/verify-email";
+import { verifyEmailAction } from "@/features/auth/actions/server/verify-email";
 import { BRAND } from "@/constants/brand";
 
 export const metadata: Metadata = {

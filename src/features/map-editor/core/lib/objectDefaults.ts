@@ -155,6 +155,17 @@ export function getDefaultDimensions(type: ToolboxObjectType): { width: number; 
   };
 }
 
+// Seeds a "Custom" shape's points from the object's current bounding box, so
+// it starts identical-looking to the rectangle it just was.
+export function defaultPolygonPoints(width: number, height: number): { x: number; y: number }[] {
+  return [
+    { x: 0, y: 0 },
+    { x: width, y: 0 },
+    { x: width, y: height },
+    { x: 0, y: height },
+  ];
+}
+
 export function getObjectColor(type: ToolboxObjectType): { fill: string; stroke: string; color: string } {
   const config = OBJECT_CONFIGS[type];
   return {

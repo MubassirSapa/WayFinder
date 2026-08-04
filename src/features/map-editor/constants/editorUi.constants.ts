@@ -7,6 +7,13 @@ export const EDITOR_UI_TEXT = {
     reload: "Reload",
     title: "Unable to load editor",
   },
+  leftPanel: {
+    tabs: {
+      automation: "Automation",
+      create: "Create",
+      image: "Image",
+    },
+  },
   inspector: {
     description: "View and edit the selected item.",
     emptyDescription:
@@ -24,7 +31,7 @@ export const EDITOR_UI_TEXT = {
       "Pick something below, then double-click anywhere on the map to place it. Drag anything already placed to move it.",
   },
   referencePanel: {
-    altFieldLabel: "Alt Text",
+    imageNameFieldLabel: "Image Name",
     attachedStatus: "Attached",
     currentImageFallback: "Current reference image",
     defaultAlt: (floorName: string) => `${floorName} reference image`,
@@ -35,13 +42,29 @@ export const EDITOR_UI_TEXT = {
     fileFieldLabel: "Image File",
     fileHint: "Choose a PNG, JPG, or similar image file.",
     imageTypeLabel: "Floor plan or sketch",
-    noAltFallback: "No alt text provided",
+    noAltFallback: "No name provided",
     readyToUploadPrefix: "Ready to upload:",
     remove: "Remove",
     replaceAction: "Replace Reference Image",
     title: "Reference",
     uploadAction: "Upload Reference Image",
     uploading: "Uploading Image",
+    adjust: {
+      title: "Adjust",
+      moveHint: "Drag the image on the canvas to reposition it, or use the sliders below.",
+      positionX: "Position X",
+      positionY: "Position Y",
+      rotation: "Rotation",
+      zoom: "Zoom",
+      opacity: "Opacity",
+      fit: "Fit",
+      fitFill: "Fill",
+      fitCover: "Cover",
+      fitContain: "Contain",
+      visible: "Show on canvas",
+      lock: "Lock reference image",
+      lockDescription: "Prevents accidental changes to position, zoom, and opacity.",
+    },
   },
   smartBuilder: {
     actions: "Actions",

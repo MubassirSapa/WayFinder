@@ -3,14 +3,16 @@ import { createEditorSlice } from '../../../store/createEditorSlice'
 import { createNodeSlice } from '../../../store/createNodeSlice'
 import { createObjectSlice } from '../../../store/createObjectSlice'
 import { createEdgeSlice } from '../../../store/createEdgeSlice'
-import type { EditorStore } from '@/store/types'
+import { createMapViewerViewportSlice } from '@/features/map-viewer/store/createMapViewerViewportSlice'
+import type { AppStore } from '@/store/types'
 
 export function makeStore() {
-  return create<EditorStore>()((...args) => ({
+  return create<AppStore>()((...args) => ({
     ...createEditorSlice(...args),
     ...createObjectSlice(...args),
     ...createNodeSlice(...args),
     ...createEdgeSlice(...args),
+    ...createMapViewerViewportSlice(...args),
     // SmartBuilderSlice stubs — not under test here
     isSmartBuilderEnabled: false,
     autoCreateNodes: false,
@@ -25,5 +27,22 @@ export function makeStore() {
     autoConnectExistingNodes: () => 0,
     finishHallwayPath: () => ({ nodesAdded: 0, edgesAdded: 0 }),
     applySmartBuilderToObject: () => ({ nodesAdded: 0, edgesAdded: 0 }),
+    // NavigationSlice stubs — not under test here
+    originNodeId: null,
+    destinationNodeId: null,
+    accessibleOnly: false,
+    activeSegmentIndex: 0,
+    activeFloorId: null,
+    setOrigin: () => {},
+    setDestination: () => {},
+    setAccessibleOnly: () => {},
+    setActiveSegmentIndex: () => {},
+    setActiveFloorId: () => {},
+    clearRoute: () => {},
+    resetNavigation: () => {},
+    // SignupFlowSlice stubs — not under test here
+    organization: null,
+    setOrganization: () => {},
+    resetSignupFlow: () => {},
   }))
 }

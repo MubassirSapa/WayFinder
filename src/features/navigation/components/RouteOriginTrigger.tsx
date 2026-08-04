@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 
-import { useNavigationStore } from "../store/useNavigationStore";
+import { useAppStore } from "@/store";
 
 interface RouteOriginTriggerProps {
   nodeId: string | null;
@@ -10,9 +10,9 @@ interface RouteOriginTriggerProps {
 }
 
 export function RouteOriginTrigger({ nodeId, label }: RouteOriginTriggerProps) {
-  const originNodeId = useNavigationStore((state) => state.originNodeId);
-  const setOrigin = useNavigationStore((state) => state.setOrigin);
-  const setDestination = useNavigationStore((state) => state.setDestination);
+  const originNodeId = useAppStore((state) => state.originNodeId);
+  const setOrigin = useAppStore((state) => state.setOrigin);
+  const setDestination = useAppStore((state) => state.setDestination);
 
   if (!nodeId) {
     return null;

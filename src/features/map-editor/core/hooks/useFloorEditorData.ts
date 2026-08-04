@@ -1,13 +1,13 @@
 import { useEffect } from "react";
-import { useEditorStore } from "@/store";
-import type { FloorEditorData } from "../actions/floorEditorActions";
+import { useAppStore } from "@/store";
+import type { FloorEditorData } from "../types/editor.types";
 
 export function useFloorEditorData(
   initialData: FloorEditorData | null,
   initialError: string | null,
 ) {
   const { setFloor, setObjects, setNodes, setEdges, resetStore } =
-    useEditorStore();
+    useAppStore();
 
   useEffect(() => {
     if (!initialData) {

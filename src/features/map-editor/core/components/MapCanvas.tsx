@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 import { useCanvasPan } from '../hooks/useCanvasPan';
 import { useCanvasPointer } from '../hooks/useCanvasPointer';
+import { useBackgroundImageDrag } from '../hooks/useBackgroundImageDrag';
+import { BACKGROUND_IMAGE_CLIP_PATH_ID, computeBackgroundImageFit } from '../lib/backgroundImageFit';
 import { MapGrid } from './MapGrid';
 import { MapNodeLayer } from './MapNodeLayer';
 import { MapObjectLayer } from './MapObjectLayer';
@@ -13,7 +15,7 @@ import { PathEdgeLayer } from './PathEdgeLayer';
 export function MapCanvas() {
   const canvasRef = useRef<SVGSVGElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const { floor, mode, pendingPathNodeId, nodes } = useEditorStore();
+  const { floor, mode, pendingPathNodeId, nodes } = useAppStore();
   const { handleCanvasClick, handleCanvasDoubleClick } = useCanvasPointer(canvasRef);
   const {
     consumeSuppressedClick,
@@ -27,6 +29,7 @@ export function MapCanvas() {
     floorWidth: floor?.width ?? 0,
     wrapperRef,
   });
+  const { handleMouseDown: handleBackgroundImageMouseDown } = useBackgroundImageDrag();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   // Track cursor position in path mode to render temporary edge preview
@@ -74,6 +77,19 @@ export function MapCanvas() {
   // Find source node coordinates for drawing path preview line
   const sourceNode = pendingPathNodeId ? nodes[pendingPathNodeId] : null;
 
+  const backgroundImageFit = computeBackgroundImageFit({
+    floorWidth: floor.width,
+    floorHeight: floor.height,
+    naturalWidth: floor.backgroundImageNaturalWidth,
+    naturalHeight: floor.backgroundImageNaturalHeight,
+    fit: floor.backgroundImageFit ?? 'fill',
+    offsetX: floor.backgroundImageOffsetX,
+    offsetY: floor.backgroundImageOffsetY,
+  });
+  const backgroundImageCenterX = backgroundImageFit.x + backgroundImageFit.width / 2;
+  const backgroundImageCenterY = backgroundImageFit.y + backgroundImageFit.height / 2;
+  const backgroundImageTransform = `translate(${backgroundImageCenterX} ${backgroundImageCenterY}) rotate(${floor.backgroundImageRotation ?? 0}) scale(${floor.backgroundImageScale ?? 1}) translate(${-backgroundImageCenterX} ${-backgroundImageCenterY})`;
+
   return (
     <div
       className={`relative h-full w-full touch-none overflow-hidden bg-editor-background p-6 flex items-start justify-start select-none ${isPanning ? 'cursor-grabbing' : 'cursor-grab'}`}
@@ -108,14 +124,29 @@ export function MapCanvas() {
           className={`absolute inset-0 select-none overflow-hidden ${mode === 'node' ? 'cursor-crosshair' : ''}`}
         >
           {/* Faded Background Image if configured */}
-          {floor.backgroundImageUrl && (
-            <image
-              href={floor.backgroundImageUrl}
-              width={floor.width}
-              height={floor.height}
-              opacity={0.3}
-              style={{ pointerEvents: 'none' }}
-            />
+          {floor.backgroundImageUrl && (floor.backgroundImageVisible ?? true) && (
+            <>
+              <defs>
+                <clipPath id={BACKGROUND_IMAGE_CLIP_PATH_ID}>
+                  <rect width={floor.width} height={floor.height} />
+                </clipPath>
+              </defs>
+              <image
+                href={floor.backgroundImageUrl}
+                x={backgroundImageFit.x}
+                y={backgroundImageFit.y}
+                width={backgroundImageFit.width}
+                height={backgroundImageFit.height}
+                opacity={floor.backgroundImageOpacity ?? 0.3}
+                clipPath={backgroundImageFit.needsClip ? `url(#${BACKGROUND_IMAGE_CLIP_PATH_ID})` : undefined}
+                style={{
+                  cursor: mode === 'select' && !floor.backgroundImageLocked ? 'move' : undefined,
+                  pointerEvents: mode === 'select' && !floor.backgroundImageLocked ? 'auto' : 'none',
+                }}
+                transform={backgroundImageTransform}
+                onMouseDown={handleBackgroundImageMouseDown}
+              />
+            </>
           )}
 
           {/* Canvas grid background */}

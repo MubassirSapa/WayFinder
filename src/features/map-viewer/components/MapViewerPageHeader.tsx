@@ -1,43 +1,61 @@
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { memo } from "react";
+
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { WayfinderBrand } from "@/components/shared/brand/WayfinderBrand";
 import { ModeToggle } from "@/components/shared/theme/ModeToggle";
 
-import {
-  formatFloorLabel,
-  formatOrganizationName,
-} from "../lib/mapViewerViewport";
+import { formatOrganizationName } from "../lib/mapViewerViewport";
 import type { ViewerFloor } from "../types/map-viewer.types";
 
 interface MapViewerPageHeaderProps {
   activeFloor: ViewerFloor | null;
 }
 
-export function MapViewerPageHeader({
+// Memoized because MapViewerShell re-renders on every selection/search/route
+// change — none of which this header cares about — so without this it would
+// re-render on all of them for no visual reason.
+export const MapViewerPageHeader = memo(function MapViewerPageHeader({
   activeFloor,
 }: MapViewerPageHeaderProps) {
   return (
     <header className="sticky top-0 z-20 border-b border-border bg-background/92 backdrop-blur-xl">
-      <div className="mx-auto flex w-full max-w-[1600px] items-center justify-between gap-4 px-4 py-3 sm:px-6">
-        <div className="flex min-w-0 items-center gap-3">
-          <WayfinderBrand href="/" className="shrink-0" textClassName="hidden sm:inline" />
-          <Separator className="hidden h-6 sm:block" orientation="vertical" />
-          <h1 className="truncate text-xl font-semibold tracking-tight sm:text-2xl">
-            {activeFloor
-              ? activeFloor.organizationName ?? formatOrganizationName(activeFloor.buildingId)
-              : "Published maps"}
-          </h1>
+      <div className="mx-auto flex w-full max-w-[1600px] items-center justify-between gap-3 px-4 py-3 sm:px-6">
+        <WayfinderBrand href="/" className="shrink-0" textClassName="hidden sm:inline" />
+
+        <div className="flex min-w-0 flex-1 items-center justify-center px-2">
+          {activeFloor ? (
+            <Breadcrumb className="min-w-0">
+              <BreadcrumbList className="flex-nowrap">
+                <BreadcrumbItem className="min-w-0">
+                  <BreadcrumbPage className="truncate text-sm font-semibold text-foreground sm:text-base">
+                    {activeFloor.organizationName ?? formatOrganizationName(activeFloor.buildingId)}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem className="min-w-0">
+                  <BreadcrumbPage className="truncate text-sm font-medium text-muted-foreground sm:text-base">
+                    {activeFloor.name}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          ) : (
+            <span className="truncate text-sm font-semibold text-muted-foreground sm:text-base">
+              Published maps
+            </span>
+          )}
         </div>
 
-        <div className="flex items-center gap-2">
-          {activeFloor ? (
-            <Badge variant="outline" className="border-border bg-card/70 text-muted-foreground">
-              {formatFloorLabel(activeFloor)}
-            </Badge>
-          ) : null}
+        <div className="flex shrink-0 items-center gap-2">
           <ModeToggle />
         </div>
       </div>
     </header>
   );
-}
+});

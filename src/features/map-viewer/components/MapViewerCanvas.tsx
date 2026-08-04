@@ -3,9 +3,13 @@ import type {
   RefObject,
 } from "react";
 
+import { useAppStore } from "@/store";
+
+import { buildPanZoomTransform } from "../lib/mapViewerTransform";
 import { getRenderedFloorSize } from "../lib/mapViewerViewport";
-import { isNodePublicMarker } from "../lib/mapStyles";
 import type {
+  ConnectorDirection,
+  ConnectorTargetInfo,
   ViewerFloor,
   ViewerMapNode,
   ViewerMapObject,
@@ -15,17 +19,21 @@ import { MapViewerSvg } from "./MapViewerSvg";
 
 interface MapViewerCanvasProps {
   activeFloor: ViewerFloor | null;
+  connectorTargetsByNodeId: Record<string, ConnectorTargetInfo[]>;
+  contentRef: RefObject<HTMLDivElement | null>;
   edges: ViewerPathEdge[];
-  isDragging: boolean;
   nodes: ViewerMapNode[];
   objects: ViewerMapObject[];
-  pan: { x: number; y: number };
+  routeConnectorDirection: ConnectorDirection | null;
+  routeConnectorNodeId: string | null;
+  routeHasDestination?: boolean;
+  routeHasStart?: boolean;
   routePoints?: { x: number; y: number }[];
   selectedObjectId: string | null;
   showGrid: boolean;
   viewportRef: RefObject<HTMLDivElement | null>;
-  zoom: number;
   onBackgroundClick: () => void;
+  onConnectorActivate: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
   onObjectSelect: (object: ViewerMapObject) => void;
   onPointerCancel: PointerEventHandler<HTMLDivElement>;
   onPointerLeave: PointerEventHandler<HTMLDivElement>;
@@ -37,17 +45,21 @@ interface MapViewerCanvasProps {
 
 export function MapViewerCanvas({
   activeFloor,
+  connectorTargetsByNodeId,
+  contentRef,
   edges,
-  isDragging,
   nodes,
   objects,
-  pan,
+  routeConnectorDirection,
+  routeConnectorNodeId,
+  routeHasDestination,
+  routeHasStart,
   routePoints,
   selectedObjectId,
   showGrid,
   viewportRef,
-  zoom,
   onBackgroundClick,
+  onConnectorActivate,
   onObjectSelect,
   onPointerCancel,
   onPointerLeave,
@@ -56,13 +68,22 @@ export function MapViewerCanvas({
   onSvgPointerMove,
   onSvgPointerUp,
 }: MapViewerCanvasProps) {
+  // Scoped to just this component so a pan/zoom tick only re-renders the
+  // canvas — the rest of the page (sidebar, header, toolbar) never reads
+  // these and stays untouched. During an active drag/pinch/wheel gesture the
+  // visual transform is already applied straight to contentRef's DOM node
+  // (see useMapViewerViewportGestures); this render just needs to agree with
+  // that value once React catches up, and to drive the "Zoom X%" readout.
+  const pan = useAppStore((state) => state.viewportPan);
+  const zoom = useAppStore((state) => state.viewportZoom);
+  const isDragging = useAppStore((state) => state.isViewportDragging);
   const renderedSize = activeFloor ? getRenderedFloorSize(activeFloor) : null;
 
   return (
     <>
       <div
         className={[
-          "relative h-full min-h-[62dvh] touch-none overflow-hidden bg-[linear-gradient(to_bottom,color-mix(in_oklch,var(--muted)_38%,transparent),transparent_22%)] lg:min-h-[680px]",
+          "relative h-full min-h-[62dvh] touch-none overflow-hidden bg-[linear-gradient(to_bottom,color-mix(in_oklch,var(--muted)_38%,transparent),transparent_22%)] md:min-h-[560px] lg:min-h-[680px]",
           "sm:min-h-[calc(100dvh-8.5rem)]",
           "before:pointer-events-none before:absolute before:inset-0 before:bg-[linear-gradient(to_bottom,color-mix(in_oklch,var(--map-viewer-canvas)_88%,transparent),transparent_20%)]",
           isDragging ? "cursor-grabbing select-none" : "cursor-grab",
@@ -84,23 +105,30 @@ export function MapViewerCanvas({
         ) : (
           <div
             className="absolute left-0 top-0 will-change-transform"
+            ref={contentRef}
             style={{
               height: renderedSize?.height,
-              transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+              transform: buildPanZoomTransform(pan, zoom),
               transformOrigin: "0 0",
               width: renderedSize?.width,
             }}
           >
             <MapViewerSvg
               activeFloor={activeFloor}
+              connectorTargetsByNodeId={connectorTargetsByNodeId}
               edges={edges}
               nodes={nodes}
               objects={objects}
               onBackgroundClick={onBackgroundClick}
+              onConnectorActivate={onConnectorActivate}
               onObjectSelect={onObjectSelect}
               onPointerDown={onSvgPointerDown}
               onPointerMove={onSvgPointerMove}
               onPointerUp={onSvgPointerUp}
+              routeConnectorDirection={routeConnectorDirection}
+              routeConnectorNodeId={routeConnectorNodeId}
+              routeHasDestination={routeHasDestination}
+              routeHasStart={routeHasStart}
               routePoints={routePoints}
               selectedObjectId={selectedObjectId}
               showGrid={showGrid}
@@ -109,11 +137,6 @@ export function MapViewerCanvas({
         )}
       </div>
 
-      {activeFloor ? (
-        <div className="absolute bottom-4 left-4 right-[5.25rem] rounded-2xl border border-border bg-card/88 px-3 py-2 text-xs text-muted-foreground shadow-sm backdrop-blur-xl sm:right-auto">
-          Zoom {(zoom * 100).toFixed(0)}% • {objects.length} objects • {nodes.filter(isNodePublicMarker).length} markers
-        </div>
-      ) : null}
     </>
   );
 }

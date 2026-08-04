@@ -1,5 +1,5 @@
 import { RefObject } from 'react';
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 import { snapToGrid, canvasPointFromEvent } from '../lib/canvas';
 import { getDefaultDimensions, getDefaultObjectName } from '../lib/objectDefaults';
 import { pixelDistance, pixelsToMeters } from '../lib/distance';
@@ -20,7 +20,7 @@ export function useCanvasPointer(canvasRef: RefObject<SVGSVGElement | null>) {
     setPendingPathNode,
     selectEntity,
     clearSelection,
-  } = useEditorStore();
+  } = useAppStore();
 
   const isCanvasTarget = (e: React.MouseEvent<SVGSVGElement>) => {
     // The visible grid is rendered as a background rect inside the SVG, so treat
@@ -57,6 +57,7 @@ export function useCanvasPointer(canvasRef: RefObject<SVGSVGElement | null>) {
       width,
       height,
       rotation: 0,
+      shape: 'rectangle',
       isSearchable: true,
       isAccessible: true,
       _clientId: tempId,

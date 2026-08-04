@@ -1,4 +1,27 @@
+import type {
+  EditorFloor,
+  EditorMapObject,
+  EditorMapNode,
+  EditorPathEdge,
+} from './map.types';
+
 export type EditorMode = 'select' | 'node' | 'path';
+
+export interface FloorEditorData {
+  floor: EditorFloor;
+  objects: EditorMapObject[];
+  nodes: EditorMapNode[];
+  edges: EditorPathEdge[];
+}
+
+export interface UploadedReferenceImage {
+  alt: string;
+  filename: string | null;
+  id: string;
+  url: string | null;
+  width: number | null;
+  height: number | null;
+}
 
 export type ToolboxObjectType =
   | 'room'

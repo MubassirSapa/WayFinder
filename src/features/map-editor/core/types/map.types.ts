@@ -10,6 +10,17 @@ export interface EditorFloor {
   backgroundImageName?: string | null;
   backgroundImageAlt?: string | null;
   backgroundImageUrl?: string | null;
+  backgroundImageRotation?: number;
+  backgroundImageScale?: number;
+  backgroundImageOpacity?: number;
+  backgroundImageLocked?: boolean;
+  backgroundImageVisible?: boolean;
+  backgroundImageOffsetX?: number;
+  backgroundImageOffsetY?: number;
+  backgroundImageFit?: 'fill' | 'cover' | 'contain';
+  /** Natural pixel size of the uploaded file, read-only (from the media doc) — used to compute "cover"/"contain" fit. */
+  backgroundImageNaturalWidth?: number | null;
+  backgroundImageNaturalHeight?: number | null;
   status: 'draft' | 'published';
   _dirty?: boolean;
 }
@@ -40,6 +51,9 @@ export interface EditorMapObject {
   width: number;
   height: number;
   rotation: number;
+  shape: 'rectangle' | 'ellipse' | 'polygon';
+  /** Only meaningful when shape === 'polygon' — local, unrotated coordinates. */
+  points?: { x: number; y: number }[] | null;
   isSearchable: boolean;
   isAccessible: boolean;
   _clientId?: string; // used to link unsaved local references

@@ -1,11 +1,11 @@
 'use client';
 
 
-import { useEditorStore } from "@/store";
+import { useAppStore } from "@/store";
 
 export function PathEdgeLayer() {
-  const edgesMap = useEditorStore((state) => state.edges);
-  const { nodes, selectedEntity, selectEntity } = useEditorStore();
+  const edgesMap = useAppStore((state) => state.edges);
+  const { nodes, selectedEntity, selectEntity } = useAppStore();
 
   const edgesList = Object.values(edgesMap);
 

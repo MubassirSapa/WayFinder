@@ -1,0 +1,3041 @@
+[{
+  "_id": {
+    "$oid": "6a6d41d8c0ea1fb774f7cbd6"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:16.382Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:16.382Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 1",
+  "label": "",
+  "x": 100,
+  "y": 80,
+  "width": 120,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d41d8c0ea1fb774f7cbd9"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:16.678Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:16.678Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "parentObject": null,
+  "type": "hallway",
+  "name": "Hallway 1",
+  "label": "",
+  "x": 100,
+  "y": 180,
+  "width": 640,
+  "height": 80,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d41d8c0ea1fb774f7cbdc"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:16.855Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:16.855Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 2",
+  "label": "",
+  "x": 100,
+  "y": 260,
+  "width": 120,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d41d9c0ea1fb774f7cbdf"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:17.136Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:17.136Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 3",
+  "label": "",
+  "x": 220,
+  "y": 80,
+  "width": 120,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d41d9c0ea1fb774f7cbe2"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:17.383Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:00.383Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 4",
+  "label": "",
+  "x": 280,
+  "y": 260,
+  "width": 140,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d41d9c0ea1fb774f7cbe5"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:17.562Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:17.562Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 5",
+  "label": "",
+  "x": 420,
+  "y": 80,
+  "width": 120,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d41d9c0ea1fb774f7cbe8"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:46:17.735Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:46:17.735Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "parentObject": null,
+  "type": "stairs",
+  "name": "Stairs 1",
+  "label": "",
+  "x": 340,
+  "y": 100,
+  "width": 80,
+  "height": 80,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d421cc0ea1fb774f7cc64"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:47:24.875Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:47:24.875Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "parentObject": null,
+  "type": "escalator",
+  "name": "Escalator 1",
+  "label": "",
+  "x": {
+    "$numberDouble": "-0.0"
+  },
+  "y": 180,
+  "width": 100,
+  "height": 80,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d43303e3e41d7087278a3"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:00.656Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:00.656Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 6",
+  "label": "",
+  "x": 500,
+  "y": 260,
+  "width": 120,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4331b247f604ae15e971"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:01.100Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:01.100Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 7",
+  "label": "",
+  "x": 740,
+  "y": 160,
+  "width": 120,
+  "height": 120,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4331b247f604ae15e974"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:01.354Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:01.355Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "parentObject": null,
+  "type": "stairs",
+  "name": "Stairs 2",
+  "label": "",
+  "x": 540,
+  "y": 100,
+  "width": 80,
+  "height": 80,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4331b247f604ae15e977"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:01.538Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:01.538Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 8",
+  "label": "",
+  "x": 620,
+  "y": 80,
+  "width": 120,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4331b247f604ae15e97a"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:01.708Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:01.708Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "parentObject": null,
+  "type": "door",
+  "name": "Door 1",
+  "label": "",
+  "x": 220,
+  "y": 260,
+  "width": 60,
+  "height": 40,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4331b247f604ae15e97d"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:52:01.880Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:52:01.880Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "parentObject": null,
+  "type": "hallway",
+  "name": "Hallway 2",
+  "label": "",
+  "x": 249,
+  "y": 430,
+  "width": 420,
+  "height": 80,
+  "rotation": 90,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d43a0c0ea1fb774f7cc97"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:53:52.948Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:53:52.948Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 9",
+  "label": "",
+  "x": 300,
+  "y": 580,
+  "width": 120,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d43a1c0ea1fb774f7cc9a"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:53:53.122Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:53:53.122Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 10",
+  "label": "",
+  "x": 500,
+  "y": 460,
+  "width": 120,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d43a1c0ea1fb774f7cc9d"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:53:53.292Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:53:53.292Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 11",
+  "label": "",
+  "x": 300,
+  "y": 480,
+  "width": 120,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d43a1c0ea1fb774f7cca0"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:53:53.463Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:53:53.463Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 12",
+  "label": "",
+  "x": 300,
+  "y": 360,
+  "width": 120,
+  "height": 120,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d43a1c0ea1fb774f7cca3"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T00:53:53.654Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T00:53:53.655Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "parentObject": null,
+  "type": "elevator",
+  "name": "Elevator 1",
+  "label": "",
+  "x": 500,
+  "y": 360,
+  "width": 100,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d478e65d5509d45887878"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:10:38.336Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:10:38.336Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d3ef7fd1e193df6851828"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 13",
+  "label": "",
+  "x": 620,
+  "y": 260,
+  "width": 120,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d496865d5509d458879c5"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:18:32.982Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:18:32.982Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "hallway",
+  "name": "Hallway 1",
+  "label": "",
+  "x": 100,
+  "y": 120,
+  "width": 500,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d496965d5509d458879c8"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:18:33.274Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:18:33.274Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "hallway",
+  "name": "Hallway 2",
+  "label": "",
+  "x": 517,
+  "y": 204,
+  "width": 226,
+  "height": 60,
+  "rotation": 90,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d496965d5509d458879cb"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:18:33.445Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:33:54.517Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "hallway",
+  "name": "Hallway 3",
+  "label": "",
+  "x": 600,
+  "y": 348,
+  "width": 240,
+  "height": 69,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d49c465d5509d458879ce"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:20:04.505Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:20:04.505Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "hallway",
+  "name": "Hallway 4",
+  "label": "",
+  "x": 141,
+  "y": 311,
+  "width": 180,
+  "height": 200,
+  "rotation": 90,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d49c465d5509d458879d1"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:20:04.682Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:42:37.360Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "hallway",
+  "name": "Hallway 5",
+  "label": "",
+  "x": 200,
+  "y": 180,
+  "width": 60,
+  "height": 140,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d4a40d9cab80255fafd15"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:22:08.826Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:22:08.826Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "hallway",
+  "name": "Hallway 6",
+  "label": "",
+  "x": 600,
+  "y": 540,
+  "width": 480,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4a41d9cab80255fafd18"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:22:09.154Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:22:09.154Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "hallway",
+  "name": "Hallway 7",
+  "label": "",
+  "x": 840,
+  "y": 60,
+  "width": 60,
+  "height": 480,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4a41d9cab80255fafd1b"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:22:09.337Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:25:15.326Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "hallway",
+  "name": "Hallway 8",
+  "label": "",
+  "x": 80,
+  "y": 640,
+  "width": 520,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d4a41d9cab80255fafd1e"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:22:09.611Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:22:09.613Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "hallway",
+  "name": "Hallway 9",
+  "label": "",
+  "x": 500,
+  "y": 500,
+  "width": 100,
+  "height": 140,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4afbd9cab80255fafd28"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:25:15.620Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:25:15.620Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "stairs",
+  "name": "Stairs 1",
+  "label": "",
+  "x": 0,
+  "y": 580,
+  "width": 80,
+  "height": 200,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4afbd9cab80255fafd2b"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:25:15.807Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:25:15.807Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 1",
+  "label": "",
+  "x": 80,
+  "y": 580,
+  "width": 240,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4afbd9cab80255fafd2e"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:25:15.996Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:25:15.998Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 2",
+  "label": "",
+  "x": 320,
+  "y": 540,
+  "width": 100,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4afcd9cab80255fafd31"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:25:16.182Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:25:16.182Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "stairs",
+  "name": "Stairs 2",
+  "label": "",
+  "x": 420,
+  "y": 560,
+  "width": 80,
+  "height": 80,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4b63d9cab80255fafdba"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:26:59.543Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:26:59.543Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 3",
+  "label": "",
+  "x": 80,
+  "y": 700,
+  "width": 280,
+  "height": 80,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4b63d9cab80255fafdbd"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:26:59.712Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:26:59.713Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 4",
+  "label": "",
+  "x": 360,
+  "y": 700,
+  "width": 240,
+  "height": 80,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4b63d9cab80255fafdc0"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:26:59.888Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:26:59.888Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 5",
+  "label": "",
+  "x": 600,
+  "y": 600,
+  "width": 120,
+  "height": 180,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4baad9cab80255fafe0f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:28:10.068Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:28:10.068Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "washroom",
+  "name": "Washroom 1",
+  "label": "",
+  "x": 480,
+  "y": 420,
+  "width": 160,
+  "height": 80,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4bcad9cab80255fafe1d"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:28:42.757Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:28:42.757Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "wall",
+  "name": "Wall 1",
+  "label": "",
+  "x": 420,
+  "y": 500,
+  "width": 80,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4c06d9cab80255fafe3c"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:29:42.500Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:29:42.500Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "escalator",
+  "name": "Escalator 1",
+  "label": "",
+  "x": 0,
+  "y": 120,
+  "width": 100,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4c577bf1ec07ac8390df"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:31:03.603Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:31:03.604Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 6",
+  "label": "",
+  "x": 100,
+  "y": 20,
+  "width": 120,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4c587bf1ec07ac839100"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:31:04.168Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:42:37.075Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 7",
+  "label": "",
+  "x": 80,
+  "y": 180,
+  "width": 120,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d4c587bf1ec07ac83910a"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:31:04.595Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:31:04.596Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 8",
+  "label": "",
+  "x": 220,
+  "y": 20,
+  "width": 120,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4c587bf1ec07ac83910d"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:31:04.780Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:31:04.780Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 9",
+  "label": "",
+  "x": 340,
+  "y": 20,
+  "width": 120,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4c864b2723567e989537"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:31:50.522Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:31:50.522Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "stairs",
+  "name": "Stairs 3",
+  "label": "",
+  "x": 460,
+  "y": 40,
+  "width": 80,
+  "height": 80,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4cb54b2723567e989556"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:32:37.752Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:32:37.753Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "hallway",
+  "name": "Hallway 10",
+  "label": "",
+  "x": 332,
+  "y": 360,
+  "width": 266,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4ce14b2723567e989559"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:33:21.397Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:33:21.397Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 10",
+  "label": "",
+  "x": 335,
+  "y": 420,
+  "width": 145,
+  "height": 80,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4d84e1a38d71e419b649"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:36:04.052Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:36:04.053Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 11",
+  "label": "",
+  "x": 660,
+  "y": 243,
+  "width": 80,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4d84e1a38d71e419b64c"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:36:04.313Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:36:04.313Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 12",
+  "label": "",
+  "x": 740,
+  "y": 243,
+  "width": 100,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4e217bf1ec07ac83915f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:38:41.299Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:38:41.299Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "washroom",
+  "name": "Washroom 2",
+  "label": "",
+  "x": 540,
+  "y": 40,
+  "width": 60,
+  "height": 80,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4e217bf1ec07ac839162"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:38:41.483Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:52:04.602Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "stairs",
+  "name": "Stairs 4",
+  "label": "",
+  "x": 600,
+  "y": 40,
+  "width": 80,
+  "height": 80,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d4e4d7bf1ec07ac83918c"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:39:25.664Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:39:25.664Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 13",
+  "label": "",
+  "x": 480,
+  "y": 180,
+  "width": 120,
+  "height": 80,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4e4d7bf1ec07ac83918f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:39:25.830Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:39:25.830Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 14",
+  "label": "",
+  "x": 480,
+  "y": 260,
+  "width": 120,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4f2be1a38d71e419b752"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:43:07.640Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:43:07.640Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 15",
+  "label": "",
+  "x": 80,
+  "y": 240,
+  "width": 120,
+  "height": 80,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d4fa84b2723567e9895ff"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:45:12.333Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:45:12.334Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 16",
+  "label": "",
+  "x": 260,
+  "y": 180,
+  "width": 120,
+  "height": 140,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d50324b2723567e98961e"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:47:30.897Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:47:30.897Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 17",
+  "label": "",
+  "x": 9,
+  "y": 320,
+  "width": 120,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d50334b2723567e989621"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:47:31.069Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:47:31.070Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 18",
+  "label": "",
+  "x": 8,
+  "y": 420,
+  "width": 120,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d504f4b2723567e989659"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:47:59.232Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:25:32.451Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "washroom",
+  "name": "Men",
+  "label": "",
+  "x": 0,
+  "y": 120,
+  "width": 100,
+  "height": 30,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d504f4b2723567e98965c"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:47:59.410Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:54:29.197Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Bedroom",
+  "label": "",
+  "x": 20,
+  "y": 20,
+  "width": 140,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d504f4b2723567e98965f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:47:59.640Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:50:23.570Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Terrace",
+  "label": "",
+  "x": 200,
+  "y": 80,
+  "width": 120,
+  "height": 40,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d504f4b2723567e989662"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:47:59.819Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:14:32.846Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Living + Dining Room",
+  "label": "",
+  "x": 140,
+  "y": 180,
+  "width": 220,
+  "height": 180,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d50a54b2723567e98968b"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:49:25.073Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T01:49:25.074Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d48d765d5509d45887999"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 19",
+  "label": "",
+  "x": 660,
+  "y": 120,
+  "width": 180,
+  "height": 120,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d50e04b2723567e9896d7"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:50:24.004Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:35:38.397Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Kitchen",
+  "label": "",
+  "x": 0,
+  "y": 180,
+  "width": 140,
+  "height": 120,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d51214b2723567e989712"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T01:51:29.457Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:50:27.954Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "hallway",
+  "name": "Hallway 1",
+  "label": "",
+  "x": 140,
+  "y": 300,
+  "width": 555,
+  "height": 120,
+  "rotation": 270,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d538f17353ec9b2976009"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:01:51.222Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:01:51.222Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d52dee1a38d71e419b800"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "bedroom",
+  "label": "",
+  "x": 100,
+  "y": 100,
+  "width": 120,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d538f17353ec9b297600c"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:01:51.735Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:01:51.735Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d52dee1a38d71e419b800"
+  },
+  "parentObject": null,
+  "type": "washroom",
+  "name": "Toilet",
+  "label": "",
+  "x": 40,
+  "y": 200,
+  "width": 100,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d539017353ec9b297600f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:01:52.222Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:02:41.154Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d52dee1a38d71e419b800"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Kitchen",
+  "label": "",
+  "x": 100,
+  "y": 260,
+  "width": 120,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d539017353ec9b2976012"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:01:52.400Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:02:41.403Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d52dee1a38d71e419b800"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Living x Dinnning",
+  "label": "",
+  "x": 220,
+  "y": 180,
+  "width": 140,
+  "height": 180,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d539017353ec9b2976015"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:01:52.574Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:01:52.574Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d52dee1a38d71e419b800"
+  },
+  "parentObject": null,
+  "type": "hallway",
+  "name": "Hallway 1",
+  "label": "",
+  "x": 140,
+  "y": 200,
+  "width": 80,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d539017353ec9b2976018"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:01:52.738Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:01:52.738Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d52dee1a38d71e419b800"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Terrace",
+  "label": "",
+  "x": 240,
+  "y": 140,
+  "width": 100,
+  "height": 40,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d53c117353ec9b2976070"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:02:41.576Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:02:41.576Z"
+  },
+  "buildingId": "building-6a6d3e83b738407e8484c9be",
+  "floor": {
+    "$oid": "6a6d52dee1a38d71e419b800"
+  },
+  "parentObject": null,
+  "type": "hallway",
+  "name": "Hallway 2",
+  "label": "",
+  "x": 360,
+  "y": 180,
+  "width": 100,
+  "height": 500,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d568917353ec9b2976191"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:14:33.030Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:14:33.030Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "hallway",
+  "name": "Hallway 2",
+  "label": "",
+  "x": 100,
+  "y": 120,
+  "width": 260,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d583163d8b84c81e17c43"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:21:37.463Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:24:37.196Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "hallway",
+  "name": "Hallway 3",
+  "label": "",
+  "x": 480,
+  "y": 120,
+  "width": 260,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d58aa63d8b84c81e17c49"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:23:38.090Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:52:32.536Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Terrace 2",
+  "label": "",
+  "x": 520,
+  "y": 80,
+  "width": 120,
+  "height": 40,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d58bf63d8b84c81e17c51"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:23:59.677Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:21:21.933Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Louge 1",
+  "label": "",
+  "x": 480,
+  "y": 180,
+  "width": 220,
+  "height": 180,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d58fc63d8b84c81e17c58"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:25:00.808Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:54:40.121Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Bedroom 2",
+  "label": "",
+  "x": 680,
+  "y": 20,
+  "width": 140,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d594c8f06b7db355c3f2f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:26:20.978Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:46:04.675Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "washroom",
+  "name": "Washroom 2",
+  "label": "",
+  "x": 740,
+  "y": 120,
+  "width": 100,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d5a825770659d3498d5dd"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:31:30.941Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:33:32.195Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "stairs",
+  "name": "Stairs 1",
+  "label": "",
+  "x": 60,
+  "y": 360,
+  "width": 300,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d5b3e5770659d3498d61f"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:34:38.189Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:45:51.224Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "stairs",
+  "name": "Stairs 2",
+  "label": "",
+  "x": 480,
+  "y": 360,
+  "width": 300,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d5bd463d8b84c81e17d45"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:37:08.304Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:21:34.769Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Living + Dining Room 2",
+  "label": "",
+  "x": 140,
+  "y": 460,
+  "width": 220,
+  "height": 180,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d5d1363d8b84c81e17d69"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:42:27.924Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:21:11.793Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Louge 2",
+  "label": "",
+  "x": 480,
+  "y": 460,
+  "width": 220,
+  "height": 180,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d5ef45770659d3498d659"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:50:28.242Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:50:28.242Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "hallway",
+  "name": "Hallway 4",
+  "label": "",
+  "x": 100,
+  "y": 640,
+  "width": 640,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d5f1e5770659d3498d674"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:51:10.162Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:53:21.144Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Terrace 3",
+  "label": "",
+  "x": 200,
+  "y": 700,
+  "width": 120,
+  "height": 40,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d5f4b5770659d3498d687"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:51:55.394Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:53:21.432Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Terrace 4",
+  "label": "",
+  "x": 520,
+  "y": 700,
+  "width": 120,
+  "height": 40,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d5fe55770659d3498d6c7"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:54:29.839Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:54:57.252Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Bedroom 3",
+  "label": "",
+  "x": 40,
+  "y": 700,
+  "width": 140,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d5fe65770659d3498d6ca"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:54:30.114Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:54:57.725Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Bedroom 4",
+  "label": "",
+  "x": 660,
+  "y": 700,
+  "width": 140,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d604a56d12b1da131c9ac"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:56:10.428Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T02:56:10.429Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "washroom",
+  "name": "Washroom 4",
+  "label": "",
+  "x": 740,
+  "y": 640,
+  "width": 100,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d604a56d12b1da131c9cd"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T02:56:10.962Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:21:46.316Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "washroom",
+  "name": "Washroom 3",
+  "label": "",
+  "x": {
+    "$numberDouble": "-0.0"
+  },
+  "y": 640,
+  "width": 100,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d659c4ac61a222ae213af"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:18:52.493Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:18:52.494Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "elevator",
+  "name": "Elevator 1",
+  "label": "",
+  "x": 380,
+  "y": 700,
+  "width": 80,
+  "height": 80,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d659d4ac61a222ae213d7"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:18:53.312Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:18:53.313Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "elevator",
+  "name": "Elevator 2",
+  "label": "",
+  "x": 380,
+  "y": 0,
+  "width": 80,
+  "height": 80,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d659d4ac61a222ae213da"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:18:53.534Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:28:57.552Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "hallway",
+  "name": "Hallway 5",
+  "label": "",
+  "x": 700,
+  "y": 240,
+  "width": 198,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d659d4ac61a222ae213dd"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:18:53.754Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:29:08.591Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "hallway",
+  "name": "Hallway 6",
+  "label": "",
+  "x": 700,
+  "y": 520,
+  "width": 198,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d65f04ac61a222ae21407"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:20:16.828Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:29:08.808Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "escalator",
+  "name": "Escalator 1",
+  "label": "",
+  "x": 900,
+  "y": 240,
+  "width": 100,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d65f74ac61a222ae2141a"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:20:23.419Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:29:12.485Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "escalator",
+  "name": "Escalator 2",
+  "label": "",
+  "x": 900,
+  "y": 520,
+  "width": 100,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d671a4ac61a222ae21456"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:25:14.357Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:25:32.687Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "washroom",
+  "name": "Women",
+  "label": "",
+  "x": 0,
+  "y": 150,
+  "width": 100,
+  "height": 30,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d692a4ac61a222ae214a6"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:34:02.188Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:34:56.762Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Garden",
+  "label": "",
+  "x": 780,
+  "y": 340,
+  "width": 303,
+  "height": 160,
+  "rotation": 0,
+  "shape": "ellipse",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d692a4ac61a222ae214a9"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:34:02.376Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:36:36.476Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "door",
+  "name": "Entrance",
+  "label": "",
+  "x": 1080,
+  "y": 400,
+  "width": 80,
+  "height": 40,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d698a4ac61a222ae214d3"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:35:38.586Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:35:44.403Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d3f10fd1e193df6851874"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Kitchen",
+  "label": "",
+  "x": 0,
+  "y": 520,
+  "width": 140,
+  "height": 120,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d69febd93c91d1a735e62"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:37:34.244Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:43:58.272Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "parentObject": null,
+  "type": "elevator",
+  "name": "Elevator 1",
+  "label": "",
+  "x": 720,
+  "y": 360,
+  "width": 60,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d69febd93c91d1a735e83"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:37:34.750Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:43:58.048Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "parentObject": null,
+  "type": "stairs",
+  "name": "Stairs 1",
+  "label": "",
+  "x": 720,
+  "y": 240,
+  "width": 80,
+  "height": 80,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d69ffbd93c91d1a735e8d"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:37:35.058Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:43:57.833Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "parentObject": null,
+  "type": "stairs",
+  "name": "Stairs 2",
+  "label": "",
+  "x": 620,
+  "y": 500,
+  "width": 80,
+  "height": 80,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d6a1abd93c91d1a735ec7"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:38:02.723Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:43:57.617Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 1",
+  "label": "",
+  "x": 440,
+  "y": 480,
+  "width": 120,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d6a5cbd93c91d1a735eea"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:39:08.168Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:43:57.365Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "parentObject": null,
+  "type": "elevator",
+  "name": "Elevator 2",
+  "label": "",
+  "x": 320,
+  "y": 380,
+  "width": 60,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0,
+  "points": []
+},
+{
+  "_id": {
+    "$oid": "6a6d6b7ebd93c91d1a735f9d"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:43:58.466Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:43:58.466Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "parentObject": null,
+  "type": "hallway",
+  "name": "Hallway 1",
+  "label": "",
+  "x": 420,
+  "y": 380,
+  "width": 240,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b7ebd93c91d1a735fa0"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:43:58.657Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:43:58.657Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "parentObject": null,
+  "type": "hallway",
+  "name": "Hallway 2",
+  "label": "",
+  "x": 440,
+  "y": 220,
+  "width": 240,
+  "height": 60,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b7ebd93c91d1a735fa3"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:43:58.830Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:43:58.830Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 2",
+  "label": "",
+  "x": 280,
+  "y": 220,
+  "width": 120,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b7fbd93c91d1a735fa6"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:43:59.014Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:43:59.015Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "parentObject": null,
+  "type": "room",
+  "name": "Room 3",
+  "label": "",
+  "x": 780,
+  "y": 420,
+  "width": 120,
+  "height": 100,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a6d6b7fbd93c91d1a735fa9"
+  },
+  "createdAt": {
+    "$date": "2026-08-01T03:43:59.184Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-01T03:43:59.184Z"
+  },
+  "buildingId": "building-6a6d3dfdb738407e8484c98d",
+  "floor": {
+    "$oid": "6a6d681b4ac61a222ae21492"
+  },
+  "parentObject": null,
+  "type": "wall",
+  "name": "Wall 1",
+  "label": "",
+  "x": 580,
+  "y": 460,
+  "width": 200,
+  "height": 20,
+  "rotation": 0,
+  "shape": "rectangle",
+  "isSearchable": true,
+  "isAccessible": true,
+  "__v": 0
+}]

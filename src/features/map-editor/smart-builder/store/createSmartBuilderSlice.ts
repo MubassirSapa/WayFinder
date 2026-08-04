@@ -8,7 +8,7 @@ import type {
   EditorMapNode,
   EditorPathEdge,
 } from "@/features/map-editor/core/types/map.types";
-import type { EditorStore } from "@/store/types";
+import type { AppStore } from "@/store/types";
 
 export interface SmartBuilderSlice {
   isSmartBuilderEnabled: boolean;
@@ -27,7 +27,7 @@ export interface SmartBuilderSlice {
 }
 
 export const createSmartBuilderSlice: StateCreator<
-  EditorStore,
+  AppStore,
   [],
   [],
   SmartBuilderSlice

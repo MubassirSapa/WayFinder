@@ -4,7 +4,7 @@ import { MapPin, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
-import { useNavigationStore } from "../store/useNavigationStore";
+import { useAppStore } from "@/store";
 
 interface MapSelectionBarProps {
   label: string;
@@ -16,14 +16,14 @@ interface MapSelectionBarProps {
 // the map, instead of having to go find the same actions in the sidebar's
 // Selection card (which may be scrolled out of view, especially on mobile).
 export function MapSelectionBar({ label, nodeId, onClose }: MapSelectionBarProps) {
-  const originNodeId = useNavigationStore((state) => state.originNodeId);
-  const setOrigin = useNavigationStore((state) => state.setOrigin);
-  const setDestination = useNavigationStore((state) => state.setDestination);
+  const originNodeId = useAppStore((state) => state.originNodeId);
+  const setOrigin = useAppStore((state) => state.setOrigin);
+  const setDestination = useAppStore((state) => state.setDestination);
 
   const isOrigin = nodeId !== null && originNodeId === nodeId;
 
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-16 z-10 flex justify-center px-4">
+    <div className="pointer-events-none absolute inset-x-0 top-3 z-10 flex justify-center px-3 sm:px-4">
       <div className="pointer-events-auto flex max-w-full items-center gap-2 rounded-2xl border border-border bg-card/95 px-3 py-2 shadow-lg backdrop-blur-xl">
         <MapPin className="h-4 w-4 shrink-0 text-muted-foreground" />
         <span className="max-w-40 truncate text-sm font-medium sm:max-w-60">{label}</span>

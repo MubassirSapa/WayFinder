@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { PUBLIC_ROUTES } from "@/constants/routes";
-import { getCurrentUser } from "@/features/auth/services/auth.ports";
+import { getCurrentUser } from "@/features/auth/services/server/auth.ports";
 
 export default async function PrivateLayout({ children }: TProps) {
   const user = await getCurrentUser();

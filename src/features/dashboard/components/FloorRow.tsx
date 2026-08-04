@@ -2,14 +2,14 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 
 import { buildEditorHref, DASHBOARD_CLIENT } from "../constants/dashboard.constants";
-import { toggleFloorStatusAction } from "../server-actions/toggle-floor-status";
+import { toggleFloorStatusAction } from "../actions/server/toggle-floor-status";
 import type { DashboardFloor } from "../types/dashboard.types";
 import { FloorMiniMap } from "./FloorMiniMap";
 

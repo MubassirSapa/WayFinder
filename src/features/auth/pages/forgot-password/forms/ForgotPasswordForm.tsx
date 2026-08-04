@@ -15,7 +15,7 @@ import {
   FORGOT_PASSWORD_CLIENT as CLIENT,
   FORGOT_PASSWORD_CONST,
 } from "@/features/auth/constants/forgot-password";
-import { forgotPasswordAction } from "@/features/auth/server-actions/forgot-password";
+import { forgotPasswordAction } from "@/features/auth/actions/server/forgot-password";
 import { ForgotPasswordSchema } from "@/features/auth/validations/forgot-password";
 
 const ForgotPasswordForm = () => {

@@ -7,7 +7,6 @@ export interface ViewerFloor {
   width: number;
   height: number;
   metersPerPixel?: number | null;
-  backgroundImageUrl?: string | null;
   status: "draft" | "published";
 }
 
@@ -39,6 +38,8 @@ export interface ViewerMapObject {
   width: number;
   height: number;
   rotation: number;
+  shape: "rectangle" | "ellipse" | "polygon";
+  points?: { x: number; y: number }[] | null;
   isSearchable: boolean;
   isAccessible: boolean;
 }
@@ -85,6 +86,18 @@ export interface ViewerPathEdge {
   distanceMeters: number;
   bidirectional: boolean;
   isAccessible: boolean;
+}
+
+// Whether taking this connector moves you to a higher or lower floor level
+// than the one you're currently on — drives the up/down badge on connector
+// markers so a stairwell/elevator's direction is visible without pressing it.
+export type ConnectorDirection = "up" | "down";
+
+export interface ConnectorTargetInfo {
+  direction: ConnectorDirection;
+  floorId: string;
+  floorName: string;
+  targetNode: ViewerMapNode;
 }
 
 export interface MapViewerData {
