@@ -2,11 +2,13 @@ import { WayfinderBrand } from "@/components/shared/brand/WayfinderBrand";
 import { MobileSiteMenu } from "@/components/shared/public-site/MobileSiteMenu";
 import { SmoothHashLink } from "@/components/shared/public-site/SmoothHashLink";
 import { ModeToggle } from "@/components/shared/theme/ModeToggle";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export type SiteHeaderLink = {
   label: string;
   href: string;
+  variant?: "default" | "primary";
 };
 
 type SiteHeaderProps = {
@@ -35,8 +37,10 @@ export function SiteHeader({
             <SmoothHashLink
               aria-current={activeHref === link.href ? "page" : undefined}
               className={cn(
-                "transition-colors hover:text-foreground",
-                activeHref === link.href && "text-foreground",
+                link.variant === "primary"
+                  ? cn(buttonVariants({ size: "lg" }), "h-9 px-4 text-sm")
+                  : "transition-colors hover:text-foreground",
+                link.variant !== "primary" && activeHref === link.href && "text-foreground",
               )}
               href={link.href}
               key={link.href}

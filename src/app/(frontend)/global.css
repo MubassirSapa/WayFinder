@@ -79,6 +79,8 @@
 
 :root {
   --site-header-height: 4rem;
+  --brand-glow: color-mix(in oklch, var(--foreground) 16%, transparent);
+  --organization-signin-glow: color-mix(in oklch, var(--primary) 55%, transparent);
   color-scheme: light;
   --background: oklch(0.94 0.004 210);
   --foreground: oklch(0.148 0.004 228.8);

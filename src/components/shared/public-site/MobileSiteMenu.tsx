@@ -12,6 +12,7 @@ type MobileSiteMenuProps = {
   links: readonly {
     href: string;
     label: string;
+    variant?: "default" | "primary";
   }[];
   navigationLabel: string;
 };
@@ -38,7 +39,11 @@ export function MobileSiteMenu({
                 aria-current={activeHref === link.href ? "page" : undefined}
                 className={cn(
                   "flex min-h-11 cursor-pointer items-center rounded-sm px-3 text-sm font-medium outline-none transition-colors hover:bg-accent hover:text-accent-foreground data-highlighted:bg-accent data-highlighted:text-accent-foreground",
-                  activeHref === link.href && "bg-accent text-accent-foreground",
+                  link.variant === "primary" &&
+                    "bg-primary text-primary-foreground hover:bg-primary/80 hover:text-primary-foreground data-highlighted:bg-primary/80 data-highlighted:text-primary-foreground",
+                  link.variant !== "primary" &&
+                    activeHref === link.href &&
+                    "bg-accent text-accent-foreground",
                 )}
                 closeOnClick
                 key={link.href}

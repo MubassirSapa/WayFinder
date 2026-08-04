@@ -27,7 +27,7 @@ export function OrganizationPromotion() {
           <Button
             className="h-11 w-full px-6 text-sm"
             nativeButton={false}
-            render={<Link href={PUBLIC_ROUTES.REGISTER_ORGANIZATION} />}
+            render={<Link href={PUBLIC_ROUTES.ORGANIZATION} />}
           >
             Join now
           </Button>

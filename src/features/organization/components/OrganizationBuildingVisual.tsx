@@ -124,10 +124,13 @@ function FloorPlate({ className, label, layout }: FloorPlateProps) {
 
 export function OrganizationBuildingVisual() {
   return (
-    <section className="overflow-hidden border-b border-border" aria-hidden="true">
-      <div className="mx-auto h-72 max-w-6xl px-5 sm:h-128 sm:px-6 xl:h-120">
+    <div
+      className="mt-4 w-full overflow-hidden sm:order-3 sm:mt-8 sm:overflow-visible lg:mt-10 xl:mt-12"
+      aria-hidden="true"
+    >
+      <div className="mx-auto h-64 w-full sm:h-96 lg:h-112 xl:h-120">
         <div className="perspective-distant relative h-full w-full sm:perspective-[1500px]">
-          <div className="absolute left-1/2 top-[48%] aspect-4/3 w-[min(82vw,34rem)] -translate-x-1/2 -translate-y-1/2 scale-[0.62] transform-3d sm:top-[57%] sm:scale-[0.7] lg:top-[56%] lg:scale-75 xl:top-1/2 xl:scale-[0.82]">
+          <div className="absolute left-1/2 top-[56%] aspect-4/3 w-[min(82vw,34rem)] -translate-x-1/2 -translate-y-1/2 scale-[0.62] transform-3d sm:top-1/2 sm:scale-[0.7] lg:scale-75 xl:scale-[0.82]">
             <div className="relative h-full w-full transform-3d transform-[rotateX(52deg)_rotateZ(-38deg)]">
               <FloorPlate
                 className="transform-[translateZ(0)]"
@@ -148,6 +151,6 @@ export function OrganizationBuildingVisual() {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

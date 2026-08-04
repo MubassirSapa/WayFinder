@@ -30,7 +30,7 @@ export function OrganizationCapabilities() {
             key={capability.title}
           >
             <Icon className="size-9 text-primary" strokeWidth={1.7} aria-hidden />
-            <h2 className="mt-5 text-base font-semibold text-foreground">{capability.title}</h2>
+            <h3 className="mt-5 text-base font-semibold text-foreground">{capability.title}</h3>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               {capability.description}
             </p>

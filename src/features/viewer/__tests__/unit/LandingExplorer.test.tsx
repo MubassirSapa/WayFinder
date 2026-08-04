@@ -158,7 +158,7 @@ describe("LandingExplorer", () => {
     ).toBe("/venues?view=recent");
   });
 
-  it("offers organizations a clear registration action", () => {
+  it("links organizations to the organization page", () => {
     render(<LandingExplorer data={data} />);
 
     const promotion = screen
@@ -170,7 +170,7 @@ describe("LandingExplorer", () => {
       within(promotion as HTMLElement)
         .getByRole("button", { name: "Join now" })
         .getAttribute("href"),
-    ).toBe("/register-organization");
+    ).toBe("/organization");
     expect(within(promotion as HTMLElement).queryByText("See how it works")).toBeNull();
     expect(within(promotion as HTMLElement).queryByText("Free to use for organizations.")).toBeNull();
   });

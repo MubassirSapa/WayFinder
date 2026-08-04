@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Added
+- Added a compact, centered primary-colored visitor handoff below the organization header that takes people directly to the public venue directory without mixing visitor destinations into organization navigation.
+
+### Changed
+- Changed the public venue promotion's "Join now" action to introduce the organization experience before registration.
+- Kept the organization-site navbar focused on organization journeys by removing its public-map link and showing registration as a prominent "Get started" action on organization subpages while leaving the landing page's existing hero actions to handle registration.
+- Made the shared Wayfinder brand glow invert with the active theme, using a dark glow on light surfaces and a light glow on dark surfaces.
+- Separated the organization landing page's benefit cards from its closing registration prompt, replacing adjacent duplicate calls to action with a benefits-first flow, a responsive green closing band, and a stacked account prompt.
+
 ## [0.1.9] - 2026-08-02
 
 ### Changed

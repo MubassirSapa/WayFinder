@@ -2,6 +2,9 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { OrganizationSiteHeader } from "@/features/organization/components/OrganizationSiteHeader";
+import {
+  OrganizationVisitorHandoff,
+} from "@/features/organization/components/OrganizationVisitorHandoff";
 
 vi.mock("@/components/shared/theme/ModeToggle", () => ({
   ModeToggle: () => <button type="button">Toggle theme</button>,
@@ -16,7 +19,7 @@ afterEach(() => {
 });
 
 describe("OrganizationSiteHeader", () => {
-  it("links the organization brand and navigation to the correct public pages", () => {
+  it("keeps the organization navigation focused on organization pages", () => {
     render(<OrganizationSiteHeader />);
 
     expect(screen.getByRole("navigation", { name: "Organization navigation" })).toBeTruthy();
@@ -26,6 +29,30 @@ describe("OrganizationSiteHeader", () => {
     expect(screen.getByRole("link", { name: "About" }).getAttribute("href")).toBe(
       "/organization/about",
     );
-    expect(screen.getByRole("link", { name: "Public maps" }).getAttribute("href")).toBe("/");
+    const getStarted = screen.getByRole("link", { name: "Get started" });
+
+    expect(getStarted.getAttribute("href")).toBe("/register-organization");
+    expect(getStarted.className).toContain("bg-primary");
+    expect(screen.queryByRole("link", { name: "Public maps" })).toBeNull();
+  });
+
+  it("can hide registration when the current page already presents that action", () => {
+    render(<OrganizationSiteHeader showRegistrationAction={false} />);
+
+    expect(screen.queryByRole("link", { name: "Get started" })).toBeNull();
+    expect(screen.getByRole("link", { name: "About" })).toBeTruthy();
+  });
+});
+
+describe("OrganizationVisitorHandoff", () => {
+  it("takes visitors directly to the public venue directory", () => {
+    render(<OrganizationVisitorHandoff />);
+
+    const link = screen.getByRole("link", { name: "Visiting a venue? Find its public map" });
+
+    expect(link.getAttribute("href")).toBe("/venues");
+    expect(link.className).toContain("max-w-6xl");
+    expect(link.className).toContain("bg-primary");
+    expect(link.className).toContain("text-primary-foreground");
   });
 });
