@@ -232,6 +232,73 @@ anywhere in `src/` outside of one-time `scripts/` (seeding and migration,
 where each iteration creates a record with genuinely different data — Payload
 has no bulk-create API, so there's no batched alternative there).
 
+## How to verify this yourself
+
+Don't trust field lists or query counts from reading the code — check the
+real thing.
+
+### See the actual SQL: `logger: true`
+
+Payload's SQLite adapter is a thin wrapper over Drizzle, which supports a
+`logger` option that prints every SQL statement it runs. Temporarily add it
+in `src/plugins/database/database.ts`:
+
+```ts
+: sqliteAdapter({ client: { url: databaseEnv.url }, logger: true });
+```
+
+Then write a one-off script (delete it when done) and run it with `payload
+run` — no dev server needed:
+
+```ts
+// scripts/verify-query-count.ts
+import { getPayload } from "payload";
+import config from "../src/payload.config";
+import { getMapViewerData } from "../src/features/map-viewer/services/server/getMapViewerData";
+
+const payload = await getPayload({ config });
+console.log("--- start ---");
+await getMapViewerData("78"); // whatever function/id you're checking
+console.log("--- end ---");
+await payload.destroy();
+```
+
+```bash
+npx payload run scripts/verify-query-count.ts
+```
+
+Count the `Query:` lines between your markers for the real query count, and
+read the `select ...` column lists directly to confirm `select`/
+`defaultPopulate` are actually trimming fields — e.g. this is exactly how the
+`Buildings`/`Organizations` `defaultPopulate` fix in this document was
+confirmed: the logged query was `select "id", "name", "organization_id" from
+"buildings"`, not every column. **Always revert `logger: true` afterward** —
+it's extremely noisy and shouldn't ship in normal dev output or a commit.
+
+### Browser DevTools Network tab: for anything client-triggered
+
+SQL logging only shows Payload/database queries. Client-triggered work like
+the map editor's save flow (`useSaveEditorChanges.ts`) is Next.js Server
+Actions — separate HTTP requests from the browser, with no SQL logging
+involved at all. Open DevTools → Network, filter to Fetch/XHR, then trigger
+the flow:
+
+- **Sequential** (the bug): requests appear one after another in the
+  waterfall, each starting only after the previous one finishes.
+- **Parallel** (the fix): requests within a phase start at roughly the same
+  time (overlapping bars); only distinct phases are staggered.
+
+The same tab is also the simplest way to eyeball response payload *size* for
+`select`/`defaultPopulate` changes on a real page load, without needing SQL
+logging at all.
+
+### Regression safety
+
+`npx tsc --noEmit && npx eslint src scripts && npx vitest run` catch you
+breaking correctness while optimizing — they do **not** catch over-fetching
+or N+1 queries by themselves. Use the two methods above for that; use this
+for "did I break something while fixing it."
+
 ## Checklist for new queries
 
 - Only need an ID off a relation? Use `depth: 0` (the default) and read the
