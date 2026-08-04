@@ -52,7 +52,7 @@ describe("OrganizationVisitorHandoff", () => {
 
     expect(link.getAttribute("href")).toBe("/venues");
     expect(link.className).toContain("max-w-6xl");
-    expect(link.className).toContain("bg-primary");
-    expect(link.className).toContain("text-primary-foreground");
+    expect(link.className).toContain("bg-primary/10");
+    expect(link.className).toContain("backdrop-blur-sm");
   });
 });

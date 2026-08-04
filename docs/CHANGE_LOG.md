@@ -3,7 +3,7 @@
 ## [Unreleased]
 
 ### Added
-- Added a compact, centered primary-colored visitor handoff below the organization header that takes people directly to the public venue directory without mixing visitor destinations into organization navigation.
+- Added a compact, centered translucent visitor handoff below the organization header that takes people directly to the public venue directory without mixing visitor destinations into organization navigation.
 
 ### Changed
 - Changed the public venue promotion's "Join now" action to introduce the organization experience before registration.
