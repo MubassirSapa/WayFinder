@@ -15,7 +15,7 @@ import type {
   ViewerMapNode,
   ViewerMapObject,
   ViewerPathEdge,
-} from "../types/map-viewer.types";
+} from "../../types/map-viewer.types";
 
 type RelationValue = number | string | { id: number | string } | null | undefined;
 

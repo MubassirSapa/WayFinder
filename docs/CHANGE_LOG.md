@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Fixed
+- Removed the unreferenced `/editor` index route, which listed floors across every organization by calling the Payload Local API directly (bypassing the `services/server` layer and, since it never identified the requesting user, effectively unscoped by building/organization). `/editor/[floorId]` — the only entry point actually linked from the dashboard — is unaffected and remains correctly building-scoped.
+
+### Changed
+- Moved `getDashboardData` and `getMapViewerData` out of `lib/` (reserved for pure, stateless helpers) into `services/server/`, matching how `docs/project/PROJECT_STRUCTURE.md` already described them.
+
 ## [0.2.0] - 2026-08-04
 
 ### Added
@@ -9,7 +15,7 @@
 - Added a compact, centered translucent visitor handoff below the organization header that takes people directly to the public venue directory without mixing visitor destinations into organization navigation.
 
 ### Changed
-- Renamed the `users.role` values from `admin`/`user` to `owner`/`manager`/`member` — `owner` is the organization's creator and implicitly manages every building in the org, `manager` gets elevated permissions on their assigned buildings, and `member` is read-only. This also resolves the naming collision with the separate `admins` collection (the platform team).
+- Renamed the `users.role` values from `admin`/`user` to `owner`/`manager`/`member` — owners and managers manage every building in their organization, while members are read-only and limited to assigned buildings. This also resolves the naming collision with the separate `admins` collection (the platform team).
 - `floors`, `map-objects`, `map-nodes`, and `path-edges` now carry a real `building` relationship instead of a free-text `buildingId`; access control for those collections and for `buildings` is now scoped by building/organization membership instead of a blanket logged-in check.
 - Signup now assigns the new organization's creator the `owner` role (previously `user`, leaving no one marked as an org's admin).
 - Changed the public venue promotion's "Join now" action to introduce the organization experience before registration.

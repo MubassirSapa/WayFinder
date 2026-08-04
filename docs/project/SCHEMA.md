@@ -209,9 +209,8 @@ owner | manager | member
   There is one owner per organization. An owner implicitly has access to
   every building in their organization — no explicit `buildings` membership
   is needed or stored for them.
-- **manager** — has elevated permissions (can create/update/delete floors,
-  map objects, map nodes, and path edges) on the buildings listed in their
-  `buildings` field.
+- **manager** — has the same organization-wide building and map-management
+  permissions as an owner. Managers do not need explicit building assignments.
 - **member** — read-only access to the buildings listed in their `buildings`
   field. Cannot create, update, or delete map data.
 
@@ -224,10 +223,30 @@ The `organization` relationship is required — every user belongs to exactly
 one organization (one email = one user = one organization). One organization
 can have many users.
 
-The `buildings` relationship (`hasMany`) is the many-to-many membership
-between users and buildings. It only applies to `manager`/`member` roles; the
-admin UI hides it for `owner` since ownership already implies full org-wide
-building access.
+The `buildings` relationship (`hasMany`) stores explicit building membership
+for `member` accounts. Owners and managers implicitly access every building in
+their organization, so their authorization does not depend on this field.
+
+#### Why User → Organization is many-to-one, not many-to-many
+
+`users.email` is unique — Payload's `auth` config enforces this automatically,
+since email is the login identifier. Each `users` document also has exactly
+one `organization` field (a single relationship, not `hasMany`), so the
+structural cardinality is Organization (1) —< User (many): one organization
+has many users, but each user row points to exactly one organization.
+
+The natural real-world relationship that *would* be many-to-many is between a
+**person** and organizations — the same person could plausibly need access to
+two different organizations. But this schema doesn't model "person" as its
+own entity; it models `users` as one authentication account per email, and
+each account is scoped to a single organization by design. A person who needs
+access to two organizations cannot reuse one email across two `users`
+documents (the unique constraint forbids it) — they need two separate
+accounts with two different email addresses, each scoped to its own
+organization. Because of that, "email" — not "person" — is the right unit to
+reason about here: one email always resolves to exactly one organization
+membership, so the relationship correctly collapses to many-to-one instead of
+many-to-many.
 
 ### Admin
 
@@ -334,14 +353,13 @@ different floor.
   auth collection (the platform team). Used to gate `admins`, `organizations`,
   and the non-self paths of `users`.
 - `accessibleBuildingIds(req)` — resolves the set of building IDs a `users`
-  account can act on: every building in their organization for `owner`, or
-  their own `buildings` relationship for `manager`/`member`. Platform admins
+  account can access: every building in their organization for `owner` and
+  `manager`, or their explicit `buildings` relationship for `member`. Platform admins
   bypass this entirely.
-- `buildingRead` / `buildingManage` — read/write access for the `buildings`
-  collection itself. Reading is scoped to accessible buildings for any role;
-  creating/updating/deleting a building is restricted to the `owner` of its
-  organization.
-- `buildingContentRead` / `buildingContentWrite` — read/write access for
+- `buildingRead` / `buildingCreate` / `buildingUpdateDelete` — read/write
+  access for the `buildings` collection itself. Owners and managers can manage
+  buildings only in their organization; members only read assigned buildings.
+- `buildingContentRead` / `buildingContentCreate` / `buildingContentUpdateDelete` — read/write access for
   `floors`, `map-objects`, `map-nodes`, and `path-edges`, scoped by their own
   `building` field. Write access excludes `member` (read-only role).
 

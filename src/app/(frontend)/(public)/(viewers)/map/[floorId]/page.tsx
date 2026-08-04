@@ -1,6 +1,6 @@
 import { MapUnavailableState } from "@/features/map-viewer/components/MapUnavailableState";
 import { MapViewerShell } from "@/features/map-viewer/components/MapViewerShell";
-import { getMapViewerData } from "@/features/map-viewer/lib/getMapViewerData";
+import { getMapViewerData } from "@/features/map-viewer/services/server/getMapViewerData";
 
 interface PublicFloorMapPageProps {
   params: Promise<{

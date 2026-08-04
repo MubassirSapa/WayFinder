@@ -8,15 +8,15 @@ import { PUBLIC_ROUTES } from "@/constants/routes";
 import { relationId } from "@/lib/payload-id";
 import type { Floor, MapObject, Organization, User } from "@/payload-types";
 
-import { DASHBOARD_CLIENT } from "../constants/dashboard.constants";
-import type { DashboardData, DashboardFloor } from "../types/dashboard.types";
+import { DASHBOARD_CLIENT } from "../../constants/dashboard.constants";
+import type { DashboardData, DashboardFloor } from "../../types/dashboard.types";
 import {
   formatRelativeTime,
   levelToBadge,
   levelToLabel,
   organizationInitials,
   organizationTypeLabel,
-} from "./floorPresentation";
+} from "../../lib/floorPresentation";
 
 export async function getDashboardData(): Promise<DashboardData> {
   const headers = await getHeaders();
