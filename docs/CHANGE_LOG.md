@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-08-04
+
 ### Added
 - Added a real `Buildings` collection (organization 1-to-many buildings, each with name/address/contact metadata and a cached floor count) and a `users.buildings` many-to-many membership, replacing the free-text `buildingId` convention that previously faked one building per organization.
 - Added a compact, centered translucent visitor handoff below the organization header that takes people directly to the public venue directory without mixing visitor destinations into organization navigation.
