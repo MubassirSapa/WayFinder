@@ -5,6 +5,9 @@
 ### Added
 - Added a compact, centered translucent visitor handoff below the organization header that takes people directly to the public venue directory without mixing visitor destinations into organization navigation.
 
+### Fixed
+- Fixed the organization visitor handoff's two adjacent text spans concatenating into a single run-on accessible name ("Visiting a venue?Find its public map") for assistive technology, by adding the whitespace an ordinary space-separated sentence needs between them.
+
 ### Changed
 - Changed the public venue promotion's "Join now" action to introduce the organization experience before registration.
 - Kept the organization-site navbar focused on organization journeys by removing its public-map link and showing registration as a prominent "Get started" action on organization subpages while leaving the landing page's existing hero actions to handle registration.

@@ -11,7 +11,7 @@ export function OrganizationVisitorHandoff() {
         href={PUBLIC_ROUTES.VENUES}
       >
         <MapPin className="size-4 shrink-0 text-foreground" aria-hidden />
-        <span>Visiting a venue?</span>
+        <span>Visiting a venue?</span>{" "}
         <span className="inline-flex items-center gap-1.5 font-semibold text-primary">
           Find its public map
           <ArrowRight
