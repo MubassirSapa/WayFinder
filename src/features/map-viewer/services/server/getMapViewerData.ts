@@ -167,66 +167,74 @@ export async function getMapViewerData(floorId?: string): Promise<MapViewerData>
     };
   }
 
-  const floorsWithData = await Promise.all(
-    floors.map(async (floor) => {
-      const [objectsResult, nodesResult, edgesResult] = await Promise.all([
-        payload.find({
-          collection: "map-objects",
-          depth: 0,
-          limit: 1000,
-          overrideAccess: true,
-          sort: "name",
-          where: {
-            floor: {
-              equals: asPayloadId(floor.id),
-            },
-          },
-        }),
-        payload.find({
-          collection: "map-nodes",
-          depth: 0,
-          limit: 1000,
-          overrideAccess: true,
-          where: {
-            floor: {
-              equals: asPayloadId(floor.id),
-            },
-          },
-        }),
-        payload.find({
-          collection: "path-edges",
-          depth: 0,
-          limit: 1000,
-          overrideAccess: true,
-          where: {
-            floor: {
-              equals: asPayloadId(floor.id),
-            },
-          },
-        }),
-      ]);
+  const floorIds = floors.map((floor) => asPayloadId(floor.id));
 
-      return {
-        edgeList: edgesResult.docs.map(normalizeEdge),
-        floorId: floor.id,
-        nodeList: nodesResult.docs.map(normalizeNode),
-        objectList: objectsResult.docs.map(normalizeObject),
-      };
+  // One query per collection across every floor being loaded (typically a
+  // handful, for one building), instead of three queries per floor.
+  const [objectsResult, nodesResult, edgesResult] = await Promise.all([
+    payload.find({
+      collection: "map-objects",
+      depth: 0,
+      limit: 0,
+      pagination: false,
+      overrideAccess: true,
+      sort: "name",
+      where: {
+        floor: {
+          in: floorIds,
+        },
+      },
     }),
-  );
+    payload.find({
+      collection: "map-nodes",
+      depth: 0,
+      limit: 0,
+      pagination: false,
+      overrideAccess: true,
+      where: {
+        floor: {
+          in: floorIds,
+        },
+      },
+    }),
+    payload.find({
+      collection: "path-edges",
+      depth: 0,
+      limit: 0,
+      pagination: false,
+      overrideAccess: true,
+      where: {
+        floor: {
+          in: floorIds,
+        },
+      },
+    }),
+  ]);
+
+  const objectsByFloorId: Record<string, ViewerMapObject[]> = {};
+  for (const doc of objectsResult.docs) {
+    const object = normalizeObject(doc);
+    (objectsByFloorId[object.floorId] ??= []).push(object);
+  }
+
+  const nodesByFloorId: Record<string, ViewerMapNode[]> = {};
+  for (const doc of nodesResult.docs) {
+    const node = normalizeNode(doc);
+    (nodesByFloorId[node.floorId] ??= []).push(node);
+  }
+
+  const edgesByFloorId: Record<string, ViewerPathEdge[]> = {};
+  for (const doc of edgesResult.docs) {
+    const edge = normalizeEdge(doc);
+    (edgesByFloorId[edge.floorId] ??= []).push(edge);
+  }
 
   return {
-    edgesByFloorId: Object.fromEntries(
-      floorsWithData.map(({ floorId, edgeList }) => [floorId, edgeList]),
-    ),
+    edgesByFloorId,
     floors,
     initialFloorId: floors[0]?.id ?? null,
-    nodesByFloorId: Object.fromEntries(
-      floorsWithData.map(({ floorId, nodeList }) => [floorId, nodeList]),
-    ),
-    objectsByFloorId: Object.fromEntries(
-      floorsWithData.map(({ floorId, objectList }) => [floorId, objectList]),
-    ),
+    nodesByFloorId,
+    objectsByFloorId,
   };
 }
 

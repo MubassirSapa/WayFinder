@@ -93,10 +93,10 @@ export async function deleteMapNodeAdapter(id: string) {
   return tryCatchResponse(async () => {
     const payload = await getPayloadClient();
 
-    const linkedEdges = await payload.find({
+    // Bulk delete-by-where in one call instead of finding linked edges and
+    // deleting each one individually.
+    await payload.delete({
       collection: "path-edges",
-      depth: 0,
-      limit: 1000,
       overrideAccess: true,
       where: {
         or: [
@@ -113,13 +113,6 @@ export async function deleteMapNodeAdapter(id: string) {
         ],
       },
     });
-
-    for (const edge of linkedEdges.docs) {
-      await payload.delete({
-        collection: "path-edges",
-        id: asPayloadId(edge.id),
-      });
-    }
 
     await payload.delete({
       collection: "map-nodes",

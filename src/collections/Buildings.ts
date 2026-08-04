@@ -10,6 +10,14 @@ export const Buildings: CollectionConfig = {
     defaultColumns: ["name", "organization", "floorCount"],
   },
 
+  // Places that populate `building` (public map viewer, public landing page)
+  // only ever read `name` and, transitively, `organization.name` — keep the
+  // address/contact/floorCount fields out of every populated copy.
+  defaultPopulate: {
+    name: true,
+    organization: true,
+  },
+
   access: {
     create: access.buildingCreate,
     read: access.buildingRead,

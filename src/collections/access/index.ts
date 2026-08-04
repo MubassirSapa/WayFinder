@@ -75,6 +75,10 @@ export async function accessibleBuildingIds(
       limit: 0,
       pagination: false,
       depth: 0,
+      // `id` is always returned regardless of `select` — an empty include
+      // object is the correct way to fetch nothing else (verified: returns
+      // `{ id }` only, not the unrestricted document).
+      select: {},
       overrideAccess: true,
     });
 

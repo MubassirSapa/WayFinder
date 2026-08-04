@@ -8,6 +8,8 @@
 
 ### Changed
 - Moved `getDashboardData` and `getMapViewerData` out of `lib/` (reserved for pure, stateless helpers) into `services/server/`, matching how `docs/project/PROJECT_STRUCTURE.md` already described them.
+- Reduced over-fetching from relationship population: `syncFloorCount` now uses `payload.count()` instead of fetching every matching floor, the building-relationship validation hook only selects the one field it checks, `accessibleBuildingIds` (run on nearly every access-control check) now selects nothing but `id`, and `Organizations`/`Buildings`/`Floors` now declare `defaultPopulate` so populating them (e.g. the public map viewer's floor → building → organization lookup) returns only the handful of fields every caller actually reads instead of the full document.
+- Fixed two N+1 query patterns: deleting a map node used to fetch its linked path-edges and delete them one at a time, now a single bulk delete; the public map viewer used to query map objects/nodes/edges separately per floor, now one query per collection across every floor in the building. See `docs/technical/QUERY_OPTIMIZATION.md`.
 
 ## [0.2.0] - 2026-08-04
 

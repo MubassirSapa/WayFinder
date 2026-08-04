@@ -11,6 +11,15 @@ export const Organizations: CollectionConfig = {
     defaultColumns: ["name", "type"],
   },
 
+  // Every relation to `organizations` currently only reads `name` (and
+  // sometimes `type`) after populating it — keep that the default so a
+  // deeply nested populate (e.g. floor -> building -> organization) doesn't
+  // drag the whole document along for one string.
+  defaultPopulate: {
+    name: true,
+    type: true,
+  },
+
   access: {
     // Created during public signup (via overrideAccess in the auth adapter).
     create: access.isPlatformAdmin,

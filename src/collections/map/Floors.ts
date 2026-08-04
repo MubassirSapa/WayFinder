@@ -5,18 +5,16 @@ import { access } from "../access";
 
 /** Keep `buildings.floorCount` in sync so dashboards can read it without an extra query. */
 async function syncFloorCount(payload: Payload, buildingId: number | string) {
-  const floors = await payload.find({
+  const { totalDocs } = await payload.count({
     collection: "floors",
     where: { building: { equals: buildingId } },
-    limit: 0,
-    depth: 0,
     overrideAccess: true,
   });
 
   await payload.update({
     collection: "buildings",
     id: buildingId,
-    data: { floorCount: floors.totalDocs },
+    data: { floorCount: totalDocs },
     overrideAccess: true,
   });
 }
@@ -44,6 +42,14 @@ export const Floors: CollectionConfig = {
   admin: {
     useAsTitle: "name",
     group: "Indoor Map",
+  },
+
+  // The only place that populates `floor` as a relation (floor-links, to
+  // resolve cross-floor connector names) only ever reads `name`/`level` —
+  // every other consumer queries floors directly, which this doesn't affect.
+  defaultPopulate: {
+    name: true,
+    level: true,
   },
 
   access: {

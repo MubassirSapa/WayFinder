@@ -19,6 +19,7 @@ async function assertRelationBuilding(
     collection,
     id,
     depth: 0,
+    select: { building: true },
     overrideAccess: true,
   });
 
