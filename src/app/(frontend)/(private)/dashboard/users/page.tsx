@@ -6,12 +6,13 @@ import { PRIVATE_ROUTES, PUBLIC_ROUTES } from "@/constants/routes";
 import { ROLES } from "@/collections/constants/roles";
 import { getCurrentUser } from "@/features/auth/services/server/auth.ports";
 import { USER_MANAGEMENT_CLIENT } from "@/features/user-management/constants/user-management.constants";
-import { UserManagementTable } from "@/features/user-management/components/UserManagementTable";
+import { TeamDirectory } from "@/features/user-management/components/TeamDirectory";
 import { listOrgBuildingOptions, listOrgUsers } from "@/features/user-management/services/server/user-management.ports";
 import { DashboardPageContainer } from "@/features/dashboard/components/DashboardPageHeader";
 
 export const metadata: Metadata = {
   title: `${USER_MANAGEMENT_CLIENT.PAGE_TITLE} | ${BRAND.NAME}`,
+  description: USER_MANAGEMENT_CLIENT.PAGE_DESCRIPTION,
 };
 
 export default async function UsersPage() {
@@ -31,7 +32,7 @@ export default async function UsersPage() {
 
   return (
     <DashboardPageContainer>
-      <UserManagementTable users={users} buildingOptions={buildingOptions} />
+      <TeamDirectory users={users} buildingOptions={buildingOptions} />
     </DashboardPageContainer>
   );
 }

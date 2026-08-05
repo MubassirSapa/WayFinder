@@ -50,7 +50,9 @@ export function BuildingsAssignmentPopover({
         if (next) setSelected(new Set(selectedBuildingIds));
       }}
     >
-      <PopoverTrigger render={<Button variant="outline" size="sm" />}>
+      <PopoverTrigger
+        render={<Button variant="outline" size="sm" className="w-full" />}
+      >
         {USER_MANAGEMENT_CLIENT.MANAGE_BUILDINGS}
       </PopoverTrigger>
       <PopoverContent>
@@ -60,19 +62,25 @@ export function BuildingsAssignmentPopover({
         </PopoverHeader>
 
         <div className="flex max-h-48 flex-col gap-2 overflow-y-auto">
-          {buildingOptions.map((building) => (
-            <label key={building.id} className="flex items-center gap-2 text-xs">
-              <Checkbox
-                checked={selected.has(building.id)}
-                onCheckedChange={(checked) => toggle(building.id, checked === true)}
-                disabled={isPending}
-              />
-              {building.name}
-            </label>
-          ))}
+          {buildingOptions.length > 0 ? (
+            buildingOptions.map((building) => (
+              <label key={building.id} className="flex min-h-9 items-center gap-2 text-xs">
+                <Checkbox
+                  checked={selected.has(building.id)}
+                  onCheckedChange={(checked) => toggle(building.id, checked === true)}
+                  disabled={isPending}
+                />
+                {building.name}
+              </label>
+            ))
+          ) : (
+            <p className="text-xs text-muted-foreground">
+              {USER_MANAGEMENT_CLIENT.NO_BUILDINGS_AVAILABLE}
+            </p>
+          )}
         </div>
 
-        <Button size="sm" onClick={save} disabled={isPending}>
+        <Button size="sm" onClick={save} disabled={isPending || buildingOptions.length === 0}>
           {isPending ? <Loader2Icon className="animate-spin" /> : null}
           {USER_MANAGEMENT_CLIENT.SAVE_BUILDINGS}
         </Button>

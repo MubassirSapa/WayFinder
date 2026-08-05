@@ -7,6 +7,7 @@ import { getDashboardData } from "@/features/dashboard/services/server/getDashbo
 
 export const metadata: Metadata = {
   title: `${DASHBOARD_CLIENT.PAGE_TITLE} | ${BRAND.NAME}`,
+  description: DASHBOARD_CLIENT.PAGE_DESCRIPTION,
 };
 
 export default async function DashboardPage() {

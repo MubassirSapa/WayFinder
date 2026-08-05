@@ -8,6 +8,7 @@ import { getDashboardData } from "@/features/dashboard/services/server/getDashbo
 
 export const metadata: Metadata = {
   title: `${BUILDINGS_CLIENT.LIST_PAGE_TITLE} | ${BRAND.NAME}`,
+  description: BUILDINGS_CLIENT.LIST_DESC,
 };
 
 export default async function BuildingsPage() {

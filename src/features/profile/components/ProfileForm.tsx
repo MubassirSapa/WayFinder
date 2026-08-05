@@ -1,27 +1,23 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
+import { Loader2Icon } from "lucide-react";
 import { useRouter } from "nextjs-toploader/app";
-import { Loader2Icon, PencilIcon, UploadIcon, UserIcon } from "lucide-react";
 
 import FormAlert from "@/components/shared/form/FormAlert";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { EntitySummaryCard } from "@/features/dashboard/components/EntitySummaryCard";
 
-import { PROFILE_CLIENT } from "../constants/profile.constants";
 import { updateProfileAction } from "../actions/server/update-profile";
+import { MAX_AVATAR_SIZE_BYTES, PROFILE_CLIENT } from "../constants/profile.constants";
+import { profileInitial, profileRoleLabel } from "../lib/profile-presentation";
 import type { ProfileEditData } from "../types/profile.types";
-
-const ROLE_LABELS: Record<ProfileEditData["role"], string> = {
-  owner: "Owner",
-  manager: "Manager",
-  member: "Member",
-};
+import { ProfileAccountSummary } from "./ProfileAccountSummary";
+import { ProfileDetailsView } from "./ProfileDetailsView";
+import { ProfileIdentityHeader } from "./ProfileIdentityHeader";
+import { ProfilePhotoEditor } from "./ProfilePhotoEditor";
 
 type ProfileFormProps = {
   profile: ProfileEditData;
@@ -40,7 +36,12 @@ export function ProfileForm({ profile }: ProfileFormProps) {
   const [success, setSuccess] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  const initial = (name.trim()[0] ?? profile.email.trim()[0] ?? "A").toUpperCase();
+  const initial = profileInitial(name, profile.email);
+  const roleLabel = profileRoleLabel(profile.role);
+
+  const revokeObjectPreview = () => {
+    if (avatarPreviewUrl?.startsWith("blob:")) URL.revokeObjectURL(avatarPreviewUrl);
+  };
 
   const onSelectAvatar = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
@@ -51,6 +52,13 @@ export function ProfileForm({ profile }: ProfileFormProps) {
       return;
     }
 
+    if (file.size > MAX_AVATAR_SIZE_BYTES) {
+      setError(PROFILE_CLIENT.ERROR_AVATAR_SIZE);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    revokeObjectPreview();
     setError("");
     setRemoveAvatar(false);
     setAvatarFile(file);
@@ -58,10 +66,23 @@ export function ProfileForm({ profile }: ProfileFormProps) {
   };
 
   const onRemoveAvatar = () => {
+    revokeObjectPreview();
     setAvatarFile(null);
     setAvatarPreviewUrl(null);
     setRemoveAvatar(true);
     if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const cancelEditing = () => {
+    revokeObjectPreview();
+    setName(profile.name);
+    setAvatarFile(null);
+    setAvatarPreviewUrl(profile.avatarUrl);
+    setRemoveAvatar(false);
+    setError("");
+    setSuccess(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    setIsEditing(false);
   };
 
   const submit = () => {
@@ -80,7 +101,10 @@ export function ProfileForm({ profile }: ProfileFormProps) {
         return;
       }
 
+      revokeObjectPreview();
+      setName(result.data.name);
       setAvatarFile(null);
+      setAvatarPreviewUrl(result.data.avatarUrl);
       setRemoveAvatar(false);
       setSuccess(true);
       setIsEditing(false);
@@ -88,135 +112,91 @@ export function ProfileForm({ profile }: ProfileFormProps) {
     });
   };
 
-  const cancelEditing = () => {
-    setName(profile.name);
-    setAvatarFile(null);
-    setAvatarPreviewUrl(profile.avatarUrl);
-    setRemoveAvatar(false);
-    setError("");
-    setSuccess(false);
-    if (fileInputRef.current) fileInputRef.current.value = "";
-    setIsEditing(false);
-  };
-
-  if (!isEditing) {
-    return (
-      <EntitySummaryCard
-        visual={
-          <Avatar className="size-28 sm:size-32">
-            {avatarPreviewUrl ? <AvatarImage src={avatarPreviewUrl} alt={name} /> : null}
-            <AvatarFallback className="text-3xl font-semibold">
-              {avatarPreviewUrl ? initial : <UserIcon className="size-10" />}
-            </AvatarFallback>
-          </Avatar>
-        }
-        title={name}
-        meta={
-          <div className="flex flex-wrap items-center gap-2">
-            <span>{profile.email}</span>
-            <Badge variant="outline">{ROLE_LABELS[profile.role]}</Badge>
-          </div>
-        }
-        action={
-          <Button type="button" variant="outline" onClick={() => setIsEditing(true)}>
-            <PencilIcon />
-            {PROFILE_CLIENT.EDIT}
-          </Button>
-        }
-      />
-    );
-  }
-
   return (
-    <Card className="p-6 sm:p-8">
-      <h1 className="font-heading text-xl font-semibold tracking-tight">{PROFILE_CLIENT.FORM_TITLE}</h1>
-      <p className="mt-1 text-sm text-muted-foreground">{PROFILE_CLIENT.FORM_DESC}</p>
+    <Card className="mx-auto w-full max-w-3xl gap-0 overflow-hidden py-0">
+      <ProfileIdentityHeader
+        avatarUrl={avatarPreviewUrl}
+        email={profile.email}
+        initial={initial}
+        name={name}
+        roleLabel={roleLabel}
+      />
 
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          submit();
-        }}
-        className="mt-6"
-      >
-        <FieldGroup>
-          <Field>
-            <FieldLabel>{PROFILE_CLIENT.FIELD_AVATAR_LABEL}</FieldLabel>
-            <div className="flex items-center gap-4">
-              <Avatar size="lg">
-                {avatarPreviewUrl ? <AvatarImage src={avatarPreviewUrl} alt={name} /> : null}
-                <AvatarFallback>
-                  {avatarPreviewUrl ? initial : <UserIcon className="size-4" />}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex flex-col gap-2">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={onSelectAvatar}
-                  disabled={isPending}
-                />
-                <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => fileInputRef.current?.click()}
+      {!isEditing ? (
+        <>
+          {success ? (
+            <div className="px-5 pb-1 sm:px-8">
+              <FormAlert successMessage={PROFILE_CLIENT.SUCCESS_UPDATED} />
+            </div>
+          ) : null}
+          <ProfileDetailsView profile={{ ...profile, name }} roleLabel={roleLabel} onEdit={() => setIsEditing(true)} />
+        </>
+      ) : (
+        <section className="border-t border-border">
+          <header className="px-5 pb-5 pt-6 sm:px-8 sm:pb-6 sm:pt-8">
+            <h3 className="font-heading text-lg font-semibold">{PROFILE_CLIENT.EDIT_TITLE}</h3>
+            <p className="mt-1 text-sm text-muted-foreground">{PROFILE_CLIENT.EDIT_DESCRIPTION}</p>
+          </header>
+
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              submit();
+            }}
+            className="border-t border-border"
+          >
+            <div className="grid gap-7 px-5 py-6 sm:px-8 sm:py-8 md:grid-cols-[11rem_minmax(0,1fr)] md:gap-8">
+              <ProfilePhotoEditor
+                avatarUrl={avatarPreviewUrl}
+                fileInputRef={fileInputRef}
+                initial={initial}
+                isPending={isPending}
+                name={name}
+                onRemove={onRemoveAvatar}
+                onSelect={onSelectAvatar}
+                onUpload={() => fileInputRef.current?.click()}
+              />
+
+              <div className="min-w-0 space-y-6">
+                <Field>
+                  <FieldLabel htmlFor="profile-name">{PROFILE_CLIENT.FIELD_NAME_LABEL}</FieldLabel>
+                  <Input
+                    id="profile-name"
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
                     disabled={isPending}
-                  >
-                    <UploadIcon />
-                    {avatarPreviewUrl ? PROFILE_CLIENT.REPLACE_AVATAR : PROFILE_CLIENT.UPLOAD_AVATAR}
-                  </Button>
-                  {avatarPreviewUrl ? (
-                    <Button type="button" variant="ghost" size="sm" onClick={onRemoveAvatar} disabled={isPending}>
-                      {PROFILE_CLIENT.REMOVE_AVATAR}
-                    </Button>
-                  ) : null}
-                </div>
-                <FieldDescription>{PROFILE_CLIENT.FIELD_AVATAR_DESC}</FieldDescription>
+                    autoComplete="name"
+                    className="h-11"
+                  />
+                </Field>
+
+                <ProfileAccountSummary email={profile.email} roleLabel={roleLabel} />
+                <FormAlert errorMessage={error} />
               </div>
             </div>
-          </Field>
 
-          <Field>
-            <FieldLabel htmlFor="profile-name">{PROFILE_CLIENT.FIELD_NAME_LABEL}</FieldLabel>
-            <Input
-              id="profile-name"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              disabled={isPending}
-            />
-          </Field>
-
-          <div className="grid grid-cols-2 gap-4">
-            <Field>
-              <FieldLabel>{PROFILE_CLIENT.FIELD_EMAIL_LABEL}</FieldLabel>
-              <Input value={profile.email} disabled readOnly />
-            </Field>
-            <Field>
-              <FieldLabel>{PROFILE_CLIENT.FIELD_ROLE_LABEL}</FieldLabel>
-              <div>
-                <Badge variant="outline">{ROLE_LABELS[profile.role]}</Badge>
-              </div>
-            </Field>
-          </div>
-
-          {success ? <FormAlert successMessage={PROFILE_CLIENT.SUCCESS_UPDATED} /> : null}
-          <FormAlert errorMessage={error} />
-
-          <div className="flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={cancelEditing} disabled={isPending}>
-              {PROFILE_CLIENT.CANCEL}
-            </Button>
-            <Button type="submit" size="lg" disabled={isPending || name.trim().length < 2}>
-              {isPending ? <Loader2Icon className="animate-spin" /> : null}
-              {isPending ? PROFILE_CLIENT.SAVING : PROFILE_CLIENT.SAVE}
-            </Button>
-          </div>
-        </FieldGroup>
-      </form>
+            <footer className="grid grid-cols-2 gap-3 border-t border-border px-5 py-4 sm:flex sm:justify-end sm:px-8">
+              <Button
+                type="button"
+                variant="outline"
+                className="h-10 px-4"
+                onClick={cancelEditing}
+                disabled={isPending}
+              >
+                {PROFILE_CLIENT.CANCEL}
+              </Button>
+              <Button
+                type="submit"
+                className="h-10 px-4"
+                disabled={isPending || name.trim().length < 2}
+              >
+                {isPending ? <Loader2Icon className="animate-spin" /> : null}
+                {isPending ? PROFILE_CLIENT.SAVING : PROFILE_CLIENT.SAVE}
+              </Button>
+            </footer>
+          </form>
+        </section>
+      )}
     </Card>
   );
 }

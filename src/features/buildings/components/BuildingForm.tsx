@@ -7,7 +7,6 @@ import { Building2Icon, GlobeIcon, Loader2Icon, MailIcon, MapPinIcon, PencilIcon
 
 import FormAlert from "@/components/shared/form/FormAlert";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
@@ -146,8 +145,8 @@ export function BuildingForm({ building }: BuildingFormProps) {
   }
 
   return (
-    <Card className="p-6 sm:p-8">
-      <h1 className="font-heading text-xl font-semibold tracking-tight">{BUILDINGS_CLIENT.FORM_TITLE}</h1>
+    <section className="border-y border-border py-5 sm:py-6">
+      <h2 className="font-heading text-lg font-semibold tracking-tight">{BUILDINGS_CLIENT.FORM_TITLE}</h2>
       <p className="mt-1 text-sm text-muted-foreground">{BUILDINGS_CLIENT.FORM_DESC}</p>
 
       <form
@@ -157,11 +156,11 @@ export function BuildingForm({ building }: BuildingFormProps) {
         }}
         className="mt-6"
       >
-        <FieldGroup>
-          <Field>
+        <FieldGroup className="grid gap-5 sm:grid-cols-2">
+          <Field className="sm:col-span-2">
             <FieldLabel>{BUILDINGS_CLIENT.FIELD_LOGO_LABEL}</FieldLabel>
-            <div className="flex items-center gap-4">
-              <div className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-border bg-muted">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+              <div className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-muted">
                 {logoPreviewUrl ? (
                   <Image alt={name} src={logoPreviewUrl} fill sizes="64px" className="object-cover" />
                 ) : (
@@ -178,7 +177,7 @@ export function BuildingForm({ building }: BuildingFormProps) {
                     onChange={onSelectLogo}
                     disabled={isPending}
                   />
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     <Button
                       type="button"
                       variant="outline"
@@ -201,7 +200,7 @@ export function BuildingForm({ building }: BuildingFormProps) {
             </div>
           </Field>
 
-          <Field>
+          <Field className="sm:col-span-2">
             <FieldLabel htmlFor="building-name">{BUILDINGS_CLIENT.FIELD_NAME_LABEL}</FieldLabel>
             <Input
               id="building-name"
@@ -211,7 +210,7 @@ export function BuildingForm({ building }: BuildingFormProps) {
             />
           </Field>
 
-          <Field>
+          <Field className="sm:col-span-2">
             <FieldLabel htmlFor="building-address">{BUILDINGS_CLIENT.FIELD_ADDRESS_LABEL}</FieldLabel>
             <Input
               id="building-address"
@@ -252,22 +251,28 @@ export function BuildingForm({ building }: BuildingFormProps) {
             />
           </Field>
 
-          {success ? <FormAlert successMessage={BUILDINGS_CLIENT.SUCCESS_UPDATED} /> : null}
-          <FormAlert errorMessage={error} />
+          {success ? (
+            <div className="sm:col-span-2">
+              <FormAlert successMessage={BUILDINGS_CLIENT.SUCCESS_UPDATED} />
+            </div>
+          ) : null}
+          <div className="sm:col-span-2">
+            <FormAlert errorMessage={error} />
+          </div>
 
           {!readOnly ? (
-            <div className="flex justify-end gap-2">
+            <div className="grid grid-cols-2 gap-2 border-t border-border pt-5 sm:col-span-2 sm:flex sm:justify-end">
               <Button type="button" variant="outline" onClick={cancelEditing} disabled={isPending}>
                 {BUILDINGS_CLIENT.CANCEL}
               </Button>
-            <Button type="submit" size="lg" disabled={isPending || name.trim().length < 2}>
-              {isPending ? <Loader2Icon className="animate-spin" /> : null}
-              {isPending ? BUILDINGS_CLIENT.SAVING : BUILDINGS_CLIENT.SAVE}
-            </Button>
+              <Button type="submit" disabled={isPending || name.trim().length < 2}>
+                {isPending ? <Loader2Icon className="animate-spin" /> : null}
+                {isPending ? BUILDINGS_CLIENT.SAVING : BUILDINGS_CLIENT.SAVE}
+              </Button>
             </div>
           ) : null}
         </FieldGroup>
       </form>
-    </Card>
+    </section>
   );
 }

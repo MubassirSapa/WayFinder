@@ -38,11 +38,11 @@ export function FloorRow({ floor, buildingId }: FloorRowProps) {
   };
 
   return (
-    <li className="rounded-2xl border border-border bg-card p-4 shadow-sm transition-colors hover:border-primary/40">
+    <li className="px-1 py-4 transition-colors hover:bg-muted/30 sm:px-3">
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
         <div className="flex min-w-0 items-center gap-4">
           <FloorMiniMap className="hidden sm:block" />
-          <span className="grid size-12 shrink-0 place-content-center rounded-xl border border-primary/30 bg-primary/10 font-heading text-sm font-semibold text-primary">
+          <span className="grid size-10 shrink-0 place-content-center rounded-lg bg-primary/10 font-heading text-xs font-semibold text-primary">
             {floor.badge}
           </span>
           <div className="min-w-0 flex-1">
@@ -53,7 +53,7 @@ export function FloorRow({ floor, buildingId }: FloorRowProps) {
           </div>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto] sm:items-center lg:flex lg:justify-end">
+        <div className="grid gap-3 border-t border-border pt-3 sm:grid-cols-[1fr_auto] sm:items-center lg:flex lg:border-t-0 lg:pt-0">
           <span className="text-xs text-muted-foreground sm:text-right">
             {BUILDINGS_CLIENT.UPDATED_PREFIX} {floor.updatedLabel}
           </span>
@@ -75,12 +75,12 @@ export function FloorRow({ floor, buildingId }: FloorRowProps) {
             />
           </label>
 
-          <div className="flex shrink-0 gap-2">
+          <div className="col-span-full grid grid-cols-2 gap-2 sm:col-span-2 lg:flex lg:shrink-0">
             <Button
               nativeButton={false}
               render={<Link href={`${PRIVATE_ROUTES.BUILDINGS}/${buildingId}/floors/${floor.id}`} />}
               variant="outline"
-              size="lg"
+              size="sm"
               className="h-10 w-full sm:w-auto"
             >
               <PencilIcon />
@@ -90,7 +90,7 @@ export function FloorRow({ floor, buildingId }: FloorRowProps) {
               nativeButton={false}
               render={<Link href={buildEditorHref(floor.id)} />}
               variant="default"
-              size="lg"
+              size="sm"
               className="h-10 w-full sm:w-auto"
             >
               {BUILDINGS_CLIENT.FLOOR_OPEN_EDITOR}

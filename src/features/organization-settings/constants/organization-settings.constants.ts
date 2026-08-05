@@ -1,5 +1,6 @@
 export const ORGANIZATION_SETTINGS_CLIENT = {
   PAGE_TITLE: "Organization",
+  PAGE_DESCRIPTION: "Manage your organization identity and buildings.",
 
   FORM_TITLE: "Organization info",
   FORM_DESC: "This information is shown across your dashboard and public pages.",

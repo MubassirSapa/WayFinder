@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+- Refined the authenticated dashboard, building, floor, organization, profile, and team-management pages into a consistent responsive workspace UI.
+- Reworked the private team-management page into a responsive, searchable member directory. Compact identity cards keep role and building access visible without segmented panels, while organization owners and managers retain the existing role, building-assignment, and removal actions in a dedicated access area. Adding a teammate now uses a compact responsive dialog with separate account and access sections instead of a full-height side panel.
+
 ### Fixed
 - Fixed SQLite relationship updates rejecting serialized numeric IDs for buildings, media, floors, map objects, and map nodes while continuing to preserve string-based MongoDB ObjectIds.
 - Removed the unreferenced `/editor` index route, which listed floors across every organization by calling the Payload Local API directly (bypassing the `services/server` layer and, since it never identified the requesting user, effectively unscoped by building/organization). `/editor/[floorId]` — the only entry point actually linked from the dashboard — is unaffected and remains correctly building-scoped.
@@ -18,7 +22,7 @@
 - Standardized dashboard presentation around reusable page-header, page-container, and entity-summary components; organization/building information, add/edit actions, floor forms, and user/building lists now share consistent spacing, cards, typography, and button hierarchy.
 - Aligned the sidebar and topbar dividers on the same 64px boundary by using the flush sidebar shell instead of the padded inset variant.
 - Building pages now present logo, organization, address, and contact details as a compact read-only summary by default; owners and managers reveal the editable fields explicitly with an Edit building action, while members remain view-only.
-- Profile pages now present a large user photo with name, email, and role as read-only information; profile fields mount only after Edit profile is pressed.
+- Redesigned the responsive profile page around a Wayfinder-teal identity header and structured account details, while keeping profile fields hidden until Edit profile is pressed and preserving the existing name/avatar update flow. Its edit state now uses a dedicated photo column, unframed account rows, touch-sized actions, and immediate client-side avatar size validation.
 - Members can now create, update, and delete map content (floors, map objects, map nodes, path edges) in buildings they're assigned to — previously `buildingContentCreate`/`buildingContentUpdateDelete` excluded the `member` role entirely, leaving members with no working access to the buildings they were assigned to. A member's access to a *building's own record* (name, address, contact info, logo) stays read-only; only an owner or manager can edit that. See `docs/security/RBAC.md`.
 - Owners and managers can now edit their organization's own record (`Organizations.update` was previously platform-admin-only) and can create, update, and delete non-owner users in their organization (`Users.create/update/delete` were previously platform-admin-only, and the `role`/`buildings` fields were locked to platform admins). New access functions (`organizationUpdate`, `userRead`, `userCreate`, `userUpdate`, `userDelete`, `canManageOrgUserFields`) enforce this while still preventing self-escalation (a user can never change their own `role`/`buildings`/`organization`) and preventing anyone but a platform admin from updating, deleting, or being created as the organization's `owner`.
 - Removed the now-unused `isPlatformAdminOrSelf` access function (superseded by the new `userRead`/`userUpdate`) and the dead `buildOrgAdminHref` helper (the dashboard's "Edit" button now links to `/dashboard/organization` instead of the Payload admin panel, which non-admin users couldn't reach anyway).

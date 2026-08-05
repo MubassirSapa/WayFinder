@@ -8,10 +8,14 @@ import { BUILDINGS_CLIENT } from "@/features/buildings/constants/buildings.const
 import { BuildingForm } from "@/features/buildings/components/BuildingForm";
 import { FloorList } from "@/features/buildings/components/FloorList";
 import { getBuildingForEdit, getBuildingFloorsView } from "@/features/buildings/services/server/buildings.ports";
-import { DashboardPageContainer } from "@/features/dashboard/components/DashboardPageHeader";
+import {
+  DashboardBackLink,
+  DashboardPageContainer,
+} from "@/features/dashboard/components/DashboardPageHeader";
 
 export const metadata: Metadata = {
   title: `${BUILDINGS_CLIENT.EDIT_PAGE_TITLE} | ${BRAND.NAME}`,
+  description: BUILDINGS_CLIENT.EDIT_PAGE_DESCRIPTION,
 };
 
 type BuildingEditPageProps = {
@@ -33,6 +37,11 @@ export default async function BuildingEditPage({ params }: BuildingEditPageProps
 
   return (
     <DashboardPageContainer>
+      <DashboardBackLink
+        href={PRIVATE_ROUTES.BUILDINGS}
+        label={BUILDINGS_CLIENT.BACK_TO_BUILDINGS}
+      />
+
       <div className="w-full">
         <BuildingForm building={buildingResult.data} />
       </div>

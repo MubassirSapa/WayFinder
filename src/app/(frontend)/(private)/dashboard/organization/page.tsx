@@ -10,10 +10,14 @@ import { OrganizationForm } from "@/features/organization-settings/components/Or
 import { getOrganizationForEdit } from "@/features/organization-settings/services/server/organization-settings.ports";
 import { BuildingsList } from "@/features/buildings/components/BuildingsList";
 import { listBuildings } from "@/features/buildings/services/server/buildings.ports";
-import { DashboardPageContainer } from "@/features/dashboard/components/DashboardPageHeader";
+import {
+  DashboardPageContainer,
+  DashboardPageHeader,
+} from "@/features/dashboard/components/DashboardPageHeader";
 
 export const metadata: Metadata = {
   title: `${ORGANIZATION_SETTINGS_CLIENT.PAGE_TITLE} | ${BRAND.NAME}`,
+  description: ORGANIZATION_SETTINGS_CLIENT.PAGE_DESCRIPTION,
 };
 
 export default async function OrganizationPage() {
@@ -32,6 +36,10 @@ export default async function OrganizationPage() {
 
   return (
     <DashboardPageContainer>
+      <DashboardPageHeader
+        title={ORGANIZATION_SETTINGS_CLIENT.PAGE_TITLE}
+        description={ORGANIZATION_SETTINGS_CLIENT.PAGE_DESCRIPTION}
+      />
       <OrganizationForm organization={result.data} />
       <BuildingsList buildings={buildings} canManage />
     </DashboardPageContainer>

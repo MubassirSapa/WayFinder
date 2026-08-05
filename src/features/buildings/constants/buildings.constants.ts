@@ -10,6 +10,8 @@ export const BUILDINGS_CLIENT = {
   COLUMN_NAME: "Name",
   COLUMN_ADDRESS: "Address",
   COLUMN_FLOORS: "Floors",
+  FLOOR_SUFFIX: "floor",
+  FLOORS_SUFFIX: "floors",
   EMPTY_ADDRESS: "No address set",
 
   EMPTY_TITLE: "No buildings yet",
@@ -21,6 +23,8 @@ export const BUILDINGS_CLIENT = {
   CREATE_DIALOG_DESC: "You can add contact details and a logo after creating it.",
 
   EDIT_PAGE_TITLE: "Building",
+  EDIT_PAGE_DESCRIPTION: "Manage this building's details, floors, and public visibility.",
+  BACK_TO_BUILDINGS: "Back to buildings",
   FORM_TITLE: "Building info",
   FORM_DESC: "Shown to managers and members assigned to this building.",
   READ_ONLY_NOTICE: "You can view this building's info, but only an owner or manager can edit it.",
@@ -56,7 +60,8 @@ export const BUILDINGS_CLIENT = {
   EMPTY_FLOORS_TITLE: "No floors yet",
   EMPTY_FLOORS_DESC: "Add your first floor to start mapping this building.",
 
-  CREATE_FLOOR_SHEET_TITLE: "Add floor",
+  CREATE_FLOOR_DIALOG_TITLE: "Add a floor",
+  CREATE_FLOOR_DIALOG_DESC: "Set the floor name, level, and visibility.",
   CREATE_FLOOR_FIELD_NAME_LABEL: "Floor name",
   CREATE_FLOOR_FIELD_NAME_PLACEHOLDER: "e.g. Outpatients & Imaging",
   FIELD_PUBLISH_TITLE: "Make public on create",

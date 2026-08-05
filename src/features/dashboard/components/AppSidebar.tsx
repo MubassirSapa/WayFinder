@@ -3,12 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowUpRightIcon, Building2Icon, LayoutDashboardIcon, LandmarkIcon, UsersIcon } from "lucide-react";
+import { Building2Icon, LayoutDashboardIcon, LandmarkIcon, UsersIcon } from "lucide-react";
 
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -19,7 +18,7 @@ import {
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { PRIVATE_ROUTES, PUBLIC_ROUTES } from "@/constants/routes";
+import { PRIVATE_ROUTES } from "@/constants/routes";
 import { BRAND } from "@/constants/brand";
 
 import { DASHBOARD_CLIENT } from "../constants/dashboard.constants";
@@ -97,20 +96,6 @@ export function AppSidebar({ user }: { user: TopbarUser }) {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              render={<Link href={PUBLIC_ROUTES.HOME} onClick={() => setOpenMobile(false)} />}
-              tooltip={DASHBOARD_CLIENT.VIEW_PUBLIC}
-              className="group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0"
-            >
-              <ArrowUpRightIcon />
-              <span className="group-data-[collapsible=icon]:hidden">{DASHBOARD_CLIENT.VIEW_PUBLIC}</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );

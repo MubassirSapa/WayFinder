@@ -1,15 +1,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowLeftIcon } from "lucide-react";
+import { ExternalLinkIcon } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import { BRAND } from "@/constants/brand";
 import { PRIVATE_ROUTES, PUBLIC_ROUTES } from "@/constants/routes";
 import { getCurrentUser } from "@/features/auth/services/server/auth.ports";
-import { BUILDINGS_CLIENT } from "@/features/buildings/constants/buildings.constants";
+import {
+  buildEditorHref,
+  BUILDINGS_CLIENT,
+} from "@/features/buildings/constants/buildings.constants";
 import { FloorMetadataForm } from "@/features/buildings/components/FloorMetadataForm";
 import { getFloorForEdit } from "@/features/buildings/services/server/buildings.ports";
-import { DashboardPageContainer } from "@/features/dashboard/components/DashboardPageHeader";
+import {
+  DashboardPageContainer,
+  DashboardPageHeader,
+} from "@/features/dashboard/components/DashboardPageHeader";
 
 export const metadata: Metadata = {
   title: `${BUILDINGS_CLIENT.FLOOR_EDIT_PAGE_TITLE} | ${BRAND.NAME}`,
@@ -32,16 +39,23 @@ export default async function FloorEditPage({ params }: FloorEditPageProps) {
 
   return (
     <DashboardPageContainer>
-      <div className="mx-auto w-full max-w-xl">
-      <Link
-        href={`${PRIVATE_ROUTES.BUILDINGS}/${buildingId}`}
-        className="mb-6 inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
-      >
-        <ArrowLeftIcon className="size-3.5" />
-        {BUILDINGS_CLIENT.BACK_TO_BUILDING}
-      </Link>
-
-      <FloorMetadataForm floor={floorResult.data} />
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+        <DashboardPageHeader
+          title={floorResult.data.name}
+          description={`${floorResult.data.buildingName} - ${BUILDINGS_CLIENT.FLOOR_FORM_DESC}`}
+          backHref={`${PRIVATE_ROUTES.BUILDINGS}/${buildingId}`}
+          backLabel={BUILDINGS_CLIENT.BACK_TO_BUILDING}
+          action={
+            <Button
+              nativeButton={false}
+              render={<Link href={buildEditorHref(floorId)} />}
+            >
+              <ExternalLinkIcon />
+              {BUILDINGS_CLIENT.FLOOR_OPEN_EDITOR}
+            </Button>
+          }
+        />
+        <FloorMetadataForm floor={floorResult.data} />
       </div>
     </DashboardPageContainer>
   );

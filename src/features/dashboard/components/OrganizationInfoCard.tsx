@@ -11,23 +11,26 @@ type OrganizationInfoCardProps = {
   typeLabel: string;
   logoUrl: string | null;
   action?: ReactNode;
+  children?: ReactNode;
 };
 
-export function OrganizationInfoCard({ name, typeLabel, logoUrl, action }: OrganizationInfoCardProps) {
+export function OrganizationInfoCard({ name, typeLabel, logoUrl, action, children }: OrganizationInfoCardProps) {
   return (
     <EntitySummaryCard
       visual={
-        <div className="relative flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-primary/20 bg-primary/15">
+        <div className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-primary/20 bg-primary/10 sm:size-18">
           {logoUrl ? (
             <Image alt={name} src={logoUrl} fill sizes="80px" className="object-cover" />
           ) : (
-            <LandmarkIcon className="size-8 text-primary" />
+            <LandmarkIcon className="size-7 text-primary" />
           )}
         </div>
       }
       title={name}
       meta={<Badge variant="outline" className="uppercase tracking-wide">{typeLabel}</Badge>}
       action={action}
-    />
+    >
+      {children}
+    </EntitySummaryCard>
   );
 }

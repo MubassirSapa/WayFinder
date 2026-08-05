@@ -6,7 +6,6 @@ import { Loader2Icon } from "lucide-react";
 
 import FormAlert from "@/components/shared/form/FormAlert";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -59,16 +58,13 @@ export function FloorMetadataForm({ floor }: FloorMetadataFormProps) {
   };
 
   return (
-    <Card className="p-6 sm:p-8">
-      <h1 className="font-heading text-xl font-semibold tracking-tight">{BUILDINGS_CLIENT.FLOOR_FORM_TITLE}</h1>
-      <p className="mt-1 text-sm text-muted-foreground">{BUILDINGS_CLIENT.FLOOR_FORM_DESC}</p>
-
+    <section className="border-y border-border py-5 sm:py-6">
       <form
         onSubmit={(event) => {
           event.preventDefault();
           submit();
         }}
-        className="mt-6"
+        className="space-y-6"
       >
         <FieldGroup>
           <Field>
@@ -81,7 +77,7 @@ export function FloorMetadataForm({ floor }: FloorMetadataFormProps) {
             />
           </Field>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-4 sm:grid-cols-2">
             <Field>
               <FieldLabel htmlFor="floor-level">{BUILDINGS_CLIENT.FIELD_LEVEL_LABEL}</FieldLabel>
               <Input
@@ -108,7 +104,7 @@ export function FloorMetadataForm({ floor }: FloorMetadataFormProps) {
             </Field>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-4 sm:grid-cols-2">
             <Field>
               <FieldLabel htmlFor="floor-width">{BUILDINGS_CLIENT.FIELD_WIDTH_LABEL}</FieldLabel>
               <Input
@@ -133,7 +129,7 @@ export function FloorMetadataForm({ floor }: FloorMetadataFormProps) {
             </Field>
           </div>
 
-          <div className="flex items-center justify-between gap-4 rounded-xl border border-border bg-background/40 p-4">
+          <div className="flex items-center justify-between gap-4 border-y border-border py-4">
             <div>
               <p className="text-sm font-medium">{BUILDINGS_CLIENT.FIELD_STATUS_LABEL}</p>
               <p className="mt-1 text-xs text-muted-foreground">
@@ -146,12 +142,14 @@ export function FloorMetadataForm({ floor }: FloorMetadataFormProps) {
           {success ? <FormAlert successMessage={BUILDINGS_CLIENT.SUCCESS_FLOOR_UPDATED} /> : null}
           <FormAlert errorMessage={error} />
 
-          <Button type="submit" size="lg" disabled={isPending || name.trim().length < 2}>
-            {isPending ? <Loader2Icon className="animate-spin" /> : null}
-            {isPending ? BUILDINGS_CLIENT.SAVING : BUILDINGS_CLIENT.SAVE}
-          </Button>
+          <div className="flex justify-end">
+            <Button type="submit" disabled={isPending || name.trim().length < 2}>
+              {isPending ? <Loader2Icon className="animate-spin" /> : null}
+              {isPending ? BUILDINGS_CLIENT.SAVING : BUILDINGS_CLIENT.SAVE}
+            </Button>
+          </div>
         </FieldGroup>
       </form>
-    </Card>
+    </section>
   );
 }

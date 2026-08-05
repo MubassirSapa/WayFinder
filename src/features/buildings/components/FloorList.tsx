@@ -14,10 +14,10 @@ type FloorListProps = {
 
 export function FloorList({ floors, buildingId, organizationName }: FloorListProps) {
   return (
-    <section className="flex flex-1 flex-col">
+    <section className="flex flex-1 flex-col" aria-labelledby="floors-title">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="font-heading text-2xl font-semibold tracking-tight">
+          <h2 id="floors-title" className="font-heading text-xl font-semibold tracking-tight">
             {BUILDINGS_CLIENT.FLOORS_TITLE}
           </h2>
           <p className="mt-2 inline-flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground">
@@ -35,7 +35,7 @@ export function FloorList({ floors, buildingId, organizationName }: FloorListPro
       </div>
 
       {floors.length > 0 ? (
-        <ul className="mt-6 flex flex-col gap-3">
+        <ul className="mt-5 divide-y divide-border border-y border-border">
           {floors.map((floor) => (
             <FloorRow key={floor.id} floor={floor} buildingId={buildingId} />
           ))}

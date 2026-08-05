@@ -7,10 +7,14 @@ import { getCurrentUser } from "@/features/auth/services/server/auth.ports";
 import { PROFILE_CLIENT } from "@/features/profile/constants/profile.constants";
 import { ProfileForm } from "@/features/profile/components/ProfileForm";
 import { getProfileForEdit } from "@/features/profile/services/server/profile.ports";
-import { DashboardPageContainer } from "@/features/dashboard/components/DashboardPageHeader";
+import {
+  DashboardPageContainer,
+  DashboardPageHeader,
+} from "@/features/dashboard/components/DashboardPageHeader";
 
 export const metadata: Metadata = {
   title: `${PROFILE_CLIENT.PAGE_TITLE} | ${BRAND.NAME}`,
+  description: PROFILE_CLIENT.PAGE_DESCRIPTION,
 };
 
 export default async function ProfilePage() {
@@ -22,6 +26,10 @@ export default async function ProfilePage() {
 
   return (
     <DashboardPageContainer>
+      <DashboardPageHeader
+        title={PROFILE_CLIENT.PAGE_TITLE}
+        description={PROFILE_CLIENT.PAGE_DESCRIPTION}
+      />
       <ProfileForm profile={result.data} />
     </DashboardPageContainer>
   );

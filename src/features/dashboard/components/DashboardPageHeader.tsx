@@ -41,6 +41,18 @@ export function DashboardPageHeader({
   );
 }
 
+export function DashboardBackLink({ href, label }: { href: string; label: string }) {
+  return (
+    <Link
+      href={href}
+      className="inline-flex w-fit items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+    >
+      <ArrowLeftIcon className="size-3.5" aria-hidden="true" />
+      {label}
+    </Link>
+  );
+}
+
 export function DashboardPageContainer({ children }: { children: ReactNode }) {
   return (
     <main className="mx-auto flex w-full max-w-270 flex-1 flex-col gap-8 px-4 pb-16 pt-6 sm:px-6 sm:pt-8 lg:px-8">

@@ -1,9 +1,15 @@
 export const PROFILE_CLIENT = {
   PAGE_TITLE: "Profile",
+  PAGE_DESCRIPTION: "Manage your personal details and how you appear to your organization.",
   FORM_TITLE: "Your profile",
   FORM_DESC: "Update how you appear across the dashboard.",
   EDIT: "Edit profile",
   CANCEL: "Cancel",
+
+  DETAILS_TITLE: "Account details",
+  DETAILS_DESCRIPTION: "Your account identity and organization access.",
+  EDIT_TITLE: "Edit personal details",
+  EDIT_DESCRIPTION: "Update your name or choose a new profile photo.",
 
   FIELD_AVATAR_LABEL: "Photo",
   FIELD_AVATAR_DESC: "PNG or JPG, up to 5MB.",
@@ -32,3 +38,9 @@ export const PROFILE_CLIENT = {
 } as const;
 
 export const MAX_AVATAR_SIZE_BYTES = 5 * 1024 * 1024;
+
+export const PROFILE_ROLE_LABELS = {
+  owner: "Owner",
+  manager: "Manager",
+  member: "Member",
+} as const;

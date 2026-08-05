@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 import { BUILDINGS_CLIENT } from "../constants/buildings.constants";
-import { AddFloorSheet } from "./AddFloorSheet";
+import { AddFloorDialog } from "./AddFloorDialog";
 
 type AddFloorControlProps = {
   buildingId: string;
@@ -24,7 +24,7 @@ export function AddFloorControl({ buildingId, organizationName, className }: Add
         <PlusIcon />
         {BUILDINGS_CLIENT.ADD_FLOOR}
       </Button>
-      <AddFloorSheet
+      <AddFloorDialog
         open={isOpen}
         onOpenChange={setIsOpen}
         buildingId={buildingId}

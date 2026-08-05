@@ -7,7 +7,6 @@ import { Building2Icon, Loader2Icon, PencilIcon, UploadIcon } from "lucide-react
 
 import FormAlert from "@/components/shared/form/FormAlert";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -114,8 +113,8 @@ export function OrganizationForm({ organization }: OrganizationFormProps) {
   }
 
   return (
-    <Card className="p-6 sm:p-8">
-      <h1 className="font-heading text-xl font-semibold tracking-tight">{ORGANIZATION_SETTINGS_CLIENT.FORM_TITLE}</h1>
+    <section className="border-y border-border py-5 sm:py-6">
+      <h2 className="font-heading text-lg font-semibold tracking-tight">{ORGANIZATION_SETTINGS_CLIENT.FORM_TITLE}</h2>
       <p className="mt-1 text-sm text-muted-foreground">{ORGANIZATION_SETTINGS_CLIENT.FORM_DESC}</p>
 
       <form
@@ -125,11 +124,11 @@ export function OrganizationForm({ organization }: OrganizationFormProps) {
         }}
         className="mt-6"
       >
-        <FieldGroup>
-          <Field>
+        <FieldGroup className="grid gap-5 sm:grid-cols-2">
+          <Field className="sm:col-span-2">
             <FieldLabel>{ORGANIZATION_SETTINGS_CLIENT.FIELD_LOGO_LABEL}</FieldLabel>
-            <div className="flex items-center gap-4">
-              <div className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-border bg-muted">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+              <div className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-muted">
                 {logoPreviewUrl ? (
                   <Image alt={name} src={logoPreviewUrl} fill sizes="64px" className="object-cover" />
                 ) : (
@@ -145,7 +144,7 @@ export function OrganizationForm({ organization }: OrganizationFormProps) {
                   onChange={onSelectLogo}
                   disabled={isPending}
                 />
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <Button
                     type="button"
                     variant="outline"
@@ -202,20 +201,26 @@ export function OrganizationForm({ organization }: OrganizationFormProps) {
             </Select>
           </Field>
 
-          {success ? <FormAlert successMessage={ORGANIZATION_SETTINGS_CLIENT.SUCCESS_UPDATED} /> : null}
-          <FormAlert errorMessage={error} />
+          {success ? (
+            <div className="sm:col-span-2">
+              <FormAlert successMessage={ORGANIZATION_SETTINGS_CLIENT.SUCCESS_UPDATED} />
+            </div>
+          ) : null}
+          <div className="sm:col-span-2">
+            <FormAlert errorMessage={error} />
+          </div>
 
-          <div className="flex justify-end gap-2">
+          <div className="grid grid-cols-2 gap-2 border-t border-border pt-5 sm:col-span-2 sm:flex sm:justify-end">
             <Button type="button" variant="outline" onClick={cancelEditing} disabled={isPending}>
               {ORGANIZATION_SETTINGS_CLIENT.CANCEL}
             </Button>
-            <Button type="submit" size="lg" disabled={isPending || name.trim().length < 2}>
+            <Button type="submit" disabled={isPending || name.trim().length < 2}>
               {isPending ? <Loader2Icon className="animate-spin" /> : null}
               {isPending ? ORGANIZATION_SETTINGS_CLIENT.SAVING : ORGANIZATION_SETTINGS_CLIENT.SAVE}
             </Button>
           </div>
         </FieldGroup>
       </form>
-    </Card>
+    </section>
   );
 }
