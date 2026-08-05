@@ -1,4 +1,5 @@
 import { WayfinderBrand } from "@/components/shared/brand/WayfinderBrand";
+import { ModeToggle } from "@/components/shared/theme/ModeToggle";
 import { NotFoundActions } from "./NotFoundActions";
 
 export function NotFoundPage() {
@@ -10,8 +11,11 @@ export function NotFoundPage() {
 
       <header className="relative z-10 flex items-center justify-between px-5 py-6 sm:px-10 lg:px-14 lg:py-9">
         <WayfinderBrand href="/" textClassName="text-not-found-strong" />
-        <div className="hidden font-mono text-xs uppercase tracking-[0.18em] text-not-found-subtle sm:block">
-          Status - <span className="text-not-found-danger">No fix</span>
+        <div className="flex items-center gap-3">
+          <div className="hidden font-mono text-xs uppercase tracking-[0.18em] text-not-found-subtle sm:block">
+            Status - <span className="text-not-found-danger">No fix</span>
+          </div>
+          <ModeToggle />
         </div>
       </header>
 

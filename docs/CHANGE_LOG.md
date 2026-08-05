@@ -7,6 +7,7 @@
 - Reworked the private team-management page into a responsive, searchable member directory. Compact identity cards keep role and building access visible without segmented panels, while organization owners and managers retain the existing role, building-assignment, and removal actions in a dedicated access area. Adding a teammate now uses a compact responsive dialog with separate account and access sections instead of a full-height side panel.
 
 ### Fixed
+- Added the shared light/dark theme control to the private dashboard topbar and 404 header so both experiences use the same tested theme behavior.
 - Fixed SQLite relationship updates rejecting serialized numeric IDs for buildings, media, floors, map objects, and map nodes while continuing to preserve string-based MongoDB ObjectIds.
 - Removed the unreferenced `/editor` index route, which listed floors across every organization by calling the Payload Local API directly (bypassing the `services/server` layer and, since it never identified the requesting user, effectively unscoped by building/organization). `/editor/[floorId]` — the only entry point actually linked from the dashboard — is unaffected and remains correctly building-scoped.
 

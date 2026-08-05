@@ -159,27 +159,27 @@
   --editor-smart-builder: oklch(0.58 0.16 160);
   --editor-smart-builder-fill: oklch(0.58 0.16 160 / 18%);
   --mask-opaque: oklch(0 0 0);
-  --not-found-background: oklch(0.97 0.008 165);
-  --not-found-foreground: oklch(0.24 0.018 165);
-  --not-found-strong: oklch(0.15 0.012 165);
-  --not-found-muted: oklch(0.45 0.03 165);
-  --not-found-subtle: oklch(0.58 0.025 165);
-  --not-found-danger: oklch(0.62 0.16 28);
-  --not-found-ring: oklch(0.48 0.08 165 / 20%);
-  --not-found-ring-strong: oklch(0.48 0.08 165 / 36%);
-  --not-found-crosshair: oklch(0.48 0.08 165 / 27%);
-  --not-found-marker-background: oklch(0.94 0.015 165);
+  --not-found-background: var(--background);
+  --not-found-foreground: var(--foreground);
+  --not-found-strong: var(--foreground);
+  --not-found-muted: var(--muted-foreground);
+  --not-found-subtle: color-mix(in oklch, var(--muted-foreground) 82%, transparent);
+  --not-found-danger: var(--destructive);
+  --not-found-ring: color-mix(in oklch, var(--primary) 24%, transparent);
+  --not-found-ring-strong: color-mix(in oklch, var(--primary) 42%, transparent);
+  --not-found-crosshair: color-mix(in oklch, var(--primary) 32%, transparent);
+  --not-found-marker-background: var(--card);
   --not-found-backdrop: radial-gradient(
     120% 100% at 78% 18%,
     var(--not-found-marker-background) 0%,
     var(--not-found-background) 55%,
-    color-mix(in oklch, var(--not-found-background), var(--not-found-strong) 18%) 100%
+    color-mix(in oklch, var(--not-found-background), var(--not-found-strong) 8%) 100%
   );
   --not-found-grid-line: color-mix(in oklch, var(--primary) 10%, transparent);
   --not-found-vignette: radial-gradient(
     70% 70% at 50% 50%,
     transparent 40%,
-    color-mix(in oklch, var(--not-found-background), var(--not-found-strong) 35%) 100%
+    color-mix(in oklch, var(--not-found-background), var(--not-found-strong) 12%) 100%
   );
   --not-found-sweep: conic-gradient(
     from 0deg,
@@ -272,16 +272,6 @@
   --editor-grid-major: oklch(1 0 0 / 10%);
   --editor-canvas-label: oklch(1 0 0 / 90%);
   --editor-canvas-label-inverse: oklch(0.18 0.02 250);
-  --not-found-background: oklch(0.25 0.012 165);
-  --not-found-foreground: oklch(0.88 0.012 165);
-  --not-found-strong: oklch(0.93 0.008 165);
-  --not-found-muted: oklch(0.68 0.03 165);
-  --not-found-subtle: oklch(0.58 0.035 165);
-  --not-found-danger: oklch(0.7 0.15 28);
-  --not-found-ring: oklch(0.42 0.08 165 / 20%);
-  --not-found-ring-strong: oklch(0.42 0.08 165 / 36%);
-  --not-found-crosshair: oklch(0.42 0.08 165 / 27%);
-  --not-found-marker-background: oklch(0.31 0.025 165);
 }
 
 .map-viewer-theme {

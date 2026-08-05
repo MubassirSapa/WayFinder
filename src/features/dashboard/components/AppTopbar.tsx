@@ -2,10 +2,10 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { useTheme } from "next-themes";
-import { Building2Icon, LogOutIcon, MoonIcon, UserIcon } from "lucide-react";
+import { Building2Icon, LogOutIcon, UserIcon } from "lucide-react";
 
 import { WayfinderBrand } from "@/components/shared/brand/WayfinderBrand";
+import { ModeToggle } from "@/components/shared/theme/ModeToggle";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,9 +25,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { applyTheme, useIsDarkTheme } from "@/components/shared/theme/ModeToggle";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Switch } from "@/components/ui/switch";
 import { PRIVATE_ROUTES } from "@/constants/routes";
 import { logoutAction } from "@/features/auth/actions/server/logout";
 
@@ -40,8 +38,6 @@ type AppTopbarProps = {
 };
 
 export function AppTopbar({ user }: AppTopbarProps) {
-  const { setTheme } = useTheme();
-  const isDark = useIsDarkTheme();
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
   const [isLoggingOut, startLogout] = useTransition();
   const canManage = user.role === "owner" || user.role === "manager";
@@ -66,63 +62,58 @@ export function AppTopbar({ user }: AppTopbarProps) {
             />
           </div>
 
-          <div className="flex items-center">
+          <div className="flex items-center gap-1.5">
+            <ModeToggle />
             <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-2.5 rounded-full outline-none">
-              <UserAvatar user={user} />
-              <span className="hidden leading-tight sm:block">
-                <span className="block text-sm font-medium text-foreground">{user.name}</span>
-                <span className="block text-xs capitalize text-muted-foreground">{user.role}</span>
-              </span>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-72 max-w-[calc(100vw-2rem)]">
-              <DropdownMenuGroup>
-                <DropdownMenuLabel className="flex min-w-0 items-center gap-3 p-3">
-                  <UserAvatar user={user} className="size-10" />
-                  <span className="min-w-0 leading-tight">
-                    <span className="block truncate text-sm font-medium text-foreground">{user.name}</span>
-                    <span className="block truncate text-xs font-normal text-muted-foreground" title={user.email}>
-                      {user.email}
+              <DropdownMenuTrigger className="flex items-center gap-2.5 rounded-full outline-none">
+                <UserAvatar user={user} />
+                <span className="hidden leading-tight sm:block">
+                  <span className="block text-sm font-medium text-foreground">{user.name}</span>
+                  <span className="block text-xs capitalize text-muted-foreground">{user.role}</span>
+                </span>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-72 max-w-[calc(100vw-2rem)]">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel className="flex min-w-0 items-center gap-3 p-3">
+                    <UserAvatar user={user} className="size-10" />
+                    <span className="min-w-0 leading-tight">
+                      <span className="block truncate text-sm font-medium text-foreground">
+                        {user.name}
+                      </span>
+                      <span
+                        className="block truncate text-xs font-normal text-muted-foreground"
+                        title={user.email}
+                      >
+                        {user.email}
+                      </span>
                     </span>
-                  </span>
-                </DropdownMenuLabel>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                {canManage ? (
-                  <DropdownMenuItem render={<Link href={PRIVATE_ROUTES.ORGANIZATION} />}>
-                    <Building2Icon />
-                    {DASHBOARD_CLIENT.NAV_ORGANIZATION}
+                  </DropdownMenuLabel>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  {canManage ? (
+                    <DropdownMenuItem render={<Link href={PRIVATE_ROUTES.ORGANIZATION} />}>
+                      <Building2Icon />
+                      {DASHBOARD_CLIENT.NAV_ORGANIZATION}
+                    </DropdownMenuItem>
+                  ) : null}
+                  <DropdownMenuItem render={<Link href={PRIVATE_ROUTES.PROFILE} />}>
+                    <UserIcon />
+                    {DASHBOARD_CLIENT.NAV_PROFILE}
                   </DropdownMenuItem>
-                ) : null}
-                <DropdownMenuItem render={<Link href={PRIVATE_ROUTES.PROFILE} />}>
-                  <UserIcon />
-                  {DASHBOARD_CLIENT.NAV_PROFILE}
-                </DropdownMenuItem>
-                <div className="flex items-center justify-between gap-3 px-2 py-1.5 text-sm">
-                  <span className="flex items-center gap-2">
-                    <MoonIcon className="size-4" />
-                    {DASHBOARD_CLIENT.THEME_DARK}
-                  </span>
-                  <Switch
-                    aria-label={DASHBOARD_CLIENT.THEME_DARK}
-                    checked={isDark}
-                    onCheckedChange={(checked) => applyTheme(checked ? "dark" : "light", setTheme)}
-                  />
-                </div>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem
-                  variant="destructive"
-                  disabled={isLoggingOut}
-                  onClick={() => setIsLogoutOpen(true)}
-                >
-                  <LogOutIcon />
-                  {DASHBOARD_CLIENT.LOG_OUT}
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem
+                    variant="destructive"
+                    disabled={isLoggingOut}
+                    onClick={() => setIsLogoutOpen(true)}
+                  >
+                    <LogOutIcon />
+                    {DASHBOARD_CLIENT.LOG_OUT}
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </div>
