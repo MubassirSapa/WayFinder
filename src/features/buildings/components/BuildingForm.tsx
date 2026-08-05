@@ -10,10 +10,10 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { MEDIA_RESOURCE_FOLDER } from "@/constants/media";
+import { useStagedMediaUpload } from "@/hooks/use-staged-media-upload";
 
 import { BUILDINGS_CLIENT } from "../constants/buildings.constants";
 import { EntitySummaryCard } from "@/features/dashboard/components/EntitySummaryCard";
-import { uploadMediaClientSide } from "@/lib/uploads/uploadMediaClientSide";
 import { updateBuildingAction } from "../actions/server/update-building";
 import type { BuildingEditData } from "../types/buildings.types";
 
@@ -25,56 +25,31 @@ export function BuildingForm({ building }: BuildingFormProps) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isPending, startTransition] = useTransition();
+  const logo = useStagedMediaUpload(building.logoUrl, fileInputRef);
 
   const [name, setName] = useState(building.name);
   const [address, setAddress] = useState(building.address ?? "");
   const [contactEmail, setContactEmail] = useState(building.contactEmail ?? "");
   const [contactPhone, setContactPhone] = useState(building.contactPhone ?? "");
   const [website, setWebsite] = useState(building.website ?? "");
-  const [logoId, setLogoId] = useState<string | null>(building.logoId);
-  const [logoPreviewUrl, setLogoPreviewUrl] = useState(building.logoUrl);
-  const [removeLogo, setRemoveLogo] = useState(false);
-  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
   const readOnly = !building.canEdit;
 
-  const onSelectLogo = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onSelectLogo = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
       setError(BUILDINGS_CLIENT.ERROR_LOGO_TYPE);
-      if (fileInputRef.current) fileInputRef.current.value = "";
+      logo.rejectInvalidFile();
       return;
     }
 
     setError("");
-    setIsUploadingLogo(true);
-    try {
-      const media = await uploadMediaClientSide({
-        data: { alt: `${name} logo` },
-        docPrefix: MEDIA_RESOURCE_FOLDER.BUILDINGS,
-        file,
-      });
-      setRemoveLogo(false);
-      setLogoId(String(media.id));
-      setLogoPreviewUrl(media.url ?? null);
-    } catch (uploadError) {
-      setError(uploadError instanceof Error ? uploadError.message : BUILDINGS_CLIENT.ERROR_UPDATE_FAILED);
-    } finally {
-      setIsUploadingLogo(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    }
-  };
-
-  const onRemoveLogo = () => {
-    setLogoId(null);
-    setLogoPreviewUrl(null);
-    setRemoveLogo(true);
-    if (fileInputRef.current) fileInputRef.current.value = "";
+    logo.select(file);
   };
 
   const submit = () => {
@@ -82,14 +57,24 @@ export function BuildingForm({ building }: BuildingFormProps) {
     setSuccess(false);
 
     startTransition(async () => {
+      let logoResolution;
+      try {
+        logoResolution = await logo.resolve({ data: { alt: `${name} logo` }, docPrefix: MEDIA_RESOURCE_FOLDER.BUILDINGS });
+      } catch (uploadError) {
+        setError(uploadError instanceof Error ? uploadError.message : BUILDINGS_CLIENT.ERROR_UPDATE_FAILED);
+        return;
+      }
+
       const formData = new FormData();
       formData.set("name", name.trim());
       formData.set("address", address.trim());
       formData.set("contactEmail", contactEmail.trim());
       formData.set("contactPhone", contactPhone.trim());
       formData.set("website", website.trim());
-      formData.set("removeLogo", String(removeLogo));
-      if (logoId) formData.set("logoId", logoId);
+      if (logoResolution) {
+        formData.set("removeLogo", String(logoResolution.id === null));
+        if (logoResolution.id) formData.set("logoId", logoResolution.id);
+      }
 
       const result = await updateBuildingAction(building.id, formData);
       if (!result?.isSuccess) {
@@ -97,7 +82,7 @@ export function BuildingForm({ building }: BuildingFormProps) {
         return;
       }
 
-      setRemoveLogo(false);
+      logo.settle(result.data.logoUrl);
       setSuccess(true);
       setIsEditing(false);
       router.refresh();
@@ -110,12 +95,9 @@ export function BuildingForm({ building }: BuildingFormProps) {
     setContactEmail(building.contactEmail ?? "");
     setContactPhone(building.contactPhone ?? "");
     setWebsite(building.website ?? "");
-    setLogoId(building.logoId);
-    setLogoPreviewUrl(building.logoUrl);
-    setRemoveLogo(false);
+    logo.reset(building.logoUrl);
     setError("");
     setSuccess(false);
-    if (fileInputRef.current) fileInputRef.current.value = "";
     setIsEditing(false);
   };
 
@@ -130,8 +112,8 @@ export function BuildingForm({ building }: BuildingFormProps) {
     return (
       <EntitySummaryCard
         visual={<div className="relative flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-primary/20 bg-primary/15">
-            {logoPreviewUrl ? (
-              <Image alt={name} src={logoPreviewUrl} fill sizes="80px" className="object-cover" unoptimized />
+            {logo.previewUrl ? (
+              <Image alt={name} src={logo.previewUrl} fill sizes="80px" className="object-cover" unoptimized />
             ) : (
               <Building2Icon className="size-8 text-primary" />
             )}
@@ -177,8 +159,8 @@ export function BuildingForm({ building }: BuildingFormProps) {
             <FieldLabel>{BUILDINGS_CLIENT.FIELD_LOGO_LABEL}</FieldLabel>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
               <div className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-muted">
-                {logoPreviewUrl ? (
-                  <Image alt={name} src={logoPreviewUrl} fill sizes="64px" className="object-cover" unoptimized />
+                {logo.previewUrl ? (
+                  <Image alt={name} src={logo.previewUrl} fill sizes="64px" className="object-cover" unoptimized />
                 ) : (
                   <Building2Icon className="size-6 text-muted-foreground" />
                 )}
@@ -191,7 +173,7 @@ export function BuildingForm({ building }: BuildingFormProps) {
                     accept="image/*"
                     className="hidden"
                     onChange={onSelectLogo}
-                    disabled={isPending || isUploadingLogo}
+                    disabled={isPending}
                   />
                   <div className="flex flex-wrap gap-2">
                     <Button
@@ -199,17 +181,13 @@ export function BuildingForm({ building }: BuildingFormProps) {
                       variant="outline"
                       size="sm"
                       onClick={() => fileInputRef.current?.click()}
-                      disabled={isPending || isUploadingLogo}
+                      disabled={isPending}
                     >
-                      {isUploadingLogo ? <Loader2Icon className="animate-spin" /> : <UploadIcon />}
-                      {isUploadingLogo
-                        ? BUILDINGS_CLIENT.UPLOADING_LOGO
-                        : logoPreviewUrl
-                          ? BUILDINGS_CLIENT.REPLACE_LOGO
-                          : BUILDINGS_CLIENT.UPLOAD_LOGO}
+                      <UploadIcon />
+                      {logo.previewUrl ? BUILDINGS_CLIENT.REPLACE_LOGO : BUILDINGS_CLIENT.UPLOAD_LOGO}
                     </Button>
-                    {logoPreviewUrl ? (
-                      <Button type="button" variant="ghost" size="sm" onClick={onRemoveLogo} disabled={isPending || isUploadingLogo}>
+                    {logo.previewUrl ? (
+                      <Button type="button" variant="ghost" size="sm" onClick={logo.remove} disabled={isPending}>
                         {BUILDINGS_CLIENT.REMOVE_LOGO}
                       </Button>
                     ) : null}
@@ -285,7 +263,7 @@ export function BuildingForm({ building }: BuildingFormProps) {
               <Button type="button" variant="outline" onClick={cancelEditing} disabled={isPending}>
                 {BUILDINGS_CLIENT.CANCEL}
               </Button>
-              <Button type="submit" disabled={isPending || isUploadingLogo || name.trim().length < 2}>
+              <Button type="submit" disabled={isPending || name.trim().length < 2}>
                 {isPending ? <Loader2Icon className="animate-spin" /> : null}
                 {isPending ? BUILDINGS_CLIENT.SAVING : BUILDINGS_CLIENT.SAVE}
               </Button>

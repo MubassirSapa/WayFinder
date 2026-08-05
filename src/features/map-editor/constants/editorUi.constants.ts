@@ -45,6 +45,7 @@ export const EDITOR_UI_TEXT = {
     noAltFallback: "No name provided",
     readyToUploadPrefix: "Ready to upload:",
     remove: "Remove",
+    cancelStaged: "Cancel",
     replaceAction: "Replace Reference Image",
     title: "Reference",
     uploadAction: "Upload Reference Image",

@@ -226,14 +226,13 @@ code change needed:
 - The 4 places that used to upload a file (org logo, building logo,
   avatar, floor reference image) got simpler: they stop handling the file
   itself and just receive "here's the ID of the file that's already
-  uploaded," then save that ID. For org logo, building logo, and avatar,
-  this also changed the UX slightly — see "One UX change worth knowing
-  about" below. The floor reference image flow already uploaded
-  immediately on file-select (not on a separate "Save"), so no UX change
-  there — only its upload call moved from a server action to
-  `uploadMediaClientSide`, and its old dedicated upload endpoint
-  (`uploadFloorReferenceImageAdapter` and its port/action wrappers) was
-  deleted rather than kept, since nothing else used it.
+  uploaded," then save that ID. The floor reference image flow's old
+  dedicated upload endpoint (`uploadFloorReferenceImageAdapter` and its
+  port/action wrappers) was deleted rather than kept, since nothing else
+  used it once its upload call moved to `uploadMediaClientSide`.
+- **`src/hooks/use-staged-media-upload.ts`** — the shared "pick a file now,
+  actually upload it later" logic for org logo, building logo, and avatar.
+  See "How picking a file works" below for what it does and why.
 - **`next.config.ts`** — deliberately **no** `images.remotePatterns` entry
   for the R2 host. Every `<Image>` that renders a Payload/R2 URL sets its
   own `unoptimized` prop instead, which serves the src as-is and never
@@ -271,16 +270,47 @@ up in `Media`'s `defaultPopulate` needs to include enough for that
 computation to still work — verify it against a real record before trusting
 it, the same way this note itself was confirmed rather than assumed.
 
-## One UX change worth knowing about
+## How picking a file works: stage locally, upload on Save
 
-Previously, picking a file just previewed it locally (a `blob:` URL) — the
-actual upload happened when you hit "Save." Org logo, building logo, and
-avatar now upload **as soon as you pick the file** instead: the button
-shows an "Uploading..." spinner, the preview becomes the real uploaded R2
-image (not a temporary local one) once it finishes, and "Save" just
-attaches the already-uploaded file's id. Submit is disabled while an
-upload is in progress. The floor reference image flow already worked this
-way before this change.
+Picking a file never uploads anything by itself. It only creates a local
+`blob:` preview (via `URL.createObjectURL`) so you can see what you picked
+— no network request yet. The real upload happens once, as the first step
+of the form's own submit, so a form the user never saves never uploads (or
+orphans-then-deletes, per `createCleanupReplacedMediaHook`) a file at all.
+
+This is shared logic, not copy-pasted per form: **`src/hooks/use-staged-media-upload.ts`**
+(`useStagedMediaUpload`), used by `OrganizationForm.tsx`, `BuildingForm.tsx`,
+and `ProfileForm.tsx`/`ProfilePhotoEditor.tsx`. It owns the staged
+`File`/blob-preview state and exposes:
+
+- `select(file)` — stage a new file, replacing any previous blob preview.
+- `remove()` — clear the image (marks it for removal on save).
+- `reset(url)` — discard staging and go back to a given url (used by "Cancel").
+- `resolve({ docPrefix, data })` — call as the first step of submit; uploads
+  the staged file if there is one and returns what to send the server
+  action (`{ id }`, `{ id: null }` for a removal, or `undefined` if nothing
+  changed at all). Throws if the upload fails, same as a failed save.
+- `settle(url)` — call after a successful save with the server's real url,
+  to clear staged state without re-uploading.
+
+The `<input type="file">` ref is owned by the calling component (a plain
+local `useRef`, passed into the hook) rather than returned from the hook —
+a hook returning a ref alongside plain reactive state trips
+`eslint-plugin-react-hooks`'s stricter "refs"/"immutability" rules, which
+taint *every* property read off the same returned object once any of them
+touches a ref, even properties that aren't the ref.
+
+The floor reference image flow (`FloorReferencePanel.tsx`) doesn't use this
+hook — its "current" image is read live from the map editor's Zustand store
+(`floor.backgroundImageUrl`), not local component state, since switching
+floors while the panel is mounted needs to show the new floor's image
+immediately; routing that through a hook that owns "the current value" as
+local state would either break on floor-switch or need extra sync-effect
+plumbing for no real gain. It already staged-then-uploaded before this
+change (picking a file only sets local state; the explicit "Upload"/
+"Replace" button triggers the real upload) — it just gained its own local
+blob preview and an always-visible image slot (a placeholder icon when
+empty, matching the other 3 forms) as part of this pass.
 
 ## How we'll verify it works
 

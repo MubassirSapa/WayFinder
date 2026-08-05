@@ -1,8 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import React, { useRef, useState, useTransition } from 'react';
-import { ImageUp, Loader2, Trash2 } from 'lucide-react';
+import React, { useEffect, useRef, useState, useTransition } from 'react';
+import { ImageOff, ImageUp, Loader2, Trash2 } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -29,12 +29,29 @@ export function FloorReferencePanel() {
   const { floor, updateFloor } = useAppStore();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [stagedPreviewUrl, setStagedPreviewUrl] = useState<string | null>(null);
   const [altText, setAltText] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isUploading, startUpload] = useTransition();
 
   const isLocked = floor?.backgroundImageLocked ?? false;
   const isVisible = floor?.backgroundImageVisible ?? true;
+  const previewUrl = stagedPreviewUrl ?? floor?.backgroundImageUrl ?? null;
+
+  // Revoke a staged blob preview whenever it's replaced or the panel unmounts.
+  useEffect(() => {
+    return () => {
+      if (stagedPreviewUrl) URL.revokeObjectURL(stagedPreviewUrl);
+    };
+  }, [stagedPreviewUrl]);
+
+  const clearStagedFile = () => {
+    setSelectedFile(null);
+    setStagedPreviewUrl(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
 
   const handleUpload = () => {
     if (!floor || !selectedFile) {
@@ -70,10 +87,7 @@ export function FloorReferencePanel() {
           backgroundImageFit: 'fill',
         });
 
-        setSelectedFile(null);
-        if (fileInputRef.current) {
-          fileInputRef.current.value = '';
-        }
+        clearStagedFile();
       } catch (uploadError) {
         setError(
           uploadError instanceof Error
@@ -86,10 +100,7 @@ export function FloorReferencePanel() {
 
   const handleRemove = () => {
     setError(null);
-    setSelectedFile(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+    clearStagedFile();
 
     updateFloor({
       backgroundImageAlt: null,
@@ -122,18 +133,42 @@ export function FloorReferencePanel() {
         {EDITOR_UI_TEXT.referencePanel.description}
       </p>
 
-      {floor?.backgroundImageUrl ? (
-        <div className="overflow-hidden rounded-2xl border border-editor-border bg-editor-background/70">
-          <div className="relative aspect-4/3 w-full bg-editor-panel">
+      <div className="overflow-hidden rounded-2xl border border-editor-border bg-editor-background/70">
+        <div className="relative aspect-4/3 w-full bg-editor-panel">
+          {previewUrl ? (
             <Image
-              alt={floor.backgroundImageAlt ?? `${floor.name} reference image`}
+              alt={floor?.backgroundImageAlt ?? `${floor?.name ?? EDITOR_UI_TEXT.toolbar.floorPrefix} reference image`}
               className="object-cover"
               fill
               sizes="288px"
-              src={floor.backgroundImageUrl}
+              src={previewUrl}
               unoptimized
             />
+          ) : (
+            <div className="flex h-full flex-col items-center justify-center gap-1.5 text-editor-subtle-foreground">
+              <ImageOff className="h-5 w-5" />
+              <p className="text-[10px]">{EDITOR_UI_TEXT.referencePanel.emptyStatus}</p>
+            </div>
+          )}
+        </div>
+        {selectedFile ? (
+          <div className="flex flex-col gap-3 border-t border-editor-border px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between">
+            <p className="min-w-0 truncate text-[11px] font-medium text-editor-foreground">
+              {EDITOR_UI_TEXT.referencePanel.readyToUploadPrefix} {selectedFile.name}
+            </p>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="self-start text-editor-muted-foreground hover:bg-editor-panel hover:text-editor-foreground sm:self-auto"
+              disabled={isUploading}
+              onClick={clearStagedFile}
+            >
+              <Trash2 className="h-3 w-3" />
+              {EDITOR_UI_TEXT.referencePanel.cancelStaged}
+            </Button>
           </div>
+        ) : floor?.backgroundImageUrl ? (
           <div className="flex flex-col gap-3 border-t border-editor-border px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0">
               <p className="truncate text-[11px] font-medium text-editor-foreground">
@@ -155,8 +190,8 @@ export function FloorReferencePanel() {
               {EDITOR_UI_TEXT.referencePanel.remove}
             </Button>
           </div>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
 
       {floor?.backgroundImageUrl ? (
         <div className="space-y-4 rounded-2xl border border-editor-border bg-editor-panel/45 p-3">
@@ -402,7 +437,12 @@ export function FloorReferencePanel() {
             disabled={!floor || isUploading || isLocked}
             className="h-7 w-full min-w-0 rounded-md border border-input bg-input/20 px-2 py-0.5 text-sm transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-xs/relaxed file:font-medium file:text-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-xs/relaxed dark:bg-input/30"
             onChange={(event) => {
-              setSelectedFile(event.target.files?.[0] ?? null);
+              const file = event.target.files?.[0] ?? null;
+              setSelectedFile(file);
+              setStagedPreviewUrl((current) => {
+                if (current) URL.revokeObjectURL(current);
+                return file ? URL.createObjectURL(file) : null;
+              });
               if (!altText.trim() && floor) {
                 setAltText(
                   floor.backgroundImageAlt
@@ -413,9 +453,7 @@ export function FloorReferencePanel() {
             }}
           />
           <p className="text-[10px] text-editor-subtle-foreground">
-            {selectedFile
-              ? `${EDITOR_UI_TEXT.referencePanel.readyToUploadPrefix} ${selectedFile.name}`
-              : EDITOR_UI_TEXT.referencePanel.fileHint}
+            {EDITOR_UI_TEXT.referencePanel.fileHint}
           </p>
         </div>
 

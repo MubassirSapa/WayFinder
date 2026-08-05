@@ -13,7 +13,6 @@ export const ORGANIZATION_SETTINGS_CLIENT = {
   FIELD_LOGO_LABEL: "Logo",
   FIELD_LOGO_DESC: "PNG or JPG, up to 5MB.",
   UPLOAD_LOGO: "Upload logo",
-  UPLOADING_LOGO: "Uploading...",
   REPLACE_LOGO: "Replace",
   REMOVE_LOGO: "Remove",
 

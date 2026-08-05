@@ -14,7 +14,6 @@ export const PROFILE_CLIENT = {
   FIELD_AVATAR_LABEL: "Photo",
   FIELD_AVATAR_DESC: "PNG or JPG, up to 5MB.",
   UPLOAD_AVATAR: "Upload photo",
-  UPLOADING_AVATAR: "Uploading...",
   REPLACE_AVATAR: "Replace",
   REMOVE_AVATAR: "Remove",
 
