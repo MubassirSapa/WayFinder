@@ -233,6 +233,8 @@ function ViewerFloorContent({
         onViewportPointerUp={onViewportPointerUp}
         originObjectId={originObjectId}
         routeConnectorNodeId={routeConnectorNodeId}
+        routeHasDestination={Boolean(routeHasDestination)}
+        routeHasStart={Boolean(routeHasStart)}
         selectedObjectId={selectedObjectId}
       />
       <ViewerNodes
@@ -255,10 +257,12 @@ function ViewerFloorContent({
 }
 
 function RouteEndpointMarker({
+  ariaLabel,
   label,
   point,
   token,
 }: {
+  ariaLabel?: string;
   label: "Destination" | "Start";
   point: { x: number; y: number };
   token: "var(--map-viewer-route-destination)" | "var(--map-viewer-route-origin)";
@@ -266,7 +270,7 @@ function RouteEndpointMarker({
   const labelWidth = label === "Destination" ? 76 : 42;
 
   return (
-    <g aria-label={`Route ${label.toLowerCase()}`} role="img">
+    <g aria-label={ariaLabel ?? `Route ${label.toLowerCase()}`} className="pointer-events-none" role="img">
       <circle cx={point.x} cy={point.y} fill={token} r="7" stroke="var(--background)" strokeWidth="2" vectorEffect="non-scaling-stroke" />
       <g transform={`translate(${point.x + 10} ${point.y - 13})`}>
         <rect fill="var(--card)" height="20" rx="10" stroke={token} width={labelWidth} x="0" y="0" vectorEffect="non-scaling-stroke" />
@@ -339,6 +343,8 @@ function ViewerObjects({
   onViewportPointerUp,
   originObjectId,
   routeConnectorNodeId,
+  routeHasDestination,
+  routeHasStart,
   selectedObjectId,
 }: {
   connectorTargetsByNodeId: Record<string, ConnectorTargetInfo[]>;
@@ -352,6 +358,8 @@ function ViewerObjects({
   onViewportPointerUp: PointerEventHandler<SVGSVGElement>;
   originObjectId: string | null;
   routeConnectorNodeId: string | null;
+  routeHasDestination: boolean;
+  routeHasStart: boolean;
   selectedObjectId: string | null;
 }) {
   return (
@@ -364,14 +372,16 @@ function ViewerObjects({
         // (rendered right at the connector point) so the two don't stack.
         const connectorNode = nodes.find((node) => node.objectId === object.id);
         const connectorTargets = connectorNode ? connectorTargetsByNodeId[connectorNode.id] : undefined;
+        const isDestination = destinationObjectId === object.id;
+        const isOrigin = originObjectId === object.id;
 
         return (
           <ViewerObjectItem
             connectorNode={connectorNode}
             connectorTargets={connectorTargets}
-            isDestination={destinationObjectId === object.id}
+            isDestination={isDestination}
             isOnRoute={connectorNode?.id === routeConnectorNodeId}
-            isOrigin={originObjectId === object.id}
+            isOrigin={isOrigin}
             isSelected={selectedObjectId === object.id}
             key={object.id}
             object={object}
@@ -380,6 +390,12 @@ function ViewerObjects({
             onViewportPointerDown={onViewportPointerDown}
             onViewportPointerMove={onViewportPointerMove}
             onViewportPointerUp={onViewportPointerUp}
+            // The route polyline draws its own "Start"/"Destination" marker
+            // at the same spot once a route actually exists on this floor —
+            // showing this object-anchored badge too would just duplicate
+            // it, so it steps aside once the real one is on screen.
+            showDestinationBadge={isDestination && !routeHasDestination}
+            showOriginBadge={isOrigin && !routeHasStart}
           />
         );
       })}
@@ -400,6 +416,8 @@ function ViewerObjectItem({
   onViewportPointerDown,
   onViewportPointerMove,
   onViewportPointerUp,
+  showDestinationBadge,
+  showOriginBadge,
 }: {
   connectorNode: ViewerMapNode | undefined;
   connectorTargets: ConnectorTargetInfo[] | undefined;
@@ -413,6 +431,8 @@ function ViewerObjectItem({
   onViewportPointerDown: PointerEventHandler<SVGSVGElement>;
   onViewportPointerMove: PointerEventHandler<SVGSVGElement>;
   onViewportPointerUp: PointerEventHandler<SVGSVGElement>;
+  showDestinationBadge: boolean;
+  showOriginBadge: boolean;
 }) {
   const palette = getViewerObjectPalette(object.type);
   const centerX = object.width / 2;
@@ -564,6 +584,22 @@ function ViewerObjectItem({
         >
           {object.label || object.name}
         </text>
+      ) : null}
+
+      {showDestinationBadge ? (
+        <RouteEndpointMarker
+          ariaLabel="Selected as destination"
+          label="Destination"
+          point={{ x: centerX, y: centerY }}
+          token="var(--map-viewer-route-destination)"
+        />
+      ) : showOriginBadge ? (
+        <RouteEndpointMarker
+          ariaLabel="Selected as starting point"
+          label="Start"
+          point={{ x: centerX, y: centerY }}
+          token="var(--map-viewer-route-origin)"
+        />
       ) : null}
     </g>
   );

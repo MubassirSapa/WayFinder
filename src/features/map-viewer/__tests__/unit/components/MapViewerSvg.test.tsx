@@ -91,8 +91,13 @@ function renderSvg({
   objects,
   nodes = [],
   connectorTargetsByNodeId = {},
+  destinationObjectId = null,
+  originObjectId = null,
   routeConnectorDirection = null,
   routeConnectorNodeId = null,
+  routeHasDestination,
+  routeHasStart,
+  routePoints,
   onObjectSelect = vi.fn(),
   onConnectorActivate = vi.fn(),
   onViewportPointerDown = vi.fn(),
@@ -100,6 +105,7 @@ function renderSvg({
   onViewportPointerUp = vi.fn(),
 }: {
   connectorTargetsByNodeId?: Record<string, ConnectorTargetInfo[]>;
+  destinationObjectId?: string | null;
   nodes?: ViewerMapNode[];
   objects: ViewerMapObject[];
   onConnectorActivate?: ReturnType<typeof vi.fn>;
@@ -107,14 +113,18 @@ function renderSvg({
   onViewportPointerDown?: ReturnType<typeof vi.fn>;
   onViewportPointerMove?: ReturnType<typeof vi.fn>;
   onViewportPointerUp?: ReturnType<typeof vi.fn>;
+  originObjectId?: string | null;
   routeConnectorDirection?: ConnectorDirection | null;
   routeConnectorNodeId?: string | null;
+  routeHasDestination?: boolean;
+  routeHasStart?: boolean;
+  routePoints?: { x: number; y: number }[];
 }) {
   render(
     <MapViewerSvg
       activeFloor={activeFloor}
       connectorTargetsByNodeId={connectorTargetsByNodeId}
-      destinationObjectId={null}
+      destinationObjectId={destinationObjectId}
       edges={[]}
       nodes={nodes}
       objects={objects}
@@ -124,10 +134,12 @@ function renderSvg({
       onPointerDown={onViewportPointerDown}
       onPointerMove={onViewportPointerMove}
       onPointerUp={onViewportPointerUp}
-      originObjectId={null}
+      originObjectId={originObjectId}
       routeConnectorDirection={routeConnectorDirection}
       routeConnectorNodeId={routeConnectorNodeId}
-      routePoints={undefined}
+      routeHasDestination={routeHasDestination}
+      routeHasStart={routeHasStart}
+      routePoints={routePoints}
       selectedObjectId={null}
       showGrid={false}
     />,
@@ -294,6 +306,57 @@ describe("MapViewerSvg route endpoints", () => {
 
     expect(screen.queryByRole("img", { name: "Route start" })).toBeNull();
     expect(screen.getByRole("img", { name: "Route destination" })).toBeTruthy();
+  });
+});
+
+describe("MapViewerSvg origin/destination object badges", () => {
+  it("badges the origin object as the starting point when no route is drawn yet", () => {
+    renderSvg({ objects: [roomObject], originObjectId: roomObject.id });
+
+    expect(screen.getByRole("img", { name: "Selected as starting point" })).toBeTruthy();
+    expect(screen.queryByRole("img", { name: "Selected as destination" })).toBeNull();
+  });
+
+  it("badges the destination object once it's chosen", () => {
+    renderSvg({ objects: [roomObject], destinationObjectId: roomObject.id });
+
+    expect(screen.getByRole("img", { name: "Selected as destination" })).toBeTruthy();
+    expect(screen.queryByRole("img", { name: "Selected as starting point" })).toBeNull();
+  });
+
+  it("hides the origin badge once the route polyline's own start marker takes over on this floor", () => {
+    renderSvg({
+      objects: [roomObject],
+      originObjectId: roomObject.id,
+      routeHasStart: true,
+      routePoints: [{ x: 20, y: 20 }, { x: 80, y: 80 }],
+    });
+
+    expect(screen.queryByRole("img", { name: "Selected as starting point" })).toBeNull();
+    expect(screen.getByRole("img", { name: "Route start" })).toBeTruthy();
+  });
+
+  it("hides the destination badge once the route polyline's own destination marker takes over on this floor", () => {
+    renderSvg({
+      objects: [roomObject],
+      destinationObjectId: roomObject.id,
+      routeHasDestination: true,
+      routePoints: [{ x: 20, y: 20 }, { x: 80, y: 80 }],
+    });
+
+    expect(screen.queryByRole("img", { name: "Selected as destination" })).toBeNull();
+    expect(screen.getByRole("img", { name: "Route destination" })).toBeTruthy();
+  });
+
+  it("keeps the origin badge when a route exists but its start marker isn't on this floor/segment", () => {
+    renderSvg({
+      objects: [roomObject],
+      originObjectId: roomObject.id,
+      routeHasStart: false,
+      routePoints: [{ x: 20, y: 20 }, { x: 80, y: 80 }],
+    });
+
+    expect(screen.getByRole("img", { name: "Selected as starting point" })).toBeTruthy();
   });
 });
 
