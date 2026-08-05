@@ -1,5 +1,5 @@
 import type { ChangeEventHandler, RefObject } from "react";
-import { Trash2Icon, UploadIcon } from "lucide-react";
+import { Loader2Icon, Trash2Icon, UploadIcon } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ type ProfilePhotoEditorProps = {
   fileInputRef: RefObject<HTMLInputElement | null>;
   initial: string;
   isPending: boolean;
+  isUploading: boolean;
   name: string;
   onRemove: () => void;
   onSelect: ChangeEventHandler<HTMLInputElement>;
@@ -22,6 +23,7 @@ export function ProfilePhotoEditor({
   fileInputRef,
   initial,
   isPending,
+  isUploading,
   name,
   onRemove,
   onSelect,
@@ -48,17 +50,21 @@ export function ProfilePhotoEditor({
             accept="image/png,image/jpeg"
             className="hidden"
             onChange={onSelect}
-            disabled={isPending}
+            disabled={isPending || isUploading}
           />
           <Button
             type="button"
             variant="outline"
             className="h-10 w-full sm:w-auto md:w-full"
             onClick={onUpload}
-            disabled={isPending}
+            disabled={isPending || isUploading}
           >
-            <UploadIcon />
-            {avatarUrl ? PROFILE_CLIENT.REPLACE_AVATAR : PROFILE_CLIENT.UPLOAD_AVATAR}
+            {isUploading ? <Loader2Icon className="animate-spin" /> : <UploadIcon />}
+            {isUploading
+              ? PROFILE_CLIENT.UPLOADING_AVATAR
+              : avatarUrl
+                ? PROFILE_CLIENT.REPLACE_AVATAR
+                : PROFILE_CLIENT.UPLOAD_AVATAR}
           </Button>
           {avatarUrl ? (
             <Button
@@ -66,7 +72,7 @@ export function ProfilePhotoEditor({
               variant="ghost"
               className="h-9 w-full justify-start text-destructive hover:text-destructive sm:w-auto md:w-full"
               onClick={onRemove}
-              disabled={isPending}
+              disabled={isPending || isUploading}
             >
               <Trash2Icon />
               {PROFILE_CLIENT.REMOVE_AVATAR}

@@ -11,8 +11,8 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { EDITOR_UI_TEXT } from '../../constants/editorUi.constants';
-import { uploadFloorReferenceImage } from '../actions/server/floor-actions';
-import { assertSuccess } from '@/lib/responses';
+import { MEDIA_RESOURCE_FOLDER } from '@/constants/media';
+import { uploadMediaClientSide } from '@/lib/uploads/uploadMediaClientSide';
 import { useAppStore } from '@/store';
 
 function clamp(value: number, min: number, max: number): number {
@@ -45,24 +45,23 @@ export function FloorReferencePanel() {
 
     startUpload(async () => {
       try {
-        const formData = new FormData();
-        formData.set('file', selectedFile);
-        formData.set(
-          'alt',
-          altText.trim()
-            || floor.backgroundImageAlt
-            || EDITOR_UI_TEXT.referencePanel.defaultAlt(floor.name),
-        );
+        const alt = altText.trim()
+          || floor.backgroundImageAlt
+          || EDITOR_UI_TEXT.referencePanel.defaultAlt(floor.name);
 
-        const uploadedImage = assertSuccess(await uploadFloorReferenceImage(formData));
+        const uploadedImage = await uploadMediaClientSide({
+          data: { alt },
+          docPrefix: MEDIA_RESOURCE_FOLDER.FLOORS,
+          file: selectedFile,
+        });
 
         updateFloor({
           backgroundImageAlt: uploadedImage.alt,
-          backgroundImageId: uploadedImage.id,
-          backgroundImageName: uploadedImage.filename,
-          backgroundImageUrl: uploadedImage.url,
-          backgroundImageNaturalWidth: uploadedImage.width,
-          backgroundImageNaturalHeight: uploadedImage.height,
+          backgroundImageId: String(uploadedImage.id),
+          backgroundImageName: uploadedImage.filename ?? null,
+          backgroundImageUrl: uploadedImage.url ?? null,
+          backgroundImageNaturalWidth: uploadedImage.width ?? null,
+          backgroundImageNaturalHeight: uploadedImage.height ?? null,
           backgroundImageRotation: 0,
           backgroundImageScale: 1,
           backgroundImageOpacity: 0.3,
@@ -132,6 +131,7 @@ export function FloorReferencePanel() {
               fill
               sizes="288px"
               src={floor.backgroundImageUrl}
+              unoptimized
             />
           </div>
           <div className="flex flex-col gap-3 border-t border-editor-border px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between">

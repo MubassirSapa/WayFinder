@@ -3,7 +3,6 @@ import "server-only";
 import config from "@payload-config";
 import type {
   Floor as PayloadFloor,
-  Media as PayloadMedia,
 } from "@/payload-types";
 import { getPayload } from "payload";
 import { tryCatchResponse } from "@/lib/responses";
@@ -16,7 +15,7 @@ import {
   normalizePathEdge,
 } from "../../lib/normalizeEditorData";
 import type { EditorFloor } from "../../types/map.types";
-import type { FloorEditorData, UploadedReferenceImage } from "../../types/editor.types";
+import type { FloorEditorData } from "../../types/editor.types";
 
 type FloorData = Omit<PayloadFloor, "id" | "createdAt" | "updatedAt">;
 
@@ -138,47 +137,5 @@ export async function updateFloorAdapter(id: string, data: Partial<EditorFloor>)
     });
 
     return normalizeFloor(doc);
-  });
-}
-
-export async function uploadFloorReferenceImageAdapter(formData: FormData) {
-  return tryCatchResponse<UploadedReferenceImage>(async () => {
-    const fileEntry = formData.get("file");
-    const altEntry = formData.get("alt");
-
-    if (!(fileEntry instanceof File) || fileEntry.size === 0) {
-      throw new Error("A reference image file is required.");
-    }
-
-    const alt =
-      typeof altEntry === "string" && altEntry.trim().length > 0
-        ? altEntry.trim()
-        : "Floor reference image";
-
-    const payload = await getPayloadClient();
-    const buffer = Buffer.from(await fileEntry.arrayBuffer());
-
-    const doc = await payload.create({
-      collection: "media",
-      data: {
-        alt,
-      },
-      file: {
-        data: buffer,
-        mimetype: fileEntry.type || "application/octet-stream",
-        name: fileEntry.name,
-        size: fileEntry.size,
-      },
-      overrideAccess: true,
-    } as never) as PayloadMedia;
-
-    return {
-      alt: doc.alt,
-      filename: doc.filename ?? null,
-      id: String(doc.id),
-      url: doc.url ?? null,
-      width: doc.width ?? null,
-      height: doc.height ?? null,
-    };
   });
 }

@@ -20,7 +20,7 @@ export function OrganizationInfoCard({ name, typeLabel, logoUrl, action, childre
       visual={
         <div className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-primary/20 bg-primary/10 sm:size-18">
           {logoUrl ? (
-            <Image alt={name} src={logoUrl} fill sizes="80px" className="object-cover" />
+            <Image alt={name} src={logoUrl} fill sizes="80px" className="object-cover" unoptimized />
           ) : (
             <LandmarkIcon className="size-7 text-primary" />
           )}

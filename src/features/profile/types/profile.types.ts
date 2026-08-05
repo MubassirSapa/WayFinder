@@ -3,11 +3,12 @@ export type ProfileEditData = {
   name: string;
   email: string;
   role: "owner" | "manager" | "member";
+  avatarId: string | null;
   avatarUrl: string | null;
 };
 
 export type TUpdateProfileInput = {
   name: string;
-  avatarFile: File | null;
+  avatarId: string | null;
   removeAvatar: boolean;
 };

@@ -21,12 +21,12 @@ export async function updateProfileAction(formData: FormData) {
     return errorResponse([], validation.error.issues[0]?.message ?? PROFILE_CLIENT.ERROR_UPDATE_FAILED);
   }
 
-  const avatarEntry = formData.get("avatar");
-  const avatarFile = avatarEntry instanceof File && avatarEntry.size > 0 ? avatarEntry : null;
+  const avatarIdEntry = formData.get("avatarId");
+  const avatarId = typeof avatarIdEntry === "string" && avatarIdEntry.length > 0 ? avatarIdEntry : null;
 
   const result = await updateProfile(currentUser.data, {
     ...validation.data,
-    avatarFile,
+    avatarId,
     removeAvatar: formData.get("removeAvatar") === "true",
   });
   if (!result.isSuccess) return errorResponse([], result.message || PROFILE_CLIENT.ERROR_UPDATE_FAILED);

@@ -41,6 +41,7 @@ export const BUILDINGS_CLIENT = {
   FIELD_LOGO_LABEL: "Logo",
   FIELD_LOGO_DESC: "PNG or JPG, up to 5MB.",
   UPLOAD_LOGO: "Upload logo",
+  UPLOADING_LOGO: "Uploading...",
   REPLACE_LOGO: "Replace",
   REMOVE_LOGO: "Remove",
 
@@ -107,14 +108,11 @@ export const BUILDINGS_CLIENT = {
   ERROR_CREATE_FAILED: "Could not create the building. Please try again.",
   ERROR_UPDATE_FAILED: "Could not save building info. Please try again.",
   ERROR_LOGO_TYPE: "Please choose an image file.",
-  ERROR_LOGO_SIZE: "Logo must be 5MB or smaller.",
 
   VALIDATION_NAME_SHORT: "The building name is too short.",
   VALIDATION_NAME_LONG: "The building name is too long.",
   VALIDATION_EMAIL_INVALID: "Please enter a valid email address.",
 } as const;
-
-export const MAX_BUILDING_LOGO_SIZE_BYTES = 5 * 1024 * 1024;
 
 export const LEVEL_OPTIONS = [
   { value: -1, label: "Lower Ground", badge: "LG" },

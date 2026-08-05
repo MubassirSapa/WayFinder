@@ -13,6 +13,6 @@ export type OrganizationEditData = {
 export type TUpdateOrganizationInput = {
   name: string;
   type: OrganizationType;
-  logoFile: File | null;
+  logoId: string | null;
   removeLogo: boolean;
 };

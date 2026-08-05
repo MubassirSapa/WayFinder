@@ -13,6 +13,7 @@ export const ORGANIZATION_SETTINGS_CLIENT = {
   FIELD_LOGO_LABEL: "Logo",
   FIELD_LOGO_DESC: "PNG or JPG, up to 5MB.",
   UPLOAD_LOGO: "Upload logo",
+  UPLOADING_LOGO: "Uploading...",
   REPLACE_LOGO: "Replace",
   REMOVE_LOGO: "Remove",
 
@@ -27,11 +28,8 @@ export const ORGANIZATION_SETTINGS_CLIENT = {
   ERROR_UPDATE_FAILED: "Could not save organization info. Please try again.",
   ERROR_LOAD_FAILED: "Could not load organization info.",
   ERROR_LOGO_TYPE: "Please choose an image file.",
-  ERROR_LOGO_SIZE: "Logo must be 5MB or smaller.",
 
   VALIDATION_NAME_SHORT: "The organization name is too short.",
   VALIDATION_NAME_LONG: "The organization name is too long.",
   VALIDATION_TYPE_REQUIRED: "Please select an organization type.",
 } as const;
-
-export const MAX_LOGO_SIZE_BYTES = 5 * 1024 * 1024;

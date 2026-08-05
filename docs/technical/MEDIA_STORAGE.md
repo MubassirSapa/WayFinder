@@ -1,7 +1,12 @@
 # Media Storage (Cloudflare R2 + direct client uploads)
 
-Status: **planned, not implemented yet.** This doc describes the design we
-agreed on. No code has been changed.
+Status: **implemented and live against real R2.** All the code below is
+written and passes `tsc`/`eslint`/`vitest`, and real credentials are set in
+`.env.local` (bucket `way-finder`, custom domain `cdn.umbrellacorp.cc`) —
+`getR2Env().enabled` is `true`, confirmed live. If R2 env vars are ever
+unset (e.g. a fresh clone without `.env.local`), the storage plugin falls
+back to Payload's default local-disk storage automatically (see
+`enabled`/`alwaysInsertFields` below).
 
 ## The problem today
 
@@ -61,30 +66,114 @@ docs don't fully explain it), so this isn't a guess.
 
 ## How files are organized in the bucket
 
-We won't dump every file into one flat folder. Payload already has a
-built-in way to do this (a "prefix"), so we don't need to build anything
-custom for it — we just configure it:
+We won't dump every file into one flat folder, and we won't mix local-dev
+test uploads or preview-deploy uploads in with real production files either
+— all three point at the same bucket, so the only thing keeping them apart
+is the path. Final shape:
 
 ```
-wayfinder/
+prod/
   organizations/   <- organization logos
   buildings/        <- building logos
   users/             <- profile avatars
   floors/             <- floor reference images
+preview/
+  organizations/
+  buildings/
+  users/
+  floors/
+local/
+  organizations/
+  buildings/
+  users/
+  floors/
 ```
 
-- `wayfinder` is set once, in config, as the root folder for everything this
-  app stores.
-- `organizations` / `buildings` / `users` / `floors` is picked per upload,
-  based on what's being uploaded — our shared upload helper (see below)
-  will say "this one goes in `buildings`" and Payload places it there
-  automatically.
+No app-name root folder on top of this (no `wayfinder/`) — the R2 bucket
+itself is already named `way-finder`, so repeating that as a folder inside
+its own bucket would just be redundant nesting.
+
+Two segments, each with one job:
+
+1. **`prod` / `preview` / `local`** — which environment produced the
+   upload. Decided automatically from Vercel's own `VERCEL_ENV` variable —
+   we don't set this by hand per environment, we just read it:
+   - `VERCEL_ENV === "production"` → `prod`
+   - `VERCEL_ENV === "preview"` → `preview` (this is the literal string
+     Vercel sets on preview deployments — not `"prev"`, not `"staging"`)
+   - anything else (including plain `next dev` on your own machine, where
+     `VERCEL_ENV` isn't set at all) → `local`
+2. **`organizations` / `buildings` / `users` / `floors`** — which *kind* of
+   upload this is. Picked per upload, not per environment.
+
+### Why this needs one extra config flag most Payload+S3 setups skip
+
+Confirmed by reading the actual installed package source
+(`@payloadcms/storage-s3@3.85.1`, `@payloadcms/plugin-cloud-storage@3.85.1`
+— published docs don't cover this), not assumed:
+
+- By **default**, Payload's S3 adapter does *not* nest the static prefix
+  (`prod`) with the per-upload folder (`buildings`) — the per-upload one
+  **replaces** the static one entirely. Turning on `useCompositePrefixes: true`
+  (an `s3Storage()` option) is what makes them combine into
+  `prod/buildings/...` instead of just `buildings/...`. Without it, this
+  whole folder scheme silently doesn't happen.
+- The **default public URL** Payload builds also doesn't fit R2 — it
+  assumes the shape `{s3-api-endpoint}/{bucket}/{file-path}`, but R2's real
+  public URL (the `r2.dev` link or a custom domain) doesn't include the
+  bucket name as a path segment and isn't the same address as the private
+  S3 API endpoint. So we also need to override how the URL is built
+  (`generateFileURL`) and construct it ourselves from `R2_PUBLIC_URL` + the
+  file's path, rather than use Payload's default.
+
+### Naming this in code
+
+Const-based, not magic strings, so "which folder does a building logo go
+in" is one constant to look up, not a string typed out (and possibly
+mistyped) at every call site. Split across two files rather than one,
+because they have different audiences:
+
+- **`src/constants/media.ts`** — `MEDIA_RESOURCE_FOLDER` (and
+  `MEDIA_MAX_FILE_SIZE_BYTES`). Safe for both client and server code, since
+  every upload form (a client component) needs to say which folder its
+  upload belongs in.
+- **`src/plugins/storage/storage.constants.ts`** — `MEDIA_ENVIRONMENT` and
+  `MEDIA_ROOT_PREFIX` (the environment segment, e.g. `"prod"`). Server-only:
+  it's read once when building the plugin config, and reading `VERCEL_ENV`
+  from a client bundle wouldn't reflect the real deploy environment anyway
+  (Next only inlines `NEXT_PUBLIC_`-prefixed env vars into client code).
+
+Each upload call site picks one `MEDIA_RESOURCE_FOLDER` value as the
+`docPrefix` it sends when asking for a signed upload URL — e.g. the
+building-logo flow always sends `MEDIA_RESOURCE_FOLDER.BUILDINGS`, never a
+typed-out `"buildings"` string. Payload combines that with
+`MEDIA_ROOT_PREFIX` (because `useCompositePrefixes: true`) into the final
+key, inside `src/plugins/storage/storage.ts`.
+
+### One more good pattern worth adopting from your other project
+
+Your reference config's `enabled: r2.enabled` + `alwaysInsertFields: true`
+combination is worth copying as-is: when R2 credentials aren't configured
+(confirmed from source — this is exactly what `enabled: false` does),
+Payload keeps the same DB schema either way and just falls back to storing
+files on local disk instead of erroring out. That means local dev works
+without needing real R2 credentials at all (only the deployed environments
+need them), and nobody has to comment/uncomment config to switch between
+"I have R2 set up" and "I don't."
 
 ## What you need to set up in Cloudflare
 
-Before any of this can work, you need to:
+Status: **done.** Bucket `way-finder` exists, the API token and its
+Access Key ID / Secret Access Key are set, and `R2_ENDPOINT`/`R2_BUCKET`/
+`R2_PUBLIC_URL` (a custom domain, `cdn.umbrellacorp.cc`) are in
+`.env.local` — confirmed live: `getR2Env().enabled` is `true`. The
+remaining unverified piece is CORS (step 4 below) — check the bucket's
+CORS policy allows `PUT` from `http://localhost:3000` if uploads succeed
+but something still looks off in the browser.
 
-1. **Create an R2 bucket** (e.g. `wayfinder-media`).
+For reference, what had to be done:
+
+1. **Create an R2 bucket.**
 2. **Create an API token** for that bucket (Cloudflare gives you an Access
    Key ID + Secret Access Key, like AWS).
 3. **Turn on public access** for the bucket — either:
@@ -92,35 +181,68 @@ Before any of this can work, you need to:
    - your own domain (e.g. `cdn.yourapp.com`) pointed at the bucket (better
      long-term, since the URL won't ever need to change).
 4. **Allow uploads from our site (CORS).** By default, R2 blocks uploads
-   from a browser on a different domain — you need to add a rule allowing
-   `PUT` requests from `http://localhost:3000` (for local dev) and your
+   from a browser on a different domain — add a rule allowing `PUT`
+   requests from `http://localhost:3000` (for local dev) and the
    production domain.
 
-Once that's done, give me these 5 values and I'll wire up the code:
+The 5 env vars the code reads (`getR2Env` in `storage.env.ts`) — it
+switches from local disk to R2 automatically the moment all 5 are set, no
+code change needed:
 
 | Value | What it is |
 | --- | --- |
-| `R2_ACCOUNT_ID` | Your Cloudflare account ID |
+| `R2_ENDPOINT` | The S3 API endpoint, `https://<ACCOUNT_ID>.r2.cloudflarestorage.com` |
 | `R2_ACCESS_KEY_ID` | From the API token |
 | `R2_SECRET_ACCESS_KEY` | From the API token |
 | `R2_BUCKET` | The bucket name |
 | `R2_PUBLIC_URL` | The `r2.dev` link or your custom domain |
 
-## What changes in the code (once we have the values above)
+## What was built
 
-- One small config file that tells Payload "store files in R2, allow direct
-  uploads, and use `wayfinder` as the root folder."
-- One shared helper that does the 3-step upload from the browser — reused
-  by every upload form instead of each one doing its own thing. It also
-  says which subfolder (`organizations`, `buildings`, `users`, `floors`)
-  each upload belongs in.
-- The 4 places that currently upload a file (org logo, building logo,
-  avatar, floor reference image) get simpler: they stop handling the file
+- **`src/plugins/storage/storage.ts`** — the `s3Storage()` plugin config:
+  R2 credentials, `clientUploads: true`, `useCompositePrefixes: true`, and
+  a `generateFileURL` override that builds R2's real public URL (see
+  above). Falls back to local disk storage if R2 env vars aren't set
+  (`enabled`/`alwaysInsertFields`), so local dev works without real
+  credentials — this is registered in `payload.config.ts`'s `plugins: []`.
+- **`src/plugins/storage/storage.env.ts`** — reads the 5 `R2_*` env vars
+  and reports whether R2 is actually configured (`enabled`), unlike the
+  `requireXEnv()` helpers this app uses elsewhere, which throw if a value
+  is missing — R2 is optional by design.
+- **`src/constants/media.ts`** / **`src/plugins/storage/storage.constants.ts`**
+  — the folder/path constants (see "Naming this in code" above).
+- **`src/lib/uploads/uploadMediaClientSide.ts`** — the shared browser-side
+  helper implementing the 3-step flow, reused by every upload form instead
+  of each one doing its own thing.
+- **`Media.ts`** — `access.create` tightened from open-to-everyone to
+  `isLoggedIn`, since upload requests now come from the browser with the
+  requester's real session instead of only ever through trusted
+  server-side code. A top-level `upload.limits.fileSize` was added to
+  **`payload.config.ts`** (not a per-collection option — Payload's
+  `UploadConfig` type has no `limits` field; the size cap is a Busboy/body-
+  parser option that lives at the config root) — one central 5MB limit
+  instead of duplicating a size check in 4 forms; the signed-URL step
+  rejects an oversized file before any bytes move.
+- The 4 places that used to upload a file (org logo, building logo,
+  avatar, floor reference image) got simpler: they stop handling the file
   itself and just receive "here's the ID of the file that's already
-  uploaded," then save that ID.
-- A small tweak so images load directly from R2 instead of also being
-  routed through Next.js's own image-resizing step — same reasoning as
-  above, one less unnecessary hop.
+  uploaded," then save that ID. For org logo, building logo, and avatar,
+  this also changed the UX slightly — see "One UX change worth knowing
+  about" below. The floor reference image flow already uploaded
+  immediately on file-select (not on a separate "Save"), so no UX change
+  there — only its upload call moved from a server action to
+  `uploadMediaClientSide`, and its old dedicated upload endpoint
+  (`uploadFloorReferenceImageAdapter` and its port/action wrappers) was
+  deleted rather than kept, since nothing else used it.
+- **`next.config.ts`** — deliberately **no** `images.remotePatterns` entry
+  for the R2 host. Every `<Image>` that renders a Payload/R2 URL sets its
+  own `unoptimized` prop instead, which serves the src as-is and never
+  goes through Next's `/_next/image` optimizer — adding `remotePatterns`
+  would just make it possible for a future `<Image>` to silently start
+  routing through that optimizer if someone forgets `unoptimized`, which
+  re-adds the exact extra Vercel-function hop this whole change avoids on
+  upload. Local static assets (e.g. `WayfinderBrand`'s icon) are
+  unaffected and stay optimized, since they don't set `unoptimized`.
 
 ## Follow-up: trim what gets fetched when a logo/avatar loads
 
@@ -151,14 +273,30 @@ it, the same way this note itself was confirmed rather than assumed.
 
 ## One UX change worth knowing about
 
-Today, picking a file just previews it locally — the actual upload happens
-when you hit "Save." With direct uploads, it makes more sense to upload
-**as soon as you pick the file** (so you get a real preview from the real
-uploaded image, not a temporary local one), and "Save" just attaches the
-already-uploaded file. Small change, but worth knowing before it happens.
+Previously, picking a file just previewed it locally (a `blob:` URL) — the
+actual upload happened when you hit "Save." Org logo, building logo, and
+avatar now upload **as soon as you pick the file** instead: the button
+shows an "Uploading..." spinner, the preview becomes the real uploaded R2
+image (not a temporary local one) once it finishes, and "Save" just
+attaches the already-uploaded file's id. Submit is disabled while an
+upload is in progress. The floor reference image flow already worked this
+way before this change.
 
 ## How we'll verify it works
 
-Once it's built: upload a logo, open the browser's Network tab, and confirm
-the file upload goes straight to the R2 domain — not to our app's server at
-all. Then confirm the image shows up correctly on the page.
+Upload a logo, open the browser's Network tab, and confirm the file upload
+goes straight to the R2 domain — not to our app's server at all. Then
+confirm the image shows up correctly on the page.
+
+**One real bug already found and fixed this way**: the first live upload
+succeeded (the `PUT` went straight to R2), but the image didn't render
+afterward. Comparing the media doc's computed `url` against what was
+actually sitting in the bucket (via `HeadObject`/`ListObjectsV2` with the
+same credentials) showed the doc's `prefix` field had saved as empty, even
+though the file itself uploaded to the correct, fully-prefixed key. Root
+cause: `clientUploadContext.prefix` (sent in step 3) only tells Payload
+where to re-fetch the file's bytes *during that same request* — it is not
+copied onto the doc's own `prefix` field automatically. The doc's `prefix`
+has to be set explicitly as part of the saved data, or every URL later
+built from it (via `generateFileURL`) points at the wrong key. Fixed in
+`uploadMediaClientSide.ts`.

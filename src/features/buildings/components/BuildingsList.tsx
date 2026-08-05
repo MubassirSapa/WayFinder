@@ -53,6 +53,7 @@ export function BuildingsList({ buildings, canManage }: BuildingsListProps) {
                         fill
                         sizes="48px"
                         className="object-cover"
+                        unoptimized
                       />
                     ) : (
                       <Building2Icon className="size-5 text-muted-foreground" aria-hidden="true" />

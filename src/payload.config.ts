@@ -5,9 +5,11 @@ import { fileURLToPath } from "url";
 import sharp from "sharp";
 
 import { Admins, collections } from "./collections/index";
+import { MEDIA_MAX_FILE_SIZE_BYTES } from "./constants/media";
 import { requireEnv } from "./lib/env";
 import { databaseAdapter } from "./plugins/database/database";
 import { resendEmailAdapter } from "./plugins/mail/resend";
+import { r2StoragePlugin } from "./plugins/storage/storage";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -31,5 +33,10 @@ export default buildConfig({
   },
   db: databaseAdapter,
   sharp,
-  plugins: [],
+  plugins: [r2StoragePlugin],
+  upload: {
+    limits: {
+      fileSize: MEDIA_MAX_FILE_SIZE_BYTES,
+    },
+  },
 });

@@ -8,7 +8,7 @@ import { asPayloadId, relationId } from "@/lib/payload-id";
 import { tryCatchResponse } from "@/lib/responses/trycatch-response";
 import type { User } from "@/payload-types";
 
-import { BUILDINGS_CLIENT, MAX_BUILDING_LOGO_SIZE_BYTES, NEW_FLOOR_DEFAULTS } from "../../constants/buildings.constants";
+import { BUILDINGS_CLIENT, NEW_FLOOR_DEFAULTS } from "../../constants/buildings.constants";
 import { levelToBadge, levelToLabel, formatRelativeTime } from "../../lib/floorPresentation";
 import type {
   BuildingEditData,
@@ -31,27 +31,28 @@ export async function listBuildingsAdapter(user: User) {
     const organizationId = relationId(user.organization);
     if (organizationId === null) return [];
 
+    // depth: 0 is enough — logoUrl is a plain field (denormalized by
+    // createSyncMediaUrlHook), so no populate hop into `media` is needed.
+    // select trims the doc to only what's mapped below.
     const result = await payload.find({
       collection: "buildings",
-      depth: 1,
+      depth: 0,
       limit: 0,
       pagination: false,
+      select: { name: true, address: true, floorCount: true, logoUrl: true },
       sort: "name",
       where: { organization: { equals: organizationId } },
       user,
       overrideAccess: false,
     });
 
-    return result.docs.map((building) => {
-      const logo = typeof building.logo === "object" && building.logo ? building.logo : null;
-      return {
-        id: String(building.id),
-        name: building.name,
-        address: building.address ?? null,
-        floorCount: building.floorCount ?? 0,
-        logoUrl: logo?.url ?? null,
-      };
-    });
+    return result.docs.map((building) => ({
+      id: String(building.id),
+      name: building.name,
+      address: building.address ?? null,
+      floorCount: building.floorCount ?? 0,
+      logoUrl: building.logoUrl ?? null,
+    }));
   });
 }
 
@@ -59,16 +60,31 @@ export async function getBuildingForEditAdapter(user: User, buildingId: string) 
   return tryCatchResponse<BuildingEditData>(async () => {
     const payload = await getPayloadClient();
 
+    // populate overrides Organizations' own defaultPopulate (which now
+    // also includes logoUrl, added for the public landing page) down to
+    // just the one field this screen actually reads.
     const building = await payload.findByID({
       collection: "buildings",
       id: asPayloadId(buildingId),
       depth: 1,
+      select: {
+        name: true,
+        organization: true,
+        address: true,
+        contactEmail: true,
+        contactPhone: true,
+        website: true,
+        floorCount: true,
+        logo: true,
+        logoUrl: true,
+      },
+      populate: { organizations: { name: true } },
       user,
       overrideAccess: false,
     });
 
     const canEdit = user.role === ROLES.OWNER || user.role === ROLES.MANAGER;
-    const logo = typeof building.logo === "object" && building.logo ? building.logo : null;
+    const logoId = relationId(building.logo);
     const organization = typeof building.organization === "object" ? building.organization : null;
 
     return {
@@ -79,8 +95,8 @@ export async function getBuildingForEditAdapter(user: User, buildingId: string) 
       contactEmail: building.contactEmail ?? null,
       contactPhone: building.contactPhone ?? null,
       website: building.website ?? null,
-      logoId: logo ? String(logo.id) : null,
-      logoUrl: logo?.url ?? null,
+      logoId: logoId === null ? null : String(logoId),
+      logoUrl: building.logoUrl ?? null,
       floorCount: building.floorCount ?? 0,
       canEdit,
     };
@@ -95,6 +111,7 @@ export async function createBuildingAdapter(user: User, input: TCreateBuildingIn
 
     const building = await payload.create({
       collection: "buildings",
+      select: { name: true, address: true, floorCount: true },
       user,
       overrideAccess: false,
       data: {
@@ -136,38 +153,37 @@ export async function updateBuildingAdapter(user: User, buildingId: string, inpu
       website: input.website,
     };
 
-    if (input.logoFile) {
-      if (!input.logoFile.type.startsWith("image/")) throw new Error(BUILDINGS_CLIENT.ERROR_LOGO_TYPE);
-      if (input.logoFile.size > MAX_BUILDING_LOGO_SIZE_BYTES) throw new Error(BUILDINGS_CLIENT.ERROR_LOGO_SIZE);
-
-      const buffer = Buffer.from(await input.logoFile.arrayBuffer());
-      const media = await payload.create({
-        collection: "media",
-        data: { alt: `${input.name} logo` },
-        file: {
-          data: buffer,
-          mimetype: input.logoFile.type,
-          name: input.logoFile.name,
-          size: input.logoFile.size,
-        },
-        user,
-        overrideAccess: false,
-      });
-      data.logo = media.id;
+    if (input.logoId) {
+      data.logo = asPayloadId(input.logoId);
     } else if (input.removeLogo) {
       data.logo = null;
     }
 
+    // populate overrides Organizations' own defaultPopulate (which now
+    // also includes logoUrl, added for the public landing page) down to
+    // just the one field this screen actually reads.
     const building = await payload.update({
       collection: "buildings",
       id: asPayloadId(buildingId),
       depth: 1,
+      select: {
+        name: true,
+        organization: true,
+        address: true,
+        contactEmail: true,
+        contactPhone: true,
+        website: true,
+        floorCount: true,
+        logo: true,
+        logoUrl: true,
+      },
+      populate: { organizations: { name: true } },
       user,
       overrideAccess: false,
       data,
     });
 
-    const logo = typeof building.logo === "object" && building.logo ? building.logo : null;
+    const logoId = relationId(building.logo);
     const organization = typeof building.organization === "object" ? building.organization : null;
     const canEdit = user.role === ROLES.OWNER || user.role === ROLES.MANAGER;
 
@@ -179,8 +195,8 @@ export async function updateBuildingAdapter(user: User, buildingId: string, inpu
       contactEmail: building.contactEmail ?? null,
       contactPhone: building.contactPhone ?? null,
       website: building.website ?? null,
-      logoId: logo ? String(logo.id) : null,
-      logoUrl: logo?.url ?? null,
+      logoId: logoId === null ? null : String(logoId),
+      logoUrl: building.logoUrl ?? null,
       floorCount: building.floorCount ?? 0,
       canEdit,
     };

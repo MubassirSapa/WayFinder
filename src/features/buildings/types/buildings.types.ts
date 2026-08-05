@@ -29,7 +29,7 @@ export type TCreateBuildingInput = {
 };
 
 export type TUpdateBuildingInput = TCreateBuildingInput & {
-  logoFile: File | null;
+  logoId: string | null;
   removeLogo: boolean;
 };
 

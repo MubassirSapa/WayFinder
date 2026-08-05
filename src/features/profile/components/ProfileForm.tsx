@@ -9,9 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { MEDIA_RESOURCE_FOLDER } from "@/constants/media";
+import { uploadMediaClientSide } from "@/lib/uploads/uploadMediaClientSide";
 
 import { updateProfileAction } from "../actions/server/update-profile";
-import { MAX_AVATAR_SIZE_BYTES, PROFILE_CLIENT } from "../constants/profile.constants";
+import { PROFILE_CLIENT } from "../constants/profile.constants";
 import { profileInitial, profileRoleLabel } from "../lib/profile-presentation";
 import type { ProfileEditData } from "../types/profile.types";
 import { ProfileAccountSummary } from "./ProfileAccountSummary";
@@ -29,9 +31,10 @@ export function ProfileForm({ profile }: ProfileFormProps) {
   const [isPending, startTransition] = useTransition();
 
   const [name, setName] = useState(profile.name);
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarId, setAvatarId] = useState<string | null>(profile.avatarId);
   const [avatarPreviewUrl, setAvatarPreviewUrl] = useState(profile.avatarUrl);
   const [removeAvatar, setRemoveAvatar] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -39,44 +42,45 @@ export function ProfileForm({ profile }: ProfileFormProps) {
   const initial = profileInitial(name, profile.email);
   const roleLabel = profileRoleLabel(profile.role);
 
-  const revokeObjectPreview = () => {
-    if (avatarPreviewUrl?.startsWith("blob:")) URL.revokeObjectURL(avatarPreviewUrl);
-  };
-
-  const onSelectAvatar = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onSelectAvatar = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
       setError(PROFILE_CLIENT.ERROR_AVATAR_TYPE);
-      return;
-    }
-
-    if (file.size > MAX_AVATAR_SIZE_BYTES) {
-      setError(PROFILE_CLIENT.ERROR_AVATAR_SIZE);
       if (fileInputRef.current) fileInputRef.current.value = "";
       return;
     }
 
-    revokeObjectPreview();
     setError("");
-    setRemoveAvatar(false);
-    setAvatarFile(file);
-    setAvatarPreviewUrl(URL.createObjectURL(file));
+    setIsUploadingAvatar(true);
+    try {
+      const media = await uploadMediaClientSide({
+        data: { alt: `${name} avatar` },
+        docPrefix: MEDIA_RESOURCE_FOLDER.USERS,
+        file,
+      });
+      setRemoveAvatar(false);
+      setAvatarId(String(media.id));
+      setAvatarPreviewUrl(media.url ?? null);
+    } catch (uploadError) {
+      setError(uploadError instanceof Error ? uploadError.message : PROFILE_CLIENT.ERROR_UPDATE_FAILED);
+    } finally {
+      setIsUploadingAvatar(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
   };
 
   const onRemoveAvatar = () => {
-    revokeObjectPreview();
-    setAvatarFile(null);
+    setAvatarId(null);
     setAvatarPreviewUrl(null);
     setRemoveAvatar(true);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const cancelEditing = () => {
-    revokeObjectPreview();
     setName(profile.name);
-    setAvatarFile(null);
+    setAvatarId(profile.avatarId);
     setAvatarPreviewUrl(profile.avatarUrl);
     setRemoveAvatar(false);
     setError("");
@@ -93,7 +97,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
       const formData = new FormData();
       formData.set("name", name.trim());
       formData.set("removeAvatar", String(removeAvatar));
-      if (avatarFile) formData.set("avatar", avatarFile);
+      if (avatarId) formData.set("avatarId", avatarId);
 
       const result = await updateProfileAction(formData);
       if (!result?.isSuccess) {
@@ -101,9 +105,8 @@ export function ProfileForm({ profile }: ProfileFormProps) {
         return;
       }
 
-      revokeObjectPreview();
       setName(result.data.name);
-      setAvatarFile(null);
+      setAvatarId(result.data.avatarId);
       setAvatarPreviewUrl(result.data.avatarUrl);
       setRemoveAvatar(false);
       setSuccess(true);
@@ -151,6 +154,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
                 fileInputRef={fileInputRef}
                 initial={initial}
                 isPending={isPending}
+                isUploading={isUploadingAvatar}
                 name={name}
                 onRemove={onRemoveAvatar}
                 onSelect={onSelectAvatar}
@@ -188,7 +192,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
               <Button
                 type="submit"
                 className="h-10 px-4"
-                disabled={isPending || name.trim().length < 2}
+                disabled={isPending || isUploadingAvatar || name.trim().length < 2}
               >
                 {isPending ? <Loader2Icon className="animate-spin" /> : null}
                 {isPending ? PROFILE_CLIENT.SAVING : PROFILE_CLIENT.SAVE}

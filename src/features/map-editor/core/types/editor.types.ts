@@ -14,15 +14,6 @@ export interface FloorEditorData {
   edges: EditorPathEdge[];
 }
 
-export interface UploadedReferenceImage {
-  alt: string;
-  filename: string | null;
-  id: string;
-  url: string | null;
-  width: number | null;
-  height: number | null;
-}
-
 export type ToolboxObjectType =
   | 'room'
   | 'wall'

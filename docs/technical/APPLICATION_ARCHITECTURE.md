@@ -81,11 +81,11 @@ flowchart LR
         payloadCms["Payload CMS Local API and Auth"]
         collections["Payload collection schemas"]
         database["SQLite or MongoDB"]
-        mediaStorage["Uploaded media files"]
     end
 
     subgraph externalSystems ["External systems"]
         resend["Resend email service"]
+        mediaStorage["Cloudflare R2 (media storage)"]
     end
 
     visitor --> publicRoutes
@@ -145,9 +145,14 @@ flowchart LR
     payloadRoutes --> payloadCms
     payloadCms --> collections
     collections --> database
-    payloadCms --> mediaStorage
+    payloadCms -.->|signed URLs, read-back| mediaStorage
     emailFeature --> payloadCms
     payloadCms -.-> resend
+
+    organizationSettingsFeature -.->|direct upload, browser to R2| mediaStorage
+    buildingsFeature -.->|direct upload, browser to R2| mediaStorage
+    profileFeature -.->|direct upload, browser to R2| mediaStorage
+    editorCore -.->|direct upload, browser to R2| mediaStorage
 ```
 
 ### How to read this diagram
@@ -160,6 +165,14 @@ an operation. A Payload adapter implements that port and talks to Payload CMS.
 Payload validates the collection data and then writes it through the selected
 database adapter. `DATABASE_ENGINE=sql` selects SQLite; `DATABASE_ENGINE=mongo`
 selects MongoDB.
+
+The one deliberate exception is uploading a file (org logo, building logo,
+avatar, floor reference image): the feature component calls the shared
+`uploadMediaClientSide` helper (`src/lib/uploads/`), which sends the file
+straight from the browser to Cloudflare R2 — bypassing ports/adapters and
+our own server entirely for that step — then goes through the normal REST
+API (`payloadRoutes`/`payloadCms`) only for the small "get a signed URL" and
+"save the record" requests. See `docs/technical/MEDIA_STORAGE.md`.
 
 ## 2. Ports-and-adapters communication
 

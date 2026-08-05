@@ -10,8 +10,10 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MEDIA_RESOURCE_FOLDER } from "@/constants/media";
 import { ORGANIZATION_TYPES } from "@/features/auth/constants/register-organization";
 import { OrganizationInfoCard } from "@/features/dashboard/components/OrganizationInfoCard";
+import { uploadMediaClientSide } from "@/lib/uploads/uploadMediaClientSide";
 
 import { ORGANIZATION_SETTINGS_CLIENT } from "../constants/organization-settings.constants";
 import { updateOrganizationAction } from "../actions/server/update-organization";
@@ -28,30 +30,45 @@ export function OrganizationForm({ organization }: OrganizationFormProps) {
 
   const [name, setName] = useState(organization.name);
   const [type, setType] = useState(organization.type);
-  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoId, setLogoId] = useState<string | null>(organization.logoId);
   const [logoPreviewUrl, setLogoPreviewUrl] = useState(organization.logoUrl);
   const [removeLogo, setRemoveLogo] = useState(false);
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  const onSelectLogo = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onSelectLogo = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
       setError(ORGANIZATION_SETTINGS_CLIENT.ERROR_LOGO_TYPE);
+      if (fileInputRef.current) fileInputRef.current.value = "";
       return;
     }
 
     setError("");
-    setRemoveLogo(false);
-    setLogoFile(file);
-    setLogoPreviewUrl(URL.createObjectURL(file));
+    setIsUploadingLogo(true);
+    try {
+      const media = await uploadMediaClientSide({
+        data: { alt: `${name} logo` },
+        docPrefix: MEDIA_RESOURCE_FOLDER.ORGANIZATIONS,
+        file,
+      });
+      setRemoveLogo(false);
+      setLogoId(String(media.id));
+      setLogoPreviewUrl(media.url ?? null);
+    } catch (uploadError) {
+      setError(uploadError instanceof Error ? uploadError.message : ORGANIZATION_SETTINGS_CLIENT.ERROR_UPDATE_FAILED);
+    } finally {
+      setIsUploadingLogo(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
   };
 
   const onRemoveLogo = () => {
-    setLogoFile(null);
+    setLogoId(null);
     setLogoPreviewUrl(null);
     setRemoveLogo(true);
     if (fileInputRef.current) fileInputRef.current.value = "";
@@ -66,7 +83,7 @@ export function OrganizationForm({ organization }: OrganizationFormProps) {
       formData.set("name", name.trim());
       formData.set("type", type);
       formData.set("removeLogo", String(removeLogo));
-      if (logoFile) formData.set("logo", logoFile);
+      if (logoId) formData.set("logoId", logoId);
 
       const result = await updateOrganizationAction(formData);
       if (!result?.isSuccess) {
@@ -74,7 +91,6 @@ export function OrganizationForm({ organization }: OrganizationFormProps) {
         return;
       }
 
-      setLogoFile(null);
       setRemoveLogo(false);
       setSuccess(true);
       setIsEditing(false);
@@ -85,7 +101,7 @@ export function OrganizationForm({ organization }: OrganizationFormProps) {
   const cancelEditing = () => {
     setName(organization.name);
     setType(organization.type);
-    setLogoFile(null);
+    setLogoId(organization.logoId);
     setLogoPreviewUrl(organization.logoUrl);
     setRemoveLogo(false);
     setError("");
@@ -130,7 +146,7 @@ export function OrganizationForm({ organization }: OrganizationFormProps) {
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
               <div className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-muted">
                 {logoPreviewUrl ? (
-                  <Image alt={name} src={logoPreviewUrl} fill sizes="64px" className="object-cover" />
+                  <Image alt={name} src={logoPreviewUrl} fill sizes="64px" className="object-cover" unoptimized />
                 ) : (
                   <Building2Icon className="size-6 text-muted-foreground" />
                 )}
@@ -142,7 +158,7 @@ export function OrganizationForm({ organization }: OrganizationFormProps) {
                   accept="image/*"
                   className="hidden"
                   onChange={onSelectLogo}
-                  disabled={isPending}
+                  disabled={isPending || isUploadingLogo}
                 />
                 <div className="flex flex-wrap gap-2">
                   <Button
@@ -150,10 +166,14 @@ export function OrganizationForm({ organization }: OrganizationFormProps) {
                     variant="outline"
                     size="sm"
                     onClick={() => fileInputRef.current?.click()}
-                    disabled={isPending}
+                    disabled={isPending || isUploadingLogo}
                   >
-                    <UploadIcon />
-                    {logoPreviewUrl ? ORGANIZATION_SETTINGS_CLIENT.REPLACE_LOGO : ORGANIZATION_SETTINGS_CLIENT.UPLOAD_LOGO}
+                    {isUploadingLogo ? <Loader2Icon className="animate-spin" /> : <UploadIcon />}
+                    {isUploadingLogo
+                      ? ORGANIZATION_SETTINGS_CLIENT.UPLOADING_LOGO
+                      : logoPreviewUrl
+                        ? ORGANIZATION_SETTINGS_CLIENT.REPLACE_LOGO
+                        : ORGANIZATION_SETTINGS_CLIENT.UPLOAD_LOGO}
                   </Button>
                   {logoPreviewUrl ? (
                     <Button
@@ -161,7 +181,7 @@ export function OrganizationForm({ organization }: OrganizationFormProps) {
                       variant="ghost"
                       size="sm"
                       onClick={onRemoveLogo}
-                      disabled={isPending}
+                      disabled={isPending || isUploadingLogo}
                     >
                       {ORGANIZATION_SETTINGS_CLIENT.REMOVE_LOGO}
                     </Button>
@@ -214,7 +234,7 @@ export function OrganizationForm({ organization }: OrganizationFormProps) {
             <Button type="button" variant="outline" onClick={cancelEditing} disabled={isPending}>
               {ORGANIZATION_SETTINGS_CLIENT.CANCEL}
             </Button>
-            <Button type="submit" disabled={isPending || name.trim().length < 2}>
+            <Button type="submit" disabled={isPending || isUploadingLogo || name.trim().length < 2}>
               {isPending ? <Loader2Icon className="animate-spin" /> : null}
               {isPending ? ORGANIZATION_SETTINGS_CLIENT.SAVING : ORGANIZATION_SETTINGS_CLIENT.SAVE}
             </Button>

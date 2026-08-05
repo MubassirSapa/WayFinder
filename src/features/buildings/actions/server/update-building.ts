@@ -31,12 +31,12 @@ export async function updateBuildingAction(buildingId: string, formData: FormDat
     return errorResponse([], validation.error.issues[0]?.message ?? BUILDINGS_CLIENT.ERROR_UPDATE_FAILED);
   }
 
-  const logoEntry = formData.get("logo");
-  const logoFile = logoEntry instanceof File && logoEntry.size > 0 ? logoEntry : null;
+  const logoIdEntry = formData.get("logoId");
+  const logoId = typeof logoIdEntry === "string" && logoIdEntry.length > 0 ? logoIdEntry : null;
 
   const result = await updateBuilding(user, buildingId, {
     ...validation.data,
-    logoFile,
+    logoId,
     removeLogo: formData.get("removeLogo") === "true",
   });
   if (!result.isSuccess) return errorResponse([], result.message || BUILDINGS_CLIENT.ERROR_UPDATE_FAILED);
