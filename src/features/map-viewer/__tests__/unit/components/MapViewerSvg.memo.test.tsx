@@ -22,6 +22,7 @@ const activeFloor: ViewerFloor = {
 // not on every pan/zoom-driven re-render of the canvas itself.
 const stableProps = {
   connectorTargetsByNodeId: {},
+  destinationObjectId: null,
   edges: [],
   nodes: [],
   objects: [],
@@ -31,6 +32,7 @@ const stableProps = {
   onPointerDown: vi.fn(),
   onPointerMove: vi.fn(),
   onPointerUp: vi.fn(),
+  originObjectId: null,
   routeConnectorDirection: null,
   routeConnectorNodeId: null,
   showGrid: false,

@@ -32,6 +32,7 @@ function renderCanvas() {
       <MapViewerCanvas
         activeFloor={activeFloor}
         connectorTargetsByNodeId={{}}
+        destinationObjectId={null}
         contentRef={contentRef}
         edges={[]}
         nodes={[]}
@@ -45,6 +46,7 @@ function renderCanvas() {
         onSvgPointerDown={vi.fn()}
         onSvgPointerMove={vi.fn()}
         onSvgPointerUp={vi.fn()}
+        originObjectId={null}
         routeConnectorDirection={null}
         routeConnectorNodeId={null}
         selectedObjectId={null}
@@ -130,6 +132,7 @@ describe("MapViewerCanvas re-render isolation", () => {
           <MapViewerCanvas
             activeFloor={activeFloor}
             connectorTargetsByNodeId={{}}
+            destinationObjectId={null}
             contentRef={contentRef}
             edges={[]}
             nodes={[]}
@@ -143,6 +146,7 @@ describe("MapViewerCanvas re-render isolation", () => {
             onSvgPointerDown={vi.fn()}
             onSvgPointerMove={vi.fn()}
             onSvgPointerUp={vi.fn()}
+            originObjectId={null}
             routeConnectorDirection={null}
             routeConnectorNodeId={null}
             selectedObjectId={null}

@@ -118,6 +118,19 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
   const accessibleOnly = useAppStore((state) => state.accessibleOnly);
   const setOrigin = useAppStore((state) => state.setOrigin);
 
+  // Only resolves to an id when the origin/destination node is actually on
+  // the floor currently displayed (nodes is already scoped to activeFloor) —
+  // if you set an origin on floor 1 then switch to floor 2, nothing on floor
+  // 2 should highlight as "the origin".
+  const originObjectId = useMemo(
+    () => nodes.find((node) => node.id === originNodeId)?.objectId ?? null,
+    [nodes, originNodeId],
+  );
+  const destinationObjectId = useMemo(
+    () => nodes.find((node) => node.id === destinationNodeId)?.objectId ?? null,
+    [nodes, destinationNodeId],
+  );
+
   // setOrigin/setDestination always reset activeSegmentIndex to 0 (the store
   // slice has no way to know which floor is active). That's wrong whenever a
   // route is set while already standing on a floor other than the route's
@@ -413,6 +426,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
               activeFloor={activeFloor}
               connectorTargetsByNodeId={connectorTargetsByNodeId}
               contentRef={contentRef}
+              destinationObjectId={destinationObjectId}
               edges={edges}
               nodes={nodes}
               objects={objects}
@@ -425,6 +439,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
               onSvgPointerDown={handleSvgPointerDown}
               onSvgPointerMove={handleSvgPointerMove}
               onSvgPointerUp={handleSvgPointerUp}
+              originObjectId={originObjectId}
               routeConnectorDirection={routeConnectorDirection}
               routeConnectorNodeId={routeConnectorNodeId}
               routeHasDestination={Boolean(routePointsForActiveFloor) && activeSegmentIndex === segments.length - 1}

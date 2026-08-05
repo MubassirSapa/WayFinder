@@ -114,6 +114,7 @@ function renderSvg({
     <MapViewerSvg
       activeFloor={activeFloor}
       connectorTargetsByNodeId={connectorTargetsByNodeId}
+      destinationObjectId={null}
       edges={[]}
       nodes={nodes}
       objects={objects}
@@ -123,6 +124,7 @@ function renderSvg({
       onPointerDown={onViewportPointerDown}
       onPointerMove={onViewportPointerMove}
       onPointerUp={onViewportPointerUp}
+      originObjectId={null}
       routeConnectorDirection={routeConnectorDirection}
       routeConnectorNodeId={routeConnectorNodeId}
       routePoints={undefined}
@@ -243,6 +245,7 @@ describe("MapViewerSvg route endpoints", () => {
       <MapViewerSvg
         activeFloor={activeFloor}
         connectorTargetsByNodeId={{}}
+        destinationObjectId={null}
         edges={[]}
         nodes={[]}
         objects={[]}
@@ -252,6 +255,7 @@ describe("MapViewerSvg route endpoints", () => {
         onPointerDown={vi.fn()}
         onPointerMove={vi.fn()}
         onPointerUp={vi.fn()}
+        originObjectId={null}
         routeConnectorDirection={null}
         routeConnectorNodeId={null}
         routeHasStart
@@ -268,6 +272,7 @@ describe("MapViewerSvg route endpoints", () => {
       <MapViewerSvg
         activeFloor={activeFloor}
         connectorTargetsByNodeId={{}}
+        destinationObjectId={null}
         edges={[]}
         nodes={[]}
         objects={[]}
@@ -277,6 +282,7 @@ describe("MapViewerSvg route endpoints", () => {
         onPointerDown={vi.fn()}
         onPointerMove={vi.fn()}
         onPointerUp={vi.fn()}
+        originObjectId={null}
         routeConnectorDirection={null}
         routeConnectorNodeId={null}
         routeHasDestination
@@ -393,6 +399,7 @@ describe("MapViewerSvg route-connector highlight", () => {
       <MapViewerSvg
         activeFloor={activeFloor}
         connectorTargetsByNodeId={{}}
+        destinationObjectId={null}
         edges={[]}
         nodes={[stairsNode]}
         objects={[stairsObject]}
@@ -402,6 +409,7 @@ describe("MapViewerSvg route-connector highlight", () => {
         onPointerDown={vi.fn()}
         onPointerMove={vi.fn()}
         onPointerUp={vi.fn()}
+        originObjectId={null}
         routeConnectorDirection="up"
         routeConnectorNodeId={stairsNode.id}
         routePoints={undefined}

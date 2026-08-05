@@ -21,9 +21,11 @@ interface MapViewerCanvasProps {
   activeFloor: ViewerFloor | null;
   connectorTargetsByNodeId: Record<string, ConnectorTargetInfo[]>;
   contentRef: RefObject<HTMLDivElement | null>;
+  destinationObjectId: string | null;
   edges: ViewerPathEdge[];
   nodes: ViewerMapNode[];
   objects: ViewerMapObject[];
+  originObjectId: string | null;
   routeConnectorDirection: ConnectorDirection | null;
   routeConnectorNodeId: string | null;
   routeHasDestination?: boolean;
@@ -47,9 +49,11 @@ export function MapViewerCanvas({
   activeFloor,
   connectorTargetsByNodeId,
   contentRef,
+  destinationObjectId,
   edges,
   nodes,
   objects,
+  originObjectId,
   routeConnectorDirection,
   routeConnectorNodeId,
   routeHasDestination,
@@ -116,6 +120,7 @@ export function MapViewerCanvas({
             <MapViewerSvg
               activeFloor={activeFloor}
               connectorTargetsByNodeId={connectorTargetsByNodeId}
+              destinationObjectId={destinationObjectId}
               edges={edges}
               nodes={nodes}
               objects={objects}
@@ -125,6 +130,7 @@ export function MapViewerCanvas({
               onPointerDown={onSvgPointerDown}
               onPointerMove={onSvgPointerMove}
               onPointerUp={onSvgPointerUp}
+              originObjectId={originObjectId}
               routeConnectorDirection={routeConnectorDirection}
               routeConnectorNodeId={routeConnectorNodeId}
               routeHasDestination={routeHasDestination}

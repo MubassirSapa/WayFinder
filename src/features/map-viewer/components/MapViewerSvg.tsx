@@ -28,9 +28,11 @@ const CONNECTOR_DOWN_TRIANGLE_PATH = "M0,3.5 L2.8,-1.5 L-2.8,-1.5 Z";
 interface MapViewerSvgProps {
   activeFloor: ViewerFloor;
   connectorTargetsByNodeId: Record<string, ConnectorTargetInfo[]>;
+  destinationObjectId: string | null;
   edges: ViewerPathEdge[];
   nodes: ViewerMapNode[];
   objects: ViewerMapObject[];
+  originObjectId: string | null;
   routeConnectorDirection: ConnectorDirection | null;
   routeConnectorNodeId: string | null;
   routeHasDestination?: boolean;
@@ -54,9 +56,11 @@ interface MapViewerSvgProps {
 export const MapViewerSvg = memo(function MapViewerSvg({
   activeFloor,
   connectorTargetsByNodeId,
+  destinationObjectId,
   edges,
   nodes,
   objects,
+  originObjectId,
   routeConnectorDirection,
   routeConnectorNodeId,
   routeHasDestination,
@@ -148,6 +152,7 @@ export const MapViewerSvg = memo(function MapViewerSvg({
 
       <ViewerFloorContent
         connectorTargetsByNodeId={connectorTargetsByNodeId}
+        destinationObjectId={destinationObjectId}
         edges={edges}
         nodes={nodes}
         objects={objects}
@@ -156,6 +161,7 @@ export const MapViewerSvg = memo(function MapViewerSvg({
         onViewportPointerDown={onPointerDown}
         onViewportPointerMove={onPointerMove}
         onViewportPointerUp={onPointerUp}
+        originObjectId={originObjectId}
         routeConnectorDirection={routeConnectorDirection}
         routeConnectorNodeId={routeConnectorNodeId}
         routeHasDestination={routeHasDestination}
@@ -169,6 +175,7 @@ export const MapViewerSvg = memo(function MapViewerSvg({
 
 function ViewerFloorContent({
   connectorTargetsByNodeId,
+  destinationObjectId,
   edges,
   nodes,
   objects,
@@ -177,6 +184,7 @@ function ViewerFloorContent({
   onViewportPointerDown,
   onViewportPointerMove,
   onViewportPointerUp,
+  originObjectId,
   routeConnectorDirection,
   routeConnectorNodeId,
   routeHasDestination,
@@ -185,6 +193,7 @@ function ViewerFloorContent({
   selectedObjectId,
 }: {
   connectorTargetsByNodeId: Record<string, ConnectorTargetInfo[]>;
+  destinationObjectId: string | null;
   edges: ViewerPathEdge[];
   nodes: ViewerMapNode[];
   objects: ViewerMapObject[];
@@ -193,6 +202,7 @@ function ViewerFloorContent({
   onViewportPointerDown: PointerEventHandler<SVGSVGElement>;
   onViewportPointerMove: PointerEventHandler<SVGSVGElement>;
   onViewportPointerUp: PointerEventHandler<SVGSVGElement>;
+  originObjectId: string | null;
   routeConnectorDirection: ConnectorDirection | null;
   routeConnectorNodeId: string | null;
   routeHasDestination?: boolean;
@@ -213,6 +223,7 @@ function ViewerFloorContent({
       <ViewerEdges edges={edges} nodes={nodes} />
       <ViewerObjects
         connectorTargetsByNodeId={connectorTargetsByNodeId}
+        destinationObjectId={destinationObjectId}
         nodes={nodes}
         objects={objects}
         onConnectorPress={handlePress}
@@ -220,6 +231,7 @@ function ViewerFloorContent({
         onViewportPointerDown={onViewportPointerDown}
         onViewportPointerMove={onViewportPointerMove}
         onViewportPointerUp={onViewportPointerUp}
+        originObjectId={originObjectId}
         routeConnectorNodeId={routeConnectorNodeId}
         selectedObjectId={selectedObjectId}
       />
@@ -317,6 +329,7 @@ function RoutePolyline({
 
 function ViewerObjects({
   connectorTargetsByNodeId,
+  destinationObjectId,
   nodes,
   objects,
   onConnectorPress,
@@ -324,10 +337,12 @@ function ViewerObjects({
   onViewportPointerDown,
   onViewportPointerMove,
   onViewportPointerUp,
+  originObjectId,
   routeConnectorNodeId,
   selectedObjectId,
 }: {
   connectorTargetsByNodeId: Record<string, ConnectorTargetInfo[]>;
+  destinationObjectId: string | null;
   nodes: ViewerMapNode[];
   objects: ViewerMapObject[];
   onConnectorPress: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
@@ -335,6 +350,7 @@ function ViewerObjects({
   onViewportPointerDown: PointerEventHandler<SVGSVGElement>;
   onViewportPointerMove: PointerEventHandler<SVGSVGElement>;
   onViewportPointerUp: PointerEventHandler<SVGSVGElement>;
+  originObjectId: string | null;
   routeConnectorNodeId: string | null;
   selectedObjectId: string | null;
 }) {
@@ -353,7 +369,9 @@ function ViewerObjects({
           <ViewerObjectItem
             connectorNode={connectorNode}
             connectorTargets={connectorTargets}
+            isDestination={destinationObjectId === object.id}
             isOnRoute={connectorNode?.id === routeConnectorNodeId}
+            isOrigin={originObjectId === object.id}
             isSelected={selectedObjectId === object.id}
             key={object.id}
             object={object}
@@ -372,7 +390,9 @@ function ViewerObjects({
 function ViewerObjectItem({
   connectorNode,
   connectorTargets,
+  isDestination,
   isOnRoute,
+  isOrigin,
   isSelected,
   object,
   onConnectorPress,
@@ -383,7 +403,9 @@ function ViewerObjectItem({
 }: {
   connectorNode: ViewerMapNode | undefined;
   connectorTargets: ConnectorTargetInfo[] | undefined;
+  isDestination: boolean;
   isOnRoute: boolean;
+  isOrigin: boolean;
   isSelected: boolean;
   object: ViewerMapObject;
   onConnectorPress: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
@@ -395,15 +417,22 @@ function ViewerObjectItem({
   const palette = getViewerObjectPalette(object.type);
   const centerX = object.width / 2;
   const centerY = object.height / 2;
-  // Selection (an explicit click) always wins visually over "this is the
-  // connector your route uses" — the two can be true at once (route-planning
-  // often starts by selecting the connector itself).
+  // Selection (an explicit click) always wins visually over every other
+  // state. Below that, being the route's origin/destination is more
+  // specific than "this is merely the connector the route currently uses on
+  // this floor", so it takes precedence over isOnRoute. An object can only
+  // be shown as one or the other if it's somehow both (picking the same spot
+  // for start and destination) — destination wins in that rare case.
   const outlineColor = isSelected
     ? "var(--primary)"
-    : isOnRoute
-      ? "var(--map-viewer-route-line)"
-      : palette.stroke;
-  const outlineWidth = isSelected || isOnRoute ? 2.4 : 1.2;
+    : isDestination
+      ? "var(--map-viewer-route-destination)"
+      : isOrigin
+        ? "var(--map-viewer-route-origin)"
+        : isOnRoute
+          ? "var(--map-viewer-route-line)"
+          : palette.stroke;
+  const outlineWidth = isSelected || isOnRoute || isOrigin || isDestination ? 2.4 : 1.2;
 
   // A press that turns into a real drag should pan the map exactly like
   // starting the drag on empty canvas would — objects aren't draggable in
