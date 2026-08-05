@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
 import { access } from "./access";
+import { createCleanupReplacedMediaHook } from "./hooks/cleanupReplacedMedia";
 import { createSyncMediaUrlHook } from "./hooks/syncMediaUrl";
 
 export const Buildings: CollectionConfig = {
@@ -25,6 +26,7 @@ export const Buildings: CollectionConfig = {
 
   hooks: {
     beforeValidate: [createSyncMediaUrlHook({ relationField: "logo", urlField: "logoUrl" })],
+    afterChange: [createCleanupReplacedMediaHook({ relationField: "logo" })],
   },
 
   access: {

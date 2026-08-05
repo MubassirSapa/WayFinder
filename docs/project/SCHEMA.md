@@ -199,6 +199,13 @@ manager from `/dashboard/organization`. `logoUrl` is a denormalized copy of
 whenever `logo` changes — reads use `logoUrl` directly instead of populating
 the `logo` relation, which avoids an extra populate hop into `media` and the
 populate-restriction pitfall documented in `docs/technical/MEDIA_STORAGE.md`.
+When `logo` is replaced or cleared, an `afterChange` hook
+(`createCleanupReplacedMediaHook` in
+`src/collections/hooks/cleanupReplacedMedia.ts`) deletes the previous
+`media` doc (and, via the storage plugin's own `afterDelete` hook, the real
+file in R2) — the same cleanup hook is also applied to `Building.logo`,
+`User.avatar`, and `Floor.backgroundImage`, so no upload flow leaks a
+replaced file.
 
 ### Building
 

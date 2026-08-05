@@ -2,6 +2,7 @@ import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, CollectionCo
 
 import { relationId } from "@/lib/payload-id";
 import { access } from "../access";
+import { createCleanupReplacedMediaHook } from "../hooks/cleanupReplacedMedia";
 
 /** Keep `buildings.floorCount` in sync so dashboards can read it without an extra query. */
 async function syncFloorCount(payload: Payload, buildingId: number | string) {
@@ -60,7 +61,7 @@ export const Floors: CollectionConfig = {
   },
 
   hooks: {
-    afterChange: [syncFloorCountOnChange],
+    afterChange: [syncFloorCountOnChange, createCleanupReplacedMediaHook({ relationField: "backgroundImage" })],
     afterDelete: [syncFloorCountOnDelete],
   },
 
@@ -162,6 +163,7 @@ export const Floors: CollectionConfig = {
       type: "select",
       required: true,
       defaultValue: "draft",
+      index: true,
       options: [
         { label: "Draft", value: "draft" },
         { label: "Published", value: "published" },

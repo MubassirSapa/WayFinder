@@ -306,6 +306,43 @@ breaking correctness while optimizing — they do **not** catch over-fetching
 or N+1 queries by themselves. Use the two methods above for that; use this
 for "did I break something while fixing it."
 
+## Database indexes
+
+`select`/`populate`/`depth` control how much a query returns; an index
+controls how fast the database can find the rows to return in the first
+place. A `where` clause on an unindexed field forces a full table scan —
+small at this app's current size, but the field is still the thing worth
+getting right early, since retrofitting an index later is free while
+tracking down which fields actually need one requires re-deriving this same
+audit.
+
+Add `index: true` to a field when it's the target of a `where` clause that
+runs often — not just any field that happens to appear in a query. Verified
+by grepping every `where:` in `src/collections/access/` and
+`src/features/*/services/server/` (not guessed):
+
+| Field | Indexed? | Why |
+| --- | --- | --- |
+| `Buildings.organization` | Yes | Filtered by `accessibleBuildingIds` (`src/collections/access/index.ts`), which runs on nearly every access-control check in the app. |
+| `Floors.building`, `MapObjects.building`/`floor`/`parentObject`, `MapNodes.building`/`floor`/`object`, `PathEdges.building`/`floor`/`fromNode`/`toNode` | Yes | Floor-editor loads, map-viewer loads, and cascade deletes all filter on these. |
+| `Users.organization` | Yes | Filtered in `userRead`/`userUpdate`/`userDelete` access control and directly in `listOrgUsersAdapter` — runs every time an owner/manager opens team management or a user-management mutation's access check fires. |
+| `Floors.status` | Yes | Filtered in `getPublicLandingData.ts` (every public homepage load), `getMapViewerData.ts` (twice), and `Floors`' own `read` access function for unauthenticated visitors — the single most-hit filter in the public-facing path. |
+| `Users.email` | Yes, automatically | Payload's `auth` config always indexes the login field — nothing to add manually here, and adding a duplicate field-level index would be redundant. |
+
+Considered and deliberately **not** added:
+
+- A compound `(building, status)` index on `Floors` — two single-column
+  indexes are enough for SQLite's query planner at this app's scale (tens to
+  hundreds of floors per building, not millions of rows). Revisit only if
+  floor counts per building grow by orders of magnitude.
+- `MapObjects.type` / `MapObjects.isSearchable` — never filtered
+  server-side; search happens client-side over already-loaded objects.
+
+No manual migration step is needed either way: this project uses Payload's
+automatic schema-push for both `DATABASE_ENGINE` adapters (no `migrations/`
+folder, no migrate script in `package.json`), so `index: true` takes effect
+the next time anything connects to the DB.
+
 ## Checklist for new queries
 
 - Only need an ID off a relation? Use `depth: 0` (the default) and read the

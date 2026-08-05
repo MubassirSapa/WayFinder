@@ -2,6 +2,7 @@ import type { CollectionConfig } from "payload";
 
 import { ORGANIZATION_TYPES } from "@/features/auth/constants/register-organization";
 import { access } from "./access";
+import { createCleanupReplacedMediaHook } from "./hooks/cleanupReplacedMedia";
 import { createSyncMediaUrlHook } from "./hooks/syncMediaUrl";
 
 export const Organizations: CollectionConfig = {
@@ -28,6 +29,7 @@ export const Organizations: CollectionConfig = {
 
   hooks: {
     beforeValidate: [createSyncMediaUrlHook({ relationField: "logo", urlField: "logoUrl" })],
+    afterChange: [createCleanupReplacedMediaHook({ relationField: "logo" })],
   },
 
   access: {

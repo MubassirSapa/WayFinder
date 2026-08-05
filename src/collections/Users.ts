@@ -7,6 +7,7 @@ import { ResetPasswordEmailTemplate } from "@/features/email/templates/ResetPass
 import { VerifyEmailTemplate } from "@/features/email/templates/VerifyEmail";
 import { ROLES, ROLE_OPTIONS } from "./constants/roles";
 import { access } from "./access";
+import { createCleanupReplacedMediaHook } from "./hooks/cleanupReplacedMedia";
 import { createSyncMediaUrlHook } from "./hooks/syncMediaUrl";
 
 const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
@@ -54,6 +55,7 @@ export const Users: CollectionConfig = {
 
   hooks: {
     beforeValidate: [createSyncMediaUrlHook({ relationField: "avatar", urlField: "avatarUrl" })],
+    afterChange: [createCleanupReplacedMediaHook({ relationField: "avatar" })],
   },
 
   access: {
@@ -84,6 +86,7 @@ export const Users: CollectionConfig = {
       type: "relationship",
       relationTo: "organizations",
       required: true,
+      index: true,
       access: {
         update: ({ req }) => req.user?.collection === "admins",
       },
