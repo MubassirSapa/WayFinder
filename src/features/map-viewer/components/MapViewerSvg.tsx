@@ -256,6 +256,16 @@ function ViewerFloorContent({
   );
 }
 
+// Classic map-pin silhouette, authored tip-down in its own 24x24 box (tip at
+// 12,22 — see MAP_PIN_ORIGIN below). Reused as-is and repositioned per
+// instance via a transform, rather than hand-converting every coordinate,
+// so the shape stays easy to eyeball against the familiar Google/Apple Maps
+// pin it's deliberately modeled on.
+const MAP_PIN_HEAD_PATH = "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z";
+const MAP_PIN_TIP = { x: 12, y: 22 };
+const MAP_PIN_HOLE = { cx: 12, cy: 9, r: 2.6 };
+const MAP_PIN_SCALE = 2.3;
+
 function RouteEndpointMarker({
   ariaLabel,
   label,
@@ -267,17 +277,15 @@ function RouteEndpointMarker({
   point: { x: number; y: number };
   token: "var(--map-viewer-route-destination)" | "var(--map-viewer-route-origin)";
 }) {
-  const labelWidth = label === "Destination" ? 76 : 42;
-
   return (
-    <g aria-label={ariaLabel ?? `Route ${label.toLowerCase()}`} className="pointer-events-none" role="img">
-      <circle cx={point.x} cy={point.y} fill={token} r="7" stroke="var(--background)" strokeWidth="2" vectorEffect="non-scaling-stroke" />
-      <g transform={`translate(${point.x + 10} ${point.y - 13})`}>
-        <rect fill="var(--card)" height="20" rx="10" stroke={token} width={labelWidth} x="0" y="0" vectorEffect="non-scaling-stroke" />
-        <text fill="var(--foreground)" fontSize="9" fontWeight="700" textAnchor="middle" x={labelWidth / 2} y="13">
-          {label}
-        </text>
-      </g>
+    <g
+      aria-label={ariaLabel ?? `Route ${label.toLowerCase()}`}
+      className="pointer-events-none"
+      role="img"
+      transform={`translate(${point.x} ${point.y}) scale(${MAP_PIN_SCALE}) translate(${-MAP_PIN_TIP.x} ${-MAP_PIN_TIP.y})`}
+    >
+      <path d={MAP_PIN_HEAD_PATH} fill={token} stroke="var(--background)" strokeWidth="1.4" />
+      <circle cx={MAP_PIN_HOLE.cx} cy={MAP_PIN_HOLE.cy} fill="var(--background)" r={MAP_PIN_HOLE.r} />
     </g>
   );
 }
