@@ -140,6 +140,15 @@ add a `defaultPopulate` to `Media.ts` that only includes `url` (and `alt`
 where it's actually shown), the same way `Organizations.ts`/`Buildings.ts`/
 `Floors.ts` already do.
 
+**One catch, confirmed by testing it live**: restricting a populated media
+doc to just `{ url: true }` (via a per-query `populate` override) silently
+returns `url: null` instead of the real URL. Payload computes `url` at read
+time from the doc's other upload fields (at least `filename`), so trimming
+those away breaks the very field we wanted to keep. Whatever field set ends
+up in `Media`'s `defaultPopulate` needs to include enough for that
+computation to still work — verify it against a real record before trusting
+it, the same way this note itself was confirmed rather than assumed.
+
 ## One UX change worth knowing about
 
 Today, picking a file just previews it locally — the actual upload happens

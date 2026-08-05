@@ -17,6 +17,10 @@ const data: PublicLandingData = {
       id: "hospital",
       name: "Greenfield General Hospital",
       backgroundImageUrl: null,
+      logoUrl: null,
+      organizationId: "org-1",
+      organizationName: "Org One",
+      organizationLogoUrl: null,
       addedAt: "2026-07-28T12:00:00.000Z",
       href: "/map/1",
       floors: [{ id: "1", name: "Main Floor", level: 0, href: "/map/1" }],
@@ -25,12 +29,28 @@ const data: PublicLandingData = {
       id: "campus",
       name: "Seneca Campus",
       backgroundImageUrl: null,
+      logoUrl: null,
+      organizationId: "org-1",
+      organizationName: "Org One",
+      organizationLogoUrl: null,
       addedAt: "2026-07-29T12:00:00.000Z",
       href: "/map/2",
       floors: [
         { id: "2", name: "Main Campus", level: 0, href: "/map/2" },
         { id: "3", name: "Upper Campus", level: 1, href: "/map/3" },
       ],
+    },
+    {
+      id: "riverside",
+      name: "Riverside Mall",
+      backgroundImageUrl: null,
+      logoUrl: null,
+      organizationId: "org-2",
+      organizationName: "Org Two",
+      organizationLogoUrl: null,
+      addedAt: "2026-07-30T12:00:00.000Z",
+      href: "/map/7",
+      floors: [{ id: "7", name: "Main Floor", level: 0, href: "/map/7" }],
     },
   ],
 };
@@ -45,7 +65,7 @@ describe("LandingExplorer", () => {
     render(<LandingExplorer data={data} />);
 
     expect(screen.queryByRole("navigation", { name: "Venue types" })).toBeNull();
-    expect(screen.getByRole("heading", { name: "Popular maps" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Popular Organizations" })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Recently added" })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Browse venues" })).toBeTruthy();
   });
@@ -77,16 +97,40 @@ describe("LandingExplorer", () => {
     expect(screen.getByRole("link", { name: "Open Upper Campus map" })).toBeTruthy();
   });
 
-  it("opens the grouped floor chooser from a popular multi-floor venue", () => {
+  it("filters the browse-venues grid to an organization's buildings when its popular circle is clicked", () => {
     render(<LandingExplorer data={data} />);
 
-    fireEvent.click(
-      screen.getByRole("button", { name: "Popular map: choose a floor at Seneca Campus" }),
-    );
+    fireEvent.click(screen.getByRole("button", { name: "Show venues for Org Two" }));
 
-    expect(screen.getByRole("dialog", { name: "Choose a floor" })).toBeTruthy();
-    expect(screen.getByRole("link", { name: "Open Main Campus map" })).toBeTruthy();
-    expect(screen.getByRole("link", { name: "Open Upper Campus map" })).toBeTruthy();
+    const venuesSection = screen.getByRole("heading", { name: "Browse venues" }).closest("section");
+    expect(venuesSection).toBeTruthy();
+    expect(
+      within(venuesSection as HTMLElement).getByRole("button", {
+        name: "Choose a floor at Riverside Mall",
+      }),
+    ).toBeTruthy();
+    expect(
+      within(venuesSection as HTMLElement).queryByRole("button", {
+        name: "Choose a floor at Seneca Campus",
+      }),
+    ).toBeNull();
+    expect(screen.getByRole("button", { name: "Showing Org Two" })).toBeTruthy();
+  });
+
+  it("clears the organization filter", () => {
+    render(<LandingExplorer data={data} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Show venues for Org Two" }));
+    fireEvent.click(screen.getByRole("button", { name: "Showing Org Two" }));
+
+    const venuesSection = screen.getByRole("heading", { name: "Browse venues" }).closest("section");
+    expect(venuesSection).toBeTruthy();
+    expect(
+      within(venuesSection as HTMLElement).getByRole("button", {
+        name: "Choose a floor at Seneca Campus",
+      }),
+    ).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Showing Org Two" })).toBeNull();
   });
 
   it("uses the same floor selector for a one-floor venue", () => {
@@ -112,6 +156,10 @@ describe("LandingExplorer", () => {
           id: "library",
           name: "Central Library",
           backgroundImageUrl: null,
+      logoUrl: null,
+      organizationId: "org-1",
+      organizationName: "Org One",
+      organizationLogoUrl: null,
           addedAt: "2026-07-24T12:00:00.000Z",
           href: "/map/4",
           floors: [{ id: "4", name: "Library Main Floor", level: 0, href: "/map/4" }],
@@ -120,6 +168,10 @@ describe("LandingExplorer", () => {
           id: "market",
           name: "Central Market",
           backgroundImageUrl: null,
+      logoUrl: null,
+      organizationId: "org-1",
+      organizationName: "Org One",
+      organizationLogoUrl: null,
           addedAt: "2026-07-25T12:00:00.000Z",
           href: "/map/5",
           floors: [{ id: "5", name: "Market Main Floor", level: 0, href: "/map/5" }],
@@ -128,6 +180,10 @@ describe("LandingExplorer", () => {
           id: "offices",
           name: "Civic Offices",
           backgroundImageUrl: null,
+      logoUrl: null,
+      organizationId: "org-1",
+      organizationName: "Org One",
+      organizationLogoUrl: null,
           addedAt: "2026-07-26T12:00:00.000Z",
           href: "/map/6",
           floors: [{ id: "6", name: "Office Main Floor", level: 0, href: "/map/6" }],

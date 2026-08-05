@@ -22,7 +22,7 @@ export function VenueCard({ venue, onSelect }: VenueCardProps) {
         <span className="relative block min-h-28 overflow-hidden border-r border-border sm:h-32 sm:min-h-0 sm:border-b sm:border-r-0">
           <FloorPlanPreview
             floorCount={venue.floors.length}
-            imageUrl={venue.backgroundImageUrl}
+            imageUrl={venue.logoUrl ?? venue.backgroundImageUrl}
             name={venue.name}
           />
         </span>

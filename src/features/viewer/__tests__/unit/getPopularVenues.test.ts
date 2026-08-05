@@ -8,6 +8,10 @@ function makeVenue(id: string, floorCount: number): LandingVenue {
     id,
     name: id,
     backgroundImageUrl: null,
+    logoUrl: null,
+    organizationId: "org-1",
+    organizationName: "Org One",
+    organizationLogoUrl: null,
     addedAt: "2026-07-28T12:00:00.000Z",
     href: `/map/${id}-0`,
     floors: Array.from({ length: floorCount }, (_, index) => ({

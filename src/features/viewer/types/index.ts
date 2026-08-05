@@ -9,9 +9,20 @@ export type LandingVenue = {
   id: string;
   name: string;
   backgroundImageUrl: string | null;
+  logoUrl: string | null;
+  organizationId: string;
+  organizationName: string;
+  organizationLogoUrl: string | null;
   addedAt: string;
   href: string;
   floors: LandingFloor[];
+};
+
+export type LandingOrganization = {
+  id: string;
+  name: string;
+  logoUrl: string | null;
+  venueCount: number;
 };
 
 export type PublicLandingData = {

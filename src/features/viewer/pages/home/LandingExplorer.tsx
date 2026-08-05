@@ -1,6 +1,6 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { useRouter } from "nextjs-toploader/app";
 import { useMemo, useState } from "react";
 
@@ -9,15 +9,15 @@ import { Input } from "@/components/ui/input";
 import { EmptyDirectoryCard } from "@/features/viewer/components/EmptyDirectoryCard";
 import { FloorSelectorDialog } from "@/features/viewer/components/FloorSelectorDialog";
 import { OrganizationPromotion } from "@/features/viewer/components/OrganizationPromotion";
-import { PopularMaps } from "@/features/viewer/components/PopularMaps";
+import { PopularOrganizations } from "@/features/viewer/components/PopularOrganizations";
 import { RecentlyAddedVenues } from "@/features/viewer/components/RecentlyAddedVenues";
 import { VenueCard } from "@/features/viewer/components/VenueCard";
 import { VenueSectionHeader } from "@/features/viewer/components/VenueSectionHeader";
 import { ViewerHeroVisual } from "@/features/viewer/components/ViewerHeroVisual";
 import { filterVenues } from "@/features/viewer/lib/filterVenues";
-import { getPopularVenues } from "@/features/viewer/lib/getPopularVenues";
+import { getPopularOrganizations } from "@/features/viewer/lib/getPopularOrganizations";
 import { getRecentlyAddedVenues } from "@/features/viewer/lib/getRecentlyAddedVenues";
-import type { LandingVenue, PublicLandingData } from "@/features/viewer/types";
+import type { LandingOrganization, LandingVenue, PublicLandingData } from "@/features/viewer/types";
 
 type LandingExplorerProps = {
   data: PublicLandingData;
@@ -27,14 +27,22 @@ export function LandingExplorer({ data }: LandingExplorerProps) {
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [selectedVenue, setSelectedVenue] = useState<LandingVenue | null>(null);
+  const [selectedOrganization, setSelectedOrganization] = useState<LandingOrganization | null>(null);
 
-  const venues = useMemo(() => filterVenues(data.venues, query), [data.venues, query]);
-  const popularVenues = useMemo(() => getPopularVenues(data.venues), [data.venues]);
+  const venues = useMemo(
+    () => filterVenues(data.venues, query, selectedOrganization?.id),
+    [data.venues, query, selectedOrganization],
+  );
+  const popularOrganizations = useMemo(() => getPopularOrganizations(data.venues), [data.venues]);
   const recentlyAddedVenues = useMemo(() => getRecentlyAddedVenues(data.venues), [data.venues]);
-  const visibleVenues = query.trim() ? venues : venues.slice(0, 4);
+  const visibleVenues = query.trim() || selectedOrganization ? venues : venues.slice(0, 4);
 
   function selectVenue(venue: LandingVenue) {
     setSelectedVenue(venue);
+  }
+
+  function selectOrganization(organization: LandingOrganization) {
+    setSelectedOrganization(organization);
   }
 
   function submitSearch(event: React.FormEvent<HTMLFormElement>) {
@@ -91,7 +99,7 @@ export function LandingExplorer({ data }: LandingExplorerProps) {
       </section>
 
       <section className="mx-auto w-full max-w-6xl px-5 py-7 sm:px-6">
-        <PopularMaps venues={popularVenues} onSelect={selectVenue} />
+        <PopularOrganizations organizations={popularOrganizations} onSelect={selectOrganization} />
       </section>
 
       <section className="mx-auto w-full max-w-6xl scroll-mt-20 px-5 pb-12 sm:px-6" id="venues">
@@ -111,6 +119,17 @@ export function LandingExplorer({ data }: LandingExplorerProps) {
             </p>
           </div>
         )}
+
+        {selectedOrganization ? (
+          <button
+            className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary transition hover:bg-primary/15"
+            type="button"
+            onClick={() => setSelectedOrganization(null)}
+          >
+            Showing {selectedOrganization.name}
+            <X className="size-3.5" aria-hidden />
+          </button>
+        ) : null}
 
         {data.venues.length === 0 ? (
           <EmptyDirectoryCard isAvailable={data.isAvailable} />

@@ -17,7 +17,7 @@ export function FloorPlanPreview({
     return (
       <div
         aria-label={`${name} map preview`}
-        className="absolute inset-0 bg-cover bg-center"
+        className="absolute inset-0 bg-cover bg-center transition-transform duration-300 sm:group-hover:scale-105"
         style={{ backgroundImage: `url(${imageUrl})` }}
       />
     );
