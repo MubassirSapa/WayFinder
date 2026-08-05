@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
 import { access } from "./access";
+import { createSyncMediaUrlHook } from "./hooks/syncMediaUrl";
 
 export const Buildings: CollectionConfig = {
   slug: "buildings",
@@ -11,11 +12,19 @@ export const Buildings: CollectionConfig = {
   },
 
   // Places that populate `building` (public map viewer, public landing page)
-  // only ever read `name` and, transitively, `organization.name` — keep the
-  // address/contact/floorCount fields out of every populated copy.
+  // only ever read `name`, `logoUrl`, and, transitively, `organization.name`
+  // — keep the address/contact/floorCount fields out of every populated
+  // copy. `logoUrl` (denormalized by the hook below) is listed here instead
+  // of the `logo` relation, so showing a logo never needs a second populate
+  // hop into `media`.
   defaultPopulate: {
     name: true,
     organization: true,
+    logoUrl: true,
+  },
+
+  hooks: {
+    beforeValidate: [createSyncMediaUrlHook({ relationField: "logo", urlField: "logoUrl" })],
   },
 
   access: {
@@ -70,6 +79,11 @@ export const Buildings: CollectionConfig = {
       name: "logo",
       type: "relationship",
       relationTo: "media",
+    },
+    {
+      name: "logoUrl",
+      type: "text",
+      admin: { readOnly: true, hidden: true },
     },
   ],
 };

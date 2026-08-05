@@ -190,6 +190,7 @@ export interface User {
    */
   buildings?: (number | Building)[] | null;
   avatar?: (number | null) | Media;
+  avatarUrl?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -220,6 +221,7 @@ export interface Organization {
   name: string;
   type: 'hospital' | 'university' | 'mall' | 'office' | 'airport' | 'library' | 'other';
   logo?: (number | null) | Media;
+  logoUrl?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -230,6 +232,7 @@ export interface Organization {
 export interface Media {
   id: number;
   alt: string;
+  prefix?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -259,6 +262,7 @@ export interface Building {
    */
   floorCount?: number | null;
   logo?: (number | null) | Media;
+  logoUrl?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -521,6 +525,7 @@ export interface UsersSelect<T extends boolean = true> {
   organization?: T;
   buildings?: T;
   avatar?: T;
+  avatarUrl?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -548,6 +553,7 @@ export interface OrganizationsSelect<T extends boolean = true> {
   name?: T;
   type?: T;
   logo?: T;
+  logoUrl?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -564,6 +570,7 @@ export interface BuildingsSelect<T extends boolean = true> {
   website?: T;
   floorCount?: T;
   logo?: T;
+  logoUrl?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -573,6 +580,7 @@ export interface BuildingsSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  prefix?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

@@ -5,7 +5,7 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 import { asPayloadId, relationId, relationIds } from "@/lib/payload-id";
 import { tryCatchResponse } from "@/lib/responses/trycatch-response";
-import type { Building, User } from "@/payload-types";
+import type { User } from "@/payload-types";
 
 import { USER_MANAGEMENT_CLIENT } from "../../constants/user-management.constants";
 import type { OrgUserListItem, TCreateOrgUserInput } from "../../types/user-management.types";
@@ -14,23 +14,38 @@ async function getPayloadClient() {
   return getPayload({ config });
 }
 
-function toOrgUserListItem(target: User, currentUserId: number | string): OrgUserListItem {
+// select/populate below always trims to exactly this shape — Buildings' own
+// defaultPopulate now also includes `organization` and `logoUrl` (added for
+// other screens), neither of which this table shows, so every call site
+// restricts the populated building down to just `name`.
+type OrgUserListSource = {
+  id: number | string;
+  name: string;
+  email: string;
+  role: User["role"];
+  avatarUrl?: string | null;
+  buildings?: (number | { id: number | string; name: string })[] | null;
+};
+
+function toOrgUserListItem(target: OrgUserListSource, currentUserId: number | string): OrgUserListItem {
   const buildings = Array.isArray(target.buildings)
-    ? (target.buildings.filter((building): building is Building => typeof building === "object"))
+    ? target.buildings.filter((building) => typeof building === "object")
     : [];
-  const avatar = typeof target.avatar === "object" && target.avatar ? target.avatar : null;
 
   return {
     id: String(target.id),
     name: target.name,
     email: target.email,
     role: target.role,
-    avatarUrl: avatar?.url ?? null,
+    avatarUrl: target.avatarUrl ?? null,
     buildingIds: relationIds(target.buildings).map(String),
     buildingNames: buildings.map((building) => building.name),
     isSelf: String(target.id) === String(currentUserId),
   };
 }
+
+const USER_LIST_SELECT = { name: true, email: true, role: true, avatarUrl: true, buildings: true } as const;
+const USER_LIST_POPULATE = { buildings: { name: true } } as const;
 
 export async function listOrgUsersAdapter(user: User) {
   return tryCatchResponse<OrgUserListItem[]>(async () => {
@@ -43,6 +58,8 @@ export async function listOrgUsersAdapter(user: User) {
       depth: 1,
       limit: 0,
       pagination: false,
+      select: USER_LIST_SELECT,
+      populate: USER_LIST_POPULATE,
       sort: "name",
       where: { organization: { equals: organizationId } },
       user,
@@ -61,6 +78,9 @@ export async function createOrgUserAdapter(user: User, input: TCreateOrgUserInpu
 
     const created = await payload.create({
       collection: "users",
+      depth: 1,
+      select: USER_LIST_SELECT,
+      populate: USER_LIST_POPULATE,
       user,
       overrideAccess: false,
       data: {
@@ -85,6 +105,8 @@ export async function updateOrgUserRoleAdapter(user: User, targetUserId: string,
       collection: "users",
       id: asPayloadId(targetUserId),
       depth: 1,
+      select: USER_LIST_SELECT,
+      populate: USER_LIST_POPULATE,
       user,
       overrideAccess: false,
       data: { role, buildings: role === "manager" ? [] : undefined },
@@ -102,6 +124,8 @@ export async function updateOrgUserBuildingsAdapter(user: User, targetUserId: st
       collection: "users",
       id: asPayloadId(targetUserId),
       depth: 1,
+      select: USER_LIST_SELECT,
+      populate: USER_LIST_POPULATE,
       user,
       overrideAccess: false,
       data: { buildings: buildingIds.map((id) => asPayloadId(id)) },

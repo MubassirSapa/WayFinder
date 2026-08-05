@@ -23,13 +23,17 @@ export async function getDashboardData(): Promise<DashboardData> {
   const currentUser = user as User;
   const organizationId = relationId(currentUser.organization);
 
-  let organization: Organization | null = null;
+  let organization: Pick<Organization, "name" | "type" | "logoUrl"> | null = null;
   if (organizationId) {
     try {
+      // depth: 0 is enough — logoUrl is a plain field (denormalized by
+      // createSyncMediaUrlHook), so no populate hop into `media` is needed.
+      // select trims the doc to only what's read below.
       organization = await payload.findByID({
         collection: "organizations",
         id: organizationId,
-        depth: 1,
+        depth: 0,
+        select: { name: true, type: true, logoUrl: true },
         user: currentUser,
         overrideAccess: false,
       });
@@ -40,8 +44,6 @@ export async function getDashboardData(): Promise<DashboardData> {
 
   const buildingsResult = await listBuildings(currentUser);
   const buildings = buildingsResult.isSuccess ? buildingsResult.data : [];
-
-  const logo = organization && typeof organization.logo === "object" && organization.logo ? organization.logo : null;
 
   const name = currentUser.name ?? "";
   const email = currentUser.email ?? "";
@@ -59,7 +61,7 @@ export async function getDashboardData(): Promise<DashboardData> {
       name: organization?.name ?? DASHBOARD_CLIENT.ORG_FALLBACK_NAME,
       initials: organizationInitials(organization?.name ?? DASHBOARD_CLIENT.ORG_FALLBACK_NAME),
       typeLabel: organizationTypeLabel(organization?.type),
-      logoUrl: logo?.url ?? null,
+      logoUrl: organization?.logoUrl ?? null,
     },
     buildings,
     canManage: currentUser.role === ROLES.OWNER || currentUser.role === ROLES.MANAGER,

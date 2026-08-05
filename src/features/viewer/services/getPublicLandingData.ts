@@ -31,10 +31,15 @@ export async function getPublicLandingData(): Promise<PublicLandingData> {
 
     const floorsResult = await payload.find({
       collection: "floors",
-      // depth 3: floor -> building -> organization -> logo, so the venue
-      // name, building logo, and organization (with its own logo) all
-      // resolve without extra round trips.
-      depth: 3,
+      // depth 2: floor -> building -> organization. No third hop into
+      // `media` needed — logoUrl is a plain field on both Buildings and
+      // Organizations (denormalized by createSyncMediaUrlHook from the
+      // `logo` relation at write time), and it's already part of both
+      // collections' defaultPopulate, so no populate override is needed
+      // here either. This sidesteps the populate-restriction pitfall
+      // documented in docs/technical/MEDIA_STORAGE.md entirely, rather than
+      // working around it per-query.
+      depth: 2,
       // select trims the directly-queried floor doc to only the fields this
       // page reads (id is always included regardless of select).
       select: {
@@ -44,21 +49,6 @@ export async function getPublicLandingData(): Promise<PublicLandingData> {
         building: true,
         createdAt: true,
         updatedAt: true,
-      },
-      // populate overrides each populated relation's own fields — Buildings'
-      // defaultPopulate doesn't include `logo`, so both it and
-      // `organizations` need a per-query override here. Deliberately NOT
-      // restricting `media` the same way: verified empirically that
-      // Payload's `url` field on an upload collection is computed at read
-      // time and needs the doc's other upload fields (at least `filename`)
-      // present to resolve — selecting only `{ url: true }` on the
-      // populated media doc silently returns `url: null`. Media has no
-      // `defaultPopulate` yet (see docs/technical/MEDIA_STORAGE.md's
-      // follow-up note); adding one needs to include whatever the url hook
-      // depends on, not just `url` itself.
-      populate: {
-        buildings: { name: true, logo: true, organization: true },
-        organizations: { name: true, logo: true },
       },
       overrideAccess: true,
       pagination: false,
@@ -86,22 +76,19 @@ export async function getPublicLandingData(): Promise<PublicLandingData> {
         continue;
       }
 
-      const logo = typeof building === "object" && building.logo && typeof building.logo === "object" ? building.logo : null;
       const organization =
         typeof building === "object" && typeof building.organization === "object"
           ? (building.organization as Organization)
           : null;
-      const organizationLogo =
-        organization?.logo && typeof organization.logo === "object" ? organization.logo : null;
       const organizationId = relationId(typeof building === "object" ? building.organization : null);
 
       groups.set(key, {
         buildingId: key,
         buildingName: typeof building === "object" ? building.name : key,
-        buildingLogoUrl: logo?.url ?? null,
+        buildingLogoUrl: (typeof building === "object" ? building.logoUrl : null) ?? null,
         organizationId: organizationId === null ? "" : String(organizationId),
         organizationName: organization?.name ?? "",
-        organizationLogoUrl: organizationLogo?.url ?? null,
+        organizationLogoUrl: organization?.logoUrl ?? null,
         floors: [floor],
       });
     }

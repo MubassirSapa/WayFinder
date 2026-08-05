@@ -12,6 +12,8 @@ class Organization {
   number id
   string name
   enum type
+  number logoId
+  string logoUrl
   datetime createdAt
   datetime updatedAt
 }
@@ -33,6 +35,8 @@ class Building {
   string contactPhone
   string website
   number floorCount
+  number logoId
+  string logoUrl
   datetime createdAt
   datetime updatedAt
 }
@@ -44,6 +48,8 @@ class User {
   enum role
   number organizationId
   number[] buildingIds
+  number avatarId
+  string avatarUrl
   boolean verified
   datetime createdAt
   datetime updatedAt
@@ -52,6 +58,7 @@ class User {
 class Media {
   number id
   string alt
+  string prefix
   string url
   string filename
   string mimeType
@@ -143,6 +150,9 @@ Organization "1" --> "0..*" User : has users
 Organization "1" --> "0..*" Building : has buildings
 User "0..*" --> "0..*" Building : member of
 Media "0..1" --> "0..*" Floor : background image for
+Media "0..1" --> "0..*" Organization : logo
+Media "0..1" --> "0..*" Building : logo
+Media "0..1" --> "0..*" User : avatar
 Building "1" --> "0..*" Floor : contains
 Floor "1" --> "0..*" MapObject : contains
 Floor "1" --> "0..*" MapNode : contains
@@ -183,7 +193,12 @@ hospital | university | mall | office | airport | library | other
 
 One organization can have many `users` and many `buildings`. `logo` is an
 optional relationship to `media`, editable by the organization's owner or
-manager from `/dashboard/organization`.
+manager from `/dashboard/organization`. `logoUrl` is a denormalized copy of
+`logo`'s resolved `media.url`, kept in sync by a `beforeValidate` hook
+(`createSyncMediaUrlHook` in `src/collections/hooks/syncMediaUrl.ts`)
+whenever `logo` changes — reads use `logoUrl` directly instead of populating
+the `logo` relation, which avoids an extra populate hop into `media` and the
+populate-restriction pitfall documented in `docs/technical/MEDIA_STORAGE.md`.
 
 ### Building
 
@@ -198,10 +213,12 @@ authoritative source; it is always derived from `floors.building`.
 
 `address`, `contactEmail`, `contactPhone`, and `website` are optional
 metadata fields for the building's location and contact info. `logo` is an
-optional relationship to `media`. All of these fields (name included) are
-editable only by the organization's owner or manager, from
-`/dashboard/buildings/[buildingId]` — a member assigned to the building can
-read but not edit this record (see `docs/security/RBAC.md`).
+optional relationship to `media`; `logoUrl` denormalizes its resolved
+`media.url` the same way `Organization.logoUrl` does (see that section).
+All of these fields (name included) are editable only by the organization's
+owner or manager, from `/dashboard/buildings/[buildingId]` — a member
+assigned to the building can read but not edit this record (see
+`docs/security/RBAC.md`).
 
 ### User
 
@@ -238,7 +255,9 @@ for `member` accounts. Owners and managers implicitly access every building in
 their organization, so their authorization does not depend on this field.
 
 `avatar` is an optional relationship to `media`, editable by the user
-themself (or an owner/manager) from `/dashboard/profile`.
+themself (or an owner/manager) from `/dashboard/profile`. `avatarUrl`
+denormalizes its resolved `media.url` the same way `Organization.logoUrl`
+does (see that section).
 
 Field-level access locks `role` and `buildings` to platform admins and to an
 owner/manager acting on a *different* user in their organization
