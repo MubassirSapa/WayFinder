@@ -10,7 +10,8 @@ const data: PublicLandingData = {
     {
       id: "hospital",
       name: "Greenfield Hospital",
-      backgroundImageUrl: null,
+      address: null,
+    backgroundImageUrl: null,
       logoUrl: null,
       organizationId: "org-1",
       organizationName: "Org One",
@@ -22,7 +23,8 @@ const data: PublicLandingData = {
     {
       id: "campus",
       name: "Seneca Campus",
-      backgroundImageUrl: null,
+      address: null,
+    backgroundImageUrl: null,
       logoUrl: null,
       organizationId: "org-1",
       organizationName: "Org One",
@@ -55,7 +57,7 @@ describe("VenueDirectory", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Choose a floor at Greenfield Hospital" }));
 
-    expect(screen.getByRole("dialog", { name: "Choose a floor" })).toBeTruthy();
+    expect(screen.getByRole("dialog", { name: "Greenfield Hospital" })).toBeTruthy();
     expect(screen.getByRole("link", { name: "Open Main Floor map" })).toBeTruthy();
     expect(screen.queryByRole("region", { name: "Available maps for Greenfield Hospital" })).toBeNull();
   });

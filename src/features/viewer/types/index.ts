@@ -8,6 +8,7 @@ export type LandingFloor = {
 export type LandingVenue = {
   id: string;
   name: string;
+  address: string | null;
   backgroundImageUrl: string | null;
   logoUrl: string | null;
   organizationId: string;

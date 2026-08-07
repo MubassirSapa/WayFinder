@@ -29,7 +29,7 @@ export function OrganizationAboutContent() {
           About Wayfinder
         </h1>
         <p className="mt-2 text-sm text-muted-foreground sm:text-base">
-          Clear indoor maps. More confident arrivals.
+          Never get lost inside a building again.
         </p>
       </header>
 
@@ -70,13 +70,12 @@ export function OrganizationAboutContent() {
 
       <section className="mt-12 sm:mt-14">
         <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-          Designed with clear boundaries
+          Your maps stay private until you publish them
         </h2>
         <div className="mt-4 rounded-md bg-muted/40 p-5 sm:p-6">
           <p className="text-sm leading-7 text-muted-foreground sm:text-base">
-            Organization teams control the maps they manage and decide what is ready to publish.
-            Visitors get a focused public experience without entering the private management
-            workspace.
+            Only your team can edit your building&apos;s map. Visitors only ever see the version
+            you choose to make public.
           </p>
         </div>
       </section>

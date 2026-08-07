@@ -7,6 +7,7 @@ function makeVenue(id: string, addedAt: string): LandingVenue {
   return {
     id,
     name: `Venue ${id}`,
+    address: null,
     backgroundImageUrl: null,
     logoUrl: null,
     organizationId: "org-1",

@@ -7,8 +7,10 @@
 - Added a `blocked` field to `Users` and a `beforeLogin` collection hook (`blockLoginHook`, `src/collections/hooks/blockLogin.ts`) so an owner/manager can block another user's sign-in access from their detail page, distinct from Payload's own failed-login lockout.
 - Added a per-user detail page (`/dashboard/users/[id]`): role and building-assignment management (moved off the directory card), block/unblock, invite history (who invited them and when they accepted), and removal — gated the same way the directory page already is (owner/manager only).
 - Added `isOwnerOrManager(role)` (`src/collections/constants/roles.ts`), replacing the `role !== ROLES.OWNER && role !== ROLES.MANAGER` check that was copy-pasted across the users page, access functions, and server actions.
+- Venue cards on the public directory now show the building's address, and the floor picker dialog shows a compact floor badge (`GF`, `LG`, `B1`, `L2`, ...) next to the venue name instead of a generic layers icon.
 
 ### Changed
+- Rewrote confusing or jargon-heavy copy on the public landing and organization pages for non-technical visitors: "Popular Organizations" → "Filter by organization", "Discover" → "Home", "Join now" → "Get started", and simplified headings/body copy on the organization landing, about, and CTA sections.
 - Reworked `/dashboard/users` into a role-grouped directory (Owner / Managers / Members) instead of one flat grid; compact identity cards now link to the per-user detail page where building access and management controls live.
 - Refined the profile page against the Wayfinder workspace reference with denser identity and account-detail sections, restrained card treatment, compact metadata typography, responsive touch targets, and content aligned to the page heading while preserving the existing staged avatar upload and access rules.
 - Refined team management with responsive identity cards, grouped role sections, and a compact invitation dialog that preserves entered details behind a discard confirmation.
@@ -16,6 +18,8 @@
 - Reworked the private team-management page into a responsive, searchable member directory. Organization owners and managers retain role, building-assignment, blocking, and removal controls on dedicated user detail pages. Adding a teammate uses an email invitation flow with separate identity and access sections.
 
 ### Fixed
+- Fixed the public directory's empty-state error text leaking the backend name ("could not reach Payload data") to visitors; it now reads "We couldn't load venues right now."
+- Fixed venue card names not truncating on overflow: a `block` class combined with `line-clamp-1` was overriding the `-webkit-box` display the clamp needs.
 - Fixed dropdown menus and selects (including the topbar user menu) letting content behind them show through: `bg-popover/70` wasn't opaque enough over a plain background even with the existing blur, so both now use `bg-popover/95`.
 - Fixed building/venue logos not rendering on the public site: a `populate` restriction on the populated `media` doc (selecting only `{ url: true }`) was silently returning `url: null`, since Payload's upload `url` field is computed at read time from the doc's other upload fields. Left `media` unrestricted in this query and documented the finding in `docs/technical/MEDIA_STORAGE.md` so the eventual `Media.defaultPopulate` follow-up doesn't repeat it.
 - Added the shared light/dark theme control to the private dashboard topbar and 404 header so both experiences use the same tested theme behavior.

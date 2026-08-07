@@ -21,7 +21,7 @@ const defaultFooterGroups = [
   {
     title: "Explore",
     links: [
-      { label: "Discover", href: PUBLIC_ROUTES.DISCOVER },
+      { label: "Home", href: PUBLIC_ROUTES.DISCOVER },
       { label: "Venues", href: PUBLIC_ROUTES.VENUES },
       { label: "About Wayfinder", href: PUBLIC_ROUTES.ABOUT },
     ],
@@ -31,7 +31,7 @@ const defaultFooterGroups = [
     links: [
       { label: "For organizations", href: PUBLIC_ROUTES.ORGANIZATION },
       { label: "About organizations", href: PUBLIC_ROUTES.ORGANIZATION_ABOUT },
-      { label: "Join now", href: PUBLIC_ROUTES.REGISTER_ORGANIZATION },
+      { label: "Get started", href: PUBLIC_ROUTES.REGISTER_ORGANIZATION },
     ],
   },
   {

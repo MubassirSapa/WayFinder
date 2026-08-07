@@ -9,12 +9,12 @@ afterEach(() => {
 
 const expectedFooterLinks = [
   ["Wayfinder", "/organization"],
-  ["Discover", "/#venues"],
+  ["Home", "/#venues"],
   ["Venues", "/venues"],
   ["About Wayfinder", "/about"],
   ["For organizations", "/organization"],
   ["About organizations", "/organization/about"],
-  ["Join now", "/register-organization"],
+  ["Get started", "/register-organization"],
   ["Privacy Policy", "/privacy"],
   ["Terms of Service", "/terms"],
 ] as const;

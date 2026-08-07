@@ -15,3 +15,12 @@ export function formatFloorLevel(level: number) {
   if (level < 0) return `Lower level ${Math.abs(level)}`;
   return `Level ${level}`;
 }
+
+const FLOOR_LEVEL_BADGES: Record<number, string> = {
+  [-1]: "LG",
+  0: "GF",
+};
+
+export function formatFloorBadge(level: number) {
+  return FLOOR_LEVEL_BADGES[level] ?? (level < 0 ? `B${Math.abs(level)}` : `L${level}`);
+}

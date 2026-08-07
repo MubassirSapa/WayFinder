@@ -14,6 +14,7 @@ import { relationId } from "@/lib/payload-id";
 type VenueGroup = {
   buildingId: string;
   buildingName: string;
+  buildingAddress: string | null;
   buildingLogoUrl: string | null;
   organizationId: string;
   organizationName: string;
@@ -50,6 +51,13 @@ export async function getPublicLandingData(): Promise<PublicLandingData> {
         createdAt: true,
         updatedAt: true,
       },
+      // Buildings.defaultPopulate omits `address` (most callers don't need
+      // it) - override it for this query only, since the public venue cards
+      // show a building's location. `organization` stays included so the
+      // nested Organization populate (name/logo) is unaffected.
+      populate: {
+        buildings: { name: true, organization: true, address: true },
+      },
       overrideAccess: true,
       pagination: false,
       sort: "-updatedAt",
@@ -85,6 +93,7 @@ export async function getPublicLandingData(): Promise<PublicLandingData> {
       groups.set(key, {
         buildingId: key,
         buildingName: typeof building === "object" ? building.name : key,
+        buildingAddress: (typeof building === "object" ? building.address : null) ?? null,
         buildingLogoUrl: (typeof building === "object" ? building.logoUrl : null) ?? null,
         organizationId: organizationId === null ? "" : String(organizationId),
         organizationName: organization?.name ?? "",
@@ -125,6 +134,7 @@ function toLandingVenue(group: VenueGroup): LandingVenue {
   return {
     id: group.buildingId,
     name: group.buildingName,
+    address: group.buildingAddress,
     backgroundImageUrl: primaryFloor.backgroundImageUrl ?? null,
     logoUrl: group.buildingLogoUrl,
     organizationId: group.organizationId,

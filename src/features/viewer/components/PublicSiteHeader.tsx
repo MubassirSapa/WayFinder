@@ -6,7 +6,7 @@ type PublicSiteHeaderProps = {
 };
 
 const publicLinks = [
-  { label: "Discover", href: PUBLIC_ROUTES.DISCOVER },
+  { label: "Home", href: PUBLIC_ROUTES.DISCOVER },
   { label: "Venues", href: PUBLIC_ROUTES.VENUES },
   { label: "About", href: PUBLIC_ROUTES.ABOUT },
 ] as const;

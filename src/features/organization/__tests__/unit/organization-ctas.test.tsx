@@ -12,14 +12,14 @@ describe("organization calls to action", () => {
   it("routes the hero actions to registration and sign in", () => {
     render(<OrganizationHero />);
 
-    const joinNow = screen.getByRole("link", { name: "Join now" });
+    const getStarted = screen.getByRole("link", { name: "Get started" });
     const mapVisual = screen.getByText("Level 2").closest('[aria-hidden="true"]');
 
-    expect(joinNow.getAttribute("href")).toBe("/register-organization");
+    expect(getStarted.getAttribute("href")).toBe("/register-organization");
     expect(screen.getByRole("link", { name: "Sign in" }).getAttribute("href")).toBe("/signin");
     expect(mapVisual).toBeTruthy();
     expect(
-      (mapVisual as HTMLElement).compareDocumentPosition(joinNow) & Node.DOCUMENT_POSITION_FOLLOWING,
+      (mapVisual as HTMLElement).compareDocumentPosition(getStarted) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
   });
 

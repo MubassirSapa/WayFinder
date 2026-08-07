@@ -17,11 +17,11 @@ export function OrganizationLandingPage() {
               className="text-2xl font-semibold text-foreground sm:text-3xl"
               id="organization-capabilities-heading"
             >
-              Keep every visitor journey clear.
+              Everything you need to guide your visitors.
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground sm:text-base">
-              Keep destinations current, guide people confidently, and make accessible routes
-              easier to find as your building changes.
+              Update your map anytime, help visitors find their way, and make step-free routes
+              easy to find.
             </p>
           </div>
           <OrganizationCapabilities />

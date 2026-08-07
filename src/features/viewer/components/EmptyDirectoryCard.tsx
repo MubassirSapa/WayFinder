@@ -6,8 +6,8 @@ type EmptyDirectoryCardProps = {
 
 export function EmptyDirectoryCard({ isAvailable }: EmptyDirectoryCardProps) {
   return (
-    <div className="relative min-h-[260px] overflow-hidden rounded-lg border border-dashed border-border bg-card p-6 shadow-sm">
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[length:44px_44px] opacity-20" />
+    <div className="relative min-h-65 overflow-hidden rounded-lg border border-dashed border-border bg-card p-6 shadow-sm">
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[44px_44px] opacity-20" />
       <div className="pointer-events-none absolute right-5 top-5 size-24 rounded-full border border-primary/15 opacity-60 sm:right-8 sm:top-8 sm:size-32 sm:opacity-100">
         <span className="absolute inset-4 rounded-full border border-primary/15" />
         <span className="absolute inset-8 rounded-full border border-primary/15" />
@@ -30,7 +30,7 @@ export function EmptyDirectoryCard({ isAvailable }: EmptyDirectoryCardProps) {
         <p className="mt-3 text-sm leading-6 text-muted-foreground">
           {isAvailable
             ? "Venue maps will appear here when they are ready for visitors."
-            : "The public directory could not reach Payload data right now. Try again once the app is connected."}
+            : "We couldn't load venues right now. Please try again in a moment."}
         </p>
       </div>
     </div>

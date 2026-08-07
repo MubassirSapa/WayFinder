@@ -25,7 +25,7 @@ export function OrganizationHero() {
             className={cn(buttonVariants({ size: "lg" }), "min-h-11 px-5 text-sm")}
             href={PUBLIC_ROUTES.REGISTER_ORGANIZATION}
           >
-            Join now
+            Get started
             <ArrowRight className="size-4" aria-hidden />
           </Link>
           <Link

@@ -7,6 +7,7 @@ const venues: LandingVenue[] = [
   {
     id: "hospital",
     name: "Greenfield General Hospital",
+    address: null,
     backgroundImageUrl: null,
     logoUrl: null,
     organizationId: "org-1",
@@ -19,6 +20,7 @@ const venues: LandingVenue[] = [
   {
     id: "campus",
     name: "Seneca Campus",
+    address: null,
     backgroundImageUrl: null,
     logoUrl: null,
     organizationId: "org-1",
@@ -31,6 +33,7 @@ const venues: LandingVenue[] = [
   {
     id: "retail",
     name: "Central Market",
+    address: null,
     backgroundImageUrl: null,
     logoUrl: null,
     organizationId: "org-2",

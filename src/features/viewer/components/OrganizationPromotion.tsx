@@ -29,7 +29,7 @@ export function OrganizationPromotion() {
             nativeButton={false}
             render={<Link href={PUBLIC_ROUTES.ORGANIZATION} />}
           >
-            Join now
+            Get started
           </Button>
         </div>
       </div>

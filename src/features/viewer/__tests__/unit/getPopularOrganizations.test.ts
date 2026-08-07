@@ -7,6 +7,7 @@ function makeVenue(id: string, organizationId: string, organizationName: string)
   return {
     id,
     name: id,
+    address: null,
     backgroundImageUrl: null,
     logoUrl: null,
     organizationId,

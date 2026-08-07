@@ -1,4 +1,4 @@
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, MapPin } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { FloorPlanPreview } from "@/features/viewer/components/FloorPlanPreview";
@@ -28,8 +28,16 @@ export function VenueCard({ venue, onSelect }: VenueCardProps) {
         </span>
 
         <span className="flex min-w-0 items-center justify-between gap-3 p-3">
-          <span className="line-clamp-2 min-w-0 text-sm font-semibold leading-5 text-card-foreground sm:text-base">
-            {venue.name}
+          <span className="min-w-0">
+            <span className="line-clamp-1 text-sm font-semibold leading-5 text-card-foreground sm:text-base">
+              {venue.name}
+            </span>
+            {venue.address ? (
+              <span className="mt-1 flex min-w-0 items-center gap-1 text-xs text-muted-foreground">
+                <MapPin className="size-3.5 shrink-0" aria-hidden />
+                <span className="truncate">{venue.address}</span>
+              </span>
+            ) : null}
           </span>
           <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
             <ChevronRight

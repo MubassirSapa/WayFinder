@@ -15,9 +15,9 @@ export function PopularOrganizations({ organizations, onSelect }: PopularOrganiz
     <section aria-labelledby="popular-organizations-heading">
       <div className="mb-4">
         <h2 className="text-xl font-semibold text-foreground sm:text-2xl" id="popular-organizations-heading">
-          Popular Organizations
+          Filter by organization
         </h2>
-        <p className="mt-1 text-sm text-muted-foreground">Browse venues from an organization.</p>
+        <p className="mt-1 text-sm text-muted-foreground">Tap an organization to see its venues.</p>
       </div>
 
       <div className="-mx-5 overflow-x-auto px-5 py-2 scrollbar-none sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">

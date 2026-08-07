@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Layers3 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import {
   Dialog,
@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { formatFloorLevel } from "@/features/viewer/lib/format";
+import { formatFloorBadge, formatFloorLevel } from "@/features/viewer/lib/format";
 import type { LandingVenue } from "@/features/viewer/types";
 
 type FloorSelectorDialogProps = {
@@ -25,8 +25,8 @@ export function FloorSelectorDialog({ venue, onClose }: FloorSelectorDialogProps
         {venue ? (
           <>
             <DialogHeader className="border-b border-border px-5 py-4 pe-12">
-              <DialogTitle className="text-base font-semibold">Choose a floor</DialogTitle>
-              <DialogDescription className="line-clamp-2 text-sm">{venue.name}</DialogDescription>
+              <DialogTitle className="line-clamp-2 text-base font-semibold">{venue.name}</DialogTitle>
+              <DialogDescription className="text-sm">Choose a floor</DialogDescription>
             </DialogHeader>
 
             <div className="max-h-[min(60dvh,28rem)] overflow-y-auto overscroll-contain">
@@ -39,8 +39,8 @@ export function FloorSelectorDialog({ venue, onClose }: FloorSelectorDialogProps
                     key={floor.id}
                   >
                     <span className="flex min-w-0 items-center gap-3">
-                      <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
-                        <Layers3 className="size-5" aria-hidden />
+                      <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-primary/10 font-heading text-xs font-semibold text-primary">
+                        {formatFloorBadge(floor.level)}
                       </span>
                       <span className="min-w-0">
                         <span className="block truncate text-sm font-semibold text-card-foreground">

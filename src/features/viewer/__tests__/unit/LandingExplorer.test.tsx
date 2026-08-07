@@ -16,7 +16,8 @@ const data: PublicLandingData = {
     {
       id: "hospital",
       name: "Greenfield General Hospital",
-      backgroundImageUrl: null,
+      address: null,
+    backgroundImageUrl: null,
       logoUrl: null,
       organizationId: "org-1",
       organizationName: "Org One",
@@ -28,7 +29,8 @@ const data: PublicLandingData = {
     {
       id: "campus",
       name: "Seneca Campus",
-      backgroundImageUrl: null,
+      address: null,
+    backgroundImageUrl: null,
       logoUrl: null,
       organizationId: "org-1",
       organizationName: "Org One",
@@ -43,7 +45,8 @@ const data: PublicLandingData = {
     {
       id: "riverside",
       name: "Riverside Mall",
-      backgroundImageUrl: null,
+      address: null,
+    backgroundImageUrl: null,
       logoUrl: null,
       organizationId: "org-2",
       organizationName: "Org Two",
@@ -65,7 +68,7 @@ describe("LandingExplorer", () => {
     render(<LandingExplorer data={data} />);
 
     expect(screen.queryByRole("navigation", { name: "Venue types" })).toBeNull();
-    expect(screen.getByRole("heading", { name: "Popular Organizations" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Filter by organization" })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Recently added" })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Browse venues" })).toBeTruthy();
   });
@@ -92,7 +95,7 @@ describe("LandingExplorer", () => {
       }),
     );
 
-    expect(screen.getByRole("dialog", { name: "Choose a floor" })).toBeTruthy();
+    expect(screen.getByRole("dialog", { name: "Seneca Campus" })).toBeTruthy();
     expect(screen.getByRole("link", { name: "Open Main Campus map" })).toBeTruthy();
     expect(screen.getByRole("link", { name: "Open Upper Campus map" })).toBeTruthy();
   });
@@ -155,7 +158,8 @@ describe("LandingExplorer", () => {
         {
           id: "library",
           name: "Central Library",
-          backgroundImageUrl: null,
+          address: null,
+    backgroundImageUrl: null,
       logoUrl: null,
       organizationId: "org-1",
       organizationName: "Org One",
@@ -167,7 +171,8 @@ describe("LandingExplorer", () => {
         {
           id: "market",
           name: "Central Market",
-          backgroundImageUrl: null,
+          address: null,
+    backgroundImageUrl: null,
       logoUrl: null,
       organizationId: "org-1",
       organizationName: "Org One",
@@ -179,7 +184,8 @@ describe("LandingExplorer", () => {
         {
           id: "offices",
           name: "Civic Offices",
-          backgroundImageUrl: null,
+          address: null,
+    backgroundImageUrl: null,
       logoUrl: null,
       organizationId: "org-1",
       organizationName: "Org One",
@@ -224,7 +230,7 @@ describe("LandingExplorer", () => {
     expect(promotion).toBeTruthy();
     expect(
       within(promotion as HTMLElement)
-        .getByRole("button", { name: "Join now" })
+        .getByRole("button", { name: "Get started" })
         .getAttribute("href"),
     ).toBe("/organization");
     expect(within(promotion as HTMLElement).queryByText("See how it works")).toBeNull();
