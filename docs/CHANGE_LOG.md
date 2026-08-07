@@ -16,6 +16,7 @@
 - Reworked the private team-management page into a responsive, searchable member directory. Organization owners and managers retain role, building-assignment, blocking, and removal controls on dedicated user detail pages. Adding a teammate uses an email invitation flow with separate identity and access sections.
 
 ### Fixed
+- Fixed dropdown menus and selects (including the topbar user menu) letting content behind them show through: `bg-popover/70` wasn't opaque enough over a plain background even with the existing blur, so both now use `bg-popover/95`.
 - Fixed building/venue logos not rendering on the public site: a `populate` restriction on the populated `media` doc (selecting only `{ url: true }`) was silently returning `url: null`, since Payload's upload `url` field is computed at read time from the doc's other upload fields. Left `media` unrestricted in this query and documented the finding in `docs/technical/MEDIA_STORAGE.md` so the eventual `Media.defaultPopulate` follow-up doesn't repeat it.
 - Added the shared light/dark theme control to the private dashboard topbar and 404 header so both experiences use the same tested theme behavior.
 - Fixed SQLite relationship updates rejecting serialized numeric IDs for buildings, media, floors, map objects, and map nodes while continuing to preserve string-based MongoDB ObjectIds.
