@@ -16,16 +16,12 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { ROLE_LABELS } from "@/collections/constants/roles";
 
 import { resendInvitationAction } from "../actions/server/resend-invitation";
 import { revokeInvitationAction } from "../actions/server/revoke-invitation";
 import { INVITATIONS_CLIENT } from "../constants/invitations.constants";
-import type { InvitationRole, PendingInvitationListItem } from "../types/invitation.types";
-
-const ROLE_LABELS: Record<InvitationRole, string> = {
-  manager: INVITATIONS_CLIENT.ROLE_MANAGER,
-  member: INVITATIONS_CLIENT.ROLE_MEMBER,
-};
+import type { PendingInvitationListItem } from "../types/invitation.types";
 
 function formatExpiresAt(expiresAt: string) {
   return new Date(expiresAt).toLocaleDateString(undefined, { month: "short", day: "numeric" });

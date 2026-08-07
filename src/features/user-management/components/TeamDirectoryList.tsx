@@ -24,9 +24,14 @@ export function TeamDirectoryList({ users, pendingInvitations }: TeamDirectoryLi
   const [query, setQuery] = useState("");
   const filteredUsers = useMemo(() => filterOrgUsers(users, query), [query, users]);
 
-  const owners = filteredUsers.filter((user) => user.role === "owner");
-  const managers = filteredUsers.filter((user) => user.role === "manager");
-  const members = filteredUsers.filter((user) => user.role === "member");
+  const { owners, managers, members } = useMemo(
+    () => ({
+      owners: filteredUsers.filter((user) => user.role === "owner"),
+      managers: filteredUsers.filter((user) => user.role === "manager"),
+      members: filteredUsers.filter((user) => user.role === "member"),
+    }),
+    [filteredUsers],
+  );
 
   if (users.length === 0 && pendingInvitations.length === 0) {
     return (

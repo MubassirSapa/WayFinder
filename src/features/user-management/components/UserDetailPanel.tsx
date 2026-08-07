@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "nextjs-toploader/app";
-import { Building2Icon, Loader2Icon, MailIcon, ShieldCheckIcon, ShieldOffIcon, Trash2Icon } from "lucide-react";
+import { Loader2Icon, ShieldCheckIcon, ShieldOffIcon, Trash2Icon } from "lucide-react";
 
 import {
   AlertDialog,
@@ -15,13 +15,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { PRIVATE_ROUTES } from "@/constants/routes";
 
 import { blockOrgUserAction, unblockOrgUserAction } from "../actions/server/block-org-user";
@@ -29,18 +22,9 @@ import { deleteOrgUserAction } from "../actions/server/delete-org-user";
 import { updateOrgUserRoleAction } from "../actions/server/update-org-user";
 import { USER_MANAGEMENT_CLIENT } from "../constants/user-management.constants";
 import type { ManagedRole, OrgBuildingOption, OrgUserDetail } from "../types/user-management.types";
-import { BuildingsAssignmentPopover } from "./BuildingsAssignmentPopover";
+import { UserAccessSection } from "./UserAccessSection";
+import { UserInviteStatus } from "./UserInviteStatus";
 import { UserSummaryCard } from "./UserSummaryCard";
-
-const ROLE_LABELS: Record<OrgUserDetail["role"], string> = {
-  owner: USER_MANAGEMENT_CLIENT.ROLE_OWNER,
-  manager: USER_MANAGEMENT_CLIENT.ROLE_MANAGER,
-  member: USER_MANAGEMENT_CLIENT.ROLE_MEMBER,
-};
-
-function formatDate(value: string) {
-  return new Date(value).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
-}
 
 type UserDetailPanelProps = {
   user: OrgUserDetail;
@@ -127,69 +111,15 @@ export function UserDetailPanel({ user, buildingOptions }: UserDetailPanelProps)
       ) : null}
 
       {canManage ? (
-        <section>
-          <h3 className="flex items-center gap-1.5 border-b border-border pb-2 font-heading text-sm font-semibold">
-            {USER_MANAGEMENT_CLIENT.EDIT_ACCESS}
-          </h3>
-          <div className="mt-4 max-w-sm space-y-4">
-            <Select value={user.role} onValueChange={(value) => onRoleChange(value as ManagedRole)}>
-              <SelectTrigger className="h-10 w-full" disabled={isUpdatingRole}>
-                <SelectValue>{() => ROLE_LABELS[user.role]}</SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="manager">{USER_MANAGEMENT_CLIENT.ROLE_MANAGER}</SelectItem>
-                <SelectItem value="member">{USER_MANAGEMENT_CLIENT.ROLE_MEMBER}</SelectItem>
-              </SelectContent>
-            </Select>
-
-            {user.role === "member" ? (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Building2Icon className="size-4 shrink-0" aria-hidden="true" />
-                <span className="min-w-0 truncate">
-                  {user.buildingNames.length > 0
-                    ? user.buildingNames.join(", ")
-                    : USER_MANAGEMENT_CLIENT.NO_BUILDINGS}
-                </span>
-              </div>
-            ) : null}
-
-            {user.role === "member" ? (
-              <BuildingsAssignmentPopover
-                userId={user.id}
-                buildingOptions={buildingOptions}
-                selectedBuildingIds={user.buildingIds}
-              />
-            ) : null}
-          </div>
-        </section>
+        <UserAccessSection
+          user={user}
+          buildingOptions={buildingOptions}
+          onRoleChange={onRoleChange}
+          isUpdatingRole={isUpdatingRole}
+        />
       ) : null}
 
-      <section>
-        <h3 className="flex items-center gap-1.5 border-b border-border pb-2 font-heading text-sm font-semibold">
-          <MailIcon className="size-4 text-muted-foreground" aria-hidden="true" />
-          {USER_MANAGEMENT_CLIENT.INVITE_STATUS_TITLE}
-        </h3>
-        <div className="mt-4 text-sm text-muted-foreground">
-          {user.inviteHistory ? (
-            <div className="space-y-1">
-              <p>
-                {USER_MANAGEMENT_CLIENT.INVITE_STATUS_INVITED_BY}{" "}
-                <span className="font-medium text-foreground">{user.inviteHistory.invitedByName}</span>
-                {" · "}
-                {formatDate(user.inviteHistory.invitedAt)}
-              </p>
-              {user.inviteHistory.acceptedAt ? (
-                <p>
-                  {USER_MANAGEMENT_CLIENT.INVITE_STATUS_ACCEPTED_AT}{" "}
-                  <span className="font-medium text-foreground">{formatDate(user.inviteHistory.acceptedAt)}</span>
-                </p>
-              ) : null}
-            </div>
-          ) : (
-            <p>{USER_MANAGEMENT_CLIENT.INVITE_STATUS_NONE}</p>
-          )}
-        </div>
-      </section>
+      <UserInviteStatus inviteHistory={user.inviteHistory} />
 
       <AlertDialog open={isBlockOpen} onOpenChange={setIsBlockOpen}>
         <AlertDialogContent>

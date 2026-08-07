@@ -1,14 +1,13 @@
 import type { User } from "@/payload-types";
 
+import { acceptInvitationAdapter, getInvitationPreviewAdapter } from "./invitation-accept-pl.adapter";
 import {
-  acceptInvitationAdapter,
   createInvitationAdapter,
-  getInvitationPreviewAdapter,
   getUserInviteHistoryAdapter,
   listPendingInvitationsAdapter,
   resendInvitationAdapter,
   revokeInvitationAdapter,
-} from "./invitation-pl.adapter";
+} from "./invitation-manage-pl.adapter";
 import type { TAcceptInvitationInput, TInviteUserInput } from "../../types/invitation.types";
 
 export async function createInvitation(user: User, input: TInviteUserInput) {

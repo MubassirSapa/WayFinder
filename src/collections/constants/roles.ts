@@ -16,3 +16,8 @@ export type Role = (typeof ROLES)[keyof typeof ROLES];
 export function isOwnerOrManager(role: Role | null | undefined): boolean {
   return role === ROLES.OWNER || role === ROLES.MANAGER;
 }
+
+/** Shared display labels, derived from `ROLE_OPTIONS` so every role badge/select/email in the app stays in sync. */
+export const ROLE_LABELS: Record<Role, string> = Object.fromEntries(
+  ROLE_OPTIONS.map((option) => [option.value, option.label]),
+) as Record<Role, string>;

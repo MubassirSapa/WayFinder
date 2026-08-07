@@ -33,16 +33,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ROLE_LABELS } from "@/collections/constants/roles";
 import { inviteUserAction } from "@/features/invitations/actions/server/invite-user";
 import { INVITATIONS_CLIENT } from "@/features/invitations/constants/invitations.constants";
 import type { InvitationRole } from "@/features/invitations/types/invitation.types";
 
 import type { OrgBuildingOption } from "../types/user-management.types";
-
-const ROLE_LABELS: Record<InvitationRole, string> = {
-  manager: INVITATIONS_CLIENT.ROLE_MANAGER,
-  member: INVITATIONS_CLIENT.ROLE_MEMBER,
-};
 
 type AddTeamMemberDialogProps = {
   buildingOptions: OrgBuildingOption[];

@@ -16,7 +16,9 @@ export async function updateOrgUserRoleAction(targetUserId: string, role: "manag
   const result = await updateOrgUserRole(currentUser.data, targetUserId, role);
   if (!result.isSuccess) return errorResponse([], result.message || USER_MANAGEMENT_CLIENT.ERROR_UPDATE_FAILED);
 
+  // A role change also moves the user between the Owner/Managers/Members sections on the list.
   revalidatePath(PRIVATE_ROUTES.USERS);
+  revalidatePath(`${PRIVATE_ROUTES.USERS}/${targetUserId}`);
   return successResponse(result.data, USER_MANAGEMENT_CLIENT.SUCCESS_ROLE_UPDATED);
 }
 
@@ -27,6 +29,6 @@ export async function updateOrgUserBuildingsAction(targetUserId: string, buildin
   const result = await updateOrgUserBuildings(currentUser.data, targetUserId, buildingIds);
   if (!result.isSuccess) return errorResponse([], result.message || USER_MANAGEMENT_CLIENT.ERROR_UPDATE_FAILED);
 
-  revalidatePath(PRIVATE_ROUTES.USERS);
+  revalidatePath(`${PRIVATE_ROUTES.USERS}/${targetUserId}`);
   return successResponse(result.data, USER_MANAGEMENT_CLIENT.SUCCESS_BUILDINGS_UPDATED);
 }

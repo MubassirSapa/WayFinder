@@ -3,17 +3,12 @@ import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { ROLE_LABELS } from "@/collections/constants/roles";
 import { PRIVATE_ROUTES } from "@/constants/routes";
 
 import { USER_MANAGEMENT_CLIENT } from "../constants/user-management.constants";
 import { userInitials } from "../lib/user-management-presentation";
 import type { OrgUserListItem } from "../types/user-management.types";
-
-const ROLE_LABELS: Record<OrgUserListItem["role"], string> = {
-  owner: USER_MANAGEMENT_CLIENT.ROLE_OWNER,
-  manager: USER_MANAGEMENT_CLIENT.ROLE_MANAGER,
-  member: USER_MANAGEMENT_CLIENT.ROLE_MEMBER,
-};
 
 type TeamMemberCardProps = {
   user: OrgUserListItem;

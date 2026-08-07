@@ -30,7 +30,7 @@ export const DASHBOARD_CLIENT = {
   NAV_ORGANIZATION: "Organization",
   NAV_DASHBOARD: "Overview",
   NAV_BUILDINGS: "Buildings",
-  NAV_USERS: "Users",
+  NAV_USERS: "Team",
   NAV_PROFILE: "Profile",
   NAV_WORKSPACE: "Workspace",
   LOG_OUT: "Log out",

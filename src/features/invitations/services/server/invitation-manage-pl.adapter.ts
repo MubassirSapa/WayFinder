@@ -3,33 +3,24 @@ import "server-only";
 import { getPayload } from "payload";
 
 import config from "@payload-config";
+import { ROLE_LABELS } from "@/collections/constants/roles";
 import { asPayloadId, relationId, relationIds } from "@/lib/payload-id";
 import { tryCatchResponse } from "@/lib/responses/trycatch-response";
-import { signIn } from "@/features/auth/services/server/auth.ports";
 import { sendInviteEmail } from "@/features/email/services/email.ports";
 import type { User } from "@/payload-types";
 
 import { INVITATIONS_CLIENT } from "../../constants/invitations.constants";
-import { generateInviteToken, hashInviteToken, invitationExpiresAt } from "../../lib/invite-token";
+import { generateInviteToken, invitationExpiresAt } from "../../lib/invite-token";
 import type {
-  InvitationPreview,
   InvitationRole,
   PendingInvitationListItem,
-  TAcceptInvitationInput,
   TInviteUserInput,
   UserInviteHistory,
 } from "../../types/invitation.types";
 
-const INVALID_INVITE_ERROR = "This invite link isn't valid.";
-
 async function getPayloadClient() {
   return getPayload({ config });
 }
-
-const ROLE_LABELS: Record<InvitationRole, string> = {
-  manager: INVITATIONS_CLIENT.ROLE_MANAGER,
-  member: INVITATIONS_CLIENT.ROLE_MEMBER,
-};
 
 type PendingInvitationSource = {
   id: number | string;
@@ -76,29 +67,35 @@ export async function createInvitationAdapter(user: User, input: TInviteUserInpu
     const organizationId = relationId(user.organization);
     if (organizationId === null) throw new Error(INVITATIONS_CLIENT.ERROR_INVITE_FAILED);
 
-    const existingUser = await payload.find({
-      collection: "users",
-      overrideAccess: true,
-      limit: 1,
-      pagination: false,
-      where: { email: { equals: input.email } },
-    });
+    // Independent existence checks — run together instead of one after the other.
+    const [existingUser, existingInvite] = await Promise.all([
+      payload.find({
+        collection: "users",
+        overrideAccess: true,
+        limit: 1,
+        pagination: false,
+        depth: 0,
+        select: {},
+        where: { email: { equals: input.email } },
+      }),
+      payload.find({
+        collection: "invitations",
+        overrideAccess: true,
+        limit: 1,
+        pagination: false,
+        depth: 0,
+        select: {},
+        where: {
+          and: [
+            { email: { equals: input.email } },
+            { organization: { equals: organizationId } },
+            { status: { equals: "pending" } },
+            { expiresAt: { greater_than: new Date().toISOString() } },
+          ],
+        },
+      }),
+    ]);
     if (existingUser.totalDocs > 0) throw new Error(INVITATIONS_CLIENT.ERROR_EMAIL_TAKEN);
-
-    const existingInvite = await payload.find({
-      collection: "invitations",
-      overrideAccess: true,
-      limit: 1,
-      pagination: false,
-      where: {
-        and: [
-          { email: { equals: input.email } },
-          { organization: { equals: organizationId } },
-          { status: { equals: "pending" } },
-          { expiresAt: { greater_than: new Date().toISOString() } },
-        ],
-      },
-    });
     if (existingInvite.totalDocs > 0) throw new Error(INVITATIONS_CLIENT.ERROR_INVITE_PENDING);
 
     const organizationName = await getOrganizationName(payload, organizationId);
@@ -143,18 +140,23 @@ export async function resendInvitationAdapter(user: User, invitationId: string) 
     const existing = await payload.findByID({
       collection: "invitations",
       id: asPayloadId(invitationId),
+      depth: 0,
+      select: { email: true, name: true, role: true, buildings: true },
       user,
       overrideAccess: false,
     });
 
-    await payload.update({
-      collection: "invitations",
-      id: existing.id,
-      overrideAccess: true,
-      data: { status: "revoked" },
-    });
+    // Revoking the old invite and looking up the org name are independent of each other.
+    const [, organizationName] = await Promise.all([
+      payload.update({
+        collection: "invitations",
+        id: existing.id,
+        overrideAccess: true,
+        data: { status: "revoked" },
+      }),
+      getOrganizationName(payload, organizationId),
+    ]);
 
-    const organizationName = await getOrganizationName(payload, organizationId);
     const { rawToken, tokenHash } = generateInviteToken();
 
     await payload.create({
@@ -193,6 +195,8 @@ export async function revokeInvitationAdapter(user: User, invitationId: string) 
     const existing = await payload.findByID({
       collection: "invitations",
       id: asPayloadId(invitationId),
+      depth: 0,
+      select: {},
       user,
       overrideAccess: false,
     });
@@ -231,93 +235,6 @@ export async function listPendingInvitationsAdapter(user: User) {
   });
 }
 
-export async function getInvitationPreviewAdapter(token: string) {
-  return tryCatchResponse<InvitationPreview>(async () => {
-    const payload = await getPayloadClient();
-    const tokenHash = hashInviteToken(token);
-
-    const result = await payload.find({
-      collection: "invitations",
-      overrideAccess: true,
-      limit: 1,
-      pagination: false,
-      depth: 1,
-      populate: { organizations: { name: true } },
-      where: { tokenHash: { equals: tokenHash } },
-    });
-
-    const invitation = result.docs[0];
-    if (!invitation || invitation.status !== "pending") throw new Error(INVALID_INVITE_ERROR);
-    if (new Date(invitation.expiresAt).getTime() < Date.now()) throw new Error(INVALID_INVITE_ERROR);
-
-    const organizationName = typeof invitation.organization === "object" ? invitation.organization.name : "";
-
-    return {
-      email: invitation.email,
-      name: invitation.name,
-      role: invitation.role,
-      organizationName,
-    };
-  });
-}
-
-export async function acceptInvitationAdapter(token: string, input: TAcceptInvitationInput) {
-  return tryCatchResponse<{ email: string }>(async () => {
-    const payload = await getPayloadClient();
-    const tokenHash = hashInviteToken(token);
-
-    const result = await payload.find({
-      collection: "invitations",
-      overrideAccess: true,
-      limit: 1,
-      pagination: false,
-      where: { tokenHash: { equals: tokenHash } },
-    });
-
-    const invitation = result.docs[0];
-    if (!invitation || invitation.status !== "pending") throw new Error(INVALID_INVITE_ERROR);
-    if (new Date(invitation.expiresAt).getTime() < Date.now()) throw new Error(INVALID_INVITE_ERROR);
-
-    const existingUser = await payload.find({
-      collection: "users",
-      overrideAccess: true,
-      limit: 1,
-      pagination: false,
-      where: { email: { equals: invitation.email } },
-    });
-    if (existingUser.totalDocs > 0) throw new Error(INVALID_INVITE_ERROR);
-
-    const organizationId = relationId(invitation.organization);
-    if (organizationId === null) throw new Error(INVALID_INVITE_ERROR);
-
-    await payload.create({
-      collection: "users",
-      overrideAccess: true,
-      data: {
-        name: input.name.trim(),
-        email: invitation.email,
-        password: input.password,
-        role: invitation.role,
-        organization: asPayloadId(organizationId),
-        buildings: invitation.role === "member" ? relationIds(invitation.buildings).map((id) => asPayloadId(id)) : undefined,
-        _verified: true,
-      },
-    });
-
-    await payload.update({
-      collection: "invitations",
-      id: invitation.id,
-      overrideAccess: true,
-      data: { status: "accepted", acceptedAt: new Date().toISOString() },
-    });
-
-    const signInResult = await signIn({ email: invitation.email, password: input.password });
-    if (!signInResult.isSuccess) throw new Error(INVITATIONS_CLIENT.FALLBACK_SERVER_ERROR);
-
-    return { email: invitation.email };
-  });
-}
-
 /** Resolved invite history for a user's detail page — null for users who predate this feature or were the org's original signup owner. */
 export async function getUserInviteHistoryAdapter(user: User, email: string): Promise<UserInviteHistory | null> {
   const payload = await getPayloadClient();
@@ -331,6 +248,7 @@ export async function getUserInviteHistoryAdapter(user: User, email: string): Pr
     pagination: false,
     depth: 1,
     sort: "-acceptedAt",
+    select: { invitedBy: true, createdAt: true, acceptedAt: true },
     populate: { users: { name: true } },
     where: {
       and: [

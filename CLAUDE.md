@@ -92,6 +92,16 @@ not just new features:
 - Root-level `src/lib`, `src/store`, `src/constants`, `src/validations` are for
   code genuinely shared across features only. Feature-specific code belongs inside
   that feature's folder, not at the root.
+- **Every adapter function wraps its body in `tryCatchResponse`** (`src/lib/responses/trycatch-response.ts`)
+  and every `actions/server/*` mutation returns `errorResponse`/`successResponse`
+  (`src/lib/responses/app-response.ts`) — the `TResponse<T>` envelope is the one
+  shape a component ever needs to branch on (`if (!result?.isSuccess) ...`). A
+  `ports.ts` file that just forwards an adapter's already-enveloped result doesn't
+  need to re-wrap it. The only sanctioned exceptions are reads with no failure UI
+  to show (`getDashboardData`, `getMapViewerData`, `getTopbarUser` — documented in
+  `docs/technical/APPLICATION_ARCHITECTURE.md`'s "Current implementation notes")
+  and actions with nothing to report (`logoutAction` just redirects). Don't add a
+  new exception without documenting it there too.
 
 ## Payload typing
 
@@ -105,6 +115,13 @@ not just new features:
 - Seed and migration scripts must build relationships from IDs returned by
   Payload operations. Do not infer, synthesize, parse, or coerce adapter-specific
   IDs inside a seed script.
+- **Pass `select` on every `payload.find`/`findByID` call, trimmed to the fields
+  the caller actually reads** — don't let a full document come back just because
+  `select` was left off. An existence/count-only check (only `.totalDocs` or
+  `.docs[i].id` is read) passes `select: {}, depth: 0`, same as
+  `accessibleBuildingIds` in `src/collections/access/index.ts`. A read used to
+  populate an edit form (e.g. `getFloorForEditAdapter`) is the one legitimate case
+  for fetching the full document — most fields really do get used.
 
 ## UI implementation
 

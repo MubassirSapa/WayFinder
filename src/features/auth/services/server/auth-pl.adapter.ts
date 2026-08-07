@@ -65,6 +65,8 @@ export async function signupAdapter(data: TSignup) {
       collection: "users",
       overrideAccess: true,
       limit: 1,
+      depth: 0,
+      select: {},
       where: {
         email: {
           equals: email,

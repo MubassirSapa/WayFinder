@@ -2,17 +2,12 @@ import type { ReactNode } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { ROLE_LABELS } from "@/collections/constants/roles";
 import { EntitySummaryCard } from "@/features/dashboard/components/EntitySummaryCard";
 
 import { USER_MANAGEMENT_CLIENT } from "../constants/user-management.constants";
 import { userInitials } from "../lib/user-management-presentation";
 import type { OrgUserDetail } from "../types/user-management.types";
-
-const ROLE_LABELS: Record<OrgUserDetail["role"], string> = {
-  owner: USER_MANAGEMENT_CLIENT.ROLE_OWNER,
-  manager: USER_MANAGEMENT_CLIENT.ROLE_MANAGER,
-  member: USER_MANAGEMENT_CLIENT.ROLE_MEMBER,
-};
 
 type UserSummaryCardProps = {
   user: OrgUserDetail;
