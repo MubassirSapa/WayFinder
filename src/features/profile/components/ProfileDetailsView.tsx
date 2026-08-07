@@ -25,29 +25,37 @@ export function ProfileDetailsView({ profile, roleLabel, onEdit }: ProfileDetail
   };
 
   return (
-    <section className="border-t border-border px-5 py-6 sm:px-8 sm:py-8">
-      <div className="flex items-start justify-between gap-4">
+    <section>
+      <div className="flex items-start justify-between gap-4 border-b border-border px-4 py-3 sm:px-5">
         <div>
-          <h3 className="font-heading text-lg font-semibold">{PROFILE_CLIENT.DETAILS_TITLE}</h3>
-          <p className="mt-1 text-sm text-muted-foreground">{PROFILE_CLIENT.DETAILS_DESCRIPTION}</p>
+          <h3 className="text-sm font-semibold">{PROFILE_CLIENT.DETAILS_TITLE}</h3>
+          <p className="mt-1 text-xs text-muted-foreground">{PROFILE_CLIENT.DETAILS_DESCRIPTION}</p>
         </div>
-        <Button type="button" variant="outline" onClick={onEdit} className="shrink-0">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onEdit}
+          className="h-11 shrink-0 px-3 sm:h-8"
+        >
           <PencilIcon />
           <span className="hidden sm:inline">{PROFILE_CLIENT.EDIT}</span>
           <span className="sr-only sm:hidden">{PROFILE_CLIENT.EDIT}</span>
         </Button>
       </div>
 
-      <dl className="mt-6 divide-y divide-border border-y border-border">
+      <dl className="divide-y divide-border">
         {DETAIL_ROWS.map(({ key, label, icon: Icon }) => (
-          <div key={key} className="grid grid-cols-[2.5rem_minmax(0,1fr)] items-center gap-3 py-4 sm:grid-cols-[2.5rem_9rem_minmax(0,1fr)]">
-            <span className="grid size-10 place-items-center rounded-lg bg-muted text-muted-foreground">
-              <Icon className="size-4.5" aria-hidden="true" />
+          <div
+            key={key}
+            className="grid grid-cols-[2rem_minmax(0,1fr)] items-center gap-x-3 px-4 py-3 sm:grid-cols-[2rem_8rem_minmax(0,1fr)] sm:px-5"
+          >
+            <span className="grid size-8 place-items-center rounded-md border border-border bg-muted/40 text-muted-foreground">
+              <Icon className="size-3.5" aria-hidden="true" />
             </span>
-            <dt className="text-xs font-medium uppercase text-muted-foreground sm:text-sm sm:normal-case">
+            <dt className="font-mono text-[0.625rem] font-medium uppercase tracking-[0.1em] text-muted-foreground">
               {label}
             </dt>
-            <dd className="col-start-2 min-w-0 break-words text-sm font-medium sm:col-start-3">
+            <dd className="col-start-2 min-w-0 break-words text-xs font-medium sm:col-start-3">
               {values[key]}
             </dd>
           </div>

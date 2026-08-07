@@ -30,7 +30,7 @@ export function TeamDirectoryList({ users, pendingInvitations }: TeamDirectoryLi
 
   if (users.length === 0 && pendingInvitations.length === 0) {
     return (
-      <div className="flex min-h-64 flex-col items-center justify-center border-y border-border px-6 py-12 text-center">
+      <div className="flex min-h-64 flex-col items-center justify-center border-y border-dashed border-border px-6 py-12 text-center">
         <span className="flex size-12 items-center justify-center rounded-lg bg-muted text-muted-foreground">
           <UsersIcon className="size-5" />
         </span>
@@ -45,10 +45,10 @@ export function TeamDirectoryList({ users, pendingInvitations }: TeamDirectoryLi
   }
 
   return (
-    <section aria-label={USER_MANAGEMENT_CLIENT.LIST_TITLE} className="space-y-8">
-      <div className="flex flex-col gap-3 border-b border-border pb-5 sm:flex-row sm:items-center sm:justify-between">
+    <section aria-label={USER_MANAGEMENT_CLIENT.LIST_TITLE} className="space-y-6">
+      <div className="flex flex-col gap-3 border-y border-border py-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative w-full sm:max-w-md">
-          <SearchIcon className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <SearchIcon className="pointer-events-none absolute inset-s-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="search"
             value={query}
@@ -58,9 +58,10 @@ export function TeamDirectoryList({ users, pendingInvitations }: TeamDirectoryLi
             className="h-11 ps-10"
           />
         </div>
-        <p className="shrink-0 text-sm text-muted-foreground" aria-live="polite">
-          {teamMemberCountLabel(filteredUsers.length)}
-        </p>
+        <div className="flex shrink-0 items-center gap-2 text-sm text-muted-foreground">
+          <UsersIcon className="size-4" aria-hidden="true" />
+          <p aria-live="polite">{teamMemberCountLabel(filteredUsers.length)}</p>
+        </div>
       </div>
 
       {filteredUsers.length === 0 ? (

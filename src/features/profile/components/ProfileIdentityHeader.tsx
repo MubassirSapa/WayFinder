@@ -17,20 +17,25 @@ export function ProfileIdentityHeader({
   roleLabel,
 }: ProfileIdentityHeaderProps) {
   return (
-    <section className="text-center" aria-label="Profile identity">
-      <div className="h-24 bg-primary sm:h-28" aria-hidden="true" />
-      <div className="-mt-12 px-5 pb-6 sm:-mt-14 sm:px-8">
-        <Avatar className="mx-auto size-24 border-4 border-card shadow-sm sm:size-28">
+    <section className="border-b border-border px-4 py-4 sm:px-5" aria-label="Profile identity">
+      <div className="flex min-w-0 items-center gap-3.5">
+        <Avatar className="size-14 shrink-0 border border-border shadow-sm sm:size-16">
           {avatarUrl ? <AvatarImage src={avatarUrl} alt={name} /> : null}
-          <AvatarFallback className="bg-muted text-2xl font-semibold text-foreground">
+          <AvatarFallback className="bg-primary/10 text-base font-semibold text-primary">
             {initial}
           </AvatarFallback>
         </Avatar>
-        <h2 className="mt-3 truncate font-heading text-xl font-semibold sm:text-2xl">{name}</h2>
-        <p className="mt-1 truncate text-sm text-muted-foreground">{email}</p>
-        <Badge variant="secondary" className="mt-3">
-          {roleLabel}
-        </Badge>
+        <div className="min-w-0 flex-1 text-start">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <h2 className="truncate text-base font-semibold sm:text-lg">{name}</h2>
+            <Badge className="font-mono text-[0.625rem] font-medium uppercase tracking-wide" variant="secondary">
+              {roleLabel}
+            </Badge>
+          </div>
+          <p className="mt-1 truncate font-mono text-[0.6875rem] text-muted-foreground" title={email}>
+            {email}
+          </p>
+        </div>
       </div>
     </section>
   );

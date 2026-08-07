@@ -27,7 +27,7 @@ export function DashboardPageHeader({
         {backHref && backLabel ? (
           <Link
             href={backHref}
-            className="mb-3 inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+            className="mb-3 inline-flex min-h-10 items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeftIcon className="size-3.5" />
             {backLabel}
@@ -36,7 +36,7 @@ export function DashboardPageHeader({
         <h1 className="font-heading text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h1>
         {description ? <p className="mt-1.5 max-w-2xl text-sm text-muted-foreground">{description}</p> : null}
       </div>
-      {action ? <div className="shrink-0 self-start sm:self-auto">{action}</div> : null}
+      {action ? <div className="w-full shrink-0 sm:w-auto sm:self-auto [&_button]:min-h-11 max-sm:[&_button]:w-full">{action}</div> : null}
     </header>
   );
 }
@@ -45,7 +45,7 @@ export function DashboardBackLink({ href, label }: { href: string; label: string
   return (
     <Link
       href={href}
-      className="inline-flex w-fit items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+      className="inline-flex min-h-10 w-fit items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
     >
       <ArrowLeftIcon className="size-3.5" aria-hidden="true" />
       {label}
@@ -55,7 +55,7 @@ export function DashboardBackLink({ href, label }: { href: string; label: string
 
 export function DashboardPageContainer({ children }: { children: ReactNode }) {
   return (
-    <main className="mx-auto flex w-full max-w-270 flex-1 flex-col gap-8 px-4 pb-16 pt-6 sm:px-6 sm:pt-8 lg:px-8">
+    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-4 pb-16 pt-6 sm:px-6 sm:pt-8 lg:gap-10 lg:px-8 lg:pb-20">
       {children}
     </main>
   );

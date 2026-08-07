@@ -9,9 +9,11 @@
 - Added `isOwnerOrManager(role)` (`src/collections/constants/roles.ts`), replacing the `role !== ROLES.OWNER && role !== ROLES.MANAGER` check that was copy-pasted across the users page, access functions, and server actions.
 
 ### Changed
-- Reworked `/dashboard/users` into a role-grouped directory (Owner / Managers / Members, plain stacked sections) instead of one flat searchable grid, and trimmed each card down to avatar, name, and role — email, building access, and management controls now live on the new per-user detail page linked from the card.
+- Reworked `/dashboard/users` into a role-grouped directory (Owner / Managers / Members) instead of one flat grid; compact identity cards now link to the per-user detail page where building access and management controls live.
+- Refined the profile page against the Wayfinder workspace reference with denser identity and account-detail sections, restrained card treatment, compact metadata typography, responsive touch targets, and content aligned to the page heading while preserving the existing staged avatar upload and access rules.
+- Refined team management with responsive identity cards, grouped role sections, and a compact invitation dialog that preserves entered details behind a discard confirmation.
 - Refined the authenticated dashboard, building, floor, organization, profile, and team-management pages into a consistent responsive workspace UI.
-- Reworked the private team-management page into a responsive, searchable member directory. Compact identity cards keep role and building access visible without segmented panels, while organization owners and managers retain the existing role, building-assignment, and removal actions in a dedicated access area. Adding a teammate now uses a compact responsive dialog with separate account and access sections instead of a full-height side panel.
+- Reworked the private team-management page into a responsive, searchable member directory. Organization owners and managers retain role, building-assignment, blocking, and removal controls on dedicated user detail pages. Adding a teammate uses an email invitation flow with separate identity and access sections.
 
 ### Fixed
 - Fixed building/venue logos not rendering on the public site: a `populate` restriction on the populated `media` doc (selecting only `{ url: true }`) was silently returning `url: null`, since Payload's upload `url` field is computed at read time from the doc's other upload fields. Left `media` unrestricted in this query and documented the finding in `docs/technical/MEDIA_STORAGE.md` so the eventual `Media.defaultPopulate` follow-up doesn't repeat it.

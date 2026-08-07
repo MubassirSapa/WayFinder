@@ -16,6 +16,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
 import { PRIVATE_ROUTES } from "@/constants/routes";
@@ -44,29 +45,32 @@ export function AppSidebar({ user }: { user: TopbarUser }) {
   return (
     <Sidebar collapsible="icon" variant="sidebar">
       <SidebarHeader className="border-b border-border">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              render={<Link href={PRIVATE_ROUTES.DASHBOARD} onClick={() => setOpenMobile(false)} />}
-              size="lg"
-              tooltip={DASHBOARD_CLIENT.PAGE_TITLE}
-              className="group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0"
-            >
-              <span className="relative flex aspect-square size-8 shrink-0 items-center justify-center before:absolute before:inset-1 before:rounded-full before:bg-[var(--brand-glow)] before:blur-sm">
-                <Image
-                  alt=""
-                  className="z-10 object-contain"
-                  fill
-                  sizes="32px"
-                  src="/icon/wayfinder-no-bg.png"
-                />
-              </span>
-              <span className="truncate text-lg font-semibold tracking-normal text-foreground group-data-[collapsible=icon]:hidden">
-                {BRAND.NAME}
-              </span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <div className="flex items-center gap-1 group-data-[collapsible=icon]:flex-col-reverse group-data-[collapsible=icon]:gap-2">
+          <SidebarMenu className="min-w-0 flex-1">
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                render={<Link href={PRIVATE_ROUTES.DASHBOARD} onClick={() => setOpenMobile(false)} />}
+                size="lg"
+                tooltip={DASHBOARD_CLIENT.PAGE_TITLE}
+                className="group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0"
+              >
+                <span className="relative flex aspect-square size-8 shrink-0 items-center justify-center before:absolute before:inset-1 before:rounded-full before:bg-(--brand-glow) before:blur-sm">
+                  <Image
+                    alt=""
+                    className="z-10 object-contain"
+                    fill
+                    sizes="32px"
+                    src="/icon/wayfinder-no-bg.png"
+                  />
+                </span>
+                <span className="truncate text-lg font-semibold tracking-normal text-foreground group-data-[collapsible=icon]:hidden">
+                  {BRAND.NAME}
+                </span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+          <SidebarTrigger className="hidden shrink-0 lg:flex" />
+        </div>
       </SidebarHeader>
 
       <SidebarContent>

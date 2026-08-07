@@ -43,7 +43,7 @@ export function BuildingsList({ buildings, canManage }: BuildingsListProps) {
               <li key={building.id}>
                 <Link
                   href={href}
-                  className="group grid min-h-20 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-1 py-3 transition-colors hover:bg-muted/30 sm:gap-4 sm:px-3"
+                  className="group grid min-h-22 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-2 py-3 transition-colors hover:bg-muted/30 focus-visible:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 sm:gap-4 sm:px-4"
                 >
                   <span className="relative grid size-11 shrink-0 place-items-center overflow-hidden rounded-lg border border-border bg-muted sm:size-12">
                     {building.logoUrl ? (
@@ -80,7 +80,9 @@ export function BuildingsList({ buildings, canManage }: BuildingsListProps) {
                         ? BUILDINGS_CLIENT.FLOOR_SUFFIX
                         : BUILDINGS_CLIENT.FLOORS_SUFFIX}
                     </span>
-                    <ArrowRightIcon className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-foreground" aria-hidden="true" />
+                    <span className="grid size-10 place-items-center rounded-full border border-border text-muted-foreground transition-colors group-hover:border-primary/30 group-hover:text-primary">
+                      <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                    </span>
                   </span>
                 </Link>
               </li>

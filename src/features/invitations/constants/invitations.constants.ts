@@ -30,6 +30,10 @@ export const INVITATIONS_CLIENT = {
   SEND_INVITE: "Send invite",
   SENDING_INVITE: "Sending...",
   CANCEL: "Cancel",
+  UNSAVED_INVITE_TITLE: "Discard this invitation?",
+  UNSAVED_INVITE_DESC: "The invite details and access settings you entered will be lost.",
+  KEEP_EDITING: "Keep editing",
+  DISCARD: "Discard",
 
   VALIDATION_NAME_SHORT: "Name must be at least 2 characters.",
   VALIDATION_EMAIL_INVALID: "Enter a valid email address.",

@@ -31,7 +31,6 @@ const CheckEmailSection = () => {
     <FormCard
       title={CLIENT.TITLE}
       description={CLIENT.DESC}
-      backHref={PUBLIC_ROUTES.HOME}
       align="center"
       icon={<MailCheckIcon className="size-8 text-primary" strokeWidth={1.75} />}
       footer={

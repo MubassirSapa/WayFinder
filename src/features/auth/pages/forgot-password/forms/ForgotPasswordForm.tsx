@@ -50,7 +50,6 @@ const ForgotPasswordForm = () => {
       <FormCard
         title={CLIENT.SUCCESS_TITLE}
         description={CLIENT.SUCCESS_DESC}
-        backHref={CLIENT.SIGNIN_HREF}
         align="center"
         icon={<MailCheckIcon className="size-7 text-primary" strokeWidth={1.8} />}
         footer={
@@ -70,7 +69,6 @@ const ForgotPasswordForm = () => {
     <FormCard
       title={CLIENT.FORM_TITLE}
       description={CLIENT.FORM_DESC}
-      backHref={CLIENT.SIGNIN_HREF}
       icon={<MailIcon className="size-7 text-primary" strokeWidth={1.8} />}
       content={
         <form

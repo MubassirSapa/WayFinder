@@ -20,7 +20,7 @@ export function AddFloorControl({ buildingId, organizationName, className }: Add
 
   return (
     <>
-      <Button size="lg" className={cn(className)} onClick={() => setIsOpen(true)}>
+      <Button className={cn("h-11 px-5", className)} onClick={() => setIsOpen(true)}>
         <PlusIcon />
         {BUILDINGS_CLIENT.ADD_FLOOR}
       </Button>

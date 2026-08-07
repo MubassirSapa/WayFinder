@@ -1,4 +1,3 @@
-import BackButton from "./BackButton";
 import BrandHeader from "./BrandHeader";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -7,8 +6,6 @@ const FormCard = ({
   title,
   description,
   icon,
-  backHref,
-  showBack = true,
   children,
   content,
   footer,
@@ -18,8 +15,7 @@ const FormCard = ({
   return (
     <Card className="w-full gap-0 overflow-hidden rounded-lg border border-border bg-card py-0 text-card-foreground shadow-sm">
       <div className="px-5 pt-5 sm:px-6 sm:pt-6">
-        <div className="mb-7 flex items-center gap-3">
-          {showBack && <BackButton href={backHref} showLabel={false} className="size-8 shrink-0 px-0" />}
+        <div className="mb-7">
           <BrandHeader />
         </div>
 
@@ -74,9 +70,8 @@ export default FormCard;
 type TProps = {
   title: string;
   description: string;
-  icon?: React.ReactNode;
-  backHref?: string;
   showBack?: boolean;
+  icon?: React.ReactNode;
   children?: React.ReactNode;
   content?: React.ReactNode;
   footer?: React.ReactNode;

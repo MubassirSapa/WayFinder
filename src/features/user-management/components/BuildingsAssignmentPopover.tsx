@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Loader2Icon } from "lucide-react";
+import { Building2Icon, Loader2Icon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -15,12 +15,14 @@ type BuildingsAssignmentPopoverProps = {
   userId: string;
   buildingOptions: OrgBuildingOption[];
   selectedBuildingIds: string[];
+  compact?: boolean;
 };
 
 export function BuildingsAssignmentPopover({
   userId,
   buildingOptions,
   selectedBuildingIds,
+  compact = false,
 }: BuildingsAssignmentPopoverProps) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -51,11 +53,18 @@ export function BuildingsAssignmentPopover({
       }}
     >
       <PopoverTrigger
-        render={<Button variant="outline" size="sm" className="w-full" />}
+        render={
+          <Button
+            variant={compact ? "ghost" : "outline"}
+            size="sm"
+            className={compact ? "h-11 shrink-0 px-3 text-xs" : "h-11 w-full"}
+          />
+        }
       >
-        {USER_MANAGEMENT_CLIENT.MANAGE_BUILDINGS}
+        {compact ? <Building2Icon className="size-3.5" aria-hidden="true" /> : null}
+        {compact ? USER_MANAGEMENT_CLIENT.EDIT : USER_MANAGEMENT_CLIENT.MANAGE_BUILDINGS}
       </PopoverTrigger>
-      <PopoverContent>
+      <PopoverContent className="w-80 max-w-[calc(100vw-2rem)]">
         <PopoverHeader>
           <PopoverTitle>{USER_MANAGEMENT_CLIENT.MANAGE_BUILDINGS_TITLE}</PopoverTitle>
           <PopoverDescription>{USER_MANAGEMENT_CLIENT.MANAGE_BUILDINGS_DESC}</PopoverDescription>
@@ -64,7 +73,7 @@ export function BuildingsAssignmentPopover({
         <div className="flex max-h-48 flex-col gap-2 overflow-y-auto">
           {buildingOptions.length > 0 ? (
             buildingOptions.map((building) => (
-              <label key={building.id} className="flex min-h-9 items-center gap-2 text-xs">
+              <label key={building.id} className="flex min-h-11 items-center gap-2 text-xs">
                 <Checkbox
                   checked={selected.has(building.id)}
                   onCheckedChange={(checked) => toggle(building.id, checked === true)}
@@ -80,7 +89,7 @@ export function BuildingsAssignmentPopover({
           )}
         </div>
 
-        <Button size="sm" onClick={save} disabled={isPending || buildingOptions.length === 0}>
+        <Button className="h-11 w-full" onClick={save} disabled={isPending || buildingOptions.length === 0}>
           {isPending ? <Loader2Icon className="animate-spin" /> : null}
           {USER_MANAGEMENT_CLIENT.SAVE_BUILDINGS}
         </Button>

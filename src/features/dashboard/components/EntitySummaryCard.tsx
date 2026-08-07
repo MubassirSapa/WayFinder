@@ -17,7 +17,7 @@ export function EntitySummaryCard({ visual, title, meta, action, children }: Ent
           <h1 className="font-heading text-xl font-semibold tracking-tight sm:text-2xl">{title}</h1>
           {meta ? <div className="mt-1.5 text-sm text-muted-foreground">{meta}</div> : null}
         </div>
-        {action ? <div className="shrink-0 self-start sm:self-auto">{action}</div> : null}
+        {action ? <div className="w-full shrink-0 self-start sm:w-auto sm:self-auto max-sm:[&_button]:w-full">{action}</div> : null}
       </div>
       {children ? <div className="mt-5">{children}</div> : null}
     </section>

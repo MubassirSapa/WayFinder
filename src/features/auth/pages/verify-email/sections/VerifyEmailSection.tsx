@@ -11,7 +11,6 @@ const VerifyEmailSection = ({ isVerified }: TProps) => {
     <FormCard
       title={isVerified ? CLIENT.SUCCESS_TITLE : CLIENT.ERROR_TITLE}
       description={isVerified ? CLIENT.SUCCESS_DESC : CLIENT.ERROR_DESC}
-      showBack={false}
       align="center"
       icon={
         isVerified ? (

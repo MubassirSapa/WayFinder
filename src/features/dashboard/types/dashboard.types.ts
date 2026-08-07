@@ -19,9 +19,25 @@ export type DashboardOrganization = {
   logoUrl: string | null;
 };
 
+export type DashboardFloorOverview = {
+  id: string;
+  buildingId: string;
+  buildingName: string;
+  name: string;
+  level: number;
+  levelLabel: string;
+  backgroundImageUrl: string | null;
+  status: "draft" | "published";
+  updatedLabel: string;
+  roomCount: number;
+  poiCount: number;
+  mapObjectCount: number;
+};
+
 export type DashboardData = {
   user: DashboardUser;
   organization: DashboardOrganization;
   buildings: BuildingListItem[];
+  floors: DashboardFloorOverview[];
   canManage: boolean;
 };

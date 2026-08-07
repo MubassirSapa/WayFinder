@@ -58,7 +58,7 @@ export function FloorMetadataForm({ floor }: FloorMetadataFormProps) {
   };
 
   return (
-    <section className="border-y border-border py-5 sm:py-6">
+    <section className="rounded-lg border border-border bg-card p-5 shadow-sm sm:p-7">
       <form
         onSubmit={(event) => {
           event.preventDefault();
@@ -74,6 +74,7 @@ export function FloorMetadataForm({ floor }: FloorMetadataFormProps) {
               value={name}
               onChange={(event) => setName(event.target.value)}
               disabled={isPending}
+              className="h-11"
             />
           </Field>
 
@@ -86,6 +87,7 @@ export function FloorMetadataForm({ floor }: FloorMetadataFormProps) {
                 value={level}
                 onChange={(event) => setLevel(event.target.value)}
                 disabled={isPending}
+                className="h-11"
               />
             </Field>
             <Field>
@@ -100,6 +102,7 @@ export function FloorMetadataForm({ floor }: FloorMetadataFormProps) {
                 value={metersPerPixel}
                 onChange={(event) => setMetersPerPixel(event.target.value)}
                 disabled={isPending}
+                className="h-11"
               />
             </Field>
           </div>
@@ -114,6 +117,7 @@ export function FloorMetadataForm({ floor }: FloorMetadataFormProps) {
                 value={width}
                 onChange={(event) => setWidth(event.target.value)}
                 disabled={isPending}
+                className="h-11"
               />
             </Field>
             <Field>
@@ -125,11 +129,12 @@ export function FloorMetadataForm({ floor }: FloorMetadataFormProps) {
                 value={height}
                 onChange={(event) => setHeight(event.target.value)}
                 disabled={isPending}
+                className="h-11"
               />
             </Field>
           </div>
 
-          <div className="flex items-center justify-between gap-4 border-y border-border py-4">
+          <div className="flex items-center justify-between gap-4 rounded-lg border border-border bg-muted/20 px-4 py-4">
             <div>
               <p className="text-sm font-medium">{BUILDINGS_CLIENT.FIELD_STATUS_LABEL}</p>
               <p className="mt-1 text-xs text-muted-foreground">
@@ -142,8 +147,8 @@ export function FloorMetadataForm({ floor }: FloorMetadataFormProps) {
           {success ? <FormAlert successMessage={BUILDINGS_CLIENT.SUCCESS_FLOOR_UPDATED} /> : null}
           <FormAlert errorMessage={error} />
 
-          <div className="flex justify-end">
-            <Button type="submit" disabled={isPending || name.trim().length < 2}>
+          <div className="flex justify-end border-t border-border pt-5">
+            <Button className="h-11 w-full px-5 sm:w-auto" type="submit" disabled={isPending || name.trim().length < 2}>
               {isPending ? <Loader2Icon className="animate-spin" /> : null}
               {isPending ? BUILDINGS_CLIENT.SAVING : BUILDINGS_CLIENT.SAVE}
             </Button>

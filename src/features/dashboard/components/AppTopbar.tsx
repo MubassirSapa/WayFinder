@@ -51,12 +51,12 @@ export function AppTopbar({ user }: AppTopbarProps) {
   return (
     <>
       <header className="sticky top-0 z-20 border-b border-border bg-background/90 backdrop-blur-md">
-        <div className="flex h-16 w-full items-center justify-between gap-4 px-4 sm:px-6">
+        <div className="flex h-16 w-full items-center justify-between gap-3 px-3 sm:px-6">
           <div className="flex items-center gap-2">
-            <SidebarTrigger />
+            <SidebarTrigger className="lg:hidden" />
             <WayfinderBrand
               href={PRIVATE_ROUTES.DASHBOARD}
-              className="md:hidden"
+              className="lg:hidden"
               iconClassName="size-7"
               textClassName="text-base"
             />
@@ -65,7 +65,7 @@ export function AppTopbar({ user }: AppTopbarProps) {
           <div className="flex items-center gap-1.5">
             <ModeToggle />
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-2.5 rounded-full outline-none">
+              <DropdownMenuTrigger className="flex min-h-11 items-center gap-2.5 rounded-full px-1 outline-none focus-visible:ring-2 focus-visible:ring-ring/30">
                 <UserAvatar user={user} />
                 <span className="hidden leading-tight sm:block">
                   <span className="block text-sm font-medium text-foreground">{user.name}</span>

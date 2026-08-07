@@ -4,6 +4,7 @@ import NextTopLoader from "nextjs-toploader";
 import React from "react";
 
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 import { appleStartupImages } from "./apple-startup-images";
 import "./global.css";
@@ -70,6 +71,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
           disableTransitionOnChange
         >
           {children}
+          <Toaster position="bottom-right" closeButton />
         </ThemeProvider>
       </body>
     </html>

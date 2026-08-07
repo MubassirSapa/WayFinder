@@ -46,7 +46,6 @@ const RegisterOrganizationForm = () => {
     <FormCard
       title={CLIENT.FORM_TITLE}
       description={CLIENT.FORM_DESC}
-      backHref={PUBLIC_ROUTES.HOME}
       content={
         <form
           id={FORM_ID}

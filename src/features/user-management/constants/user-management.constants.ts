@@ -1,8 +1,8 @@
 export const USER_MANAGEMENT_CLIENT = {
   PAGE_TITLE: "Team",
   PAGE_DESCRIPTION: "Manage team roles and building access in Wayfinder.",
-  LIST_TITLE: "Team and access",
-  LIST_DESC: "Manage who can access your organization and its buildings.",
+  LIST_TITLE: "Team management",
+  LIST_DESC: "Manage roles, permissions, and building access across your organization.",
 
   SECTION_OWNER: "Owner",
   SECTION_MANAGERS: "Managers",
@@ -19,6 +19,7 @@ export const USER_MANAGEMENT_CLIENT = {
   ORGANIZATION_ACCESS: "All buildings",
   BUILDING_ACCESS: "Building access",
   EDIT_ACCESS: "Access settings",
+  EDIT: "Edit",
 
   COLUMN_NAME: "Name",
   COLUMN_ROLE: "Role",

@@ -2,8 +2,10 @@ import { withPayload } from "@payloadcms/next/withPayload";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   allowedDevOrigins: ["*.trycloudflare.com"],
+  turbopack: {
+    root: process.cwd(),
+  },
   // No `images.remotePatterns` entry for the R2 host is needed: every
   // <Image> that renders a Payload/R2 media URL sets its own `unoptimized`
   // prop instead (see docs/technical/MEDIA_STORAGE.md), which serves the

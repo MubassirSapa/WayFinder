@@ -28,20 +28,23 @@ export function ProfilePhotoEditor({
   onUpload,
 }: ProfilePhotoEditorProps) {
   return (
-    <section aria-labelledby="profile-photo-label" className="md:border-e md:border-border md:pe-8">
-      <p id="profile-photo-label" className="text-sm font-medium">
+    <section aria-labelledby="profile-photo-label" className="lg:border-e lg:border-border lg:pe-6">
+      <p
+        id="profile-photo-label"
+        className="font-mono text-[0.625rem] font-medium uppercase tracking-[0.12em] text-muted-foreground"
+      >
         {PROFILE_CLIENT.FIELD_AVATAR_LABEL}
       </p>
 
-      <div className="mt-3 flex items-center gap-4 md:flex-col md:items-start">
-        <Avatar className="size-20 border-2 border-border shadow-sm">
+      <div className="mt-3 flex items-center gap-3 lg:flex-col lg:items-start">
+        <Avatar className="size-16 border border-border shadow-sm">
           {avatarUrl ? <AvatarImage src={avatarUrl} alt={name} /> : null}
           <AvatarFallback className="bg-muted text-xl font-semibold text-foreground">
             {initial}
           </AvatarFallback>
         </Avatar>
 
-        <div className="min-w-0 flex-1 space-y-2 md:w-full">
+        <div className="min-w-0 flex-1 space-y-2 lg:w-full">
           <input
             ref={fileInputRef}
             type="file"
@@ -53,7 +56,7 @@ export function ProfilePhotoEditor({
           <Button
             type="button"
             variant="outline"
-            className="h-10 w-full sm:w-auto md:w-full"
+            className="h-11 w-full sm:h-8 sm:w-auto lg:w-full"
             onClick={onUpload}
             disabled={isPending}
           >
@@ -64,7 +67,7 @@ export function ProfilePhotoEditor({
             <Button
               type="button"
               variant="ghost"
-              className="h-9 w-full justify-start text-destructive hover:text-destructive sm:w-auto md:w-full"
+              className="h-11 w-full justify-start text-destructive hover:text-destructive sm:h-8 sm:w-auto lg:w-full"
               onClick={onRemove}
               disabled={isPending}
             >
@@ -75,7 +78,7 @@ export function ProfilePhotoEditor({
         </div>
       </div>
 
-      <p className="mt-3 text-xs leading-5 text-muted-foreground">
+      <p className="mt-3 text-[0.6875rem] leading-4 text-muted-foreground">
         {PROFILE_CLIENT.FIELD_AVATAR_DESC}
       </p>
     </section>

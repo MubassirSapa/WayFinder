@@ -101,7 +101,7 @@ export function OrganizationForm({ organization }: OrganizationFormProps) {
         typeLabel={typeLabel}
         logoUrl={logo.previewUrl}
         action={
-          <Button type="button" variant="outline" onClick={() => setIsEditing(true)}>
+          <Button type="button" variant="outline" className="h-11 px-4" onClick={() => setIsEditing(true)}>
             <PencilIcon />
             {ORGANIZATION_SETTINGS_CLIENT.EDIT}
           </Button>
@@ -111,7 +111,7 @@ export function OrganizationForm({ organization }: OrganizationFormProps) {
   }
 
   return (
-    <section className="border-y border-border py-5 sm:py-6">
+    <section className="rounded-lg border border-border bg-card p-5 shadow-sm sm:p-7">
       <h2 className="font-heading text-lg font-semibold tracking-tight">{ORGANIZATION_SETTINGS_CLIENT.FORM_TITLE}</h2>
       <p className="mt-1 text-sm text-muted-foreground">{ORGANIZATION_SETTINGS_CLIENT.FORM_DESC}</p>
 
@@ -178,13 +178,14 @@ export function OrganizationForm({ organization }: OrganizationFormProps) {
               onChange={(event) => setName(event.target.value)}
               placeholder={ORGANIZATION_SETTINGS_CLIENT.FIELD_NAME_PLACEHOLDER}
               disabled={isPending}
+              className="h-11"
             />
           </Field>
 
           <Field>
             <FieldLabel htmlFor="organization-type">{ORGANIZATION_SETTINGS_CLIENT.FIELD_TYPE_LABEL}</FieldLabel>
             <Select value={type} onValueChange={(value) => setType((value as OrganizationType) ?? type)}>
-              <SelectTrigger id="organization-type" className="w-full">
+              <SelectTrigger id="organization-type" className="h-11 w-full">
                 <SelectValue>
                   {() => ORGANIZATION_TYPES.find((option) => option.value === type)?.label ?? type}
                 </SelectValue>
@@ -208,7 +209,7 @@ export function OrganizationForm({ organization }: OrganizationFormProps) {
             <FormAlert errorMessage={error} />
           </div>
 
-          <div className="grid grid-cols-2 gap-2 border-t border-border pt-5 sm:col-span-2 sm:flex sm:justify-end">
+          <div className="grid grid-cols-2 gap-2 border-t border-border pt-5 sm:col-span-2 sm:flex sm:justify-end [&_button]:h-11 [&_button]:px-5">
             <Button type="button" variant="outline" onClick={cancelEditing} disabled={isPending}>
               {ORGANIZATION_SETTINGS_CLIENT.CANCEL}
             </Button>

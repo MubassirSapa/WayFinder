@@ -41,6 +41,9 @@ export function TeamMemberCard({ user }: TeamMemberCardProps) {
                 </Badge>
               ) : null}
             </div>
+            <p className="mt-1 truncate text-sm text-muted-foreground" title={user.email}>
+              {user.email}
+            </p>
           </div>
         </div>
       </Card>

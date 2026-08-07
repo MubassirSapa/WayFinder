@@ -121,7 +121,7 @@ export function BuildingForm({ building }: BuildingFormProps) {
         title={name}
         meta={building.organizationName}
         action={building.canEdit ? (
-            <Button type="button" variant="outline" onClick={() => setIsEditing(true)} className="self-start sm:self-auto">
+            <Button type="button" variant="outline" onClick={() => setIsEditing(true)} className="h-11 self-start px-4 sm:self-auto">
               <PencilIcon />
               {BUILDINGS_CLIENT.EDIT}
             </Button>
@@ -133,7 +133,7 @@ export function BuildingForm({ building }: BuildingFormProps) {
               <Icon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
               <div className="min-w-0">
                 <dt className="text-xs font-medium text-muted-foreground">{label}</dt>
-                <dd className="mt-0.5 break-words text-sm">{value || BUILDINGS_CLIENT.INFO_NOT_SET}</dd>
+                <dd className="mt-0.5 wrap-break-word text-sm">{value || BUILDINGS_CLIENT.INFO_NOT_SET}</dd>
               </div>
             </div>
           ))}
@@ -143,7 +143,7 @@ export function BuildingForm({ building }: BuildingFormProps) {
   }
 
   return (
-    <section className="border-y border-border py-5 sm:py-6">
+    <section className="rounded-lg border border-border bg-card p-5 shadow-sm sm:p-7">
       <h2 className="font-heading text-lg font-semibold tracking-tight">{BUILDINGS_CLIENT.FORM_TITLE}</h2>
       <p className="mt-1 text-sm text-muted-foreground">{BUILDINGS_CLIENT.FORM_DESC}</p>
 
@@ -203,8 +203,9 @@ export function BuildingForm({ building }: BuildingFormProps) {
             <Input
               id="building-name"
               value={name}
-              onChange={(event) => setName(event.target.value)}
-              disabled={isPending || readOnly}
+            onChange={(event) => setName(event.target.value)}
+            disabled={isPending || readOnly}
+            className="h-11"
             />
           </Field>
 
@@ -213,8 +214,9 @@ export function BuildingForm({ building }: BuildingFormProps) {
             <Input
               id="building-address"
               value={address}
-              onChange={(event) => setAddress(event.target.value)}
-              disabled={isPending || readOnly}
+            onChange={(event) => setAddress(event.target.value)}
+            disabled={isPending || readOnly}
+            className="h-11"
             />
           </Field>
 
@@ -226,6 +228,7 @@ export function BuildingForm({ building }: BuildingFormProps) {
               value={contactEmail}
               onChange={(event) => setContactEmail(event.target.value)}
               disabled={isPending || readOnly}
+              className="h-11"
             />
           </Field>
 
@@ -236,6 +239,7 @@ export function BuildingForm({ building }: BuildingFormProps) {
               value={contactPhone}
               onChange={(event) => setContactPhone(event.target.value)}
               disabled={isPending || readOnly}
+              className="h-11"
             />
           </Field>
 
@@ -246,6 +250,7 @@ export function BuildingForm({ building }: BuildingFormProps) {
               value={website}
               onChange={(event) => setWebsite(event.target.value)}
               disabled={isPending || readOnly}
+              className="h-11"
             />
           </Field>
 
@@ -259,7 +264,7 @@ export function BuildingForm({ building }: BuildingFormProps) {
           </div>
 
           {!readOnly ? (
-            <div className="grid grid-cols-2 gap-2 border-t border-border pt-5 sm:col-span-2 sm:flex sm:justify-end">
+            <div className="grid grid-cols-2 gap-2 border-t border-border pt-5 sm:col-span-2 sm:flex sm:justify-end [&_button]:h-11 [&_button]:px-5">
               <Button type="button" variant="outline" onClick={cancelEditing} disabled={isPending}>
                 {BUILDINGS_CLIENT.CANCEL}
               </Button>

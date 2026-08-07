@@ -81,7 +81,7 @@ export function FloorRow({ floor, buildingId }: FloorRowProps) {
               render={<Link href={`${PRIVATE_ROUTES.BUILDINGS}/${buildingId}/floors/${floor.id}`} />}
               variant="outline"
               size="sm"
-              className="h-10 w-full sm:w-auto"
+              className="h-11 w-full px-4 sm:w-auto"
             >
               <PencilIcon />
               {BUILDINGS_CLIENT.FLOOR_EDIT_INFO}
@@ -91,7 +91,7 @@ export function FloorRow({ floor, buildingId }: FloorRowProps) {
               render={<Link href={buildEditorHref(floor.id)} />}
               variant="default"
               size="sm"
-              className="h-10 w-full sm:w-auto"
+              className="h-11 w-full px-4 sm:w-auto"
             >
               {BUILDINGS_CLIENT.FLOOR_OPEN_EDITOR}
             </Button>

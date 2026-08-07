@@ -77,7 +77,6 @@ const SignupForm = () => {
     <FormCard
       title={CLIENT.FORM_TITLE}
       description={CLIENT.FORM_DESC}
-      backHref={PUBLIC_ROUTES.REGISTER_ORGANIZATION}
       content={
         <form
           id={FORM_ID}

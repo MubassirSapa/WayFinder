@@ -17,17 +17,28 @@ export const BUILDINGS_CLIENT = {
   EMPTY_TITLE: "No buildings yet",
   EMPTY_DESC: "Add your first building to start mapping it.",
   EMPTY_TITLE_MEMBER: "No buildings assigned",
-  EMPTY_DESC_MEMBER: "Ask your organization's owner or a manager to assign you to a building.",
+  EMPTY_DESC_MEMBER:
+    "Ask your organization's owner or a manager to assign you to a building.",
 
   CREATE_DIALOG_TITLE: "Add a building",
-  CREATE_DIALOG_DESC: "You can add contact details and a logo after creating it.",
+  CREATE_DIALOG_DESC:
+    "You can add contact details and a logo after creating it.",
+  UNSAVED_BUILDING_TITLE: "Discard building details?",
+  UNSAVED_BUILDING_DESC:
+    "The building name and address you entered will be lost.",
+  UNSAVED_FLOOR_TITLE: "Discard floor details?",
+  UNSAVED_FLOOR_DESC: "The floor information you entered will be lost.",
+  KEEP_EDITING: "Keep editing",
+  DISCARD: "Discard",
 
   EDIT_PAGE_TITLE: "Building",
-  EDIT_PAGE_DESCRIPTION: "Manage this building's details, floors, and public visibility.",
+  EDIT_PAGE_DESCRIPTION:
+    "Manage this building's details, floors, and public visibility.",
   BACK_TO_BUILDINGS: "Back to buildings",
   FORM_TITLE: "Building info",
   FORM_DESC: "Shown to managers and members assigned to this building.",
-  READ_ONLY_NOTICE: "You can view this building's info, but only an owner or manager can edit it.",
+  READ_ONLY_NOTICE:
+    "You can view this building's info, but only an owner or manager can edit it.",
   EDIT: "Edit building",
   INFO_NOT_SET: "Not provided",
 
@@ -77,7 +88,8 @@ export const BUILDINGS_CLIENT = {
 
   FLOOR_EDIT_PAGE_TITLE: "Edit floor",
   FLOOR_FORM_TITLE: "Floor info",
-  FLOOR_FORM_DESC: "Basic metadata for this floor. Background image and layout are edited in the map editor.",
+  FLOOR_FORM_DESC:
+    "Basic metadata for this floor. Background image and layout are edited in the map editor.",
   BACK_TO_BUILDING: "Back to building",
 
   FIELD_FLOOR_NAME_LABEL: "Floor name",
@@ -99,6 +111,7 @@ export const BUILDINGS_CLIENT = {
   CREATING: "Creating...",
 
   SUCCESS_CREATED: "Building created.",
+  SUCCESS_FLOOR_CREATED: "Floor created.",
   SUCCESS_UPDATED: "Building info updated.",
 
   ERROR_UNAUTHORIZED: "You need to be signed in to do that.",

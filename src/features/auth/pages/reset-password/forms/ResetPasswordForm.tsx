@@ -59,7 +59,6 @@ const ResetPasswordForm = ({ token }: TProps) => {
       <FormCard
         title={CLIENT.FORM_TITLE}
         description={CLIENT.VALIDATION_TOKEN_ERROR}
-        showBack={false}
         align="center"
         icon={<TriangleAlertIcon className="size-7 text-destructive" strokeWidth={1.8} />}
         footer={
@@ -81,7 +80,6 @@ const ResetPasswordForm = ({ token }: TProps) => {
       <FormCard
         title={CLIENT.SUCCESS_TITLE}
         description={CLIENT.SUCCESS_DESC}
-        showBack={false}
         align="center"
         icon={<ShieldCheckIcon className="size-7 text-primary" strokeWidth={1.8} />}
         footer={
@@ -102,7 +100,6 @@ const ResetPasswordForm = ({ token }: TProps) => {
     <FormCard
       title={CLIENT.FORM_TITLE}
       description={CLIENT.FORM_DESC}
-      showBack={false}
       icon={<KeyRoundIcon className="size-7 text-primary" strokeWidth={1.8} />}
       content={
         <form

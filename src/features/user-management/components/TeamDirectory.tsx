@@ -17,7 +17,7 @@ type TeamDirectoryProps = {
 
 export function TeamDirectory({ users, buildingOptions, pendingInvitations }: TeamDirectoryProps) {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
       <DashboardPageHeader
         title={USER_MANAGEMENT_CLIENT.LIST_TITLE}
         description={USER_MANAGEMENT_CLIENT.LIST_DESC}

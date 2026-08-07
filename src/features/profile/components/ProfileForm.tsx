@@ -96,7 +96,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
   };
 
   return (
-    <Card className="mx-auto w-full max-w-3xl gap-0 overflow-hidden py-0">
+    <Card className="w-full max-w-4xl gap-0 overflow-hidden rounded-lg py-0 shadow-none">
       <ProfileIdentityHeader
         avatarUrl={avatar.previewUrl}
         email={profile.email}
@@ -108,7 +108,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
       {!isEditing ? (
         <>
           {success ? (
-            <div className="px-5 pb-1 sm:px-8">
+            <div className="border-b border-border px-4 py-3 sm:px-5">
               <FormAlert successMessage={PROFILE_CLIENT.SUCCESS_UPDATED} />
             </div>
           ) : null}
@@ -116,9 +116,9 @@ export function ProfileForm({ profile }: ProfileFormProps) {
         </>
       ) : (
         <section className="border-t border-border">
-          <header className="px-5 pb-5 pt-6 sm:px-8 sm:pb-6 sm:pt-8">
-            <h3 className="font-heading text-lg font-semibold">{PROFILE_CLIENT.EDIT_TITLE}</h3>
-            <p className="mt-1 text-sm text-muted-foreground">{PROFILE_CLIENT.EDIT_DESCRIPTION}</p>
+          <header className="border-b border-border px-4 py-3 sm:px-5">
+            <h3 className="text-sm font-semibold">{PROFILE_CLIENT.EDIT_TITLE}</h3>
+            <p className="mt-1 text-xs text-muted-foreground">{PROFILE_CLIENT.EDIT_DESCRIPTION}</p>
           </header>
 
           <form
@@ -126,9 +126,8 @@ export function ProfileForm({ profile }: ProfileFormProps) {
               event.preventDefault();
               submit();
             }}
-            className="border-t border-border"
           >
-            <div className="grid gap-7 px-5 py-6 sm:px-8 sm:py-8 md:grid-cols-[11rem_minmax(0,1fr)] md:gap-8">
+            <div className="grid gap-6 px-4 py-5 sm:px-5 lg:grid-cols-[11rem_minmax(0,1fr)] lg:gap-6">
               <ProfilePhotoEditor
                 avatarUrl={avatar.previewUrl}
                 fileInputRef={fileInputRef}
@@ -140,16 +139,21 @@ export function ProfileForm({ profile }: ProfileFormProps) {
                 onUpload={() => fileInputRef.current?.click()}
               />
 
-              <div className="min-w-0 space-y-6">
+              <div className="min-w-0 space-y-5">
                 <Field>
-                  <FieldLabel htmlFor="profile-name">{PROFILE_CLIENT.FIELD_NAME_LABEL}</FieldLabel>
+                  <FieldLabel
+                    className="font-mono text-[0.625rem] font-medium uppercase tracking-[0.12em] text-muted-foreground"
+                    htmlFor="profile-name"
+                  >
+                    {PROFILE_CLIENT.FIELD_NAME_LABEL}
+                  </FieldLabel>
                   <Input
                     id="profile-name"
                     value={name}
                     onChange={(event) => setName(event.target.value)}
                     disabled={isPending}
                     autoComplete="name"
-                    className="h-11"
+                    className="h-11 sm:h-9"
                   />
                 </Field>
 
@@ -158,11 +162,11 @@ export function ProfileForm({ profile }: ProfileFormProps) {
               </div>
             </div>
 
-            <footer className="grid grid-cols-2 gap-3 border-t border-border px-5 py-4 sm:flex sm:justify-end sm:px-8">
+            <footer className="grid grid-cols-2 gap-2 border-t border-border bg-muted/20 px-4 py-3 sm:flex sm:justify-end sm:px-5">
               <Button
                 type="button"
                 variant="outline"
-                className="h-10 px-4"
+                className="h-11 px-4 sm:h-8"
                 onClick={cancelEditing}
                 disabled={isPending}
               >
@@ -170,7 +174,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
               </Button>
               <Button
                 type="submit"
-                className="h-10 px-4"
+                className="h-11 px-4 sm:h-8"
                 disabled={isPending || name.trim().length < 2}
               >
                 {isPending ? <Loader2Icon className="animate-spin" /> : null}

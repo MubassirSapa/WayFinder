@@ -45,7 +45,6 @@ const SigninForm = () => {
     <FormCard
       title={CLIENT.FORM_TITLE}
       description={CLIENT.FORM_DESC}
-      showBack={false}
       icon={<LogInIcon className="size-7 text-primary" strokeWidth={1.8} />}
       content={
         <form
