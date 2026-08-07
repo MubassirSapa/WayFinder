@@ -280,18 +280,6 @@ export function RoutePanel({
             </p>
           ) : route ? (
             <>
-              <div className="grid gap-2 rounded-2xl border border-border bg-background p-3">
-                <div className="flex min-w-0 items-center gap-2.5">
-                  <span className="size-2.5 shrink-0 rounded-full bg-[var(--map-viewer-route-origin)]" />
-                  <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Start</span>
-                  <span className="truncate font-medium">{originLabel ?? "Route start"}</span>
-                </div>
-                <div className="flex min-w-0 items-center gap-2.5">
-                  <span className="size-2.5 shrink-0 rounded-full bg-[var(--map-viewer-route-destination)]" />
-                  <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Destination</span>
-                  <span className="truncate font-medium">{destinationLabel ?? "Route destination"}</span>
-                </div>
-              </div>
               <Badge className="font-semibold" variant="outline">
                 {route.totalDistanceMeters.toFixed(1)} m
                 {segments.length > 1
@@ -342,10 +330,10 @@ export function RoutePanel({
                           </span>
                           <span className="ml-auto flex shrink-0 items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide">
                             {index === 0 ? (
-                              <><span className="size-2 rounded-full bg-[var(--map-viewer-route-origin)]" />Start</>
+                              <><span className="size-2 rounded-full bg-(--map-viewer-route-origin)" />Start</>
                             ) : null}
                             {index === segments.length - 1 ? (
-                              <><span className="size-2 rounded-full bg-[var(--map-viewer-route-destination)]" />Destination</>
+                              <><span className="size-2 rounded-full bg-(--map-viewer-route-destination)" />Destination</>
                             ) : null}
                           </span>
                         </button>

@@ -158,3 +158,22 @@ export function getViewerEdgePalette(type: ViewerPathEdge["type"]) {
 export function isNodePublicMarker(node: ViewerMapNode) {
   return node.role !== "hallway_point";
 }
+
+// SVG <text> doesn't wrap or truncate via CSS text-overflow, so a label wider
+// than its object silently spills past the shape's edges. There's no live
+// text-measurement API available at render time here (no canvas context,
+// and object width/fontSize already live in the same unscaled SVG user-space
+// units regardless of viewport zoom), so this estimates character width
+// instead - close enough for room-name labels, not pixel-exact.
+const AVG_CHAR_WIDTH_RATIO = 0.58;
+
+export function truncateSvgLabel(label: string, availableWidth: number, fontSize: number): string {
+  const charWidth = fontSize * AVG_CHAR_WIDTH_RATIO;
+  const maxChars = Math.max(1, Math.floor(availableWidth / charWidth));
+
+  if (label.length <= maxChars) {
+    return label;
+  }
+
+  return maxChars === 1 ? "…" : `${label.slice(0, maxChars - 1).trimEnd()}…`;
+}

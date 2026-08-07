@@ -1,11 +1,11 @@
-import { useRef, useState, type ReactNode } from "react";
+import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { ChevronUp, Search } from "lucide-react";
+import { ChevronUp, Search, X } from "lucide-react";
 
 import { formatFloorLabel, formatObjectTypeLabel } from "../lib/mapViewerViewport";
 import type { ViewerFloor, ViewerMapObject } from "../types/map-viewer.types";
@@ -25,6 +25,7 @@ interface MapViewerSidebarProps {
   selectedObject: ViewerMapObject | null;
   selectedObjectId: string | null;
   selectionActionsSlot?: ReactNode;
+  onExpandedHeightChange?: (height: number) => void;
   onFocusObject: (object: ViewerMapObject) => void;
   onFloorChange: (floorId: string) => void;
   onMobileExpandedChange: (expanded: boolean) => void;
@@ -68,6 +69,7 @@ export function MapViewerSidebar({
   selectedObject,
   selectedObjectId,
   selectionActionsSlot,
+  onExpandedHeightChange,
   onFocusObject,
   onFloorChange,
   onMobileExpandedChange,
@@ -79,6 +81,28 @@ export function MapViewerSidebar({
     : floors;
 
   const dragStartYRef = useRef<number | null>(null);
+  const asideRef = useRef<HTMLElement>(null);
+
+  // Reports the sheet's real, content-driven height once when it opens - not
+  // a fixed guess (it isn't always the full 80dvh cap; "Get directions" with
+  // no route computed yet is much shorter). scrollHeight reflects the full
+  // content extent regardless of the outer max-height clip still animating,
+  // so this reads correctly before that transition even finishes. Only fires
+  // on open/close, not continuously, so anything driven by it (the corner
+  // controls lifting above the sheet) gets one clean target to transition
+  // toward instead of following a noisy, constantly-changing value.
+  useLayoutEffect(() => {
+    if (!isMobileExpanded || !onExpandedHeightChange) {
+      return;
+    }
+
+    const node = asideRef.current;
+    if (!node) {
+      return;
+    }
+
+    onExpandedHeightChange(Math.min(node.scrollHeight, window.innerHeight * 0.8));
+  }, [isMobileExpanded, onExpandedHeightChange]);
 
   const handleHandlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     dragStartYRef.current = event.clientY;
@@ -115,8 +139,9 @@ export function MapViewerSidebar({
       className={[
         "fixed inset-x-0 bottom-0 z-30 flex flex-col overflow-hidden rounded-t-3xl border border-border bg-card/95 shadow-2xl backdrop-blur-md transition-[max-height] duration-300 ease-out",
         isMobileExpanded ? "max-h-[80dvh]" : "max-h-17",
-        "md:static md:inset-auto md:z-auto md:order-none md:h-full md:max-h-none md:min-h-0 md:rounded-3xl md:border md:bg-card/80 md:shadow-sm lg:rounded-4xl",
+        "md:static md:inset-auto md:z-auto md:order-0 md:h-full md:max-h-none md:min-h-0 md:rounded-3xl md:border md:bg-card/80 md:shadow-sm lg:rounded-4xl",
       ].join(" ")}
+      ref={asideRef}
     >
       <div
         className="shrink-0 cursor-pointer touch-none select-none border-b border-border px-5 py-3 md:cursor-default md:py-4"
@@ -136,13 +161,23 @@ export function MapViewerSidebar({
         <div className="mx-auto mb-2 h-1.5 w-10 rounded-full bg-border md:hidden" />
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-base font-semibold">Navigate</h2>
-          <ChevronUp
-            aria-hidden
-            className={[
-              "h-4 w-4 text-muted-foreground transition-transform duration-300 md:hidden",
-              isMobileExpanded ? "rotate-180" : "",
-            ].join(" ")}
-          />
+          {isMobileExpanded ? (
+            <button
+              aria-label="Close navigation panel"
+              className="flex size-7 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:hidden"
+              onClick={(event) => {
+                event.stopPropagation();
+                onMobileExpandedChange(false);
+              }}
+              onPointerDown={(event) => event.stopPropagation()}
+              onPointerUp={(event) => event.stopPropagation()}
+              type="button"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          ) : (
+            <ChevronUp aria-hidden className="h-4 w-4 text-muted-foreground transition-transform duration-300 md:hidden" />
+          )}
         </div>
       </div>
 
@@ -229,7 +264,7 @@ export function MapViewerSidebar({
                 placeholder="Search rooms, exits, POIs..."
                 value={search}
               />
-              <ScrollArea className="h-[220px] pr-3 sm:h-[280px]">
+              <ScrollArea className="h-55 pr-3 sm:h-70">
                 <div className="grid gap-1">
                   {searchableObjects.length === 0 ? (
                     <p className="px-3 py-4 text-sm text-muted-foreground">

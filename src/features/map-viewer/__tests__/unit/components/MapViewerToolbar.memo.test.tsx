@@ -3,7 +3,7 @@ import { act, cleanup, render } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { MapViewerToolbar } from "@/features/map-viewer/components/MapViewerToolbar";
-import * as mapViewerViewportLib from "@/features/map-viewer/lib/mapViewerViewport";
+import * as libUtils from "@/lib/utils";
 import type { ViewerFloor } from "@/features/map-viewer/types/map-viewer.types";
 import type { RouteFloorSegment } from "@/features/navigation/types/navigation.types";
 
@@ -23,11 +23,12 @@ const floors = [activeFloor];
 // memo regardless of what this test is trying to prove.
 const emptySegments: RouteFloorSegment[] = [];
 
-// segments.length <= 1 renders FloorNavigator, which calls formatFloorLabel
-// for each floor option. That stable call count is a
-// reliable proxy for "did this component subtree execute again".
+// segments.length <= 1 renders FloorNavigator -> FloorWheel, and
+// MapCornerControls itself, both of which call cn() to build their
+// className on every render - a stable proxy for "did this subtree's
+// render body actually execute," unlike React's Profiler, whose onRender
+// fires once per commit regardless of whether a memoized child bailed out.
 const stableHandlers = {
-  onClearRoute: vi.fn(),
   onFloorChange: vi.fn(),
   onJumpToSegment: vi.fn(),
   onResetView: vi.fn(),
@@ -46,7 +47,9 @@ describe("MapViewerToolbar memoization", () => {
       <MapViewerToolbar
         activeFloor={activeFloor}
         activeSegmentIndex={0}
+        expandedSheetHeight={0}
         floors={floors}
+        isMobileSidebarExpanded={false}
         segments={emptySegments}
         showGrid={false}
         {...stableHandlers}
@@ -62,7 +65,7 @@ describe("MapViewerToolbar memoization", () => {
   });
 
   it("does not re-render when the parent re-renders with referentially unchanged props", () => {
-    const formatSpy = vi.spyOn(mapViewerViewportLib, "formatFloorLabel");
+    const cnSpy = vi.spyOn(libUtils, "cn");
 
     function Harness() {
       const [tick, setTick] = useState(0);
@@ -74,7 +77,9 @@ describe("MapViewerToolbar memoization", () => {
           <MapViewerToolbar
             activeFloor={activeFloor}
             activeSegmentIndex={0}
+            expandedSheetHeight={0}
             floors={floors}
+            isMobileSidebarExpanded={false}
             segments={emptySegments}
             showGrid={false}
             {...stableHandlers}
@@ -84,7 +89,8 @@ describe("MapViewerToolbar memoization", () => {
     }
 
     const { getByRole } = render(<Harness />);
-    expect(formatSpy).toHaveBeenCalledTimes(1);
+    const callsAfterMount = cnSpy.mock.calls.length;
+    expect(callsAfterMount).toBeGreaterThan(0);
 
     act(() => {
       getByRole("button", { name: /tick/ }).click();
@@ -94,11 +100,11 @@ describe("MapViewerToolbar memoization", () => {
     });
 
     expect(getByRole("button", { name: /tick/ }).textContent).toBe("tick: 2");
-    expect(formatSpy).toHaveBeenCalledTimes(1);
+    expect(cnSpy.mock.calls.length).toBe(callsAfterMount);
   });
 
   it("still re-renders when showGrid changes, proving memo isn't over-suppressing updates", () => {
-    const formatSpy = vi.spyOn(mapViewerViewportLib, "formatFloorLabel");
+    const cnSpy = vi.spyOn(libUtils, "cn");
 
     function Harness() {
       const [showGrid, setShowGrid] = useState(false);
@@ -110,7 +116,9 @@ describe("MapViewerToolbar memoization", () => {
           <MapViewerToolbar
             activeFloor={activeFloor}
             activeSegmentIndex={0}
+            expandedSheetHeight={0}
             floors={floors}
+            isMobileSidebarExpanded={false}
             segments={emptySegments}
             showGrid={showGrid}
             {...stableHandlers}
@@ -120,12 +128,12 @@ describe("MapViewerToolbar memoization", () => {
     }
 
     const { getByRole } = render(<Harness />);
-    expect(formatSpy).toHaveBeenCalledTimes(1);
+    const callsAfterMount = cnSpy.mock.calls.length;
 
     act(() => {
       getByRole("button", { name: /toggle/ }).click();
     });
 
-    expect(formatSpy).toHaveBeenCalledTimes(2);
+    expect(cnSpy.mock.calls.length).toBeGreaterThan(callsAfterMount);
   });
 });

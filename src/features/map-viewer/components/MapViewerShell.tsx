@@ -60,6 +60,10 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
   // map when tapped or dragged up — ignored entirely at the md breakpoint
   // and above, where the sidebar is always a normal, always-visible column.
   const [isMobileSidebarExpanded, setIsMobileSidebarExpanded] = useState(false);
+  // The expanded sheet's real, content-driven height in px (reported by
+  // MapViewerSidebar) - used to lift the floor/zoom controls to sit just
+  // above it instead of guessing a fixed height that's usually wrong.
+  const [expandedSheetHeight, setExpandedSheetHeight] = useState(0);
   const [connectorPicker, setConnectorPicker] = useState<{
     connectorType: ConnectorType;
     targets: ConnectorTargetInfo[];
@@ -114,7 +118,6 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
   const setActiveSegmentIndex = useAppStore((state) => state.setActiveSegmentIndex);
   const originNodeId = useAppStore((state) => state.originNodeId);
   const destinationNodeId = useAppStore((state) => state.destinationNodeId);
-  const clearRoute = useAppStore((state) => state.clearRoute);
   const accessibleOnly = useAppStore((state) => state.accessibleOnly);
   const setOrigin = useAppStore((state) => state.setOrigin);
 
@@ -364,11 +367,11 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
             the map when tapped/dragged — never part of the page's normal
             flow, so there's nothing to scroll past to reach it. At md and
             up, it's a normal always-visible grid column, exactly as before. */}
-        <div className="relative mx-auto flex w-full max-w-[1600px] flex-1 flex-col gap-0 p-0 sm:gap-4 sm:p-6 md:grid md:min-h-0 md:grid-cols-[300px_minmax(0,1fr)] lg:grid-cols-[340px_minmax(0,1fr)]">
+        <div className="relative mx-auto flex w-full max-w-400 flex-1 flex-col gap-0 p-0 sm:gap-4 sm:p-6 md:grid md:min-h-0 md:grid-cols-[300px_minmax(0,1fr)] lg:grid-cols-[340px_minmax(0,1fr)]">
           {isMobileSidebarExpanded ? (
             <button
               aria-label="Collapse the map sidebar"
-              className="fixed inset-0 z-20 bg-black/35 md:hidden"
+              className="fixed inset-0 z-20 bg-transparent md:hidden"
               onClick={() => setIsMobileSidebarExpanded(false)}
               type="button"
             />
@@ -379,6 +382,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
             activeFloorId={activeFloorId}
             floors={floors}
             isMobileExpanded={isMobileSidebarExpanded}
+            onExpandedHeightChange={setExpandedSheetHeight}
             onFloorChange={handleFloorChange}
             onFocusObject={focusObject}
             onMobileExpandedChange={setIsMobileSidebarExpanded}
@@ -407,13 +411,14 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
             ) : null}
           />
 
-          <main className="order-1 relative min-h-0 flex-1 overflow-hidden border-x-0 border-t-0 border-b border-border bg-[var(--map-viewer-canvas)] shadow-sm sm:rounded-3xl sm:border md:order-none md:h-full md:min-h-0 lg:rounded-4xl">
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklch,var(--primary)_10%,transparent),transparent_32%),linear-gradient(to_right,var(--map-viewer-grid-minor)_1px,transparent_1px),linear-gradient(to_bottom,var(--map-viewer-grid-minor)_1px,transparent_1px)] [background-size:auto,28px_28px,28px_28px]" />
+          <main className="order-1 relative min-h-0 flex-1 overflow-hidden border-x-0 border-t-0 border-b border-border bg-(--map-viewer-canvas) shadow-sm sm:rounded-3xl sm:border md:order-0 md:h-full md:min-h-0 lg:rounded-4xl">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklch,var(--primary)_10%,transparent),transparent_32%),linear-gradient(to_right,var(--map-viewer-grid-minor)_1px,transparent_1px),linear-gradient(to_bottom,var(--map-viewer-grid-minor)_1px,transparent_1px)] bg-size-[auto,28px_28px,28px_28px]" />
             <MapViewerToolbar
               activeFloor={activeFloor}
               activeSegmentIndex={activeSegmentIndex}
+              expandedSheetHeight={expandedSheetHeight}
               floors={floors}
-              onClearRoute={clearRoute}
+              isMobileSidebarExpanded={isMobileSidebarExpanded}
               onFloorChange={handleFloorChange}
               onJumpToSegment={handleJumpToSegment}
               onResetView={resetView}

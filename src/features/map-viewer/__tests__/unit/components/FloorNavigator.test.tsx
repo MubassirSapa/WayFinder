@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { FloorNavigator } from "@/features/map-viewer/components/FloorNavigator";
@@ -15,33 +15,67 @@ const floors: ViewerFloor[] = Array.from({ length: 8 }, (_, index) => ({
   width: 1200,
 }));
 
-afterEach(cleanup);
+// The wheel commits a floor change after its slide-into-place animation
+// finishes (FloorWheel's SLIDE_DURATION_MS), not on the same tick as the
+// click - fake timers make that deterministic instead of racing a real
+// 200ms setTimeout in the test.
+function commitPendingSlide() {
+  act(() => {
+    vi.advanceTimersByTime(200);
+  });
+}
+
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+});
 
 describe("FloorNavigator", () => {
-  it("shows the active floor, building position, and adjacent-floor actions", () => {
-    const onFloorChange = vi.fn();
-    render(
-      <FloorNavigator
-        activeFloor={floors[3]}
-        floors={floors}
-        onFloorChange={onFloorChange}
-      />,
-    );
+  it("shows the active floor's plain level number, with its neighbors above and below", () => {
+    render(<FloorNavigator activeFloor={floors[3]} floors={floors} onFloorChange={vi.fn()} />);
 
     expect(screen.getByRole("group", { name: "Floor navigation" })).toBeTruthy();
-    const navigator = screen.getByRole("group", { name: "Floor navigation" });
-    const selector = screen.getByRole("combobox", { name: "Switch floor, Floor 4, 4 of 8" });
-    expect(navigator.className).toContain("w-fit");
-    expect(navigator.className).toContain("gap-0.5");
-    expect(selector.className).toContain("w-16");
-    expect(selector.className).not.toContain("flex-1");
-    expect(screen.queryByText("4 of 8")).toBeNull();
+    expect(screen.getByRole("status").textContent).toBe("4");
+    expect(screen.getByRole("button", { name: "3" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "4" }).hasAttribute("disabled")).toBe(true);
+    expect(screen.getByRole("button", { name: "5" })).toBeTruthy();
+    expect(screen.queryByText("Floor 4")).toBeNull();
+  });
 
-    fireEvent.click(screen.getByRole("button", { name: "Go down to Floor 3" }));
-    fireEvent.click(screen.getByRole("button", { name: "Go up to Floor 5" }));
+  it("jumps to the tapped neighbor floor", () => {
+    vi.useFakeTimers();
+    const onFloorChange = vi.fn();
+    render(<FloorNavigator activeFloor={floors[3]} floors={floors} onFloorChange={onFloorChange} />);
 
-    expect(onFloorChange).toHaveBeenNthCalledWith(1, "floor-3");
-    expect(onFloorChange).toHaveBeenNthCalledWith(2, "floor-5");
+    act(() => {
+      screen.getByRole("button", { name: "5" }).click();
+    });
+    commitPendingSlide();
+    expect(onFloorChange).toHaveBeenCalledWith("floor-5");
+
+    act(() => {
+      screen.getByRole("button", { name: "3" }).click();
+    });
+    commitPendingSlide();
+    expect(onFloorChange).toHaveBeenCalledWith("floor-3");
+  });
+
+  it("moves between floors with the desktop-only up/down arrows", () => {
+    vi.useFakeTimers();
+    const onFloorChange = vi.fn();
+    render(<FloorNavigator activeFloor={floors[3]} floors={floors} onFloorChange={onFloorChange} />);
+
+    act(() => {
+      screen.getByRole("button", { name: "Go to 5" }).click();
+    });
+    commitPendingSlide();
+    expect(onFloorChange).toHaveBeenCalledWith("floor-5");
+
+    act(() => {
+      screen.getByRole("button", { name: "Go to 3" }).click();
+    });
+    commitPendingSlide();
+    expect(onFloorChange).toHaveBeenCalledWith("floor-3");
   });
 
   it("disables navigation beyond the building's floor boundaries", () => {
@@ -49,35 +83,12 @@ describe("FloorNavigator", () => {
       <FloorNavigator activeFloor={floors[0]} floors={floors} onFloorChange={vi.fn()} />,
     );
 
-    expect(screen.getByRole("button", { name: "No lower floor" }).hasAttribute("disabled")).toBe(true);
-    expect(screen.getByRole("button", { name: "Go up to Floor 2" }).hasAttribute("disabled")).toBe(false);
+    expect(screen.getByRole("button", { name: "No more floors" }).hasAttribute("disabled")).toBe(true);
+    expect(screen.getByRole("button", { name: "Go to 2" }).hasAttribute("disabled")).toBe(false);
 
-    rerender(
-      <FloorNavigator activeFloor={floors[7]} floors={floors} onFloorChange={vi.fn()} />,
-    );
+    rerender(<FloorNavigator activeFloor={floors[7]} floors={floors} onFloorChange={vi.fn()} />);
 
-    expect(screen.getByRole("button", { name: "Go down to Floor 7" }).hasAttribute("disabled")).toBe(false);
-    expect(screen.getByRole("button", { name: "No higher floor" }).hasAttribute("disabled")).toBe(true);
-  });
-
-  it("keeps long building lists in a bounded popup and switches to a selected floor", async () => {
-    const onFloorChange = vi.fn();
-    render(
-      <FloorNavigator activeFloor={floors[0]} floors={floors} onFloorChange={onFloorChange} />,
-    );
-
-    fireEvent.click(screen.getByRole("combobox"));
-    const listbox = await screen.findByRole("listbox");
-    const popup = listbox.closest('[data-slot="select-content"]');
-    expect(popup?.className).toContain("max-h-72");
-    expect(popup?.getAttribute("data-align-trigger")).toBe("false");
-    expect(screen.getAllByRole("option")).toHaveLength(8);
-
-    const option = screen.getByRole("option", { name: /Floor 7/ });
-    fireEvent.pointerDown(option);
-    fireEvent.pointerUp(option);
-    fireEvent.click(option);
-
-    expect(onFloorChange).toHaveBeenCalledWith("floor-7");
+    expect(screen.getByRole("button", { name: "Go to 7" }).hasAttribute("disabled")).toBe(false);
+    expect(screen.getByRole("button", { name: "No more floors" }).hasAttribute("disabled")).toBe(true);
   });
 });

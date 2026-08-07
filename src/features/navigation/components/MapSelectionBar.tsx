@@ -19,6 +19,7 @@ export function MapSelectionBar({ label, nodeId, onClose }: MapSelectionBarProps
   const originNodeId = useAppStore((state) => state.originNodeId);
   const setOrigin = useAppStore((state) => state.setOrigin);
   const setDestination = useAppStore((state) => state.setDestination);
+  const clearRoute = useAppStore((state) => state.clearRoute);
 
   const isOrigin = nodeId !== null && originNodeId === nodeId;
 
@@ -46,9 +47,12 @@ export function MapSelectionBar({ label, nodeId, onClose }: MapSelectionBarProps
         )}
 
         <button
-          aria-label="Dismiss selection"
-          className="ml-1 shrink-0 text-muted-foreground hover:text-foreground"
-          onClick={onClose}
+          aria-label="Clear route and close"
+          className="ml-1 shrink-0 text-destructive hover:text-destructive/80"
+          onClick={() => {
+            clearRoute();
+            onClose();
+          }}
           type="button"
         >
           <X className="h-3.5 w-3.5" />

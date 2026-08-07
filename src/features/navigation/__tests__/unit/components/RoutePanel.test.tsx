@@ -47,11 +47,13 @@ describe("RoutePanel", () => {
       />,
     );
 
-    expect(screen.getByText("Start")).toBeTruthy();
-    expect(screen.getByText("Main Entrance")).toBeTruthy();
-    expect(screen.getByText("Destination")).toBeTruthy();
-    expect(screen.getByText("Room 101")).toBeTruthy();
-    expect(screen.queryByText(/you(?:'|\u2019)?re here/i)).toBeNull();
+    // Endpoints are shown once, via the "Get directions" fields themselves -
+    // no separate Start/Destination summary card duplicating the same names.
+    expect(screen.getByDisplayValue("Main Entrance")).toBeTruthy();
+    expect(screen.getByDisplayValue("Room 101")).toBeTruthy();
+    expect(screen.queryByText("Start")).toBeNull();
+    expect(screen.queryByText("Destination")).toBeNull();
+    expect(screen.getByText("12.0 m")).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: "Clear navigation" }));
     expect(useAppStore.getState().originNodeId).toBeNull();

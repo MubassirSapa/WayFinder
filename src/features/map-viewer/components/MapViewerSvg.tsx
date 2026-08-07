@@ -8,6 +8,7 @@ import {
   getViewerNodePalette,
   getViewerObjectPalette,
   isNodePublicMarker,
+  truncateSvgLabel,
 } from "../lib/mapStyles";
 import { getRenderedFloorSize } from "../lib/mapViewerViewport";
 import type {
@@ -590,7 +591,7 @@ function ViewerObjectItem({
           x={centerX}
           y={centerY}
         >
-          {object.label || object.name}
+          {truncateSvgLabel(object.label || object.name, object.width - 8, 11)}
         </text>
       ) : null}
 

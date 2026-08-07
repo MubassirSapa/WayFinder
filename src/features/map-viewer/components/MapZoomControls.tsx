@@ -23,7 +23,7 @@ export function MapZoomControls({
   return (
     <div
       aria-label="Map view controls"
-      className="pointer-events-auto flex items-center gap-1 rounded-full border border-border bg-card/95 p-1 shadow-lg backdrop-blur-xl"
+      className="pointer-events-auto flex items-center gap-1 rounded-xl border border-border bg-card/95 p-1 shadow-lg backdrop-blur-xl"
       role="group"
     >
       <Button
