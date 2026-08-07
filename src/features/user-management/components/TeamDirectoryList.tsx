@@ -4,28 +4,31 @@ import { useMemo, useState } from "react";
 import { SearchIcon, UsersIcon } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
+import { PendingInvitesSection } from "@/features/invitations/components/PendingInvitesSection";
+import type { PendingInvitationListItem } from "@/features/invitations/types/invitation.types";
 
 import { USER_MANAGEMENT_CLIENT } from "../constants/user-management.constants";
 import {
   filterOrgUsers,
   teamMemberCountLabel,
 } from "../lib/user-management-presentation";
-import type {
-  OrgBuildingOption,
-  OrgUserListItem,
-} from "../types/user-management.types";
-import { TeamMemberCard } from "./TeamMemberCard";
+import type { OrgUserListItem } from "../types/user-management.types";
+import { TeamRoleSection } from "./TeamRoleSection";
 
 type TeamDirectoryListProps = {
   users: OrgUserListItem[];
-  buildingOptions: OrgBuildingOption[];
+  pendingInvitations: PendingInvitationListItem[];
 };
 
-export function TeamDirectoryList({ users, buildingOptions }: TeamDirectoryListProps) {
+export function TeamDirectoryList({ users, pendingInvitations }: TeamDirectoryListProps) {
   const [query, setQuery] = useState("");
   const filteredUsers = useMemo(() => filterOrgUsers(users, query), [query, users]);
 
-  if (users.length === 0) {
+  const owners = filteredUsers.filter((user) => user.role === "owner");
+  const managers = filteredUsers.filter((user) => user.role === "manager");
+  const members = filteredUsers.filter((user) => user.role === "member");
+
+  if (users.length === 0 && pendingInvitations.length === 0) {
     return (
       <div className="flex min-h-64 flex-col items-center justify-center border-y border-border px-6 py-12 text-center">
         <span className="flex size-12 items-center justify-center rounded-lg bg-muted text-muted-foreground">
@@ -42,7 +45,7 @@ export function TeamDirectoryList({ users, buildingOptions }: TeamDirectoryListP
   }
 
   return (
-    <section aria-label={USER_MANAGEMENT_CLIENT.LIST_TITLE} className="space-y-4">
+    <section aria-label={USER_MANAGEMENT_CLIENT.LIST_TITLE} className="space-y-8">
       <div className="flex flex-col gap-3 border-b border-border pb-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative w-full sm:max-w-md">
           <SearchIcon className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -65,16 +68,14 @@ export function TeamDirectoryList({ users, buildingOptions }: TeamDirectoryListP
           {USER_MANAGEMENT_CLIENT.NO_SEARCH_RESULTS}
         </p>
       ) : (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-          {filteredUsers.map((user) => (
-            <TeamMemberCard
-              key={user.id}
-              user={user}
-              buildingOptions={buildingOptions}
-            />
-          ))}
+        <div className="space-y-8">
+          <TeamRoleSection title={USER_MANAGEMENT_CLIENT.SECTION_OWNER} users={owners} />
+          <TeamRoleSection title={USER_MANAGEMENT_CLIENT.SECTION_MANAGERS} users={managers} />
+          <TeamRoleSection title={USER_MANAGEMENT_CLIENT.SECTION_MEMBERS} users={members} />
         </div>
       )}
+
+      <PendingInvitesSection invitations={pendingInvitations} />
     </section>
   );
 }

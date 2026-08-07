@@ -8,6 +8,8 @@ import {
   buildingUpdateDelete,
   buildingRead,
   canManageOrgUserFields,
+  invitationCreate,
+  invitationRead,
   isPlatformAdmin,
   organizationUpdate,
   userCreate,
@@ -15,6 +17,7 @@ import {
   userRead,
   userUpdate,
 } from "../index";
+import { isOwnerOrManager } from "../../constants/roles";
 import { Users } from "../../Users";
 
 describe("collection access", () => {
@@ -26,7 +29,7 @@ describe("collection access", () => {
     expect(field.access.update({ req: { user: { collection: "admins" } } } as never)).toBe(true);
   });
 
-  it.each(["role", "buildings"])(
+  it.each(["role", "buildings", "blocked"])(
     "lets an owner/manager manage another user's %s field but not their own",
     (fieldName) => {
       const field = Users.fields.find((candidate) => "name" in candidate && candidate.name === fieldName);
@@ -55,6 +58,16 @@ describe("collection access", () => {
     expect(
       isPlatformAdmin({ req: { user: { collection: "users", role: "owner" } } } as never),
     ).toBe(false);
+  });
+
+  describe("isOwnerOrManager", () => {
+    it("is true only for owner and manager roles", () => {
+      expect(isOwnerOrManager("owner")).toBe(true);
+      expect(isOwnerOrManager("manager")).toBe(true);
+      expect(isOwnerOrManager("member")).toBe(false);
+      expect(isOwnerOrManager(null)).toBe(false);
+      expect(isOwnerOrManager(undefined)).toBe(false);
+    });
   });
 
   describe("canManageOrgUserFields", () => {
@@ -138,6 +151,35 @@ describe("collection access", () => {
     it("denies a member from deleting any user", () => {
       const req = { user: { collection: "users", role: "member", organization: 5 } };
       expect(userDelete({ req } as never)).toBe(false);
+    });
+  });
+
+  describe("invitation access", () => {
+    it("scopes reads to the caller's own organization for owner/manager", () => {
+      expect(
+        invitationRead({ req: { user: { collection: "users", role: "manager", organization: 5 } } } as never),
+      ).toEqual({ organization: { equals: 5 } });
+      expect(invitationRead({ req: { user: { collection: "admins" } } } as never)).toBe(true);
+    });
+
+    it("denies a member from reading invitations", () => {
+      expect(
+        invitationRead({ req: { user: { collection: "users", role: "member", organization: 5 } } } as never),
+      ).toBe(false);
+    });
+
+    it("lets an owner/manager create a manager or member invite in their own org, never an owner invite", () => {
+      const req = { user: { collection: "users", role: "owner", organization: 5 } };
+
+      expect(invitationCreate({ req, data: { organization: 5, role: "member" } } as never)).toBe(true);
+      expect(invitationCreate({ req, data: { organization: 5, role: "manager" } } as never)).toBe(true);
+      expect(invitationCreate({ req, data: { organization: 5, role: "owner" } } as never)).toBe(false);
+      expect(invitationCreate({ req, data: { organization: 6, role: "member" } } as never)).toBe(false);
+    });
+
+    it("denies a member from creating an invitation", () => {
+      const req = { user: { collection: "users", role: "member", organization: 5 } };
+      expect(invitationCreate({ req, data: { organization: 5, role: "member" } } as never)).toBe(false);
     });
   });
 

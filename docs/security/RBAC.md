@@ -58,25 +58,36 @@ prevents a caller from gaining access to an out-of-scope record by submitting
 an in-scope replacement value.
 
 Collection rules are applied to `buildings`, `floors`, `map-objects`,
-`map-nodes`, `path-edges`, `organizations`, and `users`. The `users`
-collection additionally uses field-level update restrictions on `role`,
-`organization`, and `buildings` — `organization` stays platform-admin-only
-(reassigning a user's org isn't supported); `role`/`buildings` allow an
-owner/manager to set them on someone else, via `canManageOrgUserFields`,
-while the same fields stay locked when a user updates their own record
-(`userUpdate` grants self-update at the document level, but the field-level
-check still blocks self-escalation).
+`map-nodes`, `path-edges`, `organizations`, `users`, and `invitations`. The
+`users` collection additionally uses field-level update restrictions on
+`role`, `organization`, `buildings`, and `blocked` — `organization` stays
+platform-admin-only (reassigning a user's org isn't supported); `role`/
+`buildings`/`blocked` allow an owner/manager to set them on someone else, via
+`canManageOrgUserFields`, while the same fields stay locked when a user
+updates their own record (`userUpdate` grants self-update at the document
+level, but the field-level check still blocks self-escalation and
+self-blocking). `invitations` itself is create/read only for an owner/manager
+in their own organization (`invitationCreate`/`invitationRead`); `update`/
+`delete` are `noOne`, since an invitation is only ever mutated through the
+resend/revoke/accept actions, never edited directly.
 
 ## Trusted user management
 
 Implemented in `src/features/user-management/` (`/dashboard/users`, owner/
-manager only): create a new manager or member directly (name, email, an
-initial password, role, building assignment for members), change a non-owner
-user's role or building assignment, and remove a non-owner user from the
+manager only): a role-grouped directory (owner/managers/members) plus a
+per-user detail page at `/dashboard/users/[id]` for changing a non-owner
+user's role or building assignment, blocking/unblocking their sign-in
+access, viewing their invite history, and removing them from the
 organization. Every mutation goes through the Local API with the real
 authenticated user and `overrideAccess: false`, so it is authorized by the
 same `userCreate`/`userUpdate`/`userDelete`/`canManageOrgUserFields`
-functions described above — not by a bespoke check in the action layer.
-Email invitations and self-service password reset for these created accounts
-are not implemented yet; the owner/manager sets the initial password and
-shares it with the new user directly.
+functions described above — not by a bespoke check in the action layer. A
+blocked user is rejected at sign-in by a `beforeLogin` collection hook
+(`blockLoginHook`), not by an access-control read/write rule.
+
+Adding a teammate is now a real email invitation, implemented in
+`src/features/invitations/` (see `docs/technical/USER_INVITATIONS.md`) — the
+owner/manager no longer sets an initial password directly. The invitee
+proves ownership of their email by opening the invite link and choosing
+their own password; the invite token is stored only as a sha256 hash
+(`invitations.tokenHash`) and is single-use, expiring after 7 days.

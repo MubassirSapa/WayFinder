@@ -72,6 +72,7 @@ export interface Config {
     users: User;
     organizations: Organization;
     buildings: Building;
+    invitations: Invitation;
     media: Media;
     floors: Floor;
     'map-objects': MapObject;
@@ -88,6 +89,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     organizations: OrganizationsSelect<false> | OrganizationsSelect<true>;
     buildings: BuildingsSelect<false> | BuildingsSelect<true>;
+    invitations: InvitationsSelect<false> | InvitationsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     floors: FloorsSelect<false> | FloorsSelect<true>;
     'map-objects': MapObjectsSelect<false> | MapObjectsSelect<true>;
@@ -189,6 +191,10 @@ export interface User {
    * Buildings this member can access. Owners and managers implicitly access every building in their organization.
    */
   buildings?: (number | Building)[] | null;
+  /**
+   * Blocked users can't sign in. Owners and managers can block anyone except themselves.
+   */
+  blocked?: boolean | null;
   avatar?: (number | null) | Media;
   avatarUrl?: string | null;
   updatedAt: string;
@@ -263,6 +269,28 @@ export interface Building {
   floorCount?: number | null;
   logo?: (number | null) | Media;
   logoUrl?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "invitations".
+ */
+export interface Invitation {
+  id: number;
+  email: string;
+  name: string;
+  role: 'manager' | 'member';
+  organization: number | Organization;
+  /**
+   * Buildings the invitee will be assigned to on acceptance. Only applies to the member role.
+   */
+  buildings?: (number | Building)[] | null;
+  tokenHash: string;
+  status: 'pending' | 'accepted' | 'revoked';
+  expiresAt: string;
+  acceptedAt?: string | null;
+  invitedBy: number | User;
   updatedAt: string;
   createdAt: string;
 }
@@ -421,6 +449,10 @@ export interface PayloadLockedDocument {
         value: number | Building;
       } | null)
     | ({
+        relationTo: 'invitations';
+        value: number | Invitation;
+      } | null)
+    | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
@@ -524,6 +556,7 @@ export interface UsersSelect<T extends boolean = true> {
   role?: T;
   organization?: T;
   buildings?: T;
+  blocked?: T;
   avatar?: T;
   avatarUrl?: T;
   updatedAt?: T;
@@ -571,6 +604,24 @@ export interface BuildingsSelect<T extends boolean = true> {
   floorCount?: T;
   logo?: T;
   logoUrl?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "invitations_select".
+ */
+export interface InvitationsSelect<T extends boolean = true> {
+  email?: T;
+  name?: T;
+  role?: T;
+  organization?: T;
+  buildings?: T;
+  tokenHash?: T;
+  status?: T;
+  expiresAt?: T;
+  acceptedAt?: T;
+  invitedBy?: T;
   updatedAt?: T;
   createdAt?: T;
 }

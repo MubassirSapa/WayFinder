@@ -3,8 +3,9 @@ import { redirect } from "next/navigation";
 
 import { BRAND } from "@/constants/brand";
 import { PRIVATE_ROUTES, PUBLIC_ROUTES } from "@/constants/routes";
-import { ROLES } from "@/collections/constants/roles";
+import { isOwnerOrManager } from "@/collections/constants/roles";
 import { getCurrentUser } from "@/features/auth/services/server/auth.ports";
+import { listPendingInvitations } from "@/features/invitations/services/server/invitation.ports";
 import { USER_MANAGEMENT_CLIENT } from "@/features/user-management/constants/user-management.constants";
 import { TeamDirectory } from "@/features/user-management/components/TeamDirectory";
 import { listOrgBuildingOptions, listOrgUsers } from "@/features/user-management/services/server/user-management.ports";
@@ -20,19 +21,21 @@ export default async function UsersPage() {
   if (!currentUser.isSuccess) redirect(PUBLIC_ROUTES.SIGNIN);
 
   const user = currentUser.data;
-  if (user.role !== ROLES.OWNER && user.role !== ROLES.MANAGER) {
+  if (!isOwnerOrManager(user.role)) {
     redirect(PRIVATE_ROUTES.DASHBOARD);
   }
 
-  const [usersResult, buildingOptions] = await Promise.all([
+  const [usersResult, buildingOptions, pendingInvitationsResult] = await Promise.all([
     listOrgUsers(user),
     listOrgBuildingOptions(user),
+    listPendingInvitations(user),
   ]);
   const users = usersResult.isSuccess ? usersResult.data : [];
+  const pendingInvitations = pendingInvitationsResult.isSuccess ? pendingInvitationsResult.data : [];
 
   return (
     <DashboardPageContainer>
-      <TeamDirectory users={users} buildingOptions={buildingOptions} />
+      <TeamDirectory users={users} buildingOptions={buildingOptions} pendingInvitations={pendingInvitations} />
     </DashboardPageContainer>
   );
 }

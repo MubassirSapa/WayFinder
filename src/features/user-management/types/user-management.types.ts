@@ -17,10 +17,12 @@ export type OrgBuildingOption = {
   name: string;
 };
 
-export type TCreateOrgUserInput = {
-  name: string;
-  email: string;
-  password: string;
-  role: ManagedRole;
-  buildingIds: string[];
+export type OrgUserDetail = OrgUserListItem & {
+  blocked: boolean;
+  createdAt: string;
+  inviteHistory: {
+    invitedByName: string;
+    invitedAt: string;
+    acceptedAt: string | null;
+  } | null;
 };

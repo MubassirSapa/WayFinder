@@ -1,7 +1,7 @@
 import type { Access, FieldAccess, Payload, Where } from "payload";
 
 import { relationId, relationIds } from "@/lib/payload-id";
-import { ROLES } from "../constants/roles";
+import { isOwnerOrManager, ROLES } from "../constants/roles";
 
 /** The minimal shape `accessibleBuildingIds` needs — satisfied by both `PayloadRequest` and a plain `{ user, payload }` from a Server Component/service. */
 type BuildingScopeRequest = {
@@ -91,7 +91,7 @@ export const buildingCreate: Access = async ({ req, data }) => {
   if (
     !req.user ||
     req.user.collection !== "users" ||
-    (req.user.role !== ROLES.OWNER && req.user.role !== ROLES.MANAGER)
+    !isOwnerOrManager(req.user.role)
   ) return false;
 
   const userOrganizationId = relationId(req.user.organization);
@@ -106,7 +106,7 @@ export const buildingUpdateDelete: Access = async ({ req }) => {
   if (
     !req.user ||
     req.user.collection !== "users" ||
-    (req.user.role !== ROLES.OWNER && req.user.role !== ROLES.MANAGER)
+    !isOwnerOrManager(req.user.role)
   ) return false;
 
   return { id: { in: await accessibleBuildingIds(req) } };
@@ -156,7 +156,7 @@ export const organizationUpdate: Access = ({ req }) => {
   if (
     !req.user ||
     req.user.collection !== "users" ||
-    (req.user.role !== ROLES.OWNER && req.user.role !== ROLES.MANAGER)
+    !isOwnerOrManager(req.user.role)
   ) return false;
 
   const organizationId = relationId(req.user.organization);
@@ -170,7 +170,7 @@ export const userRead: Access = ({ req }) => {
   if (req.user?.collection === "admins") return true;
   if (!req.user || req.user.collection !== "users") return false;
 
-  if (req.user.role === ROLES.OWNER || req.user.role === ROLES.MANAGER) {
+  if (isOwnerOrManager(req.user.role)) {
     const organizationId = relationId(req.user.organization);
     if (organizationId === null) return false;
     const where: Where = { organization: { equals: organizationId } };
@@ -187,7 +187,7 @@ export const userCreate: Access = ({ req, data }) => {
   if (
     !req.user ||
     req.user.collection !== "users" ||
-    (req.user.role !== ROLES.OWNER && req.user.role !== ROLES.MANAGER)
+    !isOwnerOrManager(req.user.role)
   ) return false;
 
   const organizationId = relationId(req.user.organization);
@@ -203,7 +203,7 @@ export const userUpdate: Access = ({ req, id }) => {
   if (!req.user || req.user.collection !== "users") return false;
   if (id !== undefined && String(req.user.id) === String(id)) return true;
 
-  if (req.user.role !== ROLES.OWNER && req.user.role !== ROLES.MANAGER) return false;
+  if (!isOwnerOrManager(req.user.role)) return false;
 
   const organizationId = relationId(req.user.organization);
   if (organizationId === null) return false;
@@ -218,7 +218,7 @@ export const userDelete: Access = ({ req }) => {
   if (
     !req.user ||
     req.user.collection !== "users" ||
-    (req.user.role !== ROLES.OWNER && req.user.role !== ROLES.MANAGER)
+    !isOwnerOrManager(req.user.role)
   ) return false;
 
   const organizationId = relationId(req.user.organization);
@@ -240,10 +240,33 @@ export const canManageOrgUserFields: FieldAccess = ({ req, id }) => {
   if (
     !req.user ||
     req.user.collection !== "users" ||
-    (req.user.role !== ROLES.OWNER && req.user.role !== ROLES.MANAGER)
+    !isOwnerOrManager(req.user.role)
   ) return false;
 
   return id === undefined || String(req.user.id) !== String(id);
+};
+
+/** Read invitations: owner/manager, own organization only — same ceiling as `userRead`'s org-scoped branch. */
+export const invitationRead: Access = ({ req }) => {
+  if (req.user?.collection === "admins") return true;
+  if (!req.user || req.user.collection !== "users" || !isOwnerOrManager(req.user.role)) return false;
+
+  const organizationId = relationId(req.user.organization);
+  if (organizationId === null) return false;
+
+  return { organization: { equals: organizationId } };
+};
+
+/** Create an invitation: identical ceiling to `userCreate` — owner/manager, own organization, role never `owner`. */
+export const invitationCreate: Access = ({ req, data }) => {
+  if (req.user?.collection === "admins") return true;
+  if (!req.user || req.user.collection !== "users" || !isOwnerOrManager(req.user.role)) return false;
+
+  const organizationId = relationId(req.user.organization);
+  if (organizationId === null) return false;
+  if (!data || relationId(data.organization) !== organizationId) return false;
+
+  return data.role === ROLES.MANAGER || data.role === ROLES.MEMBER;
 };
 
 /**
@@ -273,4 +296,7 @@ export const access = {
   userUpdate,
   userDelete,
   canManageOrgUserFields,
+
+  invitationRead,
+  invitationCreate,
 };

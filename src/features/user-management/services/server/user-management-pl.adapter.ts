@@ -7,8 +7,7 @@ import { asPayloadId, relationId, relationIds } from "@/lib/payload-id";
 import { tryCatchResponse } from "@/lib/responses/trycatch-response";
 import type { User } from "@/payload-types";
 
-import { USER_MANAGEMENT_CLIENT } from "../../constants/user-management.constants";
-import type { OrgUserListItem, TCreateOrgUserInput } from "../../types/user-management.types";
+import type { OrgUserDetail, OrgUserListItem } from "../../types/user-management.types";
 
 async function getPayloadClient() {
   return getPayload({ config });
@@ -47,6 +46,23 @@ function toOrgUserListItem(target: OrgUserListSource, currentUserId: number | st
 const USER_LIST_SELECT = { name: true, email: true, role: true, avatarUrl: true, buildings: true } as const;
 const USER_LIST_POPULATE = { buildings: { name: true } } as const;
 
+type OrgUserDetailSource = OrgUserListSource & {
+  blocked?: boolean | null;
+  createdAt: string;
+};
+
+type OrgUserDetailBase = Omit<OrgUserDetail, "inviteHistory">;
+
+function toOrgUserDetailBase(target: OrgUserDetailSource, currentUserId: number | string): OrgUserDetailBase {
+  return {
+    ...toOrgUserListItem(target, currentUserId),
+    blocked: target.blocked ?? false,
+    createdAt: target.createdAt,
+  };
+}
+
+const USER_DETAIL_SELECT = { ...USER_LIST_SELECT, blocked: true, createdAt: true } as const;
+
 export async function listOrgUsersAdapter(user: User) {
   return tryCatchResponse<OrgUserListItem[]>(async () => {
     const payload = await getPayloadClient();
@@ -67,33 +83,6 @@ export async function listOrgUsersAdapter(user: User) {
     });
 
     return result.docs.map((target) => toOrgUserListItem(target, user.id));
-  });
-}
-
-export async function createOrgUserAdapter(user: User, input: TCreateOrgUserInput) {
-  return tryCatchResponse<OrgUserListItem>(async () => {
-    const payload = await getPayloadClient();
-    const organizationId = relationId(user.organization);
-    if (organizationId === null) throw new Error(USER_MANAGEMENT_CLIENT.ERROR_CREATE_FAILED);
-
-    const created = await payload.create({
-      collection: "users",
-      depth: 1,
-      select: USER_LIST_SELECT,
-      populate: USER_LIST_POPULATE,
-      user,
-      overrideAccess: false,
-      data: {
-        name: input.name,
-        email: input.email,
-        password: input.password,
-        role: input.role,
-        organization: asPayloadId(organizationId),
-        buildings: input.role === "member" ? input.buildingIds.map((id) => asPayloadId(id)) : undefined,
-      },
-    });
-
-    return toOrgUserListItem(created, user.id);
   });
 }
 
@@ -148,4 +137,49 @@ export async function deleteOrgUserAdapter(user: User, targetUserId: string) {
 
     return { id: targetUserId };
   });
+}
+
+export async function getOrgUserDetailBaseAdapter(user: User, targetUserId: string) {
+  return tryCatchResponse<OrgUserDetailBase>(async () => {
+    const payload = await getPayloadClient();
+
+    const target = await payload.findByID({
+      collection: "users",
+      id: asPayloadId(targetUserId),
+      depth: 1,
+      select: USER_DETAIL_SELECT,
+      populate: USER_LIST_POPULATE,
+      user,
+      overrideAccess: false,
+    });
+
+    return toOrgUserDetailBase(target, user.id);
+  });
+}
+
+async function setOrgUserBlocked(user: User, targetUserId: string, blocked: boolean) {
+  return tryCatchResponse<OrgUserDetailBase>(async () => {
+    const payload = await getPayloadClient();
+
+    const updated = await payload.update({
+      collection: "users",
+      id: asPayloadId(targetUserId),
+      depth: 1,
+      select: USER_DETAIL_SELECT,
+      populate: USER_LIST_POPULATE,
+      user,
+      overrideAccess: false,
+      data: { blocked },
+    });
+
+    return toOrgUserDetailBase(updated, user.id);
+  });
+}
+
+export async function blockOrgUserAdapter(user: User, targetUserId: string) {
+  return setOrgUserBlocked(user, targetUserId, true);
+}
+
+export async function unblockOrgUserAdapter(user: User, targetUserId: string) {
+  return setOrgUserBlocked(user, targetUserId, false);
 }

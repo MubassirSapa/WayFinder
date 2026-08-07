@@ -51,6 +51,23 @@ class User {
   number avatarId
   string avatarUrl
   boolean verified
+  boolean blocked
+  datetime createdAt
+  datetime updatedAt
+}
+
+class Invitation {
+  number id
+  string email
+  string name
+  enum role
+  number organizationId
+  number[] buildingIds
+  string tokenHash
+  enum status
+  datetime expiresAt
+  datetime acceptedAt
+  number invitedById
   datetime createdAt
   datetime updatedAt
 }
@@ -148,7 +165,10 @@ class PathEdge {
 
 Organization "1" --> "0..*" User : has users
 Organization "1" --> "0..*" Building : has buildings
+Organization "1" --> "0..*" Invitation : has invitations
 User "0..*" --> "0..*" Building : member of
+User "1" --> "0..*" Invitation : invited by
+Invitation "0..*" --> "0..*" Building : invitee buildings
 Media "0..1" --> "0..*" Floor : background image for
 Media "0..1" --> "0..*" Organization : logo
 Media "0..1" --> "0..*" Building : logo
@@ -169,6 +189,7 @@ MapNode "1" --> "0..*" PathEdge : toNode
 | --- | --- |
 | `admins` | Payload Admin accounts — the platform team. Separate from organization accounts and unrelated to any organization. |
 | `users` | Organization accounts, application roles, organization membership, and building membership |
+| `invitations` | Pending/accepted/revoked email invites for adding a teammate — see [User](#user) and [Invitation](#invitation) |
 | `organizations` | Organization name and organization type |
 | `buildings` | Buildings belonging to an organization — name, contact/address metadata, and a cached floor count |
 | `media` | Uploaded files, including floor reference images |
@@ -266,13 +287,21 @@ themself (or an owner/manager) from `/dashboard/profile`. `avatarUrl`
 denormalizes its resolved `media.url` the same way `Organization.logoUrl`
 does (see that section).
 
-Field-level access locks `role` and `buildings` to platform admins and to an
-owner/manager acting on a *different* user in their organization
+`blocked` (default `false`) is owner/manager-initiated: an owner or manager
+can block another user in their organization from `/dashboard/users/[id]`, which
+prevents that account from signing in (enforced by a `beforeLogin` hook,
+`blockLoginHook` in `src/collections/hooks/blockLogin.ts`, that throws when
+`user.blocked` is true). This is distinct from Payload's own `loginAttempts`/
+`lockUntil` fields, which handle automatic lockout after repeated failed
+password attempts, not an intentional block.
+
+Field-level access locks `role`, `buildings`, and `blocked` to platform admins
+and to an owner/manager acting on a *different* user in their organization
 (`canManageOrgUserFields` in `src/collections/access/index.ts`) — a user can
 never set these fields on their own record, which is what prevents
-self-escalation from the `/dashboard/users` management page. `organization`
-stays platform-admin-only regardless of who is acting, since reassigning a
-user's org isn't a supported operation.
+self-escalation (or self-blocking) from the `/dashboard/users` management
+page. `organization` stays platform-admin-only regardless of who is acting,
+since reassigning a user's org isn't a supported operation.
 
 #### Why User → Organization is many-to-one, not many-to-many
 
@@ -294,6 +323,45 @@ organization. Because of that, "email" — not "person" — is the right unit to
 reason about here: one email always resolves to exactly one organization
 membership, so the relationship correctly collapses to many-to-one instead of
 many-to-many.
+
+### Invitation
+
+`role` can be:
+
+```text
+manager | member
+```
+
+Never `owner` — an invitation can't grant ownership, the same ceiling
+`access.userCreate` already enforces for direct user creation.
+
+`status` can be:
+
+```text
+pending | accepted | revoked
+```
+
+There is no `expired` status; expiry is a plain comparison against
+`expiresAt` wherever `status === "pending"` is checked, not a stored state.
+
+An owner/manager invites a teammate by email instead of creating their
+account directly (see `docs/technical/USER_INVITATIONS.md` for the full
+flow). `email`, `name`, `role`, `organization`, and — for a `member`
+invite — `buildings` describe the account that will be created on
+acceptance. `tokenHash` is the sha256 hash of a random token; the raw token
+is only ever sent in the invite email, never stored. `invitedBy` is a
+required relationship to the inviting `users` record.
+
+No `users` document exists for an invitation until it is accepted — an
+invite that's never accepted or is revoked leaves no trace in `users`, only
+a non-`pending` `Invitation` row. Resending an invite creates a new
+`Invitation` document (fresh token and `expiresAt`) and sets the previous
+one's `status` to `revoked`, rather than mutating the original in place, so
+every invite attempt stays in the audit trail.
+
+`update`/`delete` access is `noOne` — an invitation is only ever mutated
+through the invite/resend/revoke/accept actions in
+`src/features/invitations/`, never edited directly.
 
 ### Admin
 
@@ -420,9 +488,19 @@ different floor.
   read/update their own record via the `isSelf`-style branch in
   `userRead`/`userUpdate`, but never delete themself; the org's owner cannot
   be updated or deleted by a manager.
-- `canManageOrgUserFields` — the field-level check backing `users.role` and
-  `users.buildings`: platform admin, or an owner/manager acting on someone
-  else. Never true when the target is the requester's own record.
+- `canManageOrgUserFields` — the field-level check backing `users.role`,
+  `users.buildings`, and `users.blocked`: platform admin, or an owner/manager
+  acting on someone else. Never true when the target is the requester's own
+  record.
+- `invitationRead` / `invitationCreate` — same ceiling as `userRead`'s
+  org-scoped branch and `userCreate` respectively: owner/manager, own
+  organization only, and a created invitation's `role` can never be `owner`.
+  `update`/`delete` are `noOne` for `invitations` (see [Invitation](#invitation)).
+- `isOwnerOrManager(role)` (`src/collections/constants/roles.ts`) — the
+  shared `role === "owner" || role === "manager"` check reused by every
+  access function above plus the `/dashboard/users*` pages and the
+  invitation actions; not itself an `Access` function, just the predicate
+  they're all built from.
 
 ## How the records rebuild a map
 

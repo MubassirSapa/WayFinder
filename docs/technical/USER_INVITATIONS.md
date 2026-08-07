@@ -1,28 +1,31 @@
 # User Invitations
 
-Status: **designed, not implemented.** This doc specs out how an
-owner/manager invites a teammate by email instead of setting their password
-directly. No code has been written yet — this is the plan to build from.
+Status: **implemented.** This doc specs out how an owner/manager invites a
+teammate by email instead of setting their password directly, and reflects
+what `src/features/invitations/` actually builds. One deviation from the
+original spec, called out in [Where this lives](#where-this-lives-in-the-codebase):
+the accept page is a `?token=` search param on a static route
+(`/invite?token=...`), matching this app's existing convention for
+`reset-password`/`verify-email`, not a `/invite/[token]` dynamic segment.
 
-## The gap this closes
+## The gap this closed
 
-`docs/security/RBAC.md` already flags this as missing, in its own words:
+`docs/security/RBAC.md` used to flag this as missing:
 
 > Email invitations and self-service password reset for these created
 > accounts are not implemented yet; the owner/manager sets the initial
 > password and shares it with the new user directly.
 
-That's exactly what happens today: `AddTeamMemberDialog` (see
-`src/features/user-management/components/AddTeamMemberDialog.tsx`) collects
-name/email/**password**/role/buildings, and
-`CreateOrgUserSchema` (`src/features/user-management/validations/create-org-user.ts`)
-requires that password to be typed in by the admin, min 8 characters. There's
-no proof the invited person owns that email address, and the admin has to
-invent and relay a password out of band.
+That was accurate before this feature: `AddTeamMemberDialog` collected
+name/email/**password**/role/buildings directly, and a since-deleted
+`CreateOrgUserSchema` required that password to be typed in by the admin,
+min 8 characters. There was no proof the invited person owned that email
+address, and the admin had to invent and relay a password out of band.
 
-This feature **replaces** that flow: the admin sends an invite instead of a
+This feature **replaced** that flow: the admin sends an invite instead of a
 password, the invitee proves ownership of their email by clicking the link,
-and picks their own password.
+and picks their own password. `AddTeamMemberDialog` still exists, but now
+collects only name/email/role/buildings and submits to `inviteUserAction`.
 
 ## Flow
 
@@ -37,9 +40,9 @@ Owner/Manager                    Server                          Invitee
      |                            | generate token, store            |
      |                            | Invitation { tokenHash, ... }    |
      |                            |                                 |
-     |                            |--- email: /invite/<token> --------------------------------->|
+     |                            |--- email: /invite?token=<token> ----------------------------->|
      |                            |                                 |
-     |                            |<---------- GET /invite/<token> ------------------------------|
+     |                            |<---------- GET /invite?token=<token> -------------------------|
      |                            | validate: exists, not expired,  |
      |                            |   not accepted, not revoked     |
      |                            |--- email (read-only), name -->----------------------------->|
@@ -48,7 +51,7 @@ Owner/Manager                    Server                          Invitee
      |                            |<--- name, password, confirm ------------------------------- Join
      |                            | re-validate token                |
      |                            | create user, set _verified: true |
-     |                            | mark invitation ACCEPTED          |
+     |                            | mark invitation accepted          |
      |                            | sign the user in                  |
      |                            |--- redirect: /dashboard ------------------------------------>|
 ```
@@ -68,14 +71,14 @@ belongs to exactly one `organization`):
    - No existing `users` doc has that email (Payload's `auth` config already
      enforces email uniqueness globally, so this is a plain `find`).
    - No `Invitation` for that email in this organization with status
-     `PENDING` and `expiresAt` in the future.
+     `"pending"` and `expiresAt` in the future.
 3. Server generates a random token, hashes it, and creates an `Invitation`
-   doc (`PENDING`) carrying the hash, not the raw token.
+   doc (`"pending"`) carrying the hash, not the raw token.
 4. Server emails the invitee a link containing the **raw** token:
-   `https://<serverUrl>/invite/<token>`.
+   `https://<serverUrl>/invite?token=<token>`.
 5. Invitee opens the link.
 6. Server looks the token up by hash and validates: exists, not expired
-   (`expiresAt < new Date()`), `status === "PENDING"` (covers both "already
+   (`expiresAt < new Date()`), `status === "pending"` (covers both "already
    accepted" and "revoked" — see [schema](#new-collection-invitations)).
 7. Page renders: email (read-only, from the invitation doc — never trust a
    client-submitted email here), name (pre-filled, editable), role
@@ -88,7 +91,7 @@ belongs to exactly one `organization`):
      from the **Invitation** record, not the form; `name`/`password` come
      from the form. Set `_verified: true` directly (Payload's built-in auth
      field — see [Email verification](#email-verification)).
-   - Mark the `Invitation` `ACCEPTED`, set `acceptedAt`.
+   - Mark the `Invitation` `"accepted"`, set `acceptedAt`.
    - Sign the new user in (Payload's `login` local/REST operation).
    - Redirect to `/dashboard`.
 
@@ -160,7 +163,7 @@ export const Invitations: CollectionConfig = {
 };
 ```
 
-No `EXPIRED` status, per the original spec — `expiresAt < new Date()` covers
+No `"expired"` status, per the original spec — `expiresAt < new Date()` covers
 it, checked wherever `status === "pending"` is checked. `updatedAt`/`createdAt`
 are Payload's automatic timestamps, not declared fields.
 
@@ -187,7 +190,7 @@ be `manager`/`member`) — same shape as `userCreate`, just against the
 - Send the **raw** token only in the email link. It's never stored.
 - On validation, hash the incoming token and look up by `tokenHash` (indexed,
   `unique`).
-- Single-use: acceptance flips `status` to `ACCEPTED` in the same operation
+- Single-use: acceptance flips `status` to `"accepted"` in the same operation
   that creates the user, so a replay of the same link fails the
   `status === "pending"` check.
 - Expiry: propose **7 days**, matching the general lifetime used for
@@ -219,12 +222,12 @@ doc is created for the first time at **acceptance** (step 8), not before.
 `role`) that can't be cleanly represented by a half-filled shell record, and
 no such "pending user" pattern exists anywhere else in this codebase. This
 also means an invite that's never accepted leaves no trace in `users` at
-all — just a `PENDING` (eventually stale) `Invitation` row.
+all — just a `"pending"` (eventually stale) `Invitation` row.
 
 ## Resending an invitation
 
 Resending creates a **new** `Invitation` document (new token, new
-`expiresAt`) and sets the old one's `status` to `REVOKED`, rather than
+`expiresAt`) and sets the old one's `status` to `"revoked"`, rather than
 mutating the existing row's token/expiry in place. This keeps a full audit
 trail of every invite attempt per email/inviter, consistent with how the
 rest of this app treats records as append-mostly rather than
@@ -235,7 +238,7 @@ overwritten-in-place.
 New template `src/features/email/templates/InviteUserEmail.tsx`, following
 the exact shape of the existing `VerifyEmail.tsx`/`ResetPasswordEmail.tsx`
 (`Layout`, `BrandLogo`, `EmailHeading`, `EmailText`, `PrimaryButton` linking
-to `/invite/<token>`, `EmailFooter`).
+to `/invite?token=<token>`, `EmailFooter`).
 
 Sending follows the existing adapter pattern
 (`src/features/email/services/email-pl.adapter.ts`,
@@ -246,41 +249,55 @@ function alongside the existing ones.
 
 ## Where this lives in the codebase
 
-Following `docs/project/PROJECT_STRUCTURE.md`:
+Following `docs/project/PROJECT_STRUCTURE.md`, this is what actually got
+built (one deviation from the original plan noted inline):
 
 ```
 src/collections/Invitations.ts         # new collection (sibling to Users.ts, Buildings.ts, ...)
+src/collections/hooks/blockLogin.ts    # beforeLogin hook backing the unrelated `blocked` field on Users
 
 src/features/invitations/              # new feature — spans both the dashboard-triggered
-  validations/                         #   "send invite" side and the public "accept invite" side,
-    invite-user.ts                     #   same way src/features/auth/ already bundles signup/
-    accept-invitation.ts               #   signin/forgot-password/reset-password as one feature
+  constants/invitations.constants.ts   #   "send invite" side and the public "accept invite" side,
+  validations/                         #   same way src/features/auth/ already bundles signup/
+    invite-user.ts                     #   signin/forgot-password/reset-password as one feature
+    accept-invitation.ts
+  lib/invite-token.ts                  # generate/hash the raw token, 7-day expiry
+  types/invitation.types.ts
   services/server/
-    invitation.service.ts              # create/validate/accept/revoke/resend
+    invitation.ports.ts                # create/resend/revoke/list/preview/accept + invite-history lookup
+    invitation-pl.adapter.ts
   actions/server/
     invite-user.ts                     # owner/manager sends an invite (dashboard mutation)
+    resend-invitation.ts
+    revoke-invitation.ts
     accept-invitation.ts               # invitee submits the Join form (public mutation)
-  types/
-    invitation.types.ts
-  pages/
-    invite-accept/                     # the public /invite/[token] page content,
-      InviteAcceptPage.tsx             #   mirrors src/features/auth/pages/reset-password/
+  components/
+    PendingInvitesSection.tsx          # rendered on /dashboard/users below the role-grouped directory
+  pages/invite-accept/
+    InviteAcceptSection.tsx            # invalid/expired state vs. the form
+    forms/InviteAcceptForm.tsx         # mirrors src/features/auth/pages/reset-password/forms/
 
-src/app/(frontend)/invite/[token]/page.tsx   # thin route: loads invitation preview, renders the feature page
+src/app/(frontend)/(auth)/invite/page.tsx   # thin route: reads ?token=, loads invitation preview —
+                                             # a static route + search param, NOT /invite/[token] as
+                                             # originally specced, matching reset-password/verify-email's
+                                             # existing convention in this app
 
 src/features/email/templates/InviteUserEmail.tsx
 src/features/email/services/email-pl.adapter.ts     # + sendInviteEmailAdapter
 src/features/email/services/email.ports.ts          # + sendInviteEmail
 
-src/features/user-management/components/AddTeamMemberDialog.tsx  # updated: drop the password
-  field, submit calls invite-user action instead of createOrgUserAction
-src/features/user-management/validations/create-org-user.ts      # CreateOrgUserSchema loses `password`
+src/features/user-management/components/AddTeamMemberDialog.tsx  # updated: dropped the password
+  field, submit now calls inviteUserAction instead of createOrgUserAction
+src/features/user-management/components/{TeamRoleSection,UserSummaryCard,UserDetailPanel}.tsx  # new
+src/app/(frontend)/(private)/dashboard/users/[id]/page.tsx        # new per-user detail route
 ```
 
-`AddTeamMemberDialog` and `createOrgUserAction` don't disappear — they
-change what they do. The dialog keeps its name/email/role/buildings fields,
-drops the password field, and its submit calls the new invite action
-instead of creating a user directly.
+`AddTeamMemberDialog` didn't disappear — it changed what it does. The dialog
+kept its name/email/role/buildings fields, dropped the password field, and
+its submit calls the new invite action instead of creating a user directly.
+Direct password creation was removed entirely (no fallback path): the old
+`create-org-user` action, adapter function, and validation schema are
+deleted, not deprecated.
 
 ## Rules checklist (from the original spec)
 
@@ -288,26 +305,27 @@ instead of creating a user directly.
 |---|---|
 | Store `tokenHash`, not the raw token | `Invitations.tokenHash`, sha256 of a random token |
 | Token expires after a limited time | `expiresAt`, checked against `new Date()` |
-| Token only works once | `status` flips to `ACCEPTED` atomically with user creation |
+| Token only works once | `status` flips to `"accepted"` atomically with user creation |
 | Email comes from the invitation record, not the submitted form | Accept action reads `email` off the looked-up `Invitation` doc, ignores any `email` in the request body |
 | Email remains read-only | Not a form field on the accept page at all — displayed as text |
-| Resending creates a new token and invalidates the old one | New `Invitation` doc, old one set to `REVOKED` |
+| Resending creates a new token and invalidates the old one | New `Invitation` doc, old one set to `"revoked"` |
 | Managers can't invite above their own permission | Already covered by `access.userCreate`'s existing role ceiling, mirrored in `access.invitationCreate` |
 | Existing account → ask to sign in instead | `users.email` is already globally unique (Payload's `auth` config); step 2's pre-check surfaces this before an invite is even sent |
 
-## Open questions
+## Decisions made while building this
 
-Judgment calls made while writing this doc, worth confirming before
-building:
+Judgment calls resolved during implementation:
 
-- **7-day expiry** — arbitrary, chosen to match the general lifetime used
-  elsewhere. Fine to change.
-- **Full replacement vs. keep both flows** — this doc assumes "invite" fully
-  replaces "set a password directly" for adding teammates, since that's the
-  gap `RBAC.md` calls out. If direct-password creation should stay available
-  as a fallback (e.g. for environments without email configured), that's a
-  bigger change than what's specced here.
-- **Invitation collection visibility in Payload admin** — not yet decided
-  whether `Invitations` needs its own admin UI list view, or whether it's
-  purely an internal collection driven only through the dashboard's
-  invite/resend/revoke actions.
+- **7-day expiry** — kept as specced. An owner/manager can send a fresh
+  invite for the same email once the previous one expires (the "no active
+  invite" duplicate check only blocks a still-`pending`-and-unexpired
+  invite), and resending an invite is a single user-facing action that
+  rotates the token behind the scenes.
+- **Full replacement, not both flows** — invite-by-email is now the only way
+  to add a teammate. Direct password creation was removed entirely, not kept
+  as a fallback; see [Where this lives](#where-this-lives-in-the-codebase).
+- **Invitation collection visibility in Payload admin** — left as an
+  ordinary registered collection with no special admin-UI treatment; it's
+  driven only through the dashboard's invite/resend/revoke actions and the
+  public accept flow, not edited directly (`update`/`delete` access is
+  `noOne`).

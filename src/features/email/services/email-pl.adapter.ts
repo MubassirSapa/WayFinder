@@ -6,6 +6,7 @@ import { getPayload } from "payload";
 
 import config from "@payload-config";
 import { BRAND } from "@/constants/brand";
+import { InviteUserEmailTemplate } from "@/features/email/templates/InviteUserEmail";
 import { WelcomeEmailTemplate } from "@/features/email/templates/WelcomeEmail";
 import { tryCatchResponse } from "@/lib/responses/trycatch-response";
 
@@ -35,6 +36,35 @@ export async function sendOwnerWelcomeEmailAdapter(userId: string) {
     return payload.sendEmail({
       to: user.email,
       subject: `Welcome to ${BRAND.NAME}`,
+      html,
+    });
+  });
+}
+
+export type SendInviteEmailParams = {
+  to: string;
+  token: string;
+  organizationName: string;
+  inviterName: string;
+  roleLabel: string;
+};
+
+export async function sendInviteEmailAdapter(params: SendInviteEmailParams) {
+  const payload = await getPayloadClient();
+
+  return tryCatchResponse(async () => {
+    const html = await render(
+      createElement(InviteUserEmailTemplate, {
+        inviteUrl: `${serverUrl}/invite?token=${params.token}`,
+        organizationName: params.organizationName,
+        inviterName: params.inviterName,
+        roleLabel: params.roleLabel,
+      }),
+    );
+
+    return payload.sendEmail({
+      to: params.to,
+      subject: `You're invited to join ${params.organizationName} on ${BRAND.NAME}`,
       html,
     });
   });

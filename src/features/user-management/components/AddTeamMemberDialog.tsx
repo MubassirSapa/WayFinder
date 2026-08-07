@@ -32,16 +32,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { createOrgUserAction } from "../actions/server/create-org-user";
-import { USER_MANAGEMENT_CLIENT } from "../constants/user-management.constants";
-import type {
-  ManagedRole,
-  OrgBuildingOption,
-} from "../types/user-management.types";
+import { INVITATIONS_CLIENT } from "@/features/invitations/constants/invitations.constants";
+import { inviteUserAction } from "@/features/invitations/actions/server/invite-user";
+import type { InvitationRole } from "@/features/invitations/types/invitation.types";
+import type { OrgBuildingOption } from "../types/user-management.types";
 
-const ROLE_LABELS: Record<ManagedRole, string> = {
-  manager: USER_MANAGEMENT_CLIENT.ROLE_MANAGER,
-  member: USER_MANAGEMENT_CLIENT.ROLE_MEMBER,
+const ROLE_LABELS: Record<InvitationRole, string> = {
+  manager: INVITATIONS_CLIENT.ROLE_MANAGER,
+  member: INVITATIONS_CLIENT.ROLE_MEMBER,
 };
 
 type AddTeamMemberDialogProps = {
@@ -53,15 +51,13 @@ export function AddTeamMemberDialog({ buildingOptions }: AddTeamMemberDialogProp
   const [isPending, startTransition] = useTransition();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState<ManagedRole>("member");
+  const [role, setRole] = useState<InvitationRole>("member");
   const [buildingIds, setBuildingIds] = useState<Set<string>>(new Set());
   const [error, setError] = useState("");
 
   const reset = () => {
     setName("");
     setEmail("");
-    setPassword("");
     setRole("member");
     setBuildingIds(new Set());
     setError("");
@@ -82,13 +78,12 @@ export function AddTeamMemberDialog({ buildingOptions }: AddTeamMemberDialogProp
       const formData = new FormData();
       formData.set("name", name.trim());
       formData.set("email", email.trim());
-      formData.set("password", password);
       formData.set("role", role);
       for (const id of buildingIds) formData.append("buildingIds", id);
 
-      const result = await createOrgUserAction(formData);
+      const result = await inviteUserAction(formData);
       if (!result?.isSuccess) {
-        setError(result?.message || USER_MANAGEMENT_CLIENT.ERROR_CREATE_FAILED);
+        setError(result?.message || INVITATIONS_CLIENT.ERROR_INVITE_FAILED);
         return;
       }
 
@@ -107,7 +102,7 @@ export function AddTeamMemberDialog({ buildingOptions }: AddTeamMemberDialogProp
     >
       <DialogTrigger render={<Button className="h-10 px-4" />}>
         <PlusIcon />
-        {USER_MANAGEMENT_CLIENT.ADD_USER}
+        {INVITATIONS_CLIENT.INVITE_USER_TRIGGER}
       </DialogTrigger>
 
       <DialogContent className="max-h-[calc(100svh-1rem)] gap-0 overflow-hidden p-0 sm:max-w-2xl">
@@ -125,10 +120,10 @@ export function AddTeamMemberDialog({ buildingOptions }: AddTeamMemberDialogProp
               </span>
               <div className="min-w-0">
                 <DialogTitle className="text-lg font-semibold">
-                  {USER_MANAGEMENT_CLIENT.CREATE_DIALOG_TITLE}
+                  {INVITATIONS_CLIENT.INVITE_DIALOG_TITLE}
                 </DialogTitle>
                 <DialogDescription className="mt-1 max-w-lg text-sm">
-                  {USER_MANAGEMENT_CLIENT.CREATE_DIALOG_DESC}
+                  {INVITATIONS_CLIENT.INVITE_DIALOG_DESC}
                 </DialogDescription>
               </div>
             </div>
@@ -139,22 +134,22 @@ export function AddTeamMemberDialog({ buildingOptions }: AddTeamMemberDialogProp
               <section className="space-y-4 px-5 py-5 sm:px-6 lg:border-e lg:border-border">
                 <div>
                   <h3 className="font-heading text-sm font-semibold">
-                    {USER_MANAGEMENT_CLIENT.ACCOUNT_DETAILS}
+                    {INVITATIONS_CLIENT.ACCOUNT_DETAILS}
                   </h3>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    {USER_MANAGEMENT_CLIENT.ACCOUNT_DETAILS_DESC}
+                    {INVITATIONS_CLIENT.ACCOUNT_DETAILS_DESC}
                   </p>
                 </div>
 
                 <Field>
                   <FieldLabel htmlFor="new-user-name">
-                    {USER_MANAGEMENT_CLIENT.FIELD_NAME_LABEL}
+                    {INVITATIONS_CLIENT.FIELD_NAME_LABEL}
                   </FieldLabel>
                   <Input
                     id="new-user-name"
                     value={name}
                     onChange={(event) => setName(event.target.value)}
-                    placeholder={USER_MANAGEMENT_CLIENT.FIELD_NAME_PLACEHOLDER}
+                    placeholder={INVITATIONS_CLIENT.FIELD_NAME_PLACEHOLDER}
                     disabled={isPending}
                     autoComplete="name"
                     autoFocus
@@ -163,73 +158,55 @@ export function AddTeamMemberDialog({ buildingOptions }: AddTeamMemberDialogProp
 
                 <Field>
                   <FieldLabel htmlFor="new-user-email">
-                    {USER_MANAGEMENT_CLIENT.FIELD_EMAIL_LABEL}
+                    {INVITATIONS_CLIENT.FIELD_EMAIL_LABEL}
                   </FieldLabel>
                   <Input
                     id="new-user-email"
                     type="email"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
-                    placeholder={USER_MANAGEMENT_CLIENT.FIELD_EMAIL_PLACEHOLDER}
+                    placeholder={INVITATIONS_CLIENT.FIELD_EMAIL_PLACEHOLDER}
                     disabled={isPending}
                     autoComplete="email"
                   />
-                </Field>
-
-                <Field>
-                  <FieldLabel htmlFor="new-user-password">
-                    {USER_MANAGEMENT_CLIENT.FIELD_PASSWORD_LABEL}
-                  </FieldLabel>
-                  <Input
-                    id="new-user-password"
-                    type="password"
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                    placeholder={USER_MANAGEMENT_CLIENT.FIELD_PASSWORD_PLACEHOLDER}
-                    disabled={isPending}
-                    autoComplete="new-password"
-                  />
-                  <FieldDescription>
-                    {USER_MANAGEMENT_CLIENT.FIELD_PASSWORD_DESC}
-                  </FieldDescription>
                 </Field>
               </section>
 
               <section className="space-y-4 border-t border-border px-5 py-5 sm:px-6 lg:border-t-0">
                 <div>
                   <h3 className="font-heading text-sm font-semibold">
-                    {USER_MANAGEMENT_CLIENT.ACCESS_DETAILS}
+                    {INVITATIONS_CLIENT.ACCESS_DETAILS}
                   </h3>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    {USER_MANAGEMENT_CLIENT.ACCESS_DETAILS_DESC}
+                    {INVITATIONS_CLIENT.ACCESS_DETAILS_DESC}
                   </p>
                 </div>
 
                 <Field>
                   <FieldLabel htmlFor="new-user-role">
                     <ShieldCheckIcon className="size-4 text-muted-foreground" aria-hidden="true" />
-                    {USER_MANAGEMENT_CLIENT.FIELD_ROLE_LABEL}
+                    {INVITATIONS_CLIENT.FIELD_ROLE_LABEL}
                   </FieldLabel>
                   <Select
                     value={role}
-                    onValueChange={(value) => setRole((value as ManagedRole) ?? role)}
+                    onValueChange={(value) => setRole((value as InvitationRole) ?? role)}
                   >
                     <SelectTrigger id="new-user-role" className="h-10 w-full" disabled={isPending}>
                       <SelectValue>{() => ROLE_LABELS[role]}</SelectValue>
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="manager">
-                        {USER_MANAGEMENT_CLIENT.ROLE_MANAGER}
+                        {INVITATIONS_CLIENT.ROLE_MANAGER}
                       </SelectItem>
                       <SelectItem value="member">
-                        {USER_MANAGEMENT_CLIENT.ROLE_MEMBER}
+                        {INVITATIONS_CLIENT.ROLE_MEMBER}
                       </SelectItem>
                     </SelectContent>
                   </Select>
                   <FieldDescription>
                     {role === "manager"
-                      ? USER_MANAGEMENT_CLIENT.ROLE_MANAGER_DESC
-                      : USER_MANAGEMENT_CLIENT.ROLE_MEMBER_DESC}
+                      ? INVITATIONS_CLIENT.ROLE_MANAGER_DESC
+                      : INVITATIONS_CLIENT.ROLE_MEMBER_DESC}
                   </FieldDescription>
                 </Field>
 
@@ -237,10 +214,10 @@ export function AddTeamMemberDialog({ buildingOptions }: AddTeamMemberDialogProp
                   <Field>
                     <FieldLabel>
                       <Building2Icon className="size-4 text-muted-foreground" aria-hidden="true" />
-                      {USER_MANAGEMENT_CLIENT.FIELD_BUILDINGS_LABEL}
+                      {INVITATIONS_CLIENT.FIELD_BUILDINGS_LABEL}
                     </FieldLabel>
                     <FieldDescription>
-                      {USER_MANAGEMENT_CLIENT.FIELD_BUILDINGS_DESC}
+                      {INVITATIONS_CLIENT.FIELD_BUILDINGS_DESC}
                     </FieldDescription>
 
                     <div className="divide-y divide-border border-y border-border">
@@ -262,7 +239,7 @@ export function AddTeamMemberDialog({ buildingOptions }: AddTeamMemberDialogProp
                         ))
                       ) : (
                         <p className="py-3 text-xs text-muted-foreground">
-                          {USER_MANAGEMENT_CLIENT.NO_BUILDINGS_AVAILABLE}
+                          {INVITATIONS_CLIENT.NO_BUILDINGS_AVAILABLE}
                         </p>
                       )}
                     </div>
@@ -280,19 +257,14 @@ export function AddTeamMemberDialog({ buildingOptions }: AddTeamMemberDialogProp
             <DialogClose
               render={<Button type="button" variant="outline" disabled={isPending} />}
             >
-              {USER_MANAGEMENT_CLIENT.CANCEL}
+              {INVITATIONS_CLIENT.CANCEL}
             </DialogClose>
             <Button
               type="submit"
-              disabled={
-                isPending ||
-                name.trim().length < 2 ||
-                !email.trim() ||
-                password.length < 8
-              }
+              disabled={isPending || name.trim().length < 2 || !email.trim()}
             >
               {isPending ? <Loader2Icon className="animate-spin" /> : null}
-              {isPending ? USER_MANAGEMENT_CLIENT.CREATING : USER_MANAGEMENT_CLIENT.CREATE}
+              {isPending ? INVITATIONS_CLIENT.SENDING_INVITE : INVITATIONS_CLIENT.SEND_INVITE}
             </Button>
           </DialogFooter>
         </form>

@@ -7,6 +7,7 @@ import { ResetPasswordEmailTemplate } from "@/features/email/templates/ResetPass
 import { VerifyEmailTemplate } from "@/features/email/templates/VerifyEmail";
 import { ROLES, ROLE_OPTIONS } from "./constants/roles";
 import { access } from "./access";
+import { blockLoginHook } from "./hooks/blockLogin";
 import { createCleanupReplacedMediaHook } from "./hooks/cleanupReplacedMedia";
 import { createSyncMediaUrlHook } from "./hooks/syncMediaUrl";
 
@@ -56,6 +57,7 @@ export const Users: CollectionConfig = {
   hooks: {
     beforeValidate: [createSyncMediaUrlHook({ relationField: "avatar", urlField: "avatarUrl" })],
     afterChange: [createCleanupReplacedMediaHook({ relationField: "avatar" })],
+    beforeLogin: [blockLoginHook],
   },
 
   access: {
@@ -102,6 +104,17 @@ export const Users: CollectionConfig = {
       admin: {
         condition: (data) => data?.role === ROLES.MEMBER,
         description: "Buildings this member can access. Owners and managers implicitly access every building in their organization.",
+      },
+    },
+    {
+      name: "blocked",
+      type: "checkbox",
+      defaultValue: false,
+      access: {
+        update: access.canManageOrgUserFields,
+      },
+      admin: {
+        description: "Blocked users can't sign in. Owners and managers can block anyone except themselves.",
       },
     },
     {

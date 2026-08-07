@@ -1,14 +1,17 @@
 import type { User } from "@/payload-types";
 import { listBuildings } from "@/features/buildings/services/server/buildings.ports";
+import { getUserInviteHistory } from "@/features/invitations/services/server/invitation.ports";
 
 import {
-  createOrgUserAdapter,
+  blockOrgUserAdapter,
   deleteOrgUserAdapter,
+  getOrgUserDetailBaseAdapter,
   listOrgUsersAdapter,
+  unblockOrgUserAdapter,
   updateOrgUserBuildingsAdapter,
   updateOrgUserRoleAdapter,
 } from "./user-management-pl.adapter";
-import type { OrgBuildingOption, TCreateOrgUserInput } from "../../types/user-management.types";
+import type { OrgBuildingOption, OrgUserDetail } from "../../types/user-management.types";
 
 export async function listOrgUsers(user: User) {
   return listOrgUsersAdapter(user);
@@ -21,8 +24,21 @@ export async function listOrgBuildingOptions(user: User): Promise<OrgBuildingOpt
   return result.data.map((building) => ({ id: building.id, name: building.name }));
 }
 
-export async function createOrgUser(user: User, input: TCreateOrgUserInput) {
-  return createOrgUserAdapter(user, input);
+export async function getOrgUserDetail(user: User, targetUserId: string) {
+  const result = await getOrgUserDetailBaseAdapter(user, targetUserId);
+  if (!result.isSuccess) return result;
+
+  const inviteHistory = await getUserInviteHistory(user, result.data.email);
+
+  return { ...result, data: { ...result.data, inviteHistory } satisfies OrgUserDetail };
+}
+
+export async function blockOrgUser(user: User, targetUserId: string) {
+  return blockOrgUserAdapter(user, targetUserId);
+}
+
+export async function unblockOrgUser(user: User, targetUserId: string) {
+  return unblockOrgUserAdapter(user, targetUserId);
 }
 
 export async function updateOrgUserRole(user: User, targetUserId: string, role: "manager" | "member") {

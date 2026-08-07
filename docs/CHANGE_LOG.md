@@ -2,7 +2,14 @@
 
 ## [Unreleased]
 
+### Added
+- Added email invitations for adding a teammate (`src/features/invitations/`, new `Invitations` collection): an owner/manager sends an invite by name/email/role/buildings instead of setting a password directly, the invitee accepts at `/invite?token=...` by proving email ownership and choosing their own password, and the invite is single-use, sha256-hashed, and expires after 7 days. Direct password creation is fully removed — `AddTeamMemberDialog` now sends an invite instead. Owners/managers can resend (rotates the token) or revoke a pending invite from a new "Pending invites" section on `/dashboard/users`. See `docs/technical/USER_INVITATIONS.md`.
+- Added a `blocked` field to `Users` and a `beforeLogin` collection hook (`blockLoginHook`, `src/collections/hooks/blockLogin.ts`) so an owner/manager can block another user's sign-in access from their detail page, distinct from Payload's own failed-login lockout.
+- Added a per-user detail page (`/dashboard/users/[id]`): role and building-assignment management (moved off the directory card), block/unblock, invite history (who invited them and when they accepted), and removal — gated the same way the directory page already is (owner/manager only).
+- Added `isOwnerOrManager(role)` (`src/collections/constants/roles.ts`), replacing the `role !== ROLES.OWNER && role !== ROLES.MANAGER` check that was copy-pasted across the users page, access functions, and server actions.
+
 ### Changed
+- Reworked `/dashboard/users` into a role-grouped directory (Owner / Managers / Members, plain stacked sections) instead of one flat searchable grid, and trimmed each card down to avatar, name, and role — email, building access, and management controls now live on the new per-user detail page linked from the card.
 - Refined the authenticated dashboard, building, floor, organization, profile, and team-management pages into a consistent responsive workspace UI.
 - Reworked the private team-management page into a responsive, searchable member directory. Compact identity cards keep role and building access visible without segmented panels, while organization owners and managers retain the existing role, building-assignment, and removal actions in a dedicated access area. Adding a teammate now uses a compact responsive dialog with separate account and access sections instead of a full-height side panel.
 

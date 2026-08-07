@@ -54,6 +54,7 @@ flowchart LR
         organizationSettingsFeature["Organization settings"]
         buildingsFeature["Buildings and floor settings"]
         userManagementFeature["User management"]
+        invitationsFeature["Invitations"]
         profileFeature["Profile"]
         editorCore["Map editor core"]
         smartBuilder["Smart Builder extension"]
@@ -103,11 +104,16 @@ flowchart LR
     privateRoutes --> organizationSettingsFeature
     privateRoutes --> buildingsFeature
     privateRoutes --> userManagementFeature
+    privateRoutes --> invitationsFeature
+    authRoutes -.->|"/invite?token=…, public accept page"| invitationsFeature
+    userManagementFeature --> invitationsFeature
     privateRoutes --> profileFeature
     privateRoutes --> editorCore
     editorCore --> smartBuilder
     editorCore --> floorLinks
     authFeature --> emailFeature
+    invitationsFeature --> emailFeature
+    invitationsFeature -.->|"sign in the new user"| authFeature
 
     authFeature --> appStore
     editorCore --> appStore
@@ -124,6 +130,7 @@ flowchart LR
     organizationSettingsFeature --> serverActions
     buildingsFeature --> serverActions
     userManagementFeature --> serverActions
+    invitationsFeature --> serverActions
     profileFeature --> serverActions
     editorCore --> serverActions
     floorLinks --> clientActions
@@ -136,6 +143,7 @@ flowchart LR
     organizationSettingsFeature --> serverLoaders
     buildingsFeature --> serverLoaders
     userManagementFeature --> serverLoaders
+    invitationsFeature --> serverLoaders
     profileFeature --> serverLoaders
     editorCore --> serverLoaders
 
@@ -279,14 +287,21 @@ feature's `listBuildings` port to resolve the building list — the dashboard
 itself has no mutations of its own; floor creation and publish-toggle moved
 to the buildings feature along with the rest of the floor-list UI.
 
-The organization-settings, buildings, user-management, and profile features
-follow the port-and-adapter read path in full — their page components call a
-`services/server` port directly (`getOrganizationForEdit`, `getBuildingForEdit`,
-`listOrgUsers`, `getProfileForEdit`, and so on), and every mutation passes the
-real authenticated user through the Local API with `overrideAccess: false`
-rather than bypassing collection access — so the same access functions
-described in `docs/security/RBAC.md` are the single source of truth for
-authorization on both the read and write paths.
+The organization-settings, buildings, user-management, invitations, and
+profile features follow the port-and-adapter read path in full — their page
+components call a `services/server` port directly (`getOrganizationForEdit`,
+`getBuildingForEdit`, `listOrgUsers`, `getOrgUserDetail`,
+`listPendingInvitations`, `getInvitationPreview`, `getProfileForEdit`, and so
+on), and every mutation passes the real authenticated user through the Local
+API with `overrideAccess: false` rather than bypassing collection access — so
+the same access functions described in `docs/security/RBAC.md` are the single
+source of truth for authorization on both the read and write paths. The one
+deliberate exception is the invitations feature's own internal mutations
+(revoking the old invitation on resend, marking an invitation accepted,
+creating the new user on acceptance) — those run with `overrideAccess: true`
+because they happen after the feature has already validated the caller (an
+authenticated owner/manager, or a validated invite token) itself, the same
+way Payload's own `forgotPassword`/`resetPassword` adapters do.
 
 ## 3. Map editor and extension modules
 
@@ -581,6 +596,17 @@ collection handles organization signup, verification, and password recovery.
 React Email templates create the HTML, while the configured Payload email
 adapter sends messages through Resend.
 
+The invitations feature reuses this same pipeline rather than adding a
+second one: its `sendInviteEmail` call goes through the same `emailPort` /
+`emailAdapter` shown above (a new `InviteUserEmail` template, same
+`Layout`/element building blocks as the reset-password and verify-email
+templates), and accepting an invite creates the `users` record and then
+calls the auth module's own `signIn` to establish the session — invitations
+never talks to `payloadAuth` directly. Sign-in itself now also runs a
+`beforeLogin` collection hook (`blockLoginHook`) that rejects a blocked
+user's login before a session is issued — see the User section of
+`docs/project/SCHEMA.md`.
+
 ## 7. Module ownership summary
 
 | Module | Owns | Communicates through |
@@ -589,7 +615,8 @@ adapter sends messages through Resend.
 | Dashboard | A role-aware bento overview linking to the user's available work areas; the complete building list lives at `/dashboard/buildings` and is also shown with read-only organization information at `/dashboard/organization`, whose edit form mounts only on demand. The shared responsive shell provides a collapsible/mobile `AppSidebar` with role-aware navigation and Wayfinder branding plus an `AppTopbar` with avatar menu, theme switch, and confirmed logout. | Server loader plus mutation ports and adapters |
 | Organization settings | Editing the current organization's name, type, and logo | Server port, mutation action, Payload adapter |
 | Buildings and floor settings | Listing and creating buildings; editing a building's own record (owner/manager) or viewing it read-only (assigned member); listing floors, creating a floor, toggling publish status, and editing floor metadata (any role with building access, including members) | Server ports, mutation actions, Payload adapter |
-| User management | Listing an organization's users, creating a manager/member with an initial password, changing role or building assignment, and removing a non-owner user | Server ports, mutation actions, Payload adapter |
+| User management | Listing an organization's users grouped by role (owner/managers/members) on `/dashboard/users`, and a per-user detail page (`/dashboard/users/[id]`) for changing role/building assignment, blocking/unblocking, viewing invite history, and removing a non-owner user | Server ports, mutation actions, Payload adapter |
+| Invitations | Sending, resending, and revoking an email invite for a manager/member (never an owner), and the public `/invite?token=` accept flow that creates the invited user's account and signs them in | Server ports, mutation actions, Payload adapter, email port, auth port |
 | Profile | Editing the signed-in user's own name and avatar | Server port, mutation action, Payload adapter |
 | Map editor core | Editable floor, objects, nodes, edges, selection, canvas, and persistence | Zustand slices, server actions, entity ports, Payload adapters |
 | Smart Builder | Automated node creation, auto-connect behavior, and hallway path building | Core editor store actions and pure helper functions |
