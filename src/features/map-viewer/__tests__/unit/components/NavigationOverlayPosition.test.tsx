@@ -25,7 +25,7 @@ describe("navigation overlay positioning", () => {
   it("keeps route status in the same non-overlapping row", () => {
     render(<RouteStatusIndicator accessibleOnly={false} distanceMeters={12} found />);
 
-    const positioner = screen.getByText("Route found • 12.0 m").parentElement;
+    const positioner = screen.getByText("Your destination floor • 12.0 m").parentElement;
     expect(positioner?.className).toContain("bottom-36");
     expect(positioner?.className).toContain("md:bottom-20");
   });

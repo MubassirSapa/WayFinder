@@ -23,9 +23,9 @@ export function FloorHopIndicator({ direction, edgeType, floorName, onAdvance }:
     // grid column instead.
     <div className="pointer-events-none absolute inset-x-0 bottom-36 z-10 flex justify-center px-4 md:bottom-20">
       <Button
-        className="pointer-events-auto shadow-lg"
+        className="pointer-events-auto shadow-lg p-4"
         onClick={onAdvance}
-        size="sm"
+        size="lg"
       >
         <DirectionIcon className="h-3.5 w-3.5" />
         {`Continue via ${via} to ${floorName}`}

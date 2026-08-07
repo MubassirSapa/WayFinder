@@ -37,36 +37,38 @@ export const MapViewerToolbar = memo(function MapViewerToolbar({
   return (
     <div className="pointer-events-none absolute inset-0 z-10">
       <MapCornerControls
-        floorControls={segments.length > 1 ? (
-          <div className="pointer-events-auto min-w-0 max-w-72">
-            <RouteFloorSelect
-              activeSegmentIndex={activeSegmentIndex}
-              floors={floors}
-              onJumpToSegment={onJumpToSegment}
-              segments={segments}
-            />
-          </div>
-        ) : activeFloor ? (
-          <div className="pointer-events-auto min-w-0">
-            <FloorNavigator
-              activeFloor={activeFloor}
-              floors={floors}
-              onFloorChange={onFloorChange}
-            />
-          </div>
-        ) : (
-          <p className="pointer-events-auto truncate rounded-full border border-border bg-card/95 px-4 py-2 text-center text-sm font-medium shadow-lg backdrop-blur-xl">
-            No published floor
-          </p>
-        )}
-        zoomControls={(
-        <MapZoomControls
-          onResetView={onResetView}
-          onToggleGrid={onToggleGrid}
-          onZoomChange={onZoomChange}
-          showGrid={showGrid}
-        />
-        )}
+        floorControls={
+          segments.length > 1 ? (
+            <div className="pointer-events-auto min-w-0 max-w-72">
+              <RouteFloorSelect
+                activeSegmentIndex={activeSegmentIndex}
+                floors={floors}
+                onJumpToSegment={onJumpToSegment}
+                segments={segments}
+              />
+            </div>
+          ) : activeFloor ? (
+            <div className="pointer-events-auto min-w-0">
+              <FloorNavigator
+                activeFloor={activeFloor}
+                floors={floors}
+                onFloorChange={onFloorChange}
+              />
+            </div>
+          ) : (
+            <p className="pointer-events-auto truncate rounded-full border border-border bg-card/95 px-4 py-2 text-center text-sm font-medium shadow-lg backdrop-blur-xl">
+              No published floor
+            </p>
+          )
+        }
+        zoomControls={
+          <MapZoomControls
+            onResetView={onResetView}
+            onToggleGrid={onToggleGrid}
+            onZoomChange={onZoomChange}
+            showGrid={showGrid}
+          />
+        }
       />
     </div>
   );

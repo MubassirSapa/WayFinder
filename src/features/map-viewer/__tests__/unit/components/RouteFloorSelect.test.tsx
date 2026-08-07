@@ -50,6 +50,35 @@ describe("RouteFloorSelect", () => {
     expect(screen.getByRole("button", { name: "4" }).hasAttribute("disabled")).toBe(true);
     expect(screen.getByRole("button", { name: "5" })).toBeTruthy();
     expect(screen.queryByText("Floor 4")).toBeNull();
+
+    // Mimics a real building: a higher floor stacks above a lower one,
+    // regardless of which direction the route actually travels.
+    const rows = screen.getByRole("group", { name: "Route floor navigation" }).querySelectorAll("button");
+    expect(Array.from(rows).map((row) => row.textContent)).toEqual(["5", "4", "3"]);
+  });
+
+  it("still shows level-descending order for a route that travels downward", () => {
+    // Floor 5 -> 4 -> 3: a route walking down. Segment (traversal) order is
+    // already descending here, but the display order must come out the same
+    // as the climbing-route case above - level order, not traversal order.
+    const descendingSegments: RouteFloorSegment[] = [floors[4], floors[3], floors[2]].map((floor, index) => ({
+      edgeIds: [],
+      enterViaEdgeType: index === 0 ? undefined : "stairs",
+      floorId: floor.id,
+      nodeIds: [`down-node-${index + 1}`],
+    }));
+
+    render(
+      <RouteFloorSelect
+        activeSegmentIndex={1}
+        floors={floors}
+        onJumpToSegment={vi.fn()}
+        segments={descendingSegments}
+      />,
+    );
+
+    const rows = screen.getByRole("group", { name: "Route floor navigation" }).querySelectorAll("button");
+    expect(Array.from(rows).map((row) => row.textContent)).toEqual(["5", "4", "3"]);
   });
 
   it("has no separate cancel-navigation control - clearing the route already lives in the Navigate panel", () => {

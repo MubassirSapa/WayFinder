@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 import { ChevronUp, Search, X } from "lucide-react";
 
 import { formatFloorLabel, formatObjectTypeLabel } from "../lib/mapViewerViewport";
@@ -24,7 +25,6 @@ interface MapViewerSidebarProps {
   searchableObjects: ViewerMapObject[];
   selectedObject: ViewerMapObject | null;
   selectedObjectId: string | null;
-  selectionActionsSlot?: ReactNode;
   onFocusObject: (object: ViewerMapObject) => void;
   onFloorChange: (floorId: string) => void;
   onMobileExpandedChange: (expanded: boolean) => void;
@@ -67,16 +67,19 @@ export function MapViewerSidebar({
   searchableObjects,
   selectedObject,
   selectedObjectId,
-  selectionActionsSlot,
   onFocusObject,
   onFloorChange,
   onMobileExpandedChange,
   onSearchChange,
 }: MapViewerSidebarProps) {
   const [floorSearch, setFloorSearch] = useState("");
+  // `floors` comes in level-ascending (matches the server sort); reversed
+  // here so the list mimics a real building, same as FloorNavigator's wheel
+  // - a higher floor listed above a lower one, not the other way round.
+  const orderedFloors = [...floors].reverse();
   const visibleFloors = floorSearch.trim()
-    ? floors.filter((floor) => floor.name.toLowerCase().includes(floorSearch.trim().toLowerCase()))
-    : floors;
+    ? orderedFloors.filter((floor) => floor.name.toLowerCase().includes(floorSearch.trim().toLowerCase()))
+    : orderedFloors;
 
   const dragStartYRef = useRef<number | null>(null);
 
@@ -274,25 +277,26 @@ export function MapViewerSidebar({
         </Accordion>
 
         {selectedObject ? (
-          <div className="rounded-3xl border border-border bg-muted/35 p-4">
-            <h3 className="text-sm font-semibold">Selection</h3>
-            <div className="mt-3 space-y-2 text-sm">
-              <p className="text-base font-semibold">
+          <div className="rounded-2xl border border-border bg-muted/35 p-3.5">
+            <p className="text-xs font-medium text-muted-foreground">Room selected</p>
+            <div className="mt-1.5 flex items-center gap-2">
+              <p className="min-w-0 flex-1 truncate text-base font-semibold">
                 {selectedObject.label || selectedObject.name}
               </p>
-              <p className="text-muted-foreground">
-                {formatObjectTypeLabel(selectedObject.type)} on {activeFloor?.name}
-              </p>
-              <div className="flex flex-wrap gap-2 pt-1">
-                <Badge variant="outline">
-                  {selectedObject.isAccessible ? "Accessible" : "Not marked accessible"}
-                </Badge>
-                <Badge variant="outline">
-                  {Math.round(selectedObject.width)} x {Math.round(selectedObject.height)}
-                </Badge>
-              </div>
-              {selectionActionsSlot}
+              <Badge
+                className={cn(
+                  "shrink-0 border-transparent font-semibold",
+                  selectedObject.isAccessible
+                    ? "bg-success/15 text-success"
+                    : "bg-destructive/15 text-destructive",
+                )}
+              >
+                {selectedObject.isAccessible ? "Accessible" : "Not marked accessible"}
+              </Badge>
             </div>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {formatObjectTypeLabel(selectedObject.type)} on {activeFloor?.name}
+            </p>
           </div>
         ) : null}
       </div>

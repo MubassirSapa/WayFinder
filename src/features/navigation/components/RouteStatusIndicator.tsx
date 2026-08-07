@@ -22,14 +22,14 @@ export function RouteStatusIndicator({ accessibleOnly, distanceMeters, found }: 
         className={[
           "pointer-events-auto flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium shadow-lg",
           found
-            ? "bg-primary text-primary-foreground"
+            ? "border border-success/20 bg-success/10 text-success backdrop-blur-xl"
             : "border border-destructive/20 bg-destructive/10 text-destructive backdrop-blur-xl",
         ].join(" ")}
       >
         {found ? (
           <>
             <CheckCircle2 className="h-3.5 w-3.5" />
-            {`Route found${typeof distanceMeters === "number" ? ` • ${distanceMeters.toFixed(1)} m` : ""}`}
+            {`Your destination floor${typeof distanceMeters === "number" ? ` • ${distanceMeters.toFixed(1)} m` : ""}`}
           </>
         ) : (
           <>

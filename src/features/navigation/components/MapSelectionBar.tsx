@@ -1,10 +1,8 @@
 "use client";
 
-import { MapPin, X } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-
 import { useAppStore } from "@/store";
+import { MapPin, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface MapSelectionBarProps {
   label: string;
@@ -15,7 +13,11 @@ interface MapSelectionBarProps {
 // Lets a user set the origin/destination straight from clicking an object on
 // the map, instead of having to go find the same actions in the sidebar's
 // Selection card (which may be scrolled out of view, especially on mobile).
-export function MapSelectionBar({ label, nodeId, onClose }: MapSelectionBarProps) {
+export function MapSelectionBar({
+  label,
+  nodeId,
+  onClose,
+}: MapSelectionBarProps) {
   const originNodeId = useAppStore((state) => state.originNodeId);
   const setOrigin = useAppStore((state) => state.setOrigin);
   const setDestination = useAppStore((state) => state.setDestination);
@@ -27,7 +29,9 @@ export function MapSelectionBar({ label, nodeId, onClose }: MapSelectionBarProps
     <div className="pointer-events-none absolute inset-x-0 top-3 z-10 flex justify-center px-3 sm:px-4">
       <div className="pointer-events-auto flex max-w-full items-center gap-2 rounded-2xl border border-border bg-card/95 px-3 py-2 shadow-lg backdrop-blur-xl">
         <MapPin className="h-4 w-4 shrink-0 text-muted-foreground" />
-        <span className="max-w-40 truncate text-sm font-medium sm:max-w-60">{label}</span>
+        <span className="max-w-40 truncate text-sm font-medium sm:max-w-60">
+          {label}
+        </span>
 
         {nodeId ? (
           <>
@@ -38,25 +42,33 @@ export function MapSelectionBar({ label, nodeId, onClose }: MapSelectionBarProps
             >
               {isOrigin ? "Starting here" : "Start here"}
             </Button>
-            <Button onClick={() => setDestination(nodeId)} size="sm" variant="outline">
+            <Button
+              onClick={() => setDestination(nodeId)}
+              size="sm"
+              variant="outline"
+            >
               Route here
             </Button>
           </>
         ) : (
-          <span className="text-xs text-muted-foreground">Not available for routing yet</span>
+          <span className="text-xs text-muted-foreground">
+            Not available for routing yet
+          </span>
         )}
 
-        <button
+        <Button
           aria-label="Clear route and close"
-          className="ml-1 shrink-0 text-destructive hover:text-destructive/80"
+          className="ml-1 rounded-full text-destructive hover:text-destructive/80"
           onClick={() => {
             clearRoute();
             onClose();
           }}
+          size="icon-sm"
           type="button"
+          variant="destructive"
         >
-          <X className="h-3.5 w-3.5" />
-        </button>
+          <X className="size-3" />
+        </Button>
       </div>
     </div>
   );

@@ -46,6 +46,13 @@ export function FloorWheel({
   items,
   onChange,
 }: FloorWheelProps) {
+  // Renders `items` top-to-bottom in the order given - it's the caller's job
+  // to decide what "up" means for their own array (FloorNavigator flips its
+  // level-ascending floors so a higher floor sits above a lower one;
+  // RouteFloorSelect keeps its segments in real route-traversal order, which
+  // isn't guaranteed to be level-ascending - a route walking downward has
+  // already-descending segments, and reversing them here would un-reverse
+  // exactly that case).
   const activeItem = items[activeIndex] ?? null;
   const previousItem = items[activeIndex - 1] ?? null;
   const nextItem = items[activeIndex + 1] ?? null;
@@ -152,7 +159,7 @@ export function FloorWheel({
 
       <div
         aria-label={ariaLabel}
-        className="flex items-stretch gap-1 rounded-xl border border-border bg-card/95 p-1 shadow-lg backdrop-blur-xl"
+        className="flex min-w-11 items-stretch gap-1 rounded-xl border border-border bg-card/95 p-1 shadow-lg backdrop-blur-xl"
         role="group"
       >
         <div className="flex min-w-0 flex-1 items-center">

@@ -4,7 +4,6 @@ import { useCallback, useDeferredValue, useEffect, useMemo, useState } from "rea
 
 import { FloorHopIndicator } from "@/features/navigation/components/FloorHopIndicator";
 import { MapSelectionBar } from "@/features/navigation/components/MapSelectionBar";
-import { RouteOriginTrigger } from "@/features/navigation/components/RouteOriginTrigger";
 import { RoutePanel } from "@/features/navigation/components/RoutePanel";
 import { RouteStatusIndicator } from "@/features/navigation/components/RouteStatusIndicator";
 import { useRoute } from "@/features/navigation/hooks/useRoute";
@@ -398,12 +397,6 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
             searchableObjects={searchableObjects}
             selectedObject={selectedObject}
             selectedObjectId={selectedObjectId}
-            selectionActionsSlot={selectedObject ? (
-              <RouteOriginTrigger
-                label={selectedObject.label || selectedObject.name}
-                nodeId={findNodeIdForObject(selectedObject.id, nodes)}
-              />
-            ) : null}
           />
 
           <main className="order-1 relative min-h-0 flex-1 overflow-hidden border-x-0 border-t-0 border-b border-border bg-(--map-viewer-canvas) shadow-sm sm:rounded-3xl sm:border md:order-0 md:h-full md:min-h-0 lg:rounded-4xl">

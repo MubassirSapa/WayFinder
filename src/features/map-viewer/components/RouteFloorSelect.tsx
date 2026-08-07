@@ -39,15 +39,27 @@ export function RouteFloorSelect({
   onJumpToSegment,
   segments,
 }: RouteFloorSelectProps) {
-  const items = segments.map((segment, index) => {
-    const level = floors.find((floor) => floor.id === segment.floorId)?.level;
+  // Displayed level-descending (a higher floor above a lower one, mimicking
+  // a real building) instead of raw route-traversal order, which runs
+  // whichever direction the destination happens to be - a route walking
+  // down would otherwise show its floors bottom-to-top. `originalIndex`
+  // keeps onChange/activeIndex mapped back to the real segment position,
+  // same as RoutePanel's own step list does for the same reason.
+  const orderedSegments = segments
+    .map((segment, originalIndex) => ({
+      level: floors.find((floor) => floor.id === segment.floorId)?.level,
+      originalIndex,
+      segment,
+    }))
+    .sort((a, b) => (b.level ?? -Infinity) - (a.level ?? -Infinity));
 
-    return {
-      connectorIcon: segment.enterViaEdgeType ? CONNECTOR_ICONS[segment.enterViaEdgeType] : null,
-      key: `${segment.floorId}-${index}`,
-      label: level === undefined ? "?" : String(level),
-    };
-  });
+  const items = orderedSegments.map(({ level, originalIndex, segment }) => ({
+    connectorIcon: segment.enterViaEdgeType ? CONNECTOR_ICONS[segment.enterViaEdgeType] : null,
+    key: `${segment.floorId}-${originalIndex}`,
+    label: level === undefined ? "?" : String(level),
+  }));
+
+  const activeIndex = orderedSegments.findIndex((entry) => entry.originalIndex === activeSegmentIndex);
 
   if (items.length === 0) {
     return null;
@@ -55,10 +67,15 @@ export function RouteFloorSelect({
 
   return (
     <FloorWheel
-      activeIndex={activeSegmentIndex}
+      activeIndex={activeIndex}
       ariaLabel="Route floor navigation"
       items={items}
-      onChange={onJumpToSegment}
+      onChange={(displayIndex) => {
+        const target = orderedSegments[displayIndex];
+        if (target) {
+          onJumpToSegment(target.originalIndex);
+        }
+      }}
     />
   );
 }

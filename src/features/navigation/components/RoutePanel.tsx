@@ -3,6 +3,7 @@
 import { useDeferredValue, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import type {
@@ -91,6 +92,21 @@ export function RoutePanel({
   const setDestination = useAppStore((state) => state.setDestination);
   const clearRoute = useAppStore((state) => state.clearRoute);
 
+  // Displayed level-descending (a higher floor above a lower one, mimicking
+  // a real building) instead of raw route order, which can run either
+  // direction depending on where the destination is. Every check below
+  // keys off `originalIndex` (the segment's real position in the walked
+  // path), not this display position, so step numbers, Start/Destination,
+  // the "via elevator/stairs" connector note, and jump-to-segment clicks
+  // all stay correct regardless of how the list is visually sorted.
+  const orderedSegments = segments
+    .map((segment, originalIndex) => ({
+      floor: floors.find((floor) => floor.id === segment.floorId),
+      originalIndex,
+      segment,
+    }))
+    .sort((a, b) => (b.floor?.level ?? -Infinity) - (a.floor?.level ?? -Infinity));
+
   const originLabel = findObjectLabelForNode(
     originNodeId,
     nodes,
@@ -152,14 +168,16 @@ export function RoutePanel({
         <Navigation className="h-4 w-4 text-muted-foreground" />
         <h3 className="text-sm font-semibold">Get directions</h3>
         {originNodeId || destinationNodeId ? (
-          <button
+          <Button
             aria-label="Clear navigation"
-            className="ml-auto rounded-full px-2 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            className="ml-auto"
             onClick={clearRoute}
+            size="sm"
             type="button"
+            variant="destructive"
           >
             Clear
-          </button>
+          </Button>
         ) : null}
       </div>
 
@@ -288,18 +306,15 @@ export function RoutePanel({
               </Badge>
               {segments.length > 1 ? (
                 <div className="space-y-1 rounded-2xl border border-border bg-background p-1.5">
-                  {segments.map((segment, index) => {
-                    const segmentFloor = floors.find(
-                      (floor) => floor.id === segment.floorId,
-                    );
-                    const isActive = index === activeSegmentIndex;
+                  {orderedSegments.map(({ floor: segmentFloor, originalIndex, segment }) => {
+                    const isActive = originalIndex === activeSegmentIndex;
                     const ConnectorIcon = segment.enterViaEdgeType
                       ? CONNECTOR_ICONS[segment.enterViaEdgeType]
                       : null;
 
                     return (
-                      <div key={segment.floorId + index}>
-                        {index > 0 && ConnectorIcon ? (
+                      <div key={segment.floorId + originalIndex}>
+                        {originalIndex > 0 && ConnectorIcon ? (
                           <div className="flex items-center gap-1.5 py-1 pl-4 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
                             <ConnectorIcon className="h-3 w-3" />
                             <span>via {segment.enterViaEdgeType}</span>
@@ -312,7 +327,7 @@ export function RoutePanel({
                               ? "bg-primary/10 font-semibold text-foreground ring-1 ring-primary/30"
                               : "text-muted-foreground hover:bg-muted/60",
                           )}
-                          onClick={() => onJumpToSegment(index)}
+                          onClick={() => onJumpToSegment(originalIndex)}
                           type="button"
                         >
                           <span
@@ -323,16 +338,16 @@ export function RoutePanel({
                                 : "bg-muted text-muted-foreground",
                             )}
                           >
-                            {index + 1}
+                            {originalIndex + 1}
                           </span>
                           <span className="truncate">
                             {segmentFloor?.name ?? "Floor"}
                           </span>
                           <span className="ml-auto flex shrink-0 items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide">
-                            {index === 0 ? (
+                            {originalIndex === 0 ? (
                               <><span className="size-2 rounded-full bg-(--map-viewer-route-origin)" />Start</>
                             ) : null}
-                            {index === segments.length - 1 ? (
+                            {originalIndex === segments.length - 1 ? (
                               <><span className="size-2 rounded-full bg-(--map-viewer-route-destination)" />Destination</>
                             ) : null}
                           </span>

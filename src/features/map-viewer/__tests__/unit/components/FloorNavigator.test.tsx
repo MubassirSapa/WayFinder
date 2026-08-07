@@ -40,6 +40,12 @@ describe("FloorNavigator", () => {
     expect(screen.getByRole("button", { name: "4" }).hasAttribute("disabled")).toBe(true);
     expect(screen.getByRole("button", { name: "5" })).toBeTruthy();
     expect(screen.queryByText("Floor 4")).toBeNull();
+
+    // Mimics a real building: a higher floor stacks above a lower one, not
+    // list/array order — so 5 (higher) renders before 4, which renders
+    // before 3 (lower), top to bottom.
+    const rows = screen.getByRole("group", { name: "Floor navigation" }).querySelectorAll("button");
+    expect(Array.from(rows).map((row) => row.textContent)).toEqual(["5", "4", "3"]);
   });
 
   it("jumps to the tapped neighbor floor", () => {
