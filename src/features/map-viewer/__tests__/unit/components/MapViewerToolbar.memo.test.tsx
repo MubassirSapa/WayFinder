@@ -23,11 +23,11 @@ const floors = [activeFloor];
 // memo regardless of what this test is trying to prove.
 const emptySegments: RouteFloorSegment[] = [];
 
-// segments.length <= 1 renders FloorNavigator -> FloorWheel, and
-// MapCornerControls itself, both of which call cn() to build their
-// className on every render - a stable proxy for "did this subtree's
-// render body actually execute," unlike React's Profiler, whose onRender
-// fires once per commit regardless of whether a memoized child bailed out.
+// segments.length <= 1 renders FloorNavigator -> FloorWheel, which calls
+// cn() to build its className on every render - a stable proxy for "did
+// this subtree's render body actually execute," unlike React's Profiler,
+// whose onRender fires once per commit regardless of whether a memoized
+// child bailed out.
 const stableHandlers = {
   onFloorChange: vi.fn(),
   onJumpToSegment: vi.fn(),
@@ -47,9 +47,7 @@ describe("MapViewerToolbar memoization", () => {
       <MapViewerToolbar
         activeFloor={activeFloor}
         activeSegmentIndex={0}
-        expandedSheetHeight={0}
         floors={floors}
-        isMobileSidebarExpanded={false}
         segments={emptySegments}
         showGrid={false}
         {...stableHandlers}
@@ -77,9 +75,7 @@ describe("MapViewerToolbar memoization", () => {
           <MapViewerToolbar
             activeFloor={activeFloor}
             activeSegmentIndex={0}
-            expandedSheetHeight={0}
             floors={floors}
-            isMobileSidebarExpanded={false}
             segments={emptySegments}
             showGrid={false}
             {...stableHandlers}
@@ -116,9 +112,7 @@ describe("MapViewerToolbar memoization", () => {
           <MapViewerToolbar
             activeFloor={activeFloor}
             activeSegmentIndex={0}
-            expandedSheetHeight={0}
             floors={floors}
-            isMobileSidebarExpanded={false}
             segments={emptySegments}
             showGrid={showGrid}
             {...stableHandlers}

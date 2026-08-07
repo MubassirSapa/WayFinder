@@ -7,9 +7,7 @@ describe("MapCornerControls", () => {
   it("keeps left and right islands in separate shrinking grid columns above the mobile sidebar", () => {
     render(
       <MapCornerControls
-        expandedSheetHeight={0}
         floorControls={<button type="button">Floors</button>}
-        isMobileSidebarExpanded={false}
         zoomControls={<button type="button">Zoom</button>}
       />,
     );
@@ -21,21 +19,5 @@ describe("MapCornerControls", () => {
     expect(dock.className).toContain("md:bottom-4");
     expect(screen.getByRole("button", { name: "Floors" }).parentElement?.className).toContain("min-w-0");
     expect(screen.getByRole("button", { name: "Zoom" })).toBeTruthy();
-  });
-
-  it("lifts above the sheet using its real measured height when expanded", () => {
-    render(
-      <MapCornerControls
-        expandedSheetHeight={320}
-        floorControls={<button type="button">Floors</button>}
-        isMobileSidebarExpanded
-        zoomControls={<button type="button">Zoom</button>}
-      />,
-    );
-
-    const dock = screen.getByTestId("map-corner-controls");
-    expect(dock.className).not.toContain("bottom-20");
-    expect(dock.className).toContain("bottom-(--corner-controls-lift)");
-    expect(dock.style.getPropertyValue("--corner-controls-lift")).toBe("332px");
   });
 });

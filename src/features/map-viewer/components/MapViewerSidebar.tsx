@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
@@ -25,7 +25,6 @@ interface MapViewerSidebarProps {
   selectedObject: ViewerMapObject | null;
   selectedObjectId: string | null;
   selectionActionsSlot?: ReactNode;
-  onExpandedHeightChange?: (height: number) => void;
   onFocusObject: (object: ViewerMapObject) => void;
   onFloorChange: (floorId: string) => void;
   onMobileExpandedChange: (expanded: boolean) => void;
@@ -69,7 +68,6 @@ export function MapViewerSidebar({
   selectedObject,
   selectedObjectId,
   selectionActionsSlot,
-  onExpandedHeightChange,
   onFocusObject,
   onFloorChange,
   onMobileExpandedChange,
@@ -81,28 +79,6 @@ export function MapViewerSidebar({
     : floors;
 
   const dragStartYRef = useRef<number | null>(null);
-  const asideRef = useRef<HTMLElement>(null);
-
-  // Reports the sheet's real, content-driven height once when it opens - not
-  // a fixed guess (it isn't always the full 80dvh cap; "Get directions" with
-  // no route computed yet is much shorter). scrollHeight reflects the full
-  // content extent regardless of the outer max-height clip still animating,
-  // so this reads correctly before that transition even finishes. Only fires
-  // on open/close, not continuously, so anything driven by it (the corner
-  // controls lifting above the sheet) gets one clean target to transition
-  // toward instead of following a noisy, constantly-changing value.
-  useLayoutEffect(() => {
-    if (!isMobileExpanded || !onExpandedHeightChange) {
-      return;
-    }
-
-    const node = asideRef.current;
-    if (!node) {
-      return;
-    }
-
-    onExpandedHeightChange(Math.min(node.scrollHeight, window.innerHeight * 0.8));
-  }, [isMobileExpanded, onExpandedHeightChange]);
 
   const handleHandlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     dragStartYRef.current = event.clientY;
@@ -141,7 +117,6 @@ export function MapViewerSidebar({
         isMobileExpanded ? "max-h-[80dvh]" : "max-h-17",
         "md:static md:inset-auto md:z-auto md:order-0 md:h-full md:max-h-none md:min-h-0 md:rounded-3xl md:border md:bg-card/80 md:shadow-sm lg:rounded-4xl",
       ].join(" ")}
-      ref={asideRef}
     >
       <div
         className="shrink-0 cursor-pointer touch-none select-none border-b border-border px-5 py-3 md:cursor-default md:py-4"

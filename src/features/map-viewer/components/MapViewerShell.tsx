@@ -60,10 +60,6 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
   // map when tapped or dragged up — ignored entirely at the md breakpoint
   // and above, where the sidebar is always a normal, always-visible column.
   const [isMobileSidebarExpanded, setIsMobileSidebarExpanded] = useState(false);
-  // The expanded sheet's real, content-driven height in px (reported by
-  // MapViewerSidebar) - used to lift the floor/zoom controls to sit just
-  // above it instead of guessing a fixed height that's usually wrong.
-  const [expandedSheetHeight, setExpandedSheetHeight] = useState(0);
   const [connectorPicker, setConnectorPicker] = useState<{
     connectorType: ConnectorType;
     targets: ConnectorTargetInfo[];
@@ -382,7 +378,6 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
             activeFloorId={activeFloorId}
             floors={floors}
             isMobileExpanded={isMobileSidebarExpanded}
-            onExpandedHeightChange={setExpandedSheetHeight}
             onFloorChange={handleFloorChange}
             onFocusObject={focusObject}
             onMobileExpandedChange={setIsMobileSidebarExpanded}
@@ -416,9 +411,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
             <MapViewerToolbar
               activeFloor={activeFloor}
               activeSegmentIndex={activeSegmentIndex}
-              expandedSheetHeight={expandedSheetHeight}
               floors={floors}
-              isMobileSidebarExpanded={isMobileSidebarExpanded}
               onFloorChange={handleFloorChange}
               onJumpToSegment={handleJumpToSegment}
               onResetView={resetView}

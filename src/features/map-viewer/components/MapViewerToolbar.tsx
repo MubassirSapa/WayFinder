@@ -10,9 +10,7 @@ import { RouteFloorSelect } from "./RouteFloorSelect";
 interface MapViewerToolbarProps {
   activeFloor: ViewerFloor | null;
   activeSegmentIndex: number;
-  expandedSheetHeight: number;
   floors: ViewerFloor[];
-  isMobileSidebarExpanded: boolean;
   segments: RouteFloorSegment[];
   showGrid: boolean;
   onFloorChange: (floorId: string) => void;
@@ -27,9 +25,7 @@ interface MapViewerToolbarProps {
 export const MapViewerToolbar = memo(function MapViewerToolbar({
   activeFloor,
   activeSegmentIndex,
-  expandedSheetHeight,
   floors,
-  isMobileSidebarExpanded,
   segments,
   showGrid,
   onFloorChange,
@@ -39,10 +35,7 @@ export const MapViewerToolbar = memo(function MapViewerToolbar({
   onZoomChange,
 }: MapViewerToolbarProps) {
   return (
-    // z-40: must stay above the mobile sheet (MapViewerSidebar, z-30) so the
-    // floor/zoom controls remain visible instead of ending up behind it once
-    // MapCornerControls lifts them to sit above the expanded sheet.
-    <div className="pointer-events-none absolute inset-0 z-40">
+    <div className="pointer-events-none absolute inset-0 z-10">
       <MapCornerControls
         floorControls={segments.length > 1 ? (
           <div className="pointer-events-auto min-w-0 max-w-72">
@@ -66,8 +59,6 @@ export const MapViewerToolbar = memo(function MapViewerToolbar({
             No published floor
           </p>
         )}
-        expandedSheetHeight={expandedSheetHeight}
-        isMobileSidebarExpanded={isMobileSidebarExpanded}
         zoomControls={(
         <MapZoomControls
           onResetView={onResetView}
