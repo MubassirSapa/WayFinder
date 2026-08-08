@@ -1,20 +1,34 @@
 # QR Code Wayfinding (scan a room → open viewer already routing from there)
 
 Status: **designed, not implemented.** No QR-related code exists anywhere in
-this repo today (confirmed by grep) — this is the plan to build from.
+this repo today (confirmed by grep) — this is the full reference design for
+the feature area. The first implementation slice of this (the URL-state
+consumer only, no UI) is tracked separately in
+`docs/technical/ROUTE_URL_STATE.md` — read that one for what's actually
+being built right now; this doc is the fuller picture it's a piece of.
 
 ## The idea
 
-Print a QR code sticker for a room/place and stick it on the wall there.
-Someone scans it with their phone camera, it opens the map viewer with
-**that room already set as the starting point** — they just pick where they
-want to go and the route is ready. No searching for "where am I" first.
+Two related entry points into the same mechanism:
+
+1. **Scan a sticker at a location** → the map viewer opens with that room
+   already set as the starting point. Someone scans it with their phone
+   camera, picks where they want to go, and the route is ready — no
+   searching for "where am I" first.
+2. **Share a route** → someone already routing from A to B in the viewer
+   taps "Share", and sends a link (or a QR code of that link) that opens the
+   viewer for someone else with *both* the same start and destination
+   already set — e.g. "meet me at gate 3", sent from one phone to another.
+
+Both are the same underlying feature: the viewer reads origin/destination
+out of the URL on load instead of requiring them to be picked in the UI. A
+sticker just encodes only the start half; a shared route encodes both.
 
 This is explicitly called out as a gap in `docs/technical/HOW_DIRECTIONS_WORK.md`
 already: the app has no live indoor positioning, and that doc names
-"QR-code checkpoints" as one of the technologies that would close it. This
-feature is the static version of that — not live tracking, just "the last
-place someone scanned a code."
+"QR-code checkpoints" as one of the technologies that would close it. The
+scan-a-sticker case is the static version of that — not live tracking, just
+"the last place someone scanned a code."
 
 ## What already exists (so this is additive, not a rewrite)
 
@@ -28,18 +42,17 @@ Confirmed by reading the actual code, not assumed:
   reactive/derived, no explicit "Go" button) any time both are set.
 - **There's already more than one way to set the origin today**: clicking a
   place on the map/sidebar (first click with no origin set becomes the
-  origin), the "Start here" button in `MapSelectionBar`/`RouteOriginTrigger`,
-  or typing into the "From" field in `RoutePanel`. A QR scan is just a new,
-  fourth way to call `setOrigin` — arriving with the value already decided
-  instead of picked in the UI.
+  origin), the "Start"/"Route" buttons in `MapSelectionBar`, or typing into
+  the from/to fields in `RouteSearchFields`. A QR scan is just a new way to
+  call `setOrigin` — arriving with the value already decided instead of
+  picked in the UI.
 - **The viewer route has zero URL query-param support today.** Grepped the
   whole `map-viewer` feature and the `map/` route tree for
   `useSearchParams`/`searchParams`/`router.push`/`router.replace` — no
   matches. The only URL-based state right now is the `floorId` **route**
   segment in `src/app/(frontend)/(public)/(viewers)/map/[floorId]/page.tsx`.
   Everything else (selected object, origin, destination, viewport) is pure
-  client state. So "add URL state" is a real, new piece of work, not
-  something to hook into — see [What has to change](#what-has-to-change).
+  client state.
 - **Origin/destination are stored as `map-nodes` IDs, not `map-objects`
   IDs.** A QR code naturally identifies a *room* (`map-objects`), so
   resolving room → node is a required step
@@ -52,20 +65,107 @@ Confirmed by reading the actual code, not assumed:
 
 ## URL shape
 
-Two pieces need deciding: what the printed sticker's URL looks like, and
-what query param the viewer reads.
+`/map/{floorId}?startObject={objectId}&destObject={objectId}&accessible=1` —
+all three params optional and independent:
+
+- `startObject` alone → the scan-a-sticker case (pre-fills origin, person
+  still picks a destination through the normal UI).
+- `startObject` + `destObject` → the share-a-route case (both endpoints
+  pre-filled, route is live the moment the page loads — same as if both had
+  been typed into the from/to fields).
+- `destObject` alone is a valid combination too (someone shares "how do I
+  get to the auditorium" without a fixed starting point) — falls back to the
+  existing `findDefaultOriginNode` ground-floor-entrance behavior for
+  origin, same as visiting the viewer fresh with no origin set today.
+- `accessible=1` (only meaningful alongside `destObject`) carries the
+  sharer's `accessibleOnly` toggle, so the recipient's route matches the one
+  the sharer actually saw instead of silently resolving to a different
+  (possibly non-accessible) path under their own default toggle state.
+  Omitted entirely rather than `accessible=0` when off, so the query string
+  stays clean for the common case.
+
+Chosen over encoding a node ID directly because node IDs are an internal
+graph-modeling detail (`map-nodes`); a room's own `map-objects` ID is the
+stable, meaningful identifier, and the object→node resolution already has to
+happen client-side via `findNodeIdForObject` regardless of where the ID
+comes from.
+
+### Why a shared route link skips the `/qr/{objectId}` indirection
+
+The sticker case (below) needs a stable `/qr/{objectId}` redirect rather than
+`/map/{floorId}?...` directly, because a **physical, printed sticker**
+outlives the floor plan — if a room moves to a different floor, the sticker
+would encode a dead `floorId` forever.
+
+That risk doesn't apply to a shared route link: it's generated fresh from
+the *current* session's state and is expected to be short-lived (sent,
+opened, discarded) — never printed, never expected to still resolve months
+later. So the Share button (design below) would encode
+`/map/{floorId}?startObject=...&destObject=...` directly, with `floorId`
+taken from the route's own start floor (`segments[0].floorId`) — no
+resolver hop, no extra Payload lookup for that path. The two producers
+(sticker resolver, Share button) both just emit the same
+`?startObject=&destObject=` contract the viewer consumes — independent of
+each other.
+
+## Sharing a route from the viewer
+
+Where the user would get the link/QR for their current route — entirely new
+UI, entirely client-side. Not built yet.
+
+### Where the trigger lives
+
+`MapSelectionBar`'s search drawer (`RouteSearchFields` plus the accessibility
+toggle) already becomes the place a route's two endpoints live once both are
+set. A **"Share"** button belongs in that same drawer, enabled once
+`originNodeId && destinationNodeId` are both set (mirrors how Start/Route
+already gate on having a `nodeId` to act on) — greyed out or hidden before
+that, same as there being nothing meaningful to share yet.
+
+### Building the link
+
+Reverse of the apply direction: `MapViewerShell` already computes
+`originObjectId`/`destinationObjectId` (node → object, floor-scoped) for
+highlighting the selected object on the canvas — sharing needs the same
+node→object resolution but across the *whole* route, not just the active
+floor, since origin and destination can be on different floors. Build:
+
+```
+`${window.location.origin}/map/${segments[0].floorId}?startObject=${originObjectId}&destObject=${destinationObjectId}`
+```
+
+`segments[0].floorId` (the route's own start floor, from `useRoute`), not
+`activeFloorId` — so the link lands on the floor the route actually begins
+on regardless of which floor the *sharer* happens to be looking at when they
+tap Share.
+
+### Generating the image
+
+No QR library exists in this repo yet (`package.json` has none — confirmed).
+Needs one new dependency: **`qrcode`** (isomorphic, but only the browser API
+is used here — `QRCode.toDataURL(url)`, entirely client-side, no server
+action).
+
+Tapping Share opens a small shadcn `Dialog` (same primitive already used
+elsewhere, e.g. `AddTeamMemberDialog`) showing the generated QR image plus
+the plain-text link with a **Copy link** button
+(`navigator.clipboard.writeText`) and a **Download** button (plain
+`<a href={dataUrl} download="route-qr.png">`, the browser's native way to
+save a data URL). No Print button here — that's specifically an admin/sticker
+concern (see below), not something a guest sharing a route on their own
+phone needs.
+
+## Generating printable room stickers
+
+This is the **permanent, printable** per-room QR sticker an admin generates
+once and sticks on a physical wall. Dashboard/admin surface area. Not built
+yet. Needs its own `/qr/{objectId}` resolver route (a real server page doing
+a Payload lookup) to protect a printed sticker from breaking if the room's
+floor ever changes — see
+[why a shared route link skips that indirection](#why-a-shared-route-link-skips-the-qrobjectid-indirection),
+which only applies to the ephemeral share-link case, not this one.
 
 ### The link a sticker encodes: `/qr/{objectId}`, not the viewer URL directly
-
-It's tempting to have the QR code just encode the final viewer URL directly
-— `/map/{floorId}?startObject={objectId}`. The problem: that hardcodes the
-floor into a **physical, unchangeable sticker**. If a room ever gets moved to
-a different floor plan, split, or a floor gets restructured, every sticker
-that encoded the old `floorId` breaks and needs reprinting on-site.
-
-Better: the sticker encodes a **stable indirection**, `/qr/{objectId}`,
-and a small resolver route looks up that object's *current* floor and
-redirects:
 
 ```ts
 // src/app/(frontend)/(public)/qr/[objectId]/page.tsx
@@ -86,55 +186,10 @@ already scopes which collection the ID belongs to.
 One extra redirect hop, but the sticker never needs reprinting unless the
 room itself is deleted (which would require a new sticker regardless).
 
-### The query param: `startObject`
-
-`/map/{floorId}?startObject={objectId}` — chosen over encoding a node ID
-directly because node IDs are an internal graph-modeling detail
-(`map-nodes`); a room's own `map-objects` ID is the stable, meaningful
-"what this sticker is about" identifier, and the object→node resolution
-already has to happen client-side via `findNodeIdForObject` regardless of
-where the ID comes from.
-
-## What has to change
-
-1. **`src/app/(frontend)/(public)/(viewers)/map/[floorId]/page.tsx`** — start
-   accepting the `searchParams` prop (currently unused), read `startObject`,
-   pass it down: `<MapViewerShell data={{ ...data, initialFloorId: floorId, startObjectId: searchParams.startObject ?? null }} />`.
-
-2. **`src/app/(frontend)/(public)/qr/[objectId]/page.tsx`** — new resolver
-   route described above.
-
-3. **`MapViewerShell.tsx`** — currently has a `useEffect` that calls
-   `resetNavigation()` whenever `data.initialFloorId` changes (a real floor
-   navigation). The QR-apply logic has to be sequenced *after* that reset,
-   not race it — either as a continuation of the same effect, or a second
-   effect with `initialFloorId` in its dependency array so it always reruns
-   together with the reset on a fresh page load:
-   - Resolve `startObjectId` → node via `findNodeIdForObject(nodes, startObjectId)`.
-   - If found: `setOrigin(nodeId)`, and set the existing local
-     `selectedObjectId` state too, so the room is visibly highlighted/
-     "You are here" rather than just silently routable.
-   - If the object has no associated node yet (a room with no entry point
-     modeled in the graph): leave origin unset, let the existing
-     ground-floor-entrance fallback apply, and surface a small toast/notice
-     rather than failing silently.
-   - After applying, `router.replace()` the same path **without** the query
-     string. Otherwise a manual refresh — or the user picking a different
-     "From" location afterward, then refreshing — would keep re-forcing the
-     origin back to the QR value on every reload.
-
-4. **Admin-side: a way to actually generate the stickers.** See
-   [Generating QR codes in the dashboard](#generating-qr-codes-in-the-dashboard)
-   below.
-
-## Generating QR codes in the dashboard
-
-Where an admin actually gets the sticker image, confirmed against the real
-editor code:
-
 ### Where the button lives
 
-The map editor already has an **object inspector** —
+Where an admin actually gets the sticker image, confirmed against the real
+editor code. The map editor already has an **object inspector** —
 `src/features/map-editor/core/components/ObjectInspector.tsx`, rendered by
 `InspectorPanel.tsx` whenever the selected entity is a `map-objects` doc.
 It already has a "Searchable (Index for guests)" checkbox bound to
@@ -205,32 +260,38 @@ isn't part of this ask.
 
 ## What does *not* need to change
 
-- `NavigationSlice`, `useRoute`, `RoutePanel`, the whole existing
-  origin/destination selection UI — none of it changes. The QR flow's whole
-  job is to call the exact same `setOrigin` that "Start here" already calls;
-  destination is still picked afterward through the existing UI exactly as
-  it works today. That matches the actual ask — QR sets *where you are*,
-  the person still chooses *where they're going*.
-- `MapObjects`/`MapNodes`/`PathEdges` schema — no new fields needed. The
-  object's existing `id` is the only thing a sticker needs to encode.
+- `NavigationSlice`, `useRoute`, `RoutePanel`, `MapSelectionBar`,
+  `RouteSearchFields` — no component in the existing origin/destination
+  selection UI changes. Applying a URL param just calls the exact same
+  `setOrigin`/`setDestination`/`setAccessibleOnly` that the existing UI
+  already calls; a start-only link still leaves the person to pick a
+  destination through the existing UI exactly as it works today.
+- `MapObjects`/`MapNodes`/`PathEdges` schema — no new fields needed. Objects'
+  existing `id`s are the only thing this ever needs to encode.
 - `getMapViewerData` — already loads the whole building's floors/objects/
-  nodes/edges up front, so a QR-provided origin on a different floor than
-  wherever a normal visit would start still has everything it needs already
-  loaded; no separate fetch required.
+  nodes/edges up front, so a URL-provided origin/destination on a different
+  floor than wherever a normal visit would start still has everything it
+  needs already loaded; no separate fetch required.
+
+## Decisions made
+
+- **Query param names**: `startObject` / `destObject` (+ `accessible`).
+- **Shared route links carry `accessibleOnly`** via `&accessible=1`, so the
+  recipient sees the same route the sharer saw, not just the same endpoints.
 
 ## Open questions
 
-- **Should scanning also jump the viewport to that floor/room**, or just
-  set the origin and leave the person to orient themselves? Leaning toward
-  "also center the viewport on it" for a good first-scan experience, but
-  that's a `viewportPan`/`viewportZoom` detail (`MapViewerViewportSlice`)
-  layered on top of this, not core to the URL-state design above.
+- **Should scanning/opening a shared link also jump the viewport to
+  focus/zoom the relevant floor content**, or is landing on the right floor
+  with the route drawn (already true via existing effects) enough? A
+  `viewportPan`/`viewportZoom` detail (`MapViewerViewportSlice`) layered on
+  top of this, not core to the URL-state design above.
 - **Bulk generation** — today's design is one-object-at-a-time from
   `ObjectInspector`. A dedicated "print every searchable room's QR code for
   this building" page would be more useful once there are dozens of rooms to
   sticker up, but isn't needed for a first version — deliberately deferred,
   not designed here.
 - **Analytics** — worth logging QR scans (which room, when) to see which
-  codes actually get used? Out of scope for the core mechanism, but cheap
-  to add later since the resolver route already sees every scan pass
-  through it.
+  codes actually get used? Out of scope for the core mechanism, but cheap to
+  add later since the resolver route already sees every scan pass through
+  it.

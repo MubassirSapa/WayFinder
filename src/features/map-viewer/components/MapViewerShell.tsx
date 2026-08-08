@@ -7,6 +7,7 @@ import { MapSelectionBar } from "@/features/navigation/components/MapSelectionBa
 // RoutePanel: only used by the commented-out MapViewerSidebar render below.
 // import { RoutePanel } from "@/features/navigation/components/RoutePanel";
 import { RouteStatusIndicator } from "@/features/navigation/components/RouteStatusIndicator";
+import { useApplyRouteFromUrl } from "@/features/navigation/hooks/useApplyRouteFromUrl";
 import { useRoute } from "@/features/navigation/hooks/useRoute";
 import { getRouteSegmentBounds } from "@/features/navigation/lib/routeBounds";
 import { findNodeIdForObject } from "@/features/navigation/lib/findNodeForObject";
@@ -35,9 +36,22 @@ const CONNECTOR_JUMP_FOCUS_RADIUS = 260;
 
 interface MapViewerShellProps {
   data: MapViewerData;
+  // Page-level, one-shot instructions read from the URL by the server page
+  // component (?startObject=/&destObject=/&accessible=) - not part of
+  // MapViewerData since that type is shared with useRoute/connectors and
+  // represents loaded building data, not a per-visit apply instruction. See
+  // docs/technical/ROUTE_URL_STATE.md.
+  destObjectId?: string | null;
+  sharedAccessibleOnly?: boolean;
+  startObjectId?: string | null;
 }
 
-export function MapViewerShell({ data }: MapViewerShellProps) {
+export function MapViewerShell({
+  data,
+  destObjectId = null,
+  sharedAccessibleOnly = false,
+  startObjectId = null,
+}: MapViewerShellProps) {
   const storedActiveFloorId = useAppStore((state) => state.activeFloorId);
   const setActiveFloorId = useAppStore((state) => state.setActiveFloorId);
   const resetNavigation = useAppStore((state) => state.resetNavigation);
@@ -125,6 +139,15 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
   const accessibleOnly = useAppStore((state) => state.accessibleOnly);
   const setOrigin = useAppStore((state) => state.setOrigin);
   const setRouteSearchOpen = useAppStore((state) => state.setRouteSearchOpen);
+
+  useApplyRouteFromUrl({
+    accessibleOnly: sharedAccessibleOnly,
+    destObjectId,
+    initialFloorId: data.initialFloorId,
+    nodes: allNodes,
+    onOriginObjectResolved: setSelectedObjectId,
+    startObjectId,
+  });
 
   // Only resolves to an id when the origin/destination node is actually on
   // the floor currently displayed (nodes is already scoped to activeFloor) —
