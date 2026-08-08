@@ -42,7 +42,7 @@ afterEach(() => {
 });
 
 describe("MapViewerToolbar memoization", () => {
-  it("positions floor navigation bottom-left and map controls bottom-right", () => {
+  it("positions map controls bottom-left and floor navigation bottom-right", () => {
     const { getByRole } = render(
       <MapViewerToolbar
         activeFloor={activeFloor}
@@ -55,10 +55,9 @@ describe("MapViewerToolbar memoization", () => {
     );
 
     const cornerDock = getByRole("group", { name: "Floor navigation" }).closest('[data-testid="map-corner-controls"]');
-    expect(cornerDock?.className).toContain("bottom-20");
+    expect(cornerDock?.className).toContain("bottom-4");
     expect(cornerDock?.className).toContain("inset-x-3");
-    expect(cornerDock?.className).toContain("grid-cols-[minmax(0,1fr)_auto]");
-    expect(cornerDock?.className).toContain("md:bottom-4");
+    expect(cornerDock?.className).toContain("grid-cols-[auto_minmax(0,1fr)]");
     expect(getByRole("group", { name: "Map view controls" })).toBeTruthy();
   });
 
