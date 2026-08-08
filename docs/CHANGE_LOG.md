@@ -27,6 +27,7 @@
 - Reworked the private team-management page into a responsive, searchable member directory. Organization owners and managers retain role, building-assignment, blocking, and removal controls on dedicated user detail pages. Adding a teammate uses an email invitation flow with separate identity and access sections.
 
 ### Fixed
+- Fixed outline-variant buttons showing almost no visible hover state in dark mode: the hover relied on the low-alpha `--input` token stacked at half opacity (~10% effective), imperceptible against a similarly-toned dark background. Dark mode now hovers with `--foreground` at low opacity instead, which has real lightness contrast.
 - Fixed the QR sticker dialog stretching wider than its own dialog box for a long room/object id: `DialogContent` is a single-column CSS grid, so the encoded url's unbreakable text (no `min-w-0` on its row) was setting the shared column's min-content width, which also stretched the QR image and footer buttons above and below it.
 - Fixed the admin QR floor viewer sometimes rendering below the fold with no indication it needed scrolling: it now auto-scrolls itself fully into view on load on large screens (≥1024px) when it's actually cut off.
 - Fixed the map editor's reference-image tools being hidden in production: a temporary `NODE_ENV !== "production"` gate on the Image tab (added to prepare a release) was never reverted, so editors had no way to upload, view, or adjust a floor's background image outside of development.
