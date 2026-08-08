@@ -33,11 +33,13 @@ export function makeStore() {
     accessibleOnly: false,
     activeSegmentIndex: 0,
     activeFloorId: null,
+    isRouteSearchOpen: false,
     setOrigin: () => {},
     setDestination: () => {},
     setAccessibleOnly: () => {},
     setActiveSegmentIndex: () => {},
     setActiveFloorId: () => {},
+    setRouteSearchOpen: () => {},
     clearRoute: () => {},
     resetNavigation: () => {},
     // SignupFlowSlice stubs — not under test here

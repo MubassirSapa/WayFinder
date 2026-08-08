@@ -7,10 +7,19 @@ afterEach(cleanup);
 
 describe("MapSelectionBar positioning", () => {
   it("keeps room navigation close to the top edge", () => {
-    render(<MapSelectionBar label="Room 101" nodeId={null} onClose={() => undefined} />);
+    render(
+      <MapSelectionBar
+        floors={[]}
+        label="Room 101"
+        nodeId={null}
+        nodes={[]}
+        onClose={() => undefined}
+        searchableObjects={[]}
+      />,
+    );
 
-    const bar = screen.getByText("Room 101").parentElement?.parentElement;
-    expect(bar?.className).toContain("top-3");
+    const bar = screen.getByText("Room 101").closest('[class*="top-3"]');
+    expect(bar).toBeTruthy();
     expect(bar?.className).not.toContain("top-16");
   });
 });

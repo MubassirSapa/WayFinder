@@ -1,10 +1,11 @@
 'use client';
 
-import { useCallback, useDeferredValue, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { FloorHopIndicator } from "@/features/navigation/components/FloorHopIndicator";
 import { MapSelectionBar } from "@/features/navigation/components/MapSelectionBar";
-import { RoutePanel } from "@/features/navigation/components/RoutePanel";
+// RoutePanel: only used by the commented-out MapViewerSidebar render below.
+// import { RoutePanel } from "@/features/navigation/components/RoutePanel";
 import { RouteStatusIndicator } from "@/features/navigation/components/RouteStatusIndicator";
 import { useRoute } from "@/features/navigation/hooks/useRoute";
 import { getRouteSegmentBounds } from "@/features/navigation/lib/routeBounds";
@@ -24,7 +25,10 @@ import type {
 import { ConnectorFloorPickerDialog } from "./ConnectorFloorPickerDialog";
 import { MapViewerCanvas } from "./MapViewerCanvas";
 import { MapViewerPageHeader } from "./MapViewerPageHeader";
-import { MapViewerSidebar } from "./MapViewerSidebar";
+// MapViewerSidebar: commented out, not deleted - MapSelectionBar now covers
+// search/accessibility/routing on the map itself, but keep this available
+// in case the sidebar needs to come back.
+// import { MapViewerSidebar } from "./MapViewerSidebar";
 import { MapViewerToolbar } from "./MapViewerToolbar";
 
 const CONNECTOR_JUMP_FOCUS_RADIUS = 260;
@@ -58,13 +62,18 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
   // screen (map fully visible above it) and expands into a sheet over the
   // map when tapped or dragged up — ignored entirely at the md breakpoint
   // and above, where the sidebar is always a normal, always-visible column.
-  const [isMobileSidebarExpanded, setIsMobileSidebarExpanded] = useState(false);
+  // Commented out along with MapViewerSidebar below, not deleted.
+  // const [isMobileSidebarExpanded, setIsMobileSidebarExpanded] = useState(false);
   const [connectorPicker, setConnectorPicker] = useState<{
     connectorType: ConnectorType;
     targets: ConnectorTargetInfo[];
   } | null>(null);
-  const [search, setSearch] = useState("");
-  const deferredSearch = useDeferredValue(search);
+  // search itself is only read by the commented-out sidebar below; setSearch
+  // stays live since handleFloorChange still resets it (ready to go if the
+  // sidebar comes back).
+  const [, setSearch] = useState("");
+  // deferredSearch: only fed the commented-out searchableObjects filter below.
+  // const deferredSearch = useDeferredValue(search);
   const [showGrid, setShowGrid] = useState(false);
   // Stable reference for MapViewerToolbar (memoized) — the inline arrow this
   // replaced was a fresh function every MapViewerShell render, which defeats
@@ -104,7 +113,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
     activeSegment,
     activeSegmentIndex,
     allNodes,
-    effectiveOriginId,
+    // effectiveOriginId: only read by the commented-out RoutePanel below.
     nodesById,
     route,
     routePoints,
@@ -115,6 +124,7 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
   const destinationNodeId = useAppStore((state) => state.destinationNodeId);
   const accessibleOnly = useAppStore((state) => state.accessibleOnly);
   const setOrigin = useAppStore((state) => state.setOrigin);
+  const setRouteSearchOpen = useAppStore((state) => state.setRouteSearchOpen);
 
   // Only resolves to an id when the origin/destination node is actually on
   // the floor currently displayed (nodes is already scoped to activeFloor) —
@@ -291,21 +301,24 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
   }, [segments, setActiveSegmentIndex, setActiveFloorId, nodesById, focusWorldBounds]);
 
   const selectedObject = objects.find((object) => object.id === selectedObjectId) ?? null;
-  const searchableObjects = objects
-    .filter((object) => object.isSearchable)
-    .filter((object) => {
-      if (!deferredSearch.trim()) {
-        return true;
-      }
-
-      const query = deferredSearch.trim().toLowerCase();
-      return (
-        object.name.toLowerCase().includes(query)
-        || object.label.toLowerCase().includes(query)
-        || object.type.toLowerCase().includes(query)
-      );
-    })
-    .slice(0, 14);
+  // searchableObjects (floor-scoped, filtered by the sidebar's search box)
+  // and the deferredSearch value above it: only ever fed to MapViewerSidebar,
+  // commented out alongside it below rather than deleted.
+  // const searchableObjects = objects
+  //   .filter((object) => object.isSearchable)
+  //   .filter((object) => {
+  //     if (!deferredSearch.trim()) {
+  //       return true;
+  //     }
+  //
+  //     const query = deferredSearch.trim().toLowerCase();
+  //     return (
+  //       object.name.toLowerCase().includes(query)
+  //       || object.label.toLowerCase().includes(query)
+  //       || object.type.toLowerCase().includes(query)
+  //     );
+  //   })
+  //   .slice(0, 14);
 
   const focusObject = (object: ViewerMapObject, options: { recenter?: boolean } = {}) => {
     setSelectedObjectId(object.id);
@@ -334,6 +347,10 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
     }
 
     setSelectedObjectId(null);
+    // A background (non-object) tap is a deliberate "I'm done" gesture,
+    // unlike tapping an object - which is still part of the same routing
+    // workflow and must not close the search drawer out from under it.
+    setRouteSearchOpen(false);
   };
 
   const handleObjectSelect = (object: ViewerMapObject) => {
@@ -357,12 +374,15 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
       <div className="flex h-full min-h-0 flex-col">
         <MapViewerPageHeader activeFloor={activeFloor} />
 
-        {/* Below md, the sidebar is a fixed bottom sheet that docks as a
-            collapsed handle (map fully visible above it) and expands over
-            the map when tapped/dragged — never part of the page's normal
-            flow, so there's nothing to scroll past to reach it. At md and
-            up, it's a normal always-visible grid column, exactly as before. */}
-        <div className="relative mx-auto flex w-full max-w-400 flex-1 flex-col gap-0 p-0 sm:gap-4 sm:p-6 md:grid md:min-h-0 md:grid-cols-[300px_minmax(0,1fr)] lg:grid-cols-[340px_minmax(0,1fr)]">
+        {/* No sidebar column reserved (MapViewerSidebar is commented out
+            above) - main just fills this whole wrapper at every breakpoint.
+            If the sidebar comes back, restore the md:grid/grid-cols pair
+            that used to live on this div alongside it. */}
+        <div className="relative mx-auto flex w-full max-w-400 flex-1 flex-col gap-0 p-0 sm:gap-4 sm:p-6 md:min-h-0">
+          {/* MapViewerSidebar (and its mobile collapse-on-backdrop-tap button)
+              commented out, not deleted - MapSelectionBar now covers search,
+              accessibility, and Start/Route actions directly on the map, but
+              keep this available in case the sidebar needs to come back.
           {isMobileSidebarExpanded ? (
             <button
               aria-label="Collapse the map sidebar"
@@ -398,9 +418,45 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
             selectedObject={selectedObject}
             selectedObjectId={selectedObjectId}
           />
+          */}
 
-          <main className="order-1 relative min-h-0 flex-1 overflow-hidden border-x-0 border-t-0 border-b border-border bg-(--map-viewer-canvas) shadow-sm sm:rounded-3xl sm:border md:order-0 md:h-full md:min-h-0 lg:rounded-4xl">
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklch,var(--primary)_10%,transparent),transparent_32%),linear-gradient(to_right,var(--map-viewer-grid-minor)_1px,transparent_1px),linear-gradient(to_bottom,var(--map-viewer-grid-minor)_1px,transparent_1px)] bg-size-[auto,28px_28px,28px_28px]" />
+          <main className="order-1 relative min-h-0 flex-1 border-x-0 border-t-0 border-b border-border bg-(--map-viewer-canvas) shadow-sm sm:rounded-3xl sm:border md:order-0 md:h-full md:min-h-0 lg:rounded-4xl">
+            {/* Only the pannable canvas itself needs clipping (so panning/
+                zooming can't spill past the rounded card edge) - it's
+                isolated in its own overflow-hidden layer instead of putting
+                overflow-hidden on `main` directly, so overlay UI anchored to
+                `main` (MapSelectionBar's drawers in particular) can escape
+                past this box's edges instead of being clipped by it. */}
+            <div className="absolute inset-0 overflow-hidden rounded-[inherit]">
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklch,var(--primary)_10%,transparent),transparent_32%),linear-gradient(to_right,var(--map-viewer-grid-minor)_1px,transparent_1px),linear-gradient(to_bottom,var(--map-viewer-grid-minor)_1px,transparent_1px)] bg-size-[auto,28px_28px,28px_28px]" />
+              <MapViewerCanvas
+                activeFloor={activeFloor}
+                connectorTargetsByNodeId={connectorTargetsByNodeId}
+                contentRef={contentRef}
+                destinationObjectId={destinationObjectId}
+                edges={edges}
+                nodes={nodes}
+                objects={objects}
+                onBackgroundClick={handleBackgroundClick}
+                onConnectorActivate={handleConnectorJump}
+                onObjectSelect={handleObjectSelect}
+                onPointerCancel={handleViewportPointerCancel}
+                onPointerLeave={handleViewportPointerLeave}
+                onPointerUp={handleViewportPointerUp}
+                onSvgPointerDown={handleSvgPointerDown}
+                onSvgPointerMove={handleSvgPointerMove}
+                onSvgPointerUp={handleSvgPointerUp}
+                originObjectId={originObjectId}
+                routeConnectorDirection={routeConnectorDirection}
+                routeConnectorNodeId={routeConnectorNodeId}
+                routeHasDestination={Boolean(routePointsForActiveFloor) && activeSegmentIndex === segments.length - 1}
+                routeHasStart={Boolean(routePointsForActiveFloor) && activeSegmentIndex === 0}
+                routePoints={routePointsForActiveFloor}
+                selectedObjectId={selectedObjectId}
+                showGrid={showGrid}
+                viewportRef={viewportRef}
+              />
+            </div>
             <MapViewerToolbar
               activeFloor={activeFloor}
               activeSegmentIndex={activeSegmentIndex}
@@ -413,40 +469,14 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
               segments={segments}
               showGrid={showGrid}
             />
-            <MapViewerCanvas
-              activeFloor={activeFloor}
-              connectorTargetsByNodeId={connectorTargetsByNodeId}
-              contentRef={contentRef}
-              destinationObjectId={destinationObjectId}
-              edges={edges}
-              nodes={nodes}
-              objects={objects}
-              onBackgroundClick={handleBackgroundClick}
-              onConnectorActivate={handleConnectorJump}
-              onObjectSelect={handleObjectSelect}
-              onPointerCancel={handleViewportPointerCancel}
-              onPointerLeave={handleViewportPointerLeave}
-              onPointerUp={handleViewportPointerUp}
-              onSvgPointerDown={handleSvgPointerDown}
-              onSvgPointerMove={handleSvgPointerMove}
-              onSvgPointerUp={handleSvgPointerUp}
-              originObjectId={originObjectId}
-              routeConnectorDirection={routeConnectorDirection}
-              routeConnectorNodeId={routeConnectorNodeId}
-              routeHasDestination={Boolean(routePointsForActiveFloor) && activeSegmentIndex === segments.length - 1}
-              routeHasStart={Boolean(routePointsForActiveFloor) && activeSegmentIndex === 0}
-              routePoints={routePointsForActiveFloor}
-              selectedObjectId={selectedObjectId}
-              showGrid={showGrid}
-              viewportRef={viewportRef}
+            <MapSelectionBar
+              floors={floors}
+              label={selectedObject ? selectedObject.label || selectedObject.name : null}
+              nodeId={selectedObject ? findNodeIdForObject(selectedObject.id, allNodes) : null}
+              nodes={allNodes}
+              onClose={() => setSelectedObjectId(null)}
+              searchableObjects={allSearchableObjects}
             />
-            {selectedObject ? (
-              <MapSelectionBar
-                label={selectedObject.label || selectedObject.name}
-                nodeId={findNodeIdForObject(selectedObject.id, allNodes)}
-                onClose={() => setSelectedObjectId(null)}
-              />
-            ) : null}
             {nextSegment && nextFloor ? (
               <FloorHopIndicator
                 direction={routeConnectorDirection ?? "up"}

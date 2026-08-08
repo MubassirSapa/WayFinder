@@ -477,12 +477,12 @@ flowchart LR
 
     subgraph viewerModule ["Map viewer module"]
         viewerShell["MapViewerShell"]
-        viewerUi["Sidebar, toolbar, canvas, and SVG"]
+        viewerUi["Toolbar, canvas, SVG, and persistent selection bar (sidebar currently disabled)"]
         floorState["Viewport pan and zoom state"]
     end
 
     subgraph navigationModule ["Navigation extension"]
-        routePanel["RoutePanel and origin controls"]
+        routePanel["RoutePanel and MapSelectionBar origin/search controls"]
         navigationState["Origin, destination, accessibility, segment index, and active floor"]
         routeHook["useRoute"]
         graphBuilder["buildRouteGraph"]
@@ -545,9 +545,11 @@ The navigation Zustand slice stores user intent only. The graph and computed
 route are derived with memoized pure functions, which prevents stale route data
 from being stored separately. The active floor also lives in this slice rather
 than as `MapViewerShell` component state, so every entry point that changes it
-(the header floor select, the sidebar floor list, a canvas connector jump, a
+(the header floor select, the corner floor wheel, a canvas connector jump, a
 route panel segment row, and `FloorHopIndicator`) reads and writes the same
-state instead of drifting out of sync with the active route segment.
+state instead of drifting out of sync with the active route segment. The
+sidebar's own floor list is currently disabled along with the rest of the
+sidebar (see `MapViewerShell.tsx`) in favor of the persistent selection bar.
 
 ## 6. Authentication and email flow
 

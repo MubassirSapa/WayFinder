@@ -18,4 +18,18 @@ describe("createNavigationSlice", () => {
     expect(store.getState().destinationNodeId).toBeNull();
     expect(store.getState().activeSegmentIndex).toBe(0);
   });
+
+  it("closes the route search drawer whenever the route (or the whole session) is cleared", () => {
+    const store = create<NavigationSlice>()(
+      createNavigationSlice as unknown as StateCreator<NavigationSlice>,
+    );
+
+    store.getState().setRouteSearchOpen(true);
+    store.getState().clearRoute();
+    expect(store.getState().isRouteSearchOpen).toBe(false);
+
+    store.getState().setRouteSearchOpen(true);
+    store.getState().resetNavigation();
+    expect(store.getState().isRouteSearchOpen).toBe(false);
+  });
 });
