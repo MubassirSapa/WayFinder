@@ -9,6 +9,7 @@ import { EditorSidePanel, type EditorSidePanelTab } from './EditorSidePanel';
 import { MapCanvas } from './MapCanvas';
 import { InspectorPanel } from './InspectorPanel';
 import { EditorDesktopOnlyNotice } from './EditorDesktopOnlyNotice';
+import { Button } from '@/components/ui/button';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Loader2, AlertCircle } from 'lucide-react';
 
@@ -42,12 +43,14 @@ export function MapEditorShell({
         <AlertCircle className="h-12 w-12 text-destructive" />
         <h2 className="text-base font-bold text-editor-foreground">{EDITOR_UI_TEXT.errors.title}</h2>
         <p className="text-xs text-editor-subtle-foreground max-w-sm leading-relaxed">{error}</p>
-        <button
+        <Button
           onClick={() => window.location.reload()}
-          className="mt-4 px-4 py-2 bg-editor-surface hover:bg-editor-hover text-editor-foreground text-xs font-semibold rounded-lg border border-editor-border-strong transition-colors"
+          type="button"
+          variant="outline"
+          className="mt-4 h-auto px-4 py-2 bg-editor-surface hover:bg-editor-hover text-editor-foreground text-xs font-semibold rounded-lg border-editor-border-strong"
         >
           {EDITOR_UI_TEXT.errors.reload}
-        </button>
+        </Button>
       </div>
     );
   }

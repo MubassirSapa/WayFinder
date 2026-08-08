@@ -3,6 +3,7 @@
 import { useDeferredValue, useState } from "react";
 import { X } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import { useAppStore } from "@/store";
 import type { ViewerFloor, ViewerMapNode, ViewerMapObject } from "@/features/map-viewer/types/map-viewer.types";
 
@@ -114,26 +115,29 @@ export function RouteSearchFields({ floors, nodes, searchableObjects }: RouteSea
           value={fromValue}
         />
         {originNodeId ? (
-          <button
+          <Button
             aria-label="Clear starting point"
-            className="shrink-0"
+            className="size-auto shrink-0 rounded-full p-1"
             onClick={() => setOrigin(null)}
+            size="icon-xs"
             type="button"
+            variant="ghost"
           >
             <X className="h-3.5 w-3.5 text-muted-foreground" />
-          </button>
+          </Button>
         ) : null}
       </div>
 
       {focusedField === "from" && candidates.length > 0 ? (
         <div className="space-y-1 rounded-2xl border border-border bg-background p-1.5">
           {candidates.map((object) => (
-            <button
+            <Button
               key={object.id}
-              className="block w-full rounded-xl px-3 py-2 text-left hover:bg-muted/60"
+              className="block h-auto w-full items-start justify-start rounded-xl px-3 py-2 text-left font-normal"
               onClick={() => pickOrigin(object)}
               onMouseDown={(event) => event.preventDefault()}
               type="button"
+              variant="ghost"
             >
               <span className="block truncate text-sm">
                 {object.label || object.name}
@@ -143,7 +147,7 @@ export function RouteSearchFields({ floors, nodes, searchableObjects }: RouteSea
                   {findFloorNameForObject(object, floors)}
                 </span>
               ) : null}
-            </button>
+            </Button>
           ))}
         </div>
       ) : null}
@@ -163,26 +167,29 @@ export function RouteSearchFields({ floors, nodes, searchableObjects }: RouteSea
           value={toValue}
         />
         {destinationNodeId ? (
-          <button
+          <Button
             aria-label="Clear destination"
-            className="shrink-0"
+            className="size-auto shrink-0 rounded-full p-1"
             onClick={clearRoute}
+            size="icon-xs"
             type="button"
+            variant="ghost"
           >
             <X className="h-3.5 w-3.5 text-muted-foreground" />
-          </button>
+          </Button>
         ) : null}
       </div>
 
       {focusedField === "to" && candidates.length > 0 ? (
         <div className="space-y-1 rounded-2xl border border-border bg-background p-1.5">
           {candidates.map((object) => (
-            <button
+            <Button
               key={object.id}
-              className="block w-full rounded-xl px-3 py-2 text-left hover:bg-muted/60"
+              className="block h-auto w-full items-start justify-start rounded-xl px-3 py-2 text-left font-normal"
               onClick={() => pickDestination(object)}
               onMouseDown={(event) => event.preventDefault()}
               type="button"
+              variant="ghost"
             >
               <span className="block truncate text-sm">
                 {object.label || object.name}
@@ -192,7 +199,7 @@ export function RouteSearchFields({ floors, nodes, searchableObjects }: RouteSea
                   {findFloorNameForObject(object, floors)}
                 </span>
               ) : null}
-            </button>
+            </Button>
           ))}
         </div>
       ) : null}

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowDown, ArrowUp } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 // Matches the row height baked into the inline pixel math below (drag clamp,
@@ -162,7 +163,7 @@ export function FloorWheel({
 
       <div
         aria-label={ariaLabel}
-        className="flex min-w-11 items-stretch gap-1 rounded-xl border border-border bg-card/95 p-1 shadow-lg backdrop-blur-xl"
+        className="flex w-14 items-stretch gap-1 rounded-xl border border-border bg-card/95 p-1 shadow-lg backdrop-blur-xl"
         role="group"
       >
         <div className="flex min-w-0 flex-1 items-center">
@@ -234,15 +235,17 @@ function ArrowButton({ direction, disabled, label, onClick }: ArrowButtonProps) 
   const Icon = direction === "previous" ? ArrowUp : ArrowDown;
 
   return (
-    <button
+    <Button
       aria-label={label ? `Go to ${label}` : "No more floors"}
-      className="hidden size-7 shrink-0 items-center justify-center rounded-full border border-border bg-card/95 text-muted-foreground shadow-lg backdrop-blur-xl transition-colors hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-40 md:flex"
+      className="hidden size-7 shrink-0 rounded-full border-border bg-card/95 text-muted-foreground shadow-lg backdrop-blur-xl hover:bg-muted hover:text-foreground md:flex"
       disabled={disabled}
       onClick={onClick}
+      size="icon"
       type="button"
+      variant="outline"
     >
       <Icon className="size-3.5" aria-hidden />
-    </button>
+    </Button>
   );
 }
 
@@ -268,9 +271,9 @@ function FloorWheelRow({ height, item, onSelect, variant }: FloorWheelRowProps) 
         : null;
 
   return (
-    <button
+    <Button
       className={cn(
-        "flex w-full min-w-0 items-center justify-center gap-1.5 px-2 text-center",
+        "h-auto w-full min-w-0 justify-center gap-1.5 rounded-none border-none bg-transparent px-2 text-center hover:bg-transparent dark:hover:bg-transparent",
         isActive
           ? "cursor-default text-sm font-semibold text-foreground sm:text-base"
           : "text-xs text-muted-foreground opacity-50 transition-opacity hover:opacity-80",
@@ -280,8 +283,9 @@ function FloorWheelRow({ height, item, onSelect, variant }: FloorWheelRowProps) 
       onClick={onSelect}
       style={{ height }}
       type="button"
+      variant="ghost"
     >
       <span className="truncate">{item.label}</span>
-    </button>
+    </Button>
   );
 }

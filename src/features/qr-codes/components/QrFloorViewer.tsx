@@ -87,7 +87,7 @@ export function QrFloorViewer({ data }: QrFloorViewerProps) {
     <div
       ref={shellRef}
       className={[
-        "relative h-[70dvh] min-h-96 overflow-hidden rounded-3xl border border-border bg-(--map-viewer-canvas) shadow-sm",
+        "relative h-105 overflow-hidden rounded-3xl border border-border bg-(--map-viewer-canvas) shadow-sm sm:h-130 md:h-150 lg:h-170",
         MAP_VIEWER_THEME_CLASSNAMES,
       ].join(" ")}
     >

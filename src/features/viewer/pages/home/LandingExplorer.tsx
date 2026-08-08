@@ -99,7 +99,11 @@ export function LandingExplorer({ data }: LandingExplorerProps) {
       </section>
 
       <section className="mx-auto w-full max-w-6xl px-5 py-7 sm:px-6">
-        <PopularOrganizations organizations={popularOrganizations} onSelect={selectOrganization} />
+        <PopularOrganizations
+          organizations={popularOrganizations}
+          onSelect={selectOrganization}
+          selectedOrganizationId={selectedOrganization?.id ?? null}
+        />
       </section>
 
       <section className="mx-auto w-full max-w-6xl scroll-mt-20 px-5 pb-12 sm:px-6" id="venues">
@@ -121,14 +125,15 @@ export function LandingExplorer({ data }: LandingExplorerProps) {
         )}
 
         {selectedOrganization ? (
-          <button
-            className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary transition hover:bg-primary/15"
+          <Button
+            className="mb-4 h-auto rounded-full border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary/15"
             type="button"
+            variant="outline"
             onClick={() => setSelectedOrganization(null)}
           >
             Showing {selectedOrganization.name}
             <X className="size-3.5" aria-hidden />
-          </button>
+          </Button>
         ) : null}
 
         {data.venues.length === 0 ? (

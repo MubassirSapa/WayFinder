@@ -2,6 +2,7 @@
 
 import { ArrowUpDown, ArrowUpRight, TrendingUp, type LucideIcon } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -46,18 +47,19 @@ export function ConnectorFloorPickerDialog({
         </DialogHeader>
         <div className="space-y-1.5">
           {targets.map((target) => (
-            <button
-              className="flex w-full items-center gap-2.5 rounded-lg border border-border px-3 py-2.5 text-left text-sm font-medium transition-colors hover:bg-muted/60"
+            <Button
+              className="h-auto w-full justify-start gap-2.5 rounded-lg border-border px-3 py-2.5 text-left text-sm font-medium"
               key={target.floorId}
               onClick={() => {
                 onSelectFloor(target.floorId);
                 onOpenChange(false);
               }}
               type="button"
+              variant="outline"
             >
               <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
               {target.floorName}
-            </button>
+            </Button>
           ))}
         </div>
       </DialogContent>

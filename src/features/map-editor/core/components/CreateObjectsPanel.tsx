@@ -5,6 +5,7 @@ import { EDITOR_UI_TEXT } from '../../constants/editorUi.constants';
 import { OBJECT_CATEGORIES, OBJECT_CONFIGS } from '../lib/objectDefaults';
 import { ToolboxObjectType } from '../types/editor.types';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 export function CreateObjectsPanel() {
@@ -43,12 +44,14 @@ export function CreateObjectsPanel() {
                   const isSelected = selectedToolboxType === type;
 
                   return (
-                    <button
+                    <Button
                       key={type}
                       onClick={() => handleSelectType(type)}
+                      type="button"
+                      variant="ghost"
                       className={cn(
-                        "w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-left text-xs font-medium transition-all",
-                        "hover:bg-editor-surface/80 hover:text-editor-foreground",
+                        "h-auto w-full items-center justify-start gap-3 px-3.5 py-3 rounded-xl text-left text-xs font-medium transition-all",
+                        "hover:bg-editor-surface/80 hover:text-editor-foreground dark:hover:bg-editor-surface/80",
                         isSelected
                           ? "bg-primary/20 text-primary border border-primary/35 shadow-[0_0_14px_rgba(59,130,246,0.16)]"
                           : "bg-editor-background/35 text-editor-muted-foreground border border-editor-border/80"
@@ -67,7 +70,7 @@ export function CreateObjectsPanel() {
                       <div className="flex-1 min-w-0">
                         <span className="block truncate text-editor-foreground">{config.label}</span>
                       </div>
-                    </button>
+                    </Button>
                   );
                 })}
               </div>

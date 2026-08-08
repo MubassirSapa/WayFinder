@@ -39,8 +39,8 @@ export function SiteHeader({
               className={cn(
                 link.variant === "primary"
                   ? cn(buttonVariants({ size: "lg" }), "h-9 px-4 text-sm")
-                  : "transition-colors hover:text-foreground",
-                link.variant !== "primary" && activeHref === link.href && "text-foreground",
+                  : "transition-colors hover:text-primary",
+                link.variant !== "primary" && activeHref === link.href && "font-semibold text-primary",
               )}
               href={link.href}
               key={link.href}
