@@ -163,6 +163,22 @@ export function MapViewerShell({ data }: MapViewerShellProps) {
     }
   }, [segments, activeFloorId, activeSegmentIndex, setActiveSegmentIndex]);
 
+  // A route is usually completed by walking to the destination floor and
+  // hitting "Route here" there, which leaves activeFloorId sitting on that
+  // last floor - the effect above then just matches activeSegmentIndex to
+  // wherever that already is, instead of anything jumping the view back to
+  // the route's own start. Hand the user back to segment 0's floor whenever
+  // a full route (both endpoints) is newly set, same as clicking segment 0
+  // in the route panel would.
+  useEffect(() => {
+    if (!originNodeId || !destinationNodeId || segments.length === 0) {
+      return;
+    }
+
+    setActiveFloorId(segments[0].floorId);
+    setActiveSegmentIndex(0);
+  }, [originNodeId, destinationNodeId, segments, setActiveFloorId, setActiveSegmentIndex]);
+
   const routePointsForActiveFloor = activeSegment?.floorId === activeFloorId ? routePoints : undefined;
   const nextSegment = segments[activeSegmentIndex + 1] ?? null;
   const nextFloor = nextSegment ? floors.find((floor) => floor.id === nextSegment.floorId) ?? null : null;

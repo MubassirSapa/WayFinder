@@ -15,9 +15,14 @@ interface RouteStatusIndicatorProps {
 // exclusive: a floor hop still pending takes priority over this).
 export function RouteStatusIndicator({ accessibleOnly, distanceMeters, found }: RouteStatusIndicatorProps) {
   return (
-    // Bottom offset clears the collapsed mobile sidebar sheet, same reason
-    // as FloorHopIndicator — back to bottom-4 at md+.
-    <div className="pointer-events-none absolute inset-x-0 bottom-36 z-10 flex justify-center px-4 md:bottom-20">
+    // bottom-36 used to clear the collapsed mobile sidebar sheet's handle -
+    // that sheet is commented out (MapViewerShell no longer renders
+    // MapViewerSidebar), so there's nothing left to clear on mobile. Went
+    // straight to bottom-20 (matching md+) first, but on a narrow phone that
+    // put it close enough to graze the corner floor wheel, which reaches
+    // higher than the zoom control beside it - bottom-28 keeps it pulled
+    // down from the old value while staying clear of the wheel.
+    <div className="pointer-events-none absolute inset-x-0 bottom-28 z-10 flex justify-center px-4 md:bottom-20">
       <div
         className={[
           "pointer-events-auto flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium shadow-lg",

@@ -17,11 +17,14 @@ export function FloorHopIndicator({ direction, edgeType, floorName, onAdvance }:
   const DirectionIcon = direction === "up" ? ArrowUp : ArrowDown;
 
   return (
-    // Bottom offset clears the collapsed mobile sidebar sheet (which docks
-    // fixed at the bottom of the screen and would otherwise sit on top of
-    // this) — back to a plain bottom-4 at md+, where the sidebar is a normal
-    // grid column instead.
-    <div className="pointer-events-none absolute inset-x-0 bottom-36 z-10 flex justify-center px-4 md:bottom-20">
+    // bottom-36 used to clear the collapsed mobile sidebar sheet's handle -
+    // that sheet is commented out (MapViewerShell no longer renders
+    // MapViewerSidebar), so there's nothing left to clear on mobile. Went
+    // straight to bottom-20 (matching md+) first, but on a narrow phone that
+    // put it close enough to graze the corner floor wheel, which reaches
+    // higher than the zoom control beside it - bottom-28 keeps it pulled
+    // down from the old value while staying clear of the wheel.
+    <div className="pointer-events-none absolute inset-x-0 bottom-28 z-10 flex justify-center px-4 md:bottom-20">
       <Button
         className="pointer-events-auto shadow-lg p-4"
         onClick={onAdvance}

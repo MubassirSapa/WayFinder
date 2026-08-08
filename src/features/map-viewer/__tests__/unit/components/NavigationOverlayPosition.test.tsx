@@ -18,7 +18,7 @@ describe("navigation overlay positioning", () => {
     );
 
     const positioner = screen.getByRole("button", { name: /Continue via elevator/ }).parentElement;
-    expect(positioner?.className).toContain("bottom-36");
+    expect(positioner?.className).toContain("bottom-28");
     expect(positioner?.className).toContain("md:bottom-20");
   });
 
@@ -26,7 +26,7 @@ describe("navigation overlay positioning", () => {
     render(<RouteStatusIndicator accessibleOnly={false} distanceMeters={12} found />);
 
     const positioner = screen.getByText("Your destination floor • 12.0 m").parentElement;
-    expect(positioner?.className).toContain("bottom-36");
+    expect(positioner?.className).toContain("bottom-28");
     expect(positioner?.className).toContain("md:bottom-20");
   });
 });
