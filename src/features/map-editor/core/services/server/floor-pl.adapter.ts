@@ -98,7 +98,7 @@ export async function updateFloorAdapter(id: string, data: Partial<EditorFloor>)
       updateData.backgroundImage = data.backgroundImageId
         ? asPayloadId(data.backgroundImageId)
         : null;
-      updateData.backgroundImageUrl = null;
+      updateData.backgroundImageUrl = data.backgroundImageUrl ?? null;
     } else if (data.backgroundImageUrl !== undefined) {
       updateData.backgroundImageUrl = data.backgroundImageUrl;
     }

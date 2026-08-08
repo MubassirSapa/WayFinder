@@ -19,7 +19,6 @@ export default async function EditorPage({ params }: PageProps) {
   const result = await getFloorEditorData(floorId);
   const initialData = result.isSuccess ? result.data : null;
   const initialError = result.isSuccess ? null : result.message;
-  const showImageTools = process.env.NODE_ENV !== "production";
 
   return (
     <>
@@ -33,16 +32,12 @@ export default async function EditorPage({ params }: PageProps) {
             icon: <LayoutGrid className="h-3.5 w-3.5" />,
             content: <CreateObjectsPanel />,
           },
-          ...(showImageTools
-            ? [
-                {
-                  id: "image",
-                  label: EDITOR_UI_TEXT.leftPanel.tabs.image,
-                  icon: <ImageIcon className="h-3.5 w-3.5" />,
-                  content: <FloorReferencePanel />,
-                },
-              ]
-            : []),
+          {
+            id: "image",
+            label: EDITOR_UI_TEXT.leftPanel.tabs.image,
+            icon: <ImageIcon className="h-3.5 w-3.5" />,
+            content: <FloorReferencePanel />,
+          },
           {
             id: "automation",
             label: EDITOR_UI_TEXT.leftPanel.tabs.automation,
