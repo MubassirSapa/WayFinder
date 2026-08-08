@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { MapViewerCanvas } from "@/features/map-viewer/components/MapViewerCanvas";
 import { MAP_VIEWER_THEME_CLASSNAMES } from "@/features/map-viewer/constants/mapViewerTheme.constants";
@@ -30,6 +30,25 @@ export function QrFloorViewer({ data }: QrFloorViewerProps) {
   const edges = activeFloorId ? data.edgesByFloorId[activeFloorId] ?? [] : [];
 
   const [selectedObjectId, setSelectedObjectId] = useState<string | null>(null);
+  const shellRef = useRef<HTMLDivElement | null>(null);
+
+  // On large screens the shell is tall enough (h-[70dvh]) that its bottom
+  // can land below the fold beneath the sticky topbar/back-link/header
+  // above it - scroll it fully into view once on mount, but only if it's
+  // actually cut off and only above the lg breakpoint (on small screens the
+  // page is expected to scroll normally).
+  useEffect(() => {
+    const node = shellRef.current;
+    if (!node) {
+      return;
+    }
+    if (!window.matchMedia("(min-width: 1024px)").matches) {
+      return;
+    }
+    if (node.getBoundingClientRect().bottom > window.innerHeight) {
+      node.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+  }, []);
 
   const {
     consumeSuppressedClick,
@@ -66,8 +85,9 @@ export function QrFloorViewer({ data }: QrFloorViewerProps) {
 
   return (
     <div
+      ref={shellRef}
       className={[
-        "relative h-[70dvh] min-h-120 overflow-hidden rounded-3xl border border-border bg-(--map-viewer-canvas) shadow-sm",
+        "relative h-[70dvh] min-h-96 overflow-hidden rounded-3xl border border-border bg-(--map-viewer-canvas) shadow-sm",
         MAP_VIEWER_THEME_CLASSNAMES,
       ].join(" ")}
     >
