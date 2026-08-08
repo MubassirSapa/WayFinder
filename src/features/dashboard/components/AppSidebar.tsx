@@ -3,14 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Building2Icon, LayoutDashboardIcon, LandmarkIcon, UsersIcon } from "lucide-react";
+import { Building2Icon, LandmarkIcon, LayoutDashboardIcon, UsersIcon } from "lucide-react";
 
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -75,7 +74,6 @@ export function AppSidebar({ user }: { user: TopbarUser }) {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>{DASHBOARD_CLIENT.NAV_WORKSPACE}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => {

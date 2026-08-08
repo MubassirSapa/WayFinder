@@ -8,7 +8,10 @@ import { getCurrentUser } from "@/features/auth/services/server/auth.ports";
 import { listPendingInvitations } from "@/features/invitations/services/server/invitation.ports";
 import { USER_MANAGEMENT_CLIENT } from "@/features/user-management/constants/user-management.constants";
 import { TeamDirectory } from "@/features/user-management/components/TeamDirectory";
-import { listOrgBuildingOptions, listOrgUsers } from "@/features/user-management/services/server/user-management.ports";
+import {
+  listOrgBuildingOptions,
+  listOrgUsers,
+} from "@/features/user-management/services/server/user-management.ports";
 import { DashboardPageContainer } from "@/features/dashboard/components/DashboardPageHeader";
 
 export const metadata: Metadata = {
@@ -25,17 +28,24 @@ export default async function UsersPage() {
     redirect(PRIVATE_ROUTES.DASHBOARD);
   }
 
-  const [usersResult, buildingOptions, pendingInvitationsResult] = await Promise.all([
-    listOrgUsers(user),
-    listOrgBuildingOptions(user),
-    listPendingInvitations(user),
-  ]);
+  const [usersResult, buildingOptions, pendingInvitationsResult] =
+    await Promise.all([
+      listOrgUsers(user),
+      listOrgBuildingOptions(user),
+      listPendingInvitations(user),
+    ]);
   const users = usersResult.isSuccess ? usersResult.data : [];
-  const pendingInvitations = pendingInvitationsResult.isSuccess ? pendingInvitationsResult.data : [];
+  const pendingInvitations = pendingInvitationsResult.isSuccess
+    ? pendingInvitationsResult.data
+    : [];
 
   return (
     <DashboardPageContainer>
-      <TeamDirectory users={users} buildingOptions={buildingOptions} pendingInvitations={pendingInvitations} />
+      <TeamDirectory
+        users={users}
+        buildingOptions={buildingOptions}
+        pendingInvitations={pendingInvitations}
+      />
     </DashboardPageContainer>
   );
 }

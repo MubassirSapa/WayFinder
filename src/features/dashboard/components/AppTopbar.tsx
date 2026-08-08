@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { Building2Icon, LogOutIcon, UserIcon } from "lucide-react";
+import { LogOutIcon, UserIcon } from "lucide-react";
 
 import { WayfinderBrand } from "@/components/shared/brand/WayfinderBrand";
 import { ModeToggle } from "@/components/shared/theme/ModeToggle";
@@ -40,7 +40,6 @@ type AppTopbarProps = {
 export function AppTopbar({ user }: AppTopbarProps) {
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
   const [isLoggingOut, startLogout] = useTransition();
-  const canManage = user.role === "owner" || user.role === "manager";
 
   const logout = () => {
     startLogout(async () => {
@@ -91,12 +90,6 @@ export function AppTopbar({ user }: AppTopbarProps) {
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  {canManage ? (
-                    <DropdownMenuItem render={<Link href={PRIVATE_ROUTES.ORGANIZATION} />}>
-                      <Building2Icon />
-                      {DASHBOARD_CLIENT.NAV_ORGANIZATION}
-                    </DropdownMenuItem>
-                  ) : null}
                   <DropdownMenuItem render={<Link href={PRIVATE_ROUTES.PROFILE} />}>
                     <UserIcon />
                     {DASHBOARD_CLIENT.NAV_PROFILE}

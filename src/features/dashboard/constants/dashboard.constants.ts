@@ -36,7 +36,6 @@ export const DASHBOARD_CLIENT = {
   NAV_BUILDINGS: "Buildings",
   NAV_USERS: "Team",
   NAV_PROFILE: "Profile",
-  NAV_WORKSPACE: "Workspace",
   LOG_OUT: "Log out",
   LOG_OUT_TITLE: "Log out of Wayfinder?",
   LOG_OUT_DESCRIPTION: "You will need to sign in again to access your dashboard.",

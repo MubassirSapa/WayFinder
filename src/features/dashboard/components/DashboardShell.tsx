@@ -42,6 +42,7 @@ export function DashboardShell({ data }: { data: DashboardData }) {
         }
       />
 
+
       <RecentFloorGrid floors={data.floors.slice(0, 4)} />
 
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.75fr)] lg:items-start">
