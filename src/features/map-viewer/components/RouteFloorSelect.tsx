@@ -1,16 +1,8 @@
 "use client";
 
-import {
-  ArrowUpDown,
-  ArrowUpRight,
-  TrendingUp,
-  Waypoints,
-  type LucideIcon,
-} from "lucide-react";
-
 import type { RouteFloorSegment } from "@/features/navigation/types/navigation.types";
 
-import type { ViewerFloor, ViewerPathEdge } from "../types/map-viewer.types";
+import type { ViewerFloor } from "../types/map-viewer.types";
 import { FloorWheel } from "./FloorWheel";
 
 interface RouteFloorSelectProps {
@@ -19,14 +11,6 @@ interface RouteFloorSelectProps {
   onJumpToSegment: (index: number) => void;
   segments: RouteFloorSegment[];
 }
-
-const CONNECTOR_ICONS: Record<ViewerPathEdge["type"], LucideIcon> = {
-  elevator: ArrowUpDown,
-  escalator: TrendingUp,
-  ramp: Waypoints,
-  stairs: ArrowUpRight,
-  walkway: Waypoints,
-};
 
 // Canceling the route entirely already lives as "Clear" in the Navigate
 // panel's "Get directions" header (RoutePanel) - this control is only
@@ -54,7 +38,11 @@ export function RouteFloorSelect({
     .sort((a, b) => (b.level ?? -Infinity) - (a.level ?? -Infinity));
 
   const items = orderedSegments.map(({ level, originalIndex, segment }) => ({
-    connectorIcon: segment.enterViaEdgeType ? CONNECTOR_ICONS[segment.enterViaEdgeType] : null,
+    colorVariant: originalIndex === 0
+      ? "start" as const
+      : originalIndex === segments.length - 1
+        ? "destination" as const
+        : "stop" as const,
     key: `${segment.floorId}-${originalIndex}`,
     label: level === undefined ? "?" : String(level),
   }));

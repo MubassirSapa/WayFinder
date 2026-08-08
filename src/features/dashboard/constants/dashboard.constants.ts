@@ -1,3 +1,7 @@
+// BuildingNavigator caps its list to this many buildings before showing a
+// "View all" link to the full /dashboard/buildings page instead.
+export const MAX_BUILDINGS_SHOWN = 3;
+
 export const DASHBOARD_CLIENT = {
   PAGE_TITLE: "Dashboard",
   PAGE_DESCRIPTION: "Your maps, buildings, and access in one place.",

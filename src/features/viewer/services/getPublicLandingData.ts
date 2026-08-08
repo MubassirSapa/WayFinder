@@ -53,10 +53,15 @@ export async function getPublicLandingData(): Promise<PublicLandingData> {
       },
       // Buildings.defaultPopulate omits `address` (most callers don't need
       // it) - override it for this query only, since the public venue cards
-      // show a building's location. `organization` stays included so the
-      // nested Organization populate (name/logo) is unaffected.
+      // show a building's location. A populate override replaces
+      // defaultPopulate entirely instead of merging with it, so every field
+      // defaultPopulate would have included (`organization`, `logoUrl`) has
+      // to be re-listed here too or it silently comes back undefined - this
+      // is what caused venue cards to never show a building's own logo even
+      // though the same field renders fine everywhere defaultPopulate is
+      // left untouched.
       populate: {
-        buildings: { name: true, organization: true, address: true },
+        buildings: { name: true, organization: true, address: true, logoUrl: true },
       },
       overrideAccess: true,
       pagination: false,

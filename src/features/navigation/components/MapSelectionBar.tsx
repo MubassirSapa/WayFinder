@@ -37,7 +37,14 @@ function MapSelectionDrawer({ children, isOpen }: { children: ReactNode; isOpen:
         // drawer would visibly drift sideways as the bar's own center point
         // shifted during that grow animation. Sharing the same fixed left
         // edge keeps both anchored together with nothing to drift.
-        "pointer-events-auto absolute left-0 top-full z-40 max-h-[60dvh] w-[min(92vw,26rem)] origin-top-left overflow-y-auto rounded-b-3xl border border-t-0 border-border bg-card/95 p-4 shadow-2xl backdrop-blur-xl transition-[opacity,transform] duration-200 ease-out",
+        //
+        // -left-px, not left-0: an absolutely positioned element's offset is
+        // measured from its containing block's *padding* edge, not its
+        // outer border edge - the bar has a 1px border, so left-0 lands 1px
+        // inside that border, shifting the drawer's whole box (same width)
+        // 1px right of the bar's actual outer edge. -left-px cancels that
+        // exactly, so the two right edges land on the same pixel.
+        "pointer-events-auto absolute -left-px top-full z-40 max-h-[60dvh] w-[min(92vw,26rem)] origin-top-left overflow-y-auto rounded-b-3xl border border-t-0 border-border bg-card/95 p-4 shadow-2xl backdrop-blur-xl transition-[opacity,transform] duration-200 ease-out",
         isOpen
           ? "translate-y-0 opacity-100"
           : "pointer-events-none -translate-y-1 opacity-0",
@@ -121,14 +128,24 @@ export function MapSelectionBar({
     }
   }, [originNodeId, destinationNodeId, setRouteSearchOpen]);
 
+  // px-3 md:px-4, not sm: - matches MapCornerControls' inset-x-3
+  // md:inset-x-4 breakpoint exactly, so the bar's left edge lines up with
+  // the zoom/floor-wheel controls below it at every viewport width instead
+  // of drifting apart between the sm and md breakpoints.
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-3 z-10 flex justify-start px-3 sm:px-4">
+    <div className="pointer-events-none absolute inset-x-0 top-3 z-10 flex justify-start px-3 md:px-4">
       {/* relative + no overflow set: the drawer below is positioned off
           *this* box's own bottom edge (top-full) and needs to escape its
           bounds, so nothing here may clip. */}
+      {/* Width itself isn't transitioned (only border-radius is) - the
+          drawer below shares this exact w-[min(92vw,26rem)] class but its
+          own width isn't animated either (only its opacity/transform are),
+          so animating the bar's width here would leave it visibly narrower
+          than the already-full-width drawer for the length of that
+          transition, even though both settle at the identical value. */}
       <div
         className={cn(
-          "pointer-events-auto relative flex h-14 max-w-full items-stretch gap-1 rounded-2xl border border-border bg-card/95 shadow-lg backdrop-blur-xl transition-[width,border-radius] duration-200 ease-out",
+          "pointer-events-auto relative flex h-14 max-w-full items-stretch gap-1 rounded-2xl border border-border bg-card/95 shadow-lg backdrop-blur-xl transition-[border-radius] duration-200 ease-out",
           barWidthClassName,
           isSearchOpen && "rounded-b-none",
         )}

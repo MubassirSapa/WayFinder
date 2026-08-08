@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowDown, ArrowUp } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -18,7 +17,11 @@ const DRAG_COMMIT_THRESHOLD = 28;
 const SLIDE_DURATION_MS = 200;
 
 export interface FloorWheelItem {
-  connectorIcon?: LucideIcon | null;
+  // Route mode only: which color the floor number itself renders in -
+  // "start" (green) is the route's first floor, "destination" (red) is its
+  // last, "stop" (blue) is any floor in between. Left undefined outside of
+  // route mode (plain floor browsing renders in the normal text color).
+  colorVariant?: "destination" | "start" | "stop" | null;
   key: string;
   label: string;
 }
@@ -256,7 +259,13 @@ function FloorWheelRow({ height, item, onSelect, variant }: FloorWheelRowProps) 
   }
 
   const isActive = variant === "active";
-  const ConnectorIcon = item.connectorIcon;
+  const colorClassName = item.colorVariant === "start"
+    ? "text-(--map-viewer-route-origin)"
+    : item.colorVariant === "destination"
+      ? "text-(--map-viewer-route-floor-destination)"
+      : item.colorVariant === "stop"
+        ? "text-(--map-viewer-route-floor-stop)"
+        : null;
 
   return (
     <button
@@ -265,13 +274,13 @@ function FloorWheelRow({ height, item, onSelect, variant }: FloorWheelRowProps) 
         isActive
           ? "cursor-default text-sm font-semibold text-foreground sm:text-base"
           : "text-xs text-muted-foreground opacity-50 transition-opacity hover:opacity-80",
+        colorClassName,
       )}
       disabled={isActive}
       onClick={onSelect}
       style={{ height }}
       type="button"
     >
-      {ConnectorIcon ? <ConnectorIcon className={isActive ? "size-3.5 shrink-0 text-primary" : "size-3 shrink-0"} /> : null}
       <span className="truncate">{item.label}</span>
     </button>
   );

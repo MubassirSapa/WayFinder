@@ -59,8 +59,20 @@ export function useSaveEditorChanges() {
       const nodeIdMap: Record<string, string> = {};
       const edgeIdMap: Record<string, string> = {};
 
-      if (localFloor?._dirty) {
-        const savedFloor = assertSuccess(await updateFloor(localFloor.id, localFloor));
+      const floorFieldsWereDirty = Boolean(localFloor?._dirty);
+      // Objects/nodes/edges are separate Payload collections from Floors,
+      // so saving them never touches the Floor doc's own updatedAt - the
+      // field dashboard "recent floors" sorts by. Captured before the save
+      // loops below mutate these so it reflects what's about to be saved,
+      // not what's left over afterward.
+      const hasEntityChanges = [
+        ...Object.values(objects),
+        ...Object.values(nodes),
+        ...Object.values(edges),
+      ].some((entity) => entity._dirty || isTempId(entity.id));
+
+      if (floorFieldsWereDirty) {
+        const savedFloor = assertSuccess(await updateFloor(localFloor!.id, localFloor!));
         localFloor = { ...savedFloor, _dirty: false };
       }
 
@@ -130,6 +142,16 @@ export function useSaveEditorChanges() {
           }
         }),
       );
+
+      // The floor plan itself just changed but the Floor doc hasn't been
+      // touched yet (floorFieldsWereDirty already handled that case above) -
+      // save it with no real field changes just to bump updatedAt, so
+      // "recent floors" on the dashboard reflects floor-plan edits, not only
+      // edits to the floor's own name/image/etc.
+      if (localFloor && !floorFieldsWereDirty && hasEntityChanges) {
+        const savedFloor = assertSuccess(await updateFloor(localFloor.id, {}));
+        localFloor = { ...savedFloor, _dirty: false };
+      }
 
       if (localFloor) {
         setFloor(localFloor);
