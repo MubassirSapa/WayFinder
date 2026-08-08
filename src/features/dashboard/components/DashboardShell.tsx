@@ -15,6 +15,7 @@ export function DashboardShell({ data }: { data: DashboardData }) {
   return (
     <DashboardPageContainer>
       <DashboardPageHeader
+        className="border-b border-border pb-10"
         title={DASHBOARD_CLIENT.PAGE_TITLE}
         description={`${data.organization.name} - ${DASHBOARD_CLIENT.PAGE_DESCRIPTION}`}
         action={
