@@ -8,7 +8,7 @@ export const INVITATIONS_CLIENT = {
   ROLE_MANAGER: "Manager",
   ROLE_MEMBER: "Member",
 
-  INVITE_USER_TRIGGER: "Invite user",
+  INVITE_USER_TRIGGER: "Invite member",
   INVITE_DIALOG_TITLE: "Invite a team member",
   INVITE_DIALOG_DESC: "Send an email invite so they can set up their own login.",
   ACCOUNT_DETAILS: "Invite details",
