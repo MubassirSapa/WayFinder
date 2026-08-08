@@ -3,10 +3,9 @@ import type {
   RefObject,
 } from "react";
 
-import { useAppStore } from "@/store";
-
 import { buildPanZoomTransform } from "../lib/mapViewerTransform";
 import { getRenderedFloorSize } from "../lib/mapViewerViewport";
+import { useDefaultMapViewerViewportState, type ViewportState } from "../store/useMapViewerViewportState";
 import type {
   ConnectorDirection,
   ConnectorTargetInfo,
@@ -33,6 +32,7 @@ interface MapViewerCanvasProps {
   routePoints?: { x: number; y: number }[];
   selectedObjectId: string | null;
   showGrid: boolean;
+  useViewportState?: () => ViewportState;
   viewportRef: RefObject<HTMLDivElement | null>;
   onBackgroundClick: () => void;
   onConnectorActivate: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
@@ -61,6 +61,7 @@ export function MapViewerCanvas({
   routePoints,
   selectedObjectId,
   showGrid,
+  useViewportState = useDefaultMapViewerViewportState,
   viewportRef,
   onBackgroundClick,
   onConnectorActivate,
@@ -72,15 +73,12 @@ export function MapViewerCanvas({
   onSvgPointerMove,
   onSvgPointerUp,
 }: MapViewerCanvasProps) {
-  // Scoped to just this component so a pan/zoom tick only re-renders the
-  // canvas — the rest of the page (sidebar, header, toolbar) never reads
-  // these and stays untouched. During an active drag/pinch/wheel gesture the
-  // visual transform is already applied straight to contentRef's DOM node
-  // (see useMapViewerViewportGestures); this render just needs to agree with
-  // that value once React catches up, and to drive the "Zoom X%" readout.
-  const pan = useAppStore((state) => state.viewportPan);
-  const zoom = useAppStore((state) => state.viewportZoom);
-  const isDragging = useAppStore((state) => state.isViewportDragging);
+  // Injected as a hook, not resolved values, so the subscription itself
+  // stays scoped to just this component - the rest of the page (sidebar,
+  // header, toolbar) never re-renders on a pan/zoom tick. The dashboard QR
+  // viewer passes its own hook reading an isolated store slice instead of
+  // this default; see useMapViewerViewportState.ts.
+  const { isDragging, pan, zoom } = useViewportState();
   const renderedSize = activeFloor ? getRenderedFloorSize(activeFloor) : null;
 
   return (

@@ -3,17 +3,20 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "nextjs-toploader/app";
-import { PencilIcon } from "lucide-react";
+import { PencilIcon, QrCodeIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { PRIVATE_ROUTES } from "@/constants/routes";
 
-import { buildEditorHref, BUILDINGS_CLIENT } from "../constants/buildings.constants";
+import {
+  buildEditorHref,
+  buildQrCodesHref,
+  BUILDINGS_CLIENT,
+} from "../constants/buildings.constants";
 import { toggleFloorStatusAction } from "../actions/server/toggle-floor-status";
 import type { DashboardFloor } from "../types/buildings.types";
-import { FloorMiniMap } from "./FloorMiniMap";
 
 type FloorRowProps = {
   floor: DashboardFloor;
@@ -41,7 +44,6 @@ export function FloorRow({ floor, buildingId }: FloorRowProps) {
     <li className="px-1 py-4 transition-colors hover:bg-muted/30 sm:px-3">
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
         <div className="flex min-w-0 items-center gap-4">
-          <FloorMiniMap className="hidden sm:block" />
           <span className="grid size-10 shrink-0 place-content-center rounded-lg bg-primary/10 font-heading text-xs font-semibold text-primary">
             {floor.badge}
           </span>
@@ -75,7 +77,7 @@ export function FloorRow({ floor, buildingId }: FloorRowProps) {
             />
           </label>
 
-          <div className="col-span-full grid grid-cols-2 gap-2 sm:col-span-2 lg:flex lg:shrink-0">
+          <div className="col-span-full grid grid-cols-3 gap-2 sm:col-span-2 lg:flex lg:shrink-0">
             <Button
               nativeButton={false}
               render={<Link href={`${PRIVATE_ROUTES.BUILDINGS}/${buildingId}/floors/${floor.id}`} />}
@@ -85,6 +87,16 @@ export function FloorRow({ floor, buildingId }: FloorRowProps) {
             >
               <PencilIcon />
               {BUILDINGS_CLIENT.FLOOR_EDIT_INFO}
+            </Button>
+            <Button
+              nativeButton={false}
+              render={<Link href={buildQrCodesHref(buildingId, floor.id)} />}
+              variant="outline"
+              size="sm"
+              className="h-11 w-full px-4 sm:w-auto"
+            >
+              <QrCodeIcon />
+              QR
             </Button>
             <Button
               nativeButton={false}

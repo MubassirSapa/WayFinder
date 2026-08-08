@@ -8,6 +8,7 @@ import { createObjectSlice } from "@/features/map-editor/core/store/createObject
 import { createSmartBuilderSlice } from "@/features/map-editor/smart-builder/store/createSmartBuilderSlice";
 import { createMapViewerViewportSlice } from "@/features/map-viewer/store/createMapViewerViewportSlice";
 import { createNavigationSlice } from "@/features/navigation/store/createNavigationSlice";
+import { createQrViewerViewportSlice } from "@/features/qr-codes/store/createQrViewerViewportSlice";
 
 import type { AppStore } from "./types";
 
@@ -20,6 +21,7 @@ export const useAppStore = create<AppStore>()((...args) => ({
   ...createNavigationSlice(...args),
   ...createSignupFlowSlice(...args),
   ...createMapViewerViewportSlice(...args),
+  ...createQrViewerViewportSlice(...args),
 }));
 
 export * from "./types";

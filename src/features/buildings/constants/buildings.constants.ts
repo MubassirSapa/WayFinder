@@ -62,6 +62,7 @@ export const BUILDINGS_CLIENT = {
   ADD_FLOOR: "Add floor",
   FLOOR_EDIT_INFO: "Edit info",
   FLOOR_OPEN_EDITOR: "Open editor",
+  FLOOR_OPEN_QR_CODES: "View & generate QR codes",
   STATUS_PUBLISHED: "Published",
   STATUS_DRAFT: "Draft",
   ROOMS_SUFFIX: "rooms",
@@ -145,4 +146,8 @@ export const NEW_FLOOR_DEFAULTS = {
 
 export function buildEditorHref(floorId: string) {
   return `${PRIVATE_ROUTES.EDITOR}/${floorId}`;
+}
+
+export function buildQrCodesHref(buildingId: string, floorId: string) {
+  return `${PRIVATE_ROUTES.BUILDINGS}/${buildingId}/floors/${floorId}/qr-codes`;
 }

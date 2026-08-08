@@ -46,5 +46,13 @@ export function makeStore() {
     organization: null,
     setOrganization: () => {},
     resetSignupFlow: () => {},
+    // QrViewerViewportSlice stubs — not under test here
+    isQrViewerDragging: false,
+    qrViewerPan: { x: 0, y: 0 },
+    qrViewerZoom: 1,
+    setIsQrViewerDragging: () => {},
+    setQrViewerPan: () => {},
+    setQrViewerView: () => {},
+    setQrViewerZoom: () => {},
   }))
 }

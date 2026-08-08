@@ -1,6 +1,11 @@
 export interface ViewerFloor {
   id: string;
   buildingId: string;
+  // Optional, not required like organizationName - added later, only for
+  // qr-codes' sticker composition, so existing fixtures/callers across the
+  // app that build a ViewerFloor by hand don't all need updating just to
+  // satisfy this one new consumer.
+  buildingName?: string | null;
   organizationName: string | null;
   name: string;
   level: number;

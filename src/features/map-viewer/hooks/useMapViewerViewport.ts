@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { useAppStore } from "@/store";
-
 import {
   clampPanToViewport,
   clampZoom,
@@ -11,6 +9,7 @@ import {
   type Point,
   type WorldBounds,
 } from "../lib/mapViewerViewport";
+import { defaultMapViewerViewportBinding, type MapViewerViewportBinding } from "../store/mapViewerViewportBinding";
 import type { ViewerFloor } from "../types/map-viewer.types";
 import { useMapViewerViewportGestures } from "./useMapViewerViewportGestures";
 
@@ -18,6 +17,7 @@ interface UseMapViewerViewportArgs {
   activeFloor: ViewerFloor | null;
   activeFloorId: string | null;
   floors: ViewerFloor[];
+  viewportBinding?: MapViewerViewportBinding;
 }
 
 // Pan/zoom themselves live in the app store (see createMapViewerViewportSlice
@@ -31,6 +31,7 @@ export function useMapViewerViewport({
   activeFloor,
   activeFloorId,
   floors,
+  viewportBinding = defaultMapViewerViewportBinding,
 }: UseMapViewerViewportArgs) {
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const [viewportSize, setViewportSize] = useState<Point>({ x: 0, y: 0 });
@@ -46,7 +47,7 @@ export function useMapViewerViewport({
     handleViewportPointerCancel,
     handleViewportPointerLeave,
     handleViewportPointerUp,
-  } = useMapViewerViewportGestures({ activeFloor, viewportRef, viewportSize });
+  } = useMapViewerViewportGestures({ activeFloor, viewportBinding, viewportRef, viewportSize });
 
   useEffect(() => {
     const element = viewportRef.current;
@@ -68,7 +69,7 @@ export function useMapViewerViewport({
       }
 
       const isFirstMeasurementForFloor = initializedFloorIdRef.current !== floor.id;
-      const { viewportPan, viewportZoom, setViewportView } = useAppStore.getState();
+      const { pan: viewportPan, zoom: viewportZoom } = viewportBinding.getViewportView();
 
       const nextView = resolveFloorViewOnResize(floor, nextViewport, {
         currentPan: viewportPan,
@@ -92,7 +93,7 @@ export function useMapViewerViewport({
         initializedFloorIdRef.current = floor.id;
         pendingFocusRef.current = false;
       }
-      setViewportView(nextView);
+      viewportBinding.setViewportView(nextView);
     };
 
     updateSize();
@@ -101,7 +102,7 @@ export function useMapViewerViewport({
     observer.observe(element);
 
     return () => observer.disconnect();
-  }, [activeFloorId, floors]);
+  }, [activeFloorId, floors, viewportBinding]);
 
   // changeZoom/resetView/focusWorldBounds are wrapped in useCallback because
   // they're threaded down to MapViewerToolbar (memoized — see
@@ -109,11 +110,11 @@ export function useMapViewerViewport({
   // MapViewerShell render (e.g. a selection click) and re-renders for no
   // reason, even though activeFloor/viewportSize didn't actually change.
   const changeZoom = useCallback((direction: "in" | "out") => {
-    const { viewportPan, viewportZoom, setViewportView } = useAppStore.getState();
+    const { pan: viewportPan, zoom: viewportZoom } = viewportBinding.getViewportView();
     const nextZoom = clampZoom(direction === "in" ? viewportZoom * 1.15 : viewportZoom / 1.15, viewportSize.x);
 
     if (!activeFloor) {
-      setViewportView({ pan: viewportPan, zoom: nextZoom });
+      viewportBinding.setViewportView({ pan: viewportPan, zoom: nextZoom });
       return;
     }
 
@@ -122,7 +123,7 @@ export function useMapViewerViewport({
     const worldX = (centerX - viewportPan.x) / viewportZoom;
     const worldY = (centerY - viewportPan.y) / viewportZoom;
 
-    setViewportView({
+    viewportBinding.setViewportView({
       pan: clampPanToViewport(
         {
           x: centerX - worldX * nextZoom,
@@ -134,7 +135,7 @@ export function useMapViewerViewport({
       ),
       zoom: nextZoom,
     });
-  }, [activeFloor, viewportSize]);
+  }, [activeFloor, viewportBinding, viewportSize]);
 
   const resetView = useCallback(() => {
     const nextViewport = viewportRef.current
@@ -148,21 +149,21 @@ export function useMapViewerViewport({
       return;
     }
 
-    useAppStore.getState().setViewportView(getDefaultViewState(activeFloor, nextViewport));
-  }, [activeFloor, viewportSize]);
+    viewportBinding.setViewportView(getDefaultViewState(activeFloor, nextViewport));
+  }, [activeFloor, viewportBinding, viewportSize]);
 
   const focusWorldPoint = (worldPoint: Point) => {
     if (!activeFloor) {
       return;
     }
 
-    const { viewportZoom, setViewportView } = useAppStore.getState();
+    const { zoom: viewportZoom } = viewportBinding.getViewportView();
     const nextPan = {
       x: viewportSize.x / 2 - worldPoint.x * viewportZoom,
       y: viewportSize.y / 2 - worldPoint.y * viewportZoom,
     };
 
-    setViewportView({
+    viewportBinding.setViewportView({
       pan: clampPanToViewport(nextPan, activeFloor, viewportSize, viewportZoom),
       zoom: viewportZoom,
     });
@@ -174,8 +175,8 @@ export function useMapViewerViewport({
     }
 
     pendingFocusRef.current = true;
-    useAppStore.getState().setViewportView(getFitBoundsView(bounds, viewportSize));
-  }, [viewportSize]);
+    viewportBinding.setViewportView(getFitBoundsView(bounds, viewportSize));
+  }, [viewportBinding, viewportSize]);
 
   return {
     changeZoom,

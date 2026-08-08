@@ -1,8 +1,6 @@
 import { useEffect, useRef } from "react";
 import type { PointerEvent, RefObject } from "react";
 
-import { useAppStore } from "@/store";
-
 import { MAP_VIEWER_DRAG_THRESHOLD } from "../constants/mapViewer.constants";
 import { buildPanZoomTransform } from "../lib/mapViewerTransform";
 import {
@@ -12,6 +10,7 @@ import {
   getMidpoint,
   type Point,
 } from "../lib/mapViewerViewport";
+import { defaultMapViewerViewportBinding, type MapViewerViewportBinding } from "../store/mapViewerViewportBinding";
 import type { ViewerFloor } from "../types/map-viewer.types";
 
 interface PinchState {
@@ -22,6 +21,7 @@ interface PinchState {
 
 interface UseMapViewerViewportGesturesArgs {
   activeFloor: ViewerFloor | null;
+  viewportBinding?: MapViewerViewportBinding;
   viewportRef: RefObject<HTMLDivElement | null>;
   viewportSize: Point;
 }
@@ -35,6 +35,7 @@ interface UseMapViewerViewportGesturesArgs {
 // gesture ends, since pointer-up flushes the pending value immediately.
 export function useMapViewerViewportGestures({
   activeFloor,
+  viewportBinding = defaultMapViewerViewportBinding,
   viewportRef,
   viewportSize,
 }: UseMapViewerViewportGesturesArgs) {
@@ -72,7 +73,7 @@ export function useMapViewerViewportGestures({
       pendingCommitRef.current = null;
 
       if (pending) {
-        useAppStore.getState().setViewportView(pending);
+        viewportBinding.setViewportView(pending);
       }
     });
   };
@@ -87,7 +88,7 @@ export function useMapViewerViewportGestures({
     pendingCommitRef.current = null;
 
     if (pending) {
-      useAppStore.getState().setViewportView(pending);
+      viewportBinding.setViewportView(pending);
     }
   };
 
@@ -99,8 +100,7 @@ export function useMapViewerViewportGestures({
       return pendingCommitRef.current;
     }
 
-    const state = useAppStore.getState();
-    return { pan: state.viewportPan, zoom: state.viewportZoom };
+    return viewportBinding.getViewportView();
   };
 
   // Pan values are relative to the map viewport, while PointerEvent client
@@ -138,10 +138,15 @@ export function useMapViewerViewportGestures({
     };
     dragStateRef.current = null;
     suppressClickRef.current = true;
-    useAppStore.getState().setIsViewportDragging(false);
+    viewportBinding.setIsViewportDragging(false);
     return true;
   };
 
+  // Flush only on true unmount, not on every viewportBinding identity change
+  // (always stable in practice - the default binding is a module-level
+  // singleton, and any custom binding a caller passes should be too) -
+  // intentionally empty deps, same as the wheel effect below.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => () => flushCommit(), []);
 
   const clearGestureState = (pointerId?: number) => {
@@ -156,7 +161,7 @@ export function useMapViewerViewportGestures({
     pinchStateRef.current = null;
     dragStateRef.current = null;
     flushCommit();
-    useAppStore.getState().setIsViewportDragging(false);
+    viewportBinding.setIsViewportDragging(false);
   };
 
   const consumeSuppressedClick = () => {
@@ -177,7 +182,7 @@ export function useMapViewerViewportGestures({
       pinchStateRef.current = null;
       dragStateRef.current = null;
       flushCommit();
-      useAppStore.getState().setIsViewportDragging(false);
+      viewportBinding.setIsViewportDragging(false);
     }
     activePointersRef.current.clear();
     if (didMove) {
@@ -194,7 +199,7 @@ export function useMapViewerViewportGestures({
 
     if (!dragSurfaceRef.current.hasPointerCapture(dragStateRef.current.pointerId)) {
       dragStateRef.current = null;
-      useAppStore.getState().setIsViewportDragging(false);
+      viewportBinding.setIsViewportDragging(false);
     }
   };
 
@@ -286,7 +291,7 @@ export function useMapViewerViewportGestures({
         pointerId: event.pointerId,
         start: pointer,
       };
-      useAppStore.getState().setIsViewportDragging(true);
+      viewportBinding.setIsViewportDragging(true);
       return;
     }
 
@@ -377,7 +382,7 @@ export function useMapViewerViewportGestures({
     if (dragStateRef.current?.pointerId === event.pointerId) {
       dragStateRef.current = null;
       flushCommit();
-      useAppStore.getState().setIsViewportDragging(false);
+      viewportBinding.setIsViewportDragging(false);
     } else {
       flushCommit();
     }
@@ -393,7 +398,7 @@ export function useMapViewerViewportGestures({
         pointerId,
         start: point,
       };
-      useAppStore.getState().setIsViewportDragging(true);
+      viewportBinding.setIsViewportDragging(true);
     }
 
     // Keep suppression armed until every finger is lifted. Clearing it after

@@ -49,12 +49,20 @@ function organizationNameFromFloor(doc: Floor): string | null {
   return organization.name ?? null;
 }
 
-function normalizeFloor(doc: Floor): ViewerFloor {
+function buildingNameFromFloor(doc: Floor): string | null {
+  const building = doc.building as Building | number;
+  if (!building || typeof building !== "object") return null;
+
+  return building.name ?? null;
+}
+
+export function normalizeFloor(doc: Floor): ViewerFloor {
   const floorDoc = doc as Floor & { metersPerPixel?: number | null };
 
   return {
     id: String(doc.id),
     buildingId: getRequiredRelationId(doc.building),
+    buildingName: buildingNameFromFloor(doc),
     organizationName: organizationNameFromFloor(doc),
     name: doc.name,
     level: doc.level ?? 0,
@@ -65,7 +73,7 @@ function normalizeFloor(doc: Floor): ViewerFloor {
   };
 }
 
-function normalizeObject(doc: MapObject): ViewerMapObject {
+export function normalizeObject(doc: MapObject): ViewerMapObject {
   return {
     id: String(doc.id),
     floorId: getRequiredRelationId(doc.floor),
@@ -86,7 +94,7 @@ function normalizeObject(doc: MapObject): ViewerMapObject {
   };
 }
 
-function normalizeNode(doc: MapNode): ViewerMapNode {
+export function normalizeNode(doc: MapNode): ViewerMapNode {
   return {
     id: String(doc.id),
     floorId: getRequiredRelationId(doc.floor),
@@ -109,7 +117,7 @@ function normalizeNode(doc: MapNode): ViewerMapNode {
   };
 }
 
-function normalizeEdge(doc: PathEdge): ViewerPathEdge {
+export function normalizeEdge(doc: PathEdge): ViewerPathEdge {
   return {
     id: String(doc.id),
     floorId: getRequiredRelationId(doc.floor),

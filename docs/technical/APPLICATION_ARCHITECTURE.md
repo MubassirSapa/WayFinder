@@ -551,6 +551,70 @@ state instead of drifting out of sync with the active route segment. The
 sidebar's own floor list is currently disabled along with the rest of the
 sidebar (see `MapViewerShell.tsx`) in favor of the persistent selection bar.
 
+### Dashboard QR viewer and sticker resolver extension
+
+A second, admin-only extension of the map viewer, alongside navigation:
+`qr-codes` renders a single floor read-only, using the exact same
+`MapViewerCanvas`/`MapViewerSvg` components and `useMapViewerViewport`/
+`useMapViewerViewportGestures` interaction hooks the public viewer uses, so
+an admin sees an identical pan/zoom feel while picking a room to generate a
+printable QR sticker for.
+
+```mermaid
+flowchart LR
+    subgraph dashboardSide ["Dashboard QR viewer (private, one floor)"]
+        qrRoute["/dashboard/buildings/{id}/floors/{id}/qr-codes"]
+        qrLoader["getFloorForQrViewer"]
+        qrViewer["QrFloorViewer"]
+        qrDialog["QrCodeDialog (qrcode client generation, download/print)"]
+        qrSlice["Isolated QrViewerViewportSlice (qrViewerPan/Zoom/Dragging)"]
+    end
+
+    subgraph sharedRendering ["Reused from the map-viewer module, unmodified"]
+        canvas["MapViewerCanvas and MapViewerSvg"]
+        viewportHooks["useMapViewerViewport and useMapViewerViewportGestures"]
+        binding["Injectable viewport binding (map-viewer's or qr-codes' own)"]
+    end
+
+    subgraph resolverSide ["Public sticker resolver"]
+        qrResolver["/qr/{objectId}"]
+        objectLookup["getObjectFloorId"]
+        mapRedirect["/map/{floorId}?startObject={objectId}"]
+    end
+
+    subgraph databaseLayer2 ["Persistence"]
+        localApi2["Payload Local API, overrideAccess false, real user"]
+    end
+
+    qrRoute --> qrLoader --> localApi2
+    qrLoader --> qrViewer
+    qrViewer --> canvas
+    qrViewer --> qrSlice
+    qrSlice --> binding
+    binding --> viewportHooks
+    viewportHooks --> canvas
+    qrViewer --> qrDialog
+
+    qrResolver --> objectLookup
+    objectLookup --> mapRedirect
+```
+
+`MapViewerCanvas`/`useMapViewerViewport`/`useMapViewerViewportGestures`
+never import a specific store slice directly — they take an injected
+binding (imperative getter/setter for pan/zoom/dragging, plus a reactive
+`useViewportState` hook for rendering). The public viewer passes the
+default binding (its own `MapViewerViewportSlice`); the QR viewer passes its
+own binding wired to `QrViewerViewportSlice` instead, so an admin's
+clicks here can never bleed into real navigation state, and vice versa,
+even within the same browser tab.
+
+The `/qr/[objectId]` resolver is a separate, public, unauthenticated route:
+a printed sticker encodes that stable URL rather than a floor-specific one,
+so it survives a room later moving to a different floor — the resolver does
+one Payload lookup for the object's *current* floor and redirects into the
+same `?startObject=` URL contract the navigation extension's
+`useApplyRouteFromUrl` hook already consumes.
+
 ## 6. Authentication and email flow
 
 ```mermaid
@@ -627,6 +691,7 @@ user's login before a session is issued — see the User section of
 | Organization | Public organization landing and About pages, shared site chrome, and visitor handoff to the venue directory | Static server components and public route links |
 | Map viewer | Normalized published building data, floor switching, viewport, and SVG rendering | Server-only loader, local component state, props |
 | Navigation | Route intent, graph creation, shortest path, floor segments, and route overlay | Navigation store slice, pure functions, `MapViewerShell` bridge |
+| QR codes | Admin read-only floor viewer for browsing rooms (`/dashboard/.../qr-codes`), per-room QR sticker generation (client-side, `qrcode`), and the public `/qr/[objectId]` resolver that redirects a scanned sticker into the navigation extension's URL contract | Isolated viewport store slice, server port/adapter (admin-scoped, no published filter), reused map-viewer rendering components via an injectable viewport binding |
 | Email | Welcome and account-related email rendering and delivery | Email port, Payload email adapter, Resend |
 
 ## 8. Important dependency rules
@@ -656,6 +721,10 @@ Important rules:
    copy.
 8. Payload collections are the persistence schema; whether SQLite or MongoDB
    stores them is an implementation detail selected through the environment.
+9. A shared interactive component that two features need against different
+   state (e.g. `MapViewerCanvas`'s pan/zoom) takes an injectable binding
+   instead of hardcoding one store slice, so both features share the same
+   implementation with fully isolated state.
 
 ## 9. Current implementation notes
 

@@ -1,11 +1,12 @@
 # QR Code Wayfinding (scan a room → open viewer already routing from there)
 
-Status: **designed, not implemented.** No QR-related code exists anywhere in
-this repo today (confirmed by grep) — this is the full reference design for
-the feature area. The first implementation slice of this (the URL-state
-consumer only, no UI) is tracked separately in
-`docs/technical/ROUTE_URL_STATE.md` — read that one for what's actually
-being built right now; this doc is the fuller picture it's a piece of.
+Status: **mostly implemented.** The URL-state consumer
+(`docs/technical/ROUTE_URL_STATE.md`) and the admin sticker generator +
+`/qr/{objectId}` resolver (`docs/technical/DASHBOARD_QR_VIEWER.md`,
+`src/features/qr-codes/`) are both built. The one piece from this doc that
+is **not** built yet is ["Sharing a route from the viewer"](#sharing-a-route-from-the-viewer)
+below — the guest-facing "Share" button/dialog in `MapSelectionBar`. That
+section remains a reference design only.
 
 ## The idea
 
@@ -156,6 +157,13 @@ concern (see below), not something a guest sharing a route on their own
 phone needs.
 
 ## Generating printable room stickers
+
+> **Implemented** — see `docs/technical/DASHBOARD_QR_VIEWER.md` and
+> `src/features/qr-codes/`. Built as its own dashboard page (a read-only
+> view rendered like `/map`), not the map editor's `ObjectInspector`
+> described below — that placement was superseded before implementation.
+> The rest of this section (the resolver route, generation/download/print
+> mechanics, why no storage) still describes what shipped.
 
 This is the **permanent, printable** per-room QR sticker an admin generates
 once and sticks on a physical wall. Dashboard/admin surface area. Not built

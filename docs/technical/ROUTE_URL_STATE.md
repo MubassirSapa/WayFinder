@@ -1,10 +1,11 @@
 # Route URL state (the consumer slice of QR wayfinding)
 
-Status: **designed, not implemented.** This is the current, scoped-down
-implementation task — the first slice of the fuller feature designed in
-`docs/technical/QR_WAYFINDING.md`. Read that doc for the full picture (why
-this exists, the eventual Share button, the eventual admin sticker
-generator); this doc is only the part actually being built right now.
+Status: **implemented** (`src/features/navigation/hooks/useApplyRouteFromUrl.ts`).
+This was the first slice of the fuller feature designed in
+`docs/technical/QR_WAYFINDING.md`; the admin sticker generator described
+there is also now implemented (`docs/technical/DASHBOARD_QR_VIEWER.md`).
+The guest-facing Share button is still the one undone piece — see
+`QR_WAYFINDING.md`'s "Sharing a route from the viewer" section.
 
 ## Scope: consumer only, no UI, public viewer only
 
