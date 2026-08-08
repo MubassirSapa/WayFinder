@@ -86,4 +86,25 @@ describe("QrCodeDialog", () => {
     });
     expect(screen.queryByAltText("QR code for Exam Room")).toBeNull();
   });
+
+  // jsdom has no real layout engine, so this can't assert the dialog stays
+  // narrow on screen - it asserts the two classes that actually cause that:
+  // `min-w-0` on the row (without it, this <p>'s unbroken text would set the
+  // shared grid column's min-content width, stretching the image/footer
+  // rows above and below it too) and `truncate` on the <p> itself (the
+  // ellipsis/nowrap clipping, which only takes effect once min-w-0 lets the
+  // row actually shrink to the dialog's real width).
+  it("keeps the long generated url from stretching the dialog's shared grid column", async () => {
+    const longObjectId = "x".repeat(300);
+
+    render(<QrCodeDialog objectId={longObjectId} objectName="Long Hallway" />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Generate QR code" }));
+
+    const longUrl = `http://localhost:3000/qr/${longObjectId}`;
+    const urlText = await screen.findByText(longUrl);
+
+    expect(urlText.className).toContain("truncate");
+    expect(urlText.parentElement?.className).toContain("min-w-0");
+  });
 });
