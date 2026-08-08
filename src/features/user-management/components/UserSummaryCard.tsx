@@ -18,9 +18,9 @@ export function UserSummaryCard({ user, action }: UserSummaryCardProps) {
   return (
     <EntitySummaryCard
       visual={
-        <Avatar className="size-16 sm:size-18" size="lg">
+        <Avatar className="size-20 sm:size-24" size="lg">
           {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt={user.name} /> : null}
-          <AvatarFallback className="bg-primary/10 text-xl font-medium text-primary">
+          <AvatarFallback className="bg-primary/10 text-2xl font-medium text-primary">
             {userInitials(user.name)}
           </AvatarFallback>
         </Avatar>
