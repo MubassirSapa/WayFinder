@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
+import Image from "next/image";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { ROLE_LABELS } from "@/collections/constants/roles";
 import { EntitySummaryCard } from "@/features/dashboard/components/EntitySummaryCard";
@@ -18,12 +18,13 @@ export function UserSummaryCard({ user, action }: UserSummaryCardProps) {
   return (
     <EntitySummaryCard
       visual={
-        <Avatar className="size-20 sm:size-24" size="lg">
-          {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt={user.name} /> : null}
-          <AvatarFallback className="bg-primary/10 text-2xl font-medium text-primary">
-            {userInitials(user.name)}
-          </AvatarFallback>
-        </Avatar>
+        <div className="relative flex size-24 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-primary/15 sm:size-28">
+          {user.avatarUrl ? (
+            <Image alt={user.name} src={user.avatarUrl} fill sizes="112px" className="object-cover" unoptimized />
+          ) : (
+            <span className="text-2xl font-medium text-primary">{userInitials(user.name)}</span>
+          )}
+        </div>
       }
       title={user.name}
       meta={

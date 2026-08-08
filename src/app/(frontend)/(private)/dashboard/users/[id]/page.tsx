@@ -28,7 +28,11 @@ export default async function UserDetailPage({ params }: UserDetailPageProps) {
   if (!currentUser.isSuccess) redirect(PUBLIC_ROUTES.SIGNIN);
 
   const user = currentUser.data;
-  if (!isOwnerOrManager(user.role)) redirect(PRIVATE_ROUTES.DASHBOARD);
+  const canManageTeam = isOwnerOrManager(user.role);
+  // A member can only ever reach their own page - everyone else's is still
+  // owner/manager-only, matching Payload's own userRead access exactly (see
+  // docs on the plan for this feature).
+  if (!canManageTeam && String(user.id) !== id) redirect(PRIVATE_ROUTES.DASHBOARD);
 
   const [detailResult, buildingOptions] = await Promise.all([
     getOrgUserDetail(user, id),
@@ -38,7 +42,10 @@ export default async function UserDetailPage({ params }: UserDetailPageProps) {
 
   return (
     <DashboardPageContainer>
-      <DashboardBackLink href={PRIVATE_ROUTES.USERS} label={USER_MANAGEMENT_CLIENT.BACK_TO_TEAM} />
+      <DashboardBackLink
+        href={canManageTeam ? PRIVATE_ROUTES.USERS : PRIVATE_ROUTES.DASHBOARD}
+        label={canManageTeam ? USER_MANAGEMENT_CLIENT.BACK_TO_TEAM : USER_MANAGEMENT_CLIENT.BACK_TO_DASHBOARD}
+      />
 
       <UserDetailPanel user={detailResult.data} buildingOptions={buildingOptions} />
     </DashboardPageContainer>

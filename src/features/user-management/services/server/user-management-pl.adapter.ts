@@ -183,3 +183,39 @@ export async function blockOrgUserAdapter(user: User, targetUserId: string) {
 export async function unblockOrgUserAdapter(user: User, targetUserId: string) {
   return setOrgUserBlocked(user, targetUserId, false);
 }
+
+type UpdateOrgUserInfoInput = {
+  name: string;
+  avatarId?: string | null;
+  removeAvatar?: boolean;
+};
+
+// name/avatar have no field-level access override in Users.ts - governed
+// purely by the collection's own userUpdate access, which already allows
+// this for self OR owner/manager acting on a non-owner target. No extra
+// role check needed here, same as every other adapter in this file.
+export async function updateOrgUserInfoAdapter(user: User, targetUserId: string, input: UpdateOrgUserInfoInput) {
+  return tryCatchResponse<OrgUserDetailBase>(async () => {
+    const payload = await getPayloadClient();
+
+    const data: { name: string; avatar?: number | null } = { name: input.name };
+    if (input.avatarId) {
+      data.avatar = asPayloadId(input.avatarId);
+    } else if (input.removeAvatar) {
+      data.avatar = null;
+    }
+
+    const updated = await payload.update({
+      collection: "users",
+      id: asPayloadId(targetUserId),
+      depth: 1,
+      select: USER_DETAIL_SELECT,
+      populate: USER_LIST_POPULATE,
+      user,
+      overrideAccess: false,
+      data,
+    });
+
+    return toOrgUserDetailBase(updated, user.id);
+  });
+}

@@ -9,6 +9,7 @@ import {
   listOrgUsersAdapter,
   unblockOrgUserAdapter,
   updateOrgUserBuildingsAdapter,
+  updateOrgUserInfoAdapter,
   updateOrgUserRoleAdapter,
 } from "./user-management-pl.adapter";
 import type { OrgBuildingOption, OrgUserDetail } from "../../types/user-management.types";
@@ -51,4 +52,12 @@ export async function updateOrgUserBuildings(user: User, targetUserId: string, b
 
 export async function deleteOrgUser(user: User, targetUserId: string) {
   return deleteOrgUserAdapter(user, targetUserId);
+}
+
+export async function updateOrgUserInfo(
+  user: User,
+  targetUserId: string,
+  input: { name: string; avatarId?: string | null; removeAvatar?: boolean },
+) {
+  return updateOrgUserInfoAdapter(user, targetUserId, input);
 }

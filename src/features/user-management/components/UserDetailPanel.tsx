@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "nextjs-toploader/app";
-import { Loader2Icon, ShieldCheckIcon, ShieldOffIcon, Trash2Icon } from "lucide-react";
+import { Loader2Icon, PencilIcon, ShieldCheckIcon, ShieldOffIcon, Trash2Icon } from "lucide-react";
 
 import {
   AlertDialog,
@@ -22,7 +22,9 @@ import { deleteOrgUserAction } from "../actions/server/delete-org-user";
 import { updateOrgUserRoleAction } from "../actions/server/update-org-user";
 import { USER_MANAGEMENT_CLIENT } from "../constants/user-management.constants";
 import type { ManagedRole, OrgBuildingOption, OrgUserDetail } from "../types/user-management.types";
+import { ChangePasswordDialog } from "./ChangePasswordDialog";
 import { UserAccessSection } from "./UserAccessSection";
+import { UserInfoEditForm } from "./UserInfoEditForm";
 import { UserInviteStatus } from "./UserInviteStatus";
 import { UserSummaryCard } from "./UserSummaryCard";
 
@@ -34,12 +36,17 @@ type UserDetailPanelProps = {
 export function UserDetailPanel({ user, buildingOptions }: UserDetailPanelProps) {
   const router = useRouter();
   const canManage = user.role !== "owner" && !user.isSelf;
+  // Exactly the union Payload's own userUpdate access already allows for
+  // name/avatar (see updateOrgUserInfoAdapter's comment) - self, or owner/
+  // manager on a non-owner target.
+  const canEditInfo = user.isSelf || canManage;
 
   const [isUpdatingRole, startRoleUpdate] = useTransition();
   const [isBlocking, startBlock] = useTransition();
   const [isRemoving, startRemove] = useTransition();
   const [isRemoveOpen, setIsRemoveOpen] = useState(false);
   const [isBlockOpen, setIsBlockOpen] = useState(false);
+  const [isEditingInfo, setIsEditingInfo] = useState(false);
 
   const onRoleChange = (role: ManagedRole) => {
     startRoleUpdate(async () => {
@@ -69,40 +76,57 @@ export function UserDetailPanel({ user, buildingOptions }: UserDetailPanelProps)
 
   return (
     <div className="flex flex-col gap-8">
-      <UserSummaryCard
-        user={user}
-        action={
-          canManage ? (
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={user.blocked ? onUnblock : () => setIsBlockOpen(true)}
-                disabled={isBlocking}
-              >
-                {isBlocking ? (
-                  <Loader2Icon className="animate-spin" />
-                ) : user.blocked ? (
-                  <ShieldCheckIcon />
-                ) : (
-                  <ShieldOffIcon />
-                )}
-                {user.blocked ? USER_MANAGEMENT_CLIENT.UNBLOCK_USER : USER_MANAGEMENT_CLIENT.BLOCK_USER}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-destructive hover:text-destructive"
-                onClick={() => setIsRemoveOpen(true)}
-                disabled={isRemoving}
-              >
-                {isRemoving ? <Loader2Icon className="animate-spin" /> : <Trash2Icon />}
-                {USER_MANAGEMENT_CLIENT.REMOVE_USER}
-              </Button>
+      {isEditingInfo ? (
+        <UserInfoEditForm
+          user={user}
+          onCancel={() => setIsEditingInfo(false)}
+          onSaved={() => setIsEditingInfo(false)}
+        />
+      ) : (
+        <UserSummaryCard
+          user={user}
+          action={
+            <div className="flex flex-wrap items-center gap-2">
+              {canEditInfo ? (
+                <Button variant="outline" size="sm" onClick={() => setIsEditingInfo(true)}>
+                  <PencilIcon />
+                  {USER_MANAGEMENT_CLIENT.EDIT_INFO}
+                </Button>
+              ) : null}
+              {user.isSelf ? <ChangePasswordDialog /> : null}
+              {canManage ? (
+                <>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={user.blocked ? onUnblock : () => setIsBlockOpen(true)}
+                    disabled={isBlocking}
+                  >
+                    {isBlocking ? (
+                      <Loader2Icon className="animate-spin" />
+                    ) : user.blocked ? (
+                      <ShieldCheckIcon />
+                    ) : (
+                      <ShieldOffIcon />
+                    )}
+                    {user.blocked ? USER_MANAGEMENT_CLIENT.UNBLOCK_USER : USER_MANAGEMENT_CLIENT.BLOCK_USER}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-destructive hover:text-destructive"
+                    onClick={() => setIsRemoveOpen(true)}
+                    disabled={isRemoving}
+                  >
+                    {isRemoving ? <Loader2Icon className="animate-spin" /> : <Trash2Icon />}
+                    {USER_MANAGEMENT_CLIENT.REMOVE_USER}
+                  </Button>
+                </>
+              ) : null}
             </div>
-          ) : null
-        }
-      />
+          }
+        />
+      )}
 
       {user.blocked ? (
         <p className="rounded-md border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">

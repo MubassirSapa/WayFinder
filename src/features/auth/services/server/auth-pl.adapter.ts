@@ -12,6 +12,7 @@ import { errorResponse, successResponse } from "@/lib/responses/app-response";
 import type { TSignin, TSignup } from "./auth.types";
 
 const EMAIL_EXISTS_ERROR = "An account with this email already exists.";
+const INCORRECT_PASSWORD_ERROR = "Your current password is incorrect.";
 
 async function getPayloadClient() {
   return getPayload({ config });
@@ -22,6 +23,27 @@ class EmailAlreadyExistsError extends Error {
     super(EMAIL_EXISTS_ERROR);
     this.name = "EmailAlreadyExistsError";
   }
+}
+
+class IncorrectPasswordError extends Error {
+  constructor() {
+    super(INCORRECT_PASSWORD_ERROR);
+    this.name = "IncorrectPasswordError";
+  }
+}
+
+function changeOwnPasswordErrorResponse(error: unknown) {
+  if (error instanceof IncorrectPasswordError) {
+    return errorResponse(
+      [{ message: INCORRECT_PASSWORD_ERROR, status: 401, code: "INCORRECT_PASSWORD" }],
+      INCORRECT_PASSWORD_ERROR,
+    );
+  }
+
+  return errorResponse(
+    [{ message: "Could not change your password.", status: 500, code: "PASSWORD_CHANGE_FAILED" }],
+    "Could not change your password.",
+  );
 }
 
 function isDuplicateEmailError(error: unknown) {
@@ -175,6 +197,40 @@ export async function resetPasswordAdapter(token: string, password: string) {
       },
     }),
   );
+}
+
+// Self-service password change: verify the current password by attempting
+// a real login with it (throws on a wrong password - the only way the
+// Local API exposes a credential check without a network round trip
+// through a real /signin), then write the new one. overrideAccess: true on
+// the login call is safe here - it never mutates anything, it only proves
+// the caller already knows the current password before overrideAccess:
+// false + a real `user` on the update actually applies the change, going
+// through the same userUpdate access every other user mutation in this app
+// relies on. No targetUserId parameter at all - this can only ever act on
+// the caller's own account.
+export async function changeOwnPasswordAdapter(user: User, currentPassword: string, newPassword: string) {
+  const payload = await getPayloadClient();
+
+  return tryCatchResponse(async () => {
+    try {
+      await payload.login({
+        collection: "users",
+        data: { email: user.email, password: currentPassword },
+        overrideAccess: true,
+      });
+    } catch {
+      throw new IncorrectPasswordError();
+    }
+
+    await payload.update({
+      collection: "users",
+      id: user.id,
+      user,
+      overrideAccess: false,
+      data: { password: newPassword },
+    });
+  }, changeOwnPasswordErrorResponse);
 }
 
 export async function getCurrentUserAdapter() {
