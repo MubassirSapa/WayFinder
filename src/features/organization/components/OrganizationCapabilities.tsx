@@ -1,6 +1,11 @@
-import { Accessibility, Navigation, RefreshCw } from "lucide-react";
+import { Accessibility, Building2, Navigation, QrCode, RefreshCw, Users } from "lucide-react";
 
 const capabilities = [
+  {
+    icon: Building2,
+    title: "Manage every building in one place",
+    description: "Add all of your organization's buildings and manage them together with your whole team.",
+  },
   {
     icon: RefreshCw,
     title: "Keep information current",
@@ -15,6 +20,16 @@ const capabilities = [
     icon: Accessibility,
     title: "Support accessible journeys",
     description: "Make step-free and accessible routes easier to discover.",
+  },
+  {
+    icon: QrCode,
+    title: "Print a QR code for any room",
+    description: "Generate a scannable sticker for any room. Visitors who scan it land straight on directions there.",
+  },
+  {
+    icon: Users,
+    title: "Invite your team with roles",
+    description: "Add teammates by email and control who can edit, publish, or just view your buildings.",
   },
 ] as const;
 

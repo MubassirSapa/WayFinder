@@ -16,8 +16,8 @@ export function RecentlyAddedVenues({ venues, onSelect }: RecentlyAddedVenuesPro
   return (
     <section aria-labelledby="recently-added-heading">
       <VenueSectionHeader
-        description="New venues ready to explore."
-        href={PUBLIC_ROUTES.VENUES_RECENT}
+        description="New buildings ready to explore."
+        href={PUBLIC_ROUTES.BUILDINGS_RECENT}
         headingId="recently-added-heading"
         title="Recently added"
       />

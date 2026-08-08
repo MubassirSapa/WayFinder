@@ -7,13 +7,17 @@ afterEach(() => {
   cleanup();
 });
 
+// "About" is intentionally reused for two different links (Explore's site
+// About and Organization's own About) since each is disambiguated by its
+// column heading - getAllByRole + some() below handles a label matching
+// more than one link, not just the single-match case.
 const expectedFooterLinks = [
   ["Wayfinder", "/organization"],
-  ["Home", "/#venues"],
-  ["Venues", "/venues"],
-  ["About Wayfinder", "/about"],
-  ["For organizations", "/organization"],
-  ["About organizations", "/organization/about"],
+  ["Home", "/#buildings"],
+  ["Buildings", "/buildings"],
+  ["About", "/about"],
+  ["Overview", "/organization"],
+  ["About", "/organization/about"],
   ["Get started", "/register-organization"],
   ["Privacy Policy", "/privacy"],
   ["Terms of Service", "/terms"],
@@ -23,6 +27,7 @@ describe("OrganizationSiteFooter", () => {
   it.each(expectedFooterLinks)("links %s to %s", (label, href) => {
     render(<OrganizationSiteFooter />);
 
-    expect(screen.getByRole("link", { name: label }).getAttribute("href")).toBe(href);
+    const matches = screen.getAllByRole("link", { name: label });
+    expect(matches.some((link) => link.getAttribute("href") === href)).toBe(true);
   });
 });

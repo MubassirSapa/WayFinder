@@ -285,8 +285,8 @@
   --map-viewer-label-muted:oklch(0.4 0.022 152);
   --map-viewer-wall-fill:oklch(0.65 0.026 152);
   --map-viewer-wall-stroke:oklch(0.4 0.03 152);
-  --map-viewer-hallway-fill:oklch(0.86 0.016 152);
-  --map-viewer-hallway-stroke:oklch(0.6 0.022 152);
+  --map-viewer-hallway-fill:oklch(0.74 0.018 152);
+  --map-viewer-hallway-stroke:oklch(0.5 0.024 152);
   --map-viewer-room-fill:oklch(0.98 0.02 152);
   --map-viewer-room-stroke:oklch(0.46 0.04 152);
   --map-viewer-section-fill:oklch(0.92 0.018 152);

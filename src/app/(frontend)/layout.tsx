@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     startupImage: appleStartupImages,
     title: "WayFinder",
   },
-  description: "Indoor maps and wayfinding for public venues and facilities.",
+  description: "Indoor maps and wayfinding for public buildings and facilities.",
   other: {
     "apple-mobile-web-app-capable": "yes",
   },

@@ -5,17 +5,19 @@ import { OrganizationSiteHeader } from "@/features/organization/components/Organ
 import { OrganizationVisitorHandoff } from "@/features/organization/components/OrganizationVisitorHandoff";
 
 type OrganizationSiteShellProps = {
+  activePage?: "about";
   children: ReactNode;
   showHeaderRegistrationAction?: boolean;
 };
 
 export function OrganizationSiteShell({
+  activePage,
   children,
   showHeaderRegistrationAction = true,
 }: OrganizationSiteShellProps) {
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <OrganizationSiteHeader showRegistrationAction={showHeaderRegistrationAction} />
+      <OrganizationSiteHeader activePage={activePage} showRegistrationAction={showHeaderRegistrationAction} />
       <OrganizationVisitorHandoff />
       <main className="flex-1">{children}</main>
       <OrganizationSiteFooter />

@@ -3,7 +3,7 @@ import { OrganizationSiteShell } from "@/features/organization/components/Organi
 
 export function AboutPage() {
   return (
-    <OrganizationSiteShell>
+    <OrganizationSiteShell activePage="about">
       <OrganizationAboutContent />
     </OrganizationSiteShell>
   );

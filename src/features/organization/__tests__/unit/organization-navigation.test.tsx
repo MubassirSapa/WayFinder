@@ -48,9 +48,9 @@ describe("OrganizationVisitorHandoff", () => {
   it("takes visitors directly to the public venue directory", () => {
     render(<OrganizationVisitorHandoff />);
 
-    const link = screen.getByRole("link", { name: "Visiting a venue? Find its public map" });
+    const link = screen.getByRole("link", { name: "Visiting a building? Find its public map" });
 
-    expect(link.getAttribute("href")).toBe("/venues");
+    expect(link.getAttribute("href")).toBe("/buildings");
     expect(link.className).toContain("max-w-6xl");
     expect(link.className).toContain("bg-primary/10");
     expect(link.className).toContain("backdrop-blur-sm");

@@ -106,7 +106,7 @@ export default function TermsPage() {
             <aside className="rounded-md border border-border bg-muted/30 p-6">
               <h2 className="text-lg font-semibold text-foreground">Ready to continue?</h2>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Learn about organization workspaces or return to the public venue directory.
+                Learn about organization workspaces or return to the public building directory.
               </p>
               <div className="mt-5 flex flex-col gap-3">
                 <Link className={cn(buttonVariants({ size: "lg" }), "h-10")} href={PUBLIC_ROUTES.ORGANIZATION}>
@@ -117,7 +117,7 @@ export default function TermsPage() {
                   className={cn(buttonVariants({ variant: "outline", size: "lg" }), "h-10")}
                   href={PUBLIC_ROUTES.HOME}
                 >
-                  Back to discover
+                  Back to home
                 </Link>
               </div>
             </aside>

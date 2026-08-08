@@ -12,7 +12,7 @@ type VenueSectionHeaderProps = {
 
 export function VenueSectionHeader({
   description,
-  href = PUBLIC_ROUTES.VENUES,
+  href = PUBLIC_ROUTES.BUILDINGS,
   headingId,
   title,
 }: VenueSectionHeaderProps) {

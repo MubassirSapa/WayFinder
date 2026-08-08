@@ -14,7 +14,7 @@ export function OrganizationCta() {
             Ready to publish your first map?
           </h2>
           <p className="mt-2 text-sm leading-6 text-muted-foreground sm:text-base">
-            Create your free account and start mapping your building — visitors will find their
+            Create your free account and start mapping your building. Visitors will find their
             way in minutes.
           </p>
         </div>

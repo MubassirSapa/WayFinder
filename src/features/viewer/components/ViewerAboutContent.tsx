@@ -7,9 +7,9 @@ import { ViewerHeroVisual } from "@/features/viewer/components/ViewerHeroVisual"
 
 const navigationSteps = [
   {
-    description: "Search the venue directory and open the building you plan to visit.",
+    description: "Search the building directory and open the one you plan to visit.",
     icon: Search,
-    title: "Find your venue",
+    title: "Find your building",
   },
   {
     description: "See every available floor together and choose the one you need.",
@@ -25,7 +25,7 @@ const navigationSteps = [
 
 const designPrinciples = [
   {
-    description: "Venues, floors, and destinations are presented in a predictable order.",
+    description: "Buildings, floors, and destinations are presented in a predictable order.",
     icon: MapPinned,
     title: "Start with the place",
   },
@@ -57,10 +57,10 @@ export function ViewerAboutContent() {
             <Button
               className="mt-6 h-12 px-7 text-base"
               nativeButton={false}
-              render={<Link href={PUBLIC_ROUTES.VENUES} />}
+              render={<Link href={PUBLIC_ROUTES.BUILDINGS} />}
               size="lg"
             >
-              Browse venues
+              Browse buildings
             </Button>
           </div>
 
@@ -141,7 +141,7 @@ export function ViewerAboutContent() {
       <section className="border-y border-primary/20 bg-primary/10">
         <div className="mx-auto flex max-w-6xl flex-col gap-5 px-5 py-8 sm:px-6 sm:py-9 md:flex-row md:items-center md:justify-between">
           <div className="max-w-2xl">
-            <h2 className="text-2xl font-semibold text-foreground">Manage a public venue?</h2>
+            <h2 className="text-2xl font-semibold text-foreground">Manage a public building?</h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground sm:text-base">
               See how organizations create, maintain, and share their own indoor maps.
             </p>

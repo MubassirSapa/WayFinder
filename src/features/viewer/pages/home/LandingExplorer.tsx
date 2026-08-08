@@ -57,7 +57,7 @@ export function LandingExplorer({ data }: LandingExplorerProps) {
       return;
     }
 
-    document.getElementById("venues")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById("buildings")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   return (
@@ -65,24 +65,24 @@ export function LandingExplorer({ data }: LandingExplorerProps) {
       <section className="overflow-hidden">
         <div className="mx-auto grid w-full max-w-6xl items-center gap-3 px-5 pb-5 pt-8 sm:px-6 sm:py-8 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-8">
           <div className="relative z-10 min-w-0 text-center lg:text-left">
-            <h1 className="mx-auto max-w-72 text-pretty text-3xl font-semibold tracking-normal text-foreground sm:max-w-2xl sm:text-5xl lg:mx-0">
-              Where do you want to go?
+            <h1 className="sr-only mx-auto max-w-72 text-pretty text-3xl font-semibold tracking-normal text-foreground sm:not-sr-only sm:max-w-2xl sm:text-5xl lg:mx-0">
+              Navigate any building.
             </h1>
-            <p className="mx-auto mt-3 max-w-sm text-pretty text-sm leading-6 text-muted-foreground sm:max-w-xl sm:text-base lg:mx-0">
-              Search for a venue, choose the right floor, and open its indoor map.
+            <p className="mx-auto mt-3 hidden max-w-sm text-pretty text-sm leading-6 text-muted-foreground sm:block sm:max-w-xl sm:text-base lg:mx-0">
+              Search for a building, choose the right floor, and open its indoor map.
             </p>
 
             <form
-              aria-label="Search venues"
+              aria-label="Search buildings"
               className="mx-auto mt-7 flex w-full min-w-0 max-w-2xl items-center gap-2 overflow-hidden rounded-lg border border-border bg-card p-2 shadow-sm focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15 lg:mx-0"
               role="search"
               onSubmit={submitSearch}
             >
               <Search className="ml-2 size-5 shrink-0 text-muted-foreground" aria-hidden />
               <Input
-                aria-label="Search by venue name"
+                aria-label="Search by building name"
                 className="h-11 w-auto min-w-0 flex-1 border-0 bg-transparent px-1 text-base shadow-none focus-visible:border-0 focus-visible:ring-0 dark:bg-transparent"
-                placeholder="Search venues"
+                placeholder="Search buildings"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
               />
@@ -106,20 +106,20 @@ export function LandingExplorer({ data }: LandingExplorerProps) {
         />
       </section>
 
-      <section className="mx-auto w-full max-w-6xl scroll-mt-20 px-5 pb-12 sm:px-6" id="venues">
+      <section className="mx-auto w-full max-w-6xl scroll-mt-20 px-5 pb-12 sm:px-6" id="buildings">
         {data.venues.length > 0 ? (
           <VenueSectionHeader
-            description="Select a venue, then choose a floor."
-            headingId="browse-venues-heading"
-            title="Browse venues"
+            description="Select a building, then choose a floor."
+            headingId="browse-buildings-heading"
+            title="Browse buildings"
           />
         ) : (
           <div className="mb-5">
-            <h2 className="text-2xl font-semibold text-foreground" id="browse-venues-heading">
-              Browse venues
+            <h2 className="text-2xl font-semibold text-foreground" id="browse-buildings-heading">
+              Browse buildings
             </h2>
             <p className="mt-1 text-sm leading-6 text-muted-foreground">
-              Select a venue, then choose a floor.
+              Select a building, then choose a floor.
             </p>
           </div>
         )}
@@ -167,9 +167,9 @@ export function LandingExplorer({ data }: LandingExplorerProps) {
 function NoMatchesCard() {
   return (
     <div className="rounded-md border border-border bg-card p-6">
-      <p className="text-base font-semibold text-card-foreground">No matching venues</p>
+      <p className="text-base font-semibold text-card-foreground">No matching buildings</p>
       <p className="mt-2 text-sm leading-6 text-muted-foreground">
-        Try another venue name.
+        Try another building name.
       </p>
     </div>
   );

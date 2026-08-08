@@ -22,8 +22,8 @@ type VenueDirectoryProps = {
 };
 
 const VIEW_TITLES: Record<VenueDirectoryView, string> = {
-  all: "All venues",
-  recent: "Recently added venues",
+  all: "All buildings",
+  recent: "Recently added buildings",
 };
 
 export function VenueDirectory({ data, view = "all" }: VenueDirectoryProps) {
@@ -40,7 +40,7 @@ export function VenueDirectory({ data, view = "all" }: VenueDirectoryProps) {
   return (
     <div className="mx-auto w-full max-w-6xl px-5 py-10 sm:px-6 sm:py-14">
       <header className="max-w-2xl">
-        <h1 className="text-3xl font-semibold text-foreground sm:text-4xl">Venue directory</h1>
+        <h1 className="text-3xl font-semibold text-foreground sm:text-4xl">Browse buildings</h1>
         <p className="mt-2 text-sm leading-6 text-muted-foreground sm:text-base">
           Search by building name, then choose the floor you need.
         </p>
@@ -49,34 +49,34 @@ export function VenueDirectory({ data, view = "all" }: VenueDirectoryProps) {
       <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
         <label className="flex h-12 min-w-0 flex-1 items-center gap-3 rounded-lg border border-border bg-card px-4 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
           <Search className="size-5 shrink-0 text-muted-foreground" aria-hidden />
-          <span className="sr-only">Search venues</span>
+          <span className="sr-only">Search buildings</span>
           <Input
-            aria-label="Search venues"
+            aria-label="Search buildings"
             className="h-10 min-w-0 flex-1 border-0 bg-transparent px-0 shadow-none focus-visible:border-0 focus-visible:ring-0 dark:bg-transparent"
-            placeholder="Search venues"
+            placeholder="Search buildings"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
           />
         </label>
 
         <nav
-          aria-label="Venue directory views"
+          aria-label="Building directory views"
           className="flex h-12 w-full shrink-0 items-center rounded-lg border border-border bg-muted p-1 sm:w-auto"
         >
           <Button
             aria-current={view === "all" ? "page" : undefined}
             className="h-10 flex-1 px-4 text-sm sm:flex-none"
             nativeButton={false}
-            render={<Link href={PUBLIC_ROUTES.VENUES} />}
+            render={<Link href={PUBLIC_ROUTES.BUILDINGS} />}
             variant={view === "all" ? "default" : "ghost"}
           >
-            All venues
+            All buildings
           </Button>
           <Button
             aria-current={view === "recent" ? "page" : undefined}
             className="h-10 flex-1 px-4 text-sm sm:flex-none"
             nativeButton={false}
-            render={<Link href={PUBLIC_ROUTES.VENUES_RECENT} />}
+            render={<Link href={PUBLIC_ROUTES.BUILDINGS_RECENT} />}
             variant={view === "recent" ? "default" : "ghost"}
           >
             Recently added
@@ -84,8 +84,8 @@ export function VenueDirectory({ data, view = "all" }: VenueDirectoryProps) {
         </nav>
       </div>
 
-      <section aria-labelledby="venue-directory-heading" className="mt-8">
-        <h2 className="sr-only" id="venue-directory-heading">
+      <section aria-labelledby="building-directory-heading" className="mt-8">
+        <h2 className="sr-only" id="building-directory-heading">
           {VIEW_TITLES[view]}
         </h2>
 
@@ -99,8 +99,8 @@ export function VenueDirectory({ data, view = "all" }: VenueDirectoryProps) {
           </div>
         ) : (
           <div className="rounded-lg border border-border bg-card p-6">
-            <p className="font-semibold text-card-foreground">No matching venues</p>
-            <p className="mt-2 text-sm text-muted-foreground">Try another venue name.</p>
+            <p className="font-semibold text-card-foreground">No matching buildings</p>
+            <p className="mt-2 text-sm text-muted-foreground">Try another building name.</p>
           </div>
         )}
       </section>

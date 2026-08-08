@@ -42,9 +42,9 @@ describe("VenueDirectory", () => {
   it("filters the complete venue list by name", () => {
     render(<VenueDirectory data={data} />);
 
-    expect(screen.getByRole("heading", { name: "Venue directory" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Browse buildings" })).toBeTruthy();
 
-    fireEvent.change(screen.getByRole("textbox", { name: "Search venues" }), {
+    fireEvent.change(screen.getByRole("textbox", { name: "Search buildings" }), {
       target: { value: "Greenfield" },
     });
 
@@ -65,7 +65,7 @@ describe("VenueDirectory", () => {
   it("shows the newest venues first in the recently added view", () => {
     render(<VenueDirectory data={data} view="recent" />);
 
-    expect(screen.getByRole("heading", { name: "Recently added venues" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Recently added buildings" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Recently added" }).getAttribute("aria-current"))
       .toBe("page");
 

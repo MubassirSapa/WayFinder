@@ -29,8 +29,8 @@ export function EmptyDirectoryCard({ isAvailable }: EmptyDirectoryCardProps) {
         </h2>
         <p className="mt-3 text-sm leading-6 text-muted-foreground">
           {isAvailable
-            ? "Venue maps will appear here when they are ready for visitors."
-            : "We couldn't load venues right now. Please try again in a moment."}
+            ? "Building maps will appear here when they are ready for visitors."
+            : "We couldn't load buildings right now. Please try again in a moment."}
         </p>
       </div>
     </div>

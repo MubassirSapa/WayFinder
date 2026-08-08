@@ -1,7 +1,6 @@
 import { WayfinderBrand } from "@/components/shared/brand/WayfinderBrand";
 import { SmoothHashLink } from "@/components/shared/public-site/SmoothHashLink";
 import { PUBLIC_ROUTES } from "@/constants/routes";
-import { cn } from "@/lib/utils";
 
 export type PublicSiteFooterGroup = {
   title: string;
@@ -22,15 +21,15 @@ const defaultFooterGroups = [
     title: "Explore",
     links: [
       { label: "Home", href: PUBLIC_ROUTES.DISCOVER },
-      { label: "Venues", href: PUBLIC_ROUTES.VENUES },
-      { label: "About Wayfinder", href: PUBLIC_ROUTES.ABOUT },
+      { label: "Buildings", href: PUBLIC_ROUTES.BUILDINGS },
+      { label: "About", href: PUBLIC_ROUTES.ABOUT },
     ],
   },
   {
     title: "Organization",
     links: [
-      { label: "For organizations", href: PUBLIC_ROUTES.ORGANIZATION },
-      { label: "About organizations", href: PUBLIC_ROUTES.ORGANIZATION_ABOUT },
+      { label: "Overview", href: PUBLIC_ROUTES.ORGANIZATION },
+      { label: "About", href: PUBLIC_ROUTES.ORGANIZATION_ABOUT },
       { label: "Get started", href: PUBLIC_ROUTES.REGISTER_ORGANIZATION },
     ],
   },
@@ -45,7 +44,7 @@ const defaultFooterGroups = [
 
 export function PublicSiteFooter({
   brandHref = "/",
-  description = "Indoor maps and wayfinding for public venues. Search any building, choose the right floor, and route to the right door.",
+  description = "Find your way inside any public building. Search for a building, choose the right floor, and get clear directions to your destination.",
   groups = defaultFooterGroups,
 }: PublicSiteFooterProps = {}) {
   return (
@@ -61,14 +60,8 @@ export function PublicSiteFooter({
         </div>
 
         <div className="grid grid-cols-2 gap-x-8 gap-y-9 md:grid-cols-[repeat(3,max-content)] md:gap-x-12 lg:gap-x-16">
-          {groups.map((group, index) => (
-            <div
-              className={cn(
-                "justify-self-start text-left",
-                index === 2 && "ml-3 md:ml-0",
-              )}
-              key={group.title}
-            >
+          {groups.map((group) => (
+            <div className="justify-self-start text-left" key={group.title}>
               <h2 className="text-xs font-bold uppercase tracking-[0.18em] text-foreground">
                 {group.title}
               </h2>

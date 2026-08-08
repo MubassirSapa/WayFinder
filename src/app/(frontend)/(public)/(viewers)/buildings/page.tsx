@@ -6,14 +6,14 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Browse Indoor Maps | Wayfinder",
-  description: "Search public venues, choose a floor, and open its indoor map.",
+  description: "Search public buildings, choose a floor, and open its indoor map.",
 };
 
-type VenuesPageProps = {
+type BuildingsPageProps = {
   searchParams: Promise<{ view?: string }>;
 };
 
-export default async function VenuesPage({ searchParams }: VenuesPageProps) {
+export default async function BuildingsPage({ searchParams }: BuildingsPageProps) {
   const { view } = await searchParams;
 
   return <PublicVenuesPage initialView={view === "recent" ? "recent" : "all"} />;

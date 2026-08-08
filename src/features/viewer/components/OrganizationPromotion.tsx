@@ -11,7 +11,7 @@ export function OrganizationPromotion() {
     >
       <div className="mx-auto grid w-full max-w-6xl gap-6 px-5 py-9 sm:px-6 sm:py-10 md:grid-cols-[minmax(0,1fr)_14rem] md:items-center md:gap-12">
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold text-primary">Manage a venue?</p>
+          <p className="text-sm font-semibold text-primary">Manage a building?</p>
           <h2
             className="mt-2 text-2xl font-semibold text-secondary-foreground sm:text-3xl"
             id="organization-promotion-heading"

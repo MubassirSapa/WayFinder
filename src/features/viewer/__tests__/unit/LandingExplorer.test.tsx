@@ -70,16 +70,16 @@ describe("LandingExplorer", () => {
     expect(screen.queryByRole("navigation", { name: "Venue types" })).toBeNull();
     expect(screen.getByRole("heading", { name: "Filter by organization" })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Recently added" })).toBeTruthy();
-    expect(screen.getByRole("heading", { name: "Browse venues" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Browse buildings" })).toBeTruthy();
   });
 
   it("opens the map when a one-floor venue is the only search result", () => {
     render(<LandingExplorer data={data} />);
 
-    fireEvent.change(screen.getByRole("textbox", { name: "Search by venue name" }), {
+    fireEvent.change(screen.getByRole("textbox", { name: "Search by building name" }), {
       target: { value: "Greenfield" },
     });
-    fireEvent.submit(screen.getByRole("search", { name: "Search venues" }));
+    fireEvent.submit(screen.getByRole("search", { name: "Search buildings" }));
 
     expect(router.push).toHaveBeenCalledWith("/map/1");
   });
@@ -87,7 +87,7 @@ describe("LandingExplorer", () => {
   it("asks for a floor when a venue has multiple published floors", () => {
     render(<LandingExplorer data={data} />);
 
-    const venuesSection = screen.getByRole("heading", { name: "Browse venues" }).closest("section");
+    const venuesSection = screen.getByRole("heading", { name: "Browse buildings" }).closest("section");
     expect(venuesSection).toBeTruthy();
     fireEvent.click(
       within(venuesSection as HTMLElement).getByRole("button", {
@@ -103,9 +103,9 @@ describe("LandingExplorer", () => {
   it("filters the browse-venues grid to an organization's buildings when its popular circle is clicked", () => {
     render(<LandingExplorer data={data} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Show venues for Org Two" }));
+    fireEvent.click(screen.getByRole("button", { name: "Show buildings for Org Two" }));
 
-    const venuesSection = screen.getByRole("heading", { name: "Browse venues" }).closest("section");
+    const venuesSection = screen.getByRole("heading", { name: "Browse buildings" }).closest("section");
     expect(venuesSection).toBeTruthy();
     expect(
       within(venuesSection as HTMLElement).getByRole("button", {
@@ -123,10 +123,10 @@ describe("LandingExplorer", () => {
   it("clears the organization filter", () => {
     render(<LandingExplorer data={data} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Show venues for Org Two" }));
+    fireEvent.click(screen.getByRole("button", { name: "Show buildings for Org Two" }));
     fireEvent.click(screen.getByRole("button", { name: "Showing Org Two" }));
 
-    const venuesSection = screen.getByRole("heading", { name: "Browse venues" }).closest("section");
+    const venuesSection = screen.getByRole("heading", { name: "Browse buildings" }).closest("section");
     expect(venuesSection).toBeTruthy();
     expect(
       within(venuesSection as HTMLElement).getByRole("button", {
@@ -139,7 +139,7 @@ describe("LandingExplorer", () => {
   it("uses the same floor selector for a one-floor venue", () => {
     render(<LandingExplorer data={data} />);
 
-    const venuesSection = screen.getByRole("heading", { name: "Browse venues" }).closest("section");
+    const venuesSection = screen.getByRole("heading", { name: "Browse buildings" }).closest("section");
     expect(venuesSection).toBeTruthy();
     fireEvent.click(
       within(venuesSection as HTMLElement).getByRole("button", {
@@ -199,7 +199,7 @@ describe("LandingExplorer", () => {
 
     render(<LandingExplorer data={expandedData} />);
 
-    const venuesSection = screen.getByRole("heading", { name: "Browse venues" }).closest("section");
+    const venuesSection = screen.getByRole("heading", { name: "Browse buildings" }).closest("section");
     expect(venuesSection).toBeTruthy();
     expect(
       within(venuesSection as HTMLElement).queryByRole("button", {
@@ -212,12 +212,12 @@ describe("LandingExplorer", () => {
     const recentSection = screen.getByRole("heading", { name: "Recently added" }).closest("section");
 
     expect(recentSection).toBeTruthy();
-    expect(browseLink.getAttribute("href")).toBe("/venues");
+    expect(browseLink.getAttribute("href")).toBe("/buildings");
     expect(
       within(recentSection as HTMLElement)
         .getByRole("button", { name: "View all" })
         .getAttribute("href"),
-    ).toBe("/venues?view=recent");
+    ).toBe("/buildings?view=recent");
   });
 
   it("links organizations to the organization page", () => {

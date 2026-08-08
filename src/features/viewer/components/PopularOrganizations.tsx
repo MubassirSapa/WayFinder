@@ -24,7 +24,7 @@ export function PopularOrganizations({
         <h2 className="text-xl font-semibold text-foreground sm:text-2xl" id="popular-organizations-heading">
           Filter by organization
         </h2>
-        <p className="mt-1 text-sm text-muted-foreground">Tap an organization to see its venues.</p>
+        <p className="mt-1 text-sm text-muted-foreground">Tap an organization to see its buildings.</p>
       </div>
 
       <div className="-mx-5 overflow-x-auto px-5 py-2 scrollbar-none sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
@@ -35,7 +35,7 @@ export function PopularOrganizations({
             return (
               <li className="w-20 shrink-0 sm:w-24" key={organization.id}>
                 <Button
-                  aria-label={`Show venues for ${organization.name}`}
+                  aria-label={`Show buildings for ${organization.name}`}
                   aria-pressed={isSelected}
                   className="group h-auto w-full flex-col items-center gap-2 whitespace-normal rounded-none border-none bg-transparent p-0 text-center hover:bg-transparent focus-visible:border-transparent focus-visible:ring-0 dark:hover:bg-transparent"
                   type="button"

@@ -9,7 +9,7 @@ const steps = [
   {
     number: "02",
     title: "Visitors choose where they are going",
-    description: "People open a venue, select the correct floor, and choose their destination.",
+    description: "People open a building, select the correct floor, and choose their destination.",
   },
   {
     number: "03",
@@ -29,7 +29,7 @@ export function OrganizationAboutContent() {
           About Wayfinder
         </h1>
         <p className="mt-2 text-sm text-muted-foreground sm:text-base">
-          Never get lost inside a building again.
+          Help every visitor find their way, without the guesswork.
         </p>
       </header>
 

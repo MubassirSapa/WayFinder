@@ -5,7 +5,7 @@ export function OrganizationSiteFooter() {
   return (
     <PublicSiteFooter
       brandHref={PUBLIC_ROUTES.ORGANIZATION}
-      description="Simple tools for creating, maintaining, and sharing accessible indoor maps."
+      description="Simple tools for creating, maintaining, and sharing accessible indoor maps with your team."
     />
   );
 }

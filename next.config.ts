@@ -3,6 +3,19 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["*.trycloudflare.com"],
+  async redirects() {
+    // /venues -> /buildings rename: keeps old bookmarks/shared links and
+    // any search-engine-indexed URLs working. Query strings (e.g.
+    // ?view=recent) are preserved automatically since the destination
+    // doesn't declare its own.
+    return [
+      {
+        source: "/venues",
+        destination: "/buildings",
+        permanent: true,
+      },
+    ];
+  },
   turbopack: {
     root: process.cwd(),
   },

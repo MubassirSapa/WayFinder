@@ -15,7 +15,7 @@ export async function PublicVenuesPage({ initialView }: PublicVenuesPageProps) {
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <PublicSiteHeader activePage="venues" />
+      <PublicSiteHeader activePage="buildings" />
       <main className="flex-1">
         <VenueDirectory data={data} view={initialView} />
       </main>
