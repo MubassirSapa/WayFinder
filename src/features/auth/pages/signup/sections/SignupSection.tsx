@@ -7,7 +7,11 @@ const SignupSection = () => {
   return (
     <AuthSplitFrame
       illustration={<SignupIllustration />}
-      illustrationHeadline="Build your first floor, one room at a time."
+      illustrationHeadline={
+        <>
+          Build your <span className="text-primary">first floor</span>, one room at a time.
+        </>
+      }
       illustrationSide="right"
     >
       <SignupForm />

@@ -11,7 +11,11 @@ const VerifyEmailSection = ({ isVerified }: TProps) => {
   return (
     <AuthSplitFrame
       illustration={<VerifyEmailIllustration />}
-      illustrationHeadline="One click and you're confirmed."
+      illustrationHeadline={
+        <>
+          One click and you&apos;re <span className="text-primary">confirmed</span>.
+        </>
+      }
       illustrationSide="left"
     >
       <FormCard

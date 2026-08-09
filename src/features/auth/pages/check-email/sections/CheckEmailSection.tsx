@@ -31,7 +31,11 @@ const CheckEmailSection = () => {
   return (
     <AuthSplitFrame
       illustration={<CheckEmailIllustration />}
-      illustrationHeadline="Your link is on its way."
+      illustrationHeadline={
+        <>
+          Your link is <span className="text-primary">on its way</span>.
+        </>
+      }
       illustrationSide="right"
     >
       <FormCard

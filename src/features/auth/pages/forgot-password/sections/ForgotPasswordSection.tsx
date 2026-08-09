@@ -7,7 +7,11 @@ const ForgotPasswordSection = () => {
   return (
     <AuthSplitFrame
       illustration={<ForgotPasswordIllustration />}
-      illustrationHeadline="Lost the way in? We'll help you find it."
+      illustrationHeadline={
+        <>
+          Lost the way in? We&apos;ll help you <span className="text-primary">find it</span>.
+        </>
+      }
       illustrationSide="right"
     >
       <ForgotPasswordForm />

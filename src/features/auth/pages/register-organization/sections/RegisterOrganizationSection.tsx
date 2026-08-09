@@ -7,7 +7,11 @@ const RegisterOrganizationSection = () => {
   return (
     <AuthSplitFrame
       illustration={<RegisterOrganizationIllustration />}
-      illustrationHeadline="One account, every building you manage."
+      illustrationHeadline={
+        <>
+          One account, <span className="text-primary">every building</span> you manage.
+        </>
+      }
       illustrationSide="left"
     >
       <RegisterOrganizationForm />

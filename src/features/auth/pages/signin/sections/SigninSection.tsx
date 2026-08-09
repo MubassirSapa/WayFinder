@@ -13,7 +13,11 @@ const SigninSection = () => {
           floorLabel="Ground - Entrance"
         />
       }
-      illustrationHeadline="Find your way in, every time."
+      illustrationHeadline={
+        <>
+          Find your <span className="text-primary">way in</span>, every time.
+        </>
+      }
       illustrationSide="left"
     >
       <SigninForm />

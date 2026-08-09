@@ -7,7 +7,11 @@ const ResetPasswordSection = ({ token }: TProps) => {
   return (
     <AuthSplitFrame
       illustration={<ResetPasswordIllustration />}
-      illustrationHeadline="Set a new path forward."
+      illustrationHeadline={
+        <>
+          Set a <span className="text-primary">new path</span> forward.
+        </>
+      }
       illustrationSide="left"
     >
       <ResetPasswordForm token={token} />

@@ -15,13 +15,18 @@ type TProps = {
 };
 
 const inviteIllustration = <InviteAcceptIllustration />;
+const inviteHeadline = (
+  <>
+    You&apos;ve been <span className="text-primary">routed</span> to the team.
+  </>
+);
 
 const InviteAcceptSection = ({ token, preview }: TProps) => {
   if (!token || !preview) {
     return (
       <AuthSplitFrame
         illustration={inviteIllustration}
-        illustrationHeadline="You've been routed to the team."
+        illustrationHeadline={inviteHeadline}
         illustrationSide="right"
       >
         <FormCard
@@ -48,7 +53,7 @@ const InviteAcceptSection = ({ token, preview }: TProps) => {
   return (
     <AuthSplitFrame
       illustration={inviteIllustration}
-      illustrationHeadline="You've been routed to the team."
+      illustrationHeadline={inviteHeadline}
       illustrationSide="right"
     >
       <InviteAcceptForm token={token} preview={preview} />
