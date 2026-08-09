@@ -123,6 +123,13 @@ not just new features:
   populate an edit form (e.g. `getFloorForEditAdapter`) is the one legitimate case
   for fetching the full document — most fields really do get used.
 
+## Comments
+
+- Default to no comments — well-named identifiers should carry the meaning.
+- Add one only when the WHY is non-obvious: a hidden constraint, a subtle invariant, a workaround for a specific bug, or behavior that would surprise a reader.
+- A comment directly above a function/export is a single-line `/** ... */` doc string, not a multi-line `//` block.
+- Never explain WHAT the code does, reference the current task/fix/PR, or write multi-paragraph explanations.
+
 ## UI implementation
 
 - Prefer clear, reusable components instead of writing one large file. Keep each component focused, easy to understand, and maintainable.
