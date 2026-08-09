@@ -4,7 +4,7 @@
 
 | Name                   | Email                                         | Role                                |
 | ---------------------- | --------------------------------------------- | ----------------------------------- |
-| Mubassir Sapa          | [msapa@myseneca.ca](mailto:msapa@myseneca.ca) | Project Lead / Full Stack Developer |
+| Mubassir Sapa          | [msapa@myseneca.ca](mailto:msapa@myseneca.ca) | Full Stack Developer                |
 | Hasan                  | [hasan@myseneca.ca](mailto:hasan@myseneca.ca) | Full Stack Developer                |
 | Paschal Chidiutor Ibeh | [pibeh@myseneca.ca](mailto:pibeh@myseneca.ca) | Frontend Developer                   |
 
@@ -12,12 +12,46 @@
 
 ## Project Description
 
-Our idea is to create something like Google Maps for indoor spaces and Uber/Uber Eats for indoor onboarding and accessibility.
+Wayfinder is like Google Maps, but for the inside of a building.
 
-The project is a universal indoor mapping and navigation platform for places like hospitals, universities, malls, grocery stores, offices, and campuses. Many people struggle to find rooms, departments, stores, services, or specific items inside large buildings, especially in hospitals and colleges. Current indoor maps are often hard to understand, outdated, or not interactive enough for everyday users.
+Big places like hospitals, colleges, malls, and offices can be confusing. It's easy to get lost trying to find a room, a department, or a store. Wayfinder fixes this. An organization can draw a map of their building, room by room, and add stairs, elevators, doors, and exits. Visitors can then search for where they want to go and get simple directions, floor by floor.
 
-Our platform will allow owners or organizations to create clean and interactive indoor maps using a simple drag and drop system. They will be able to add rooms, hallways, entrances, exits, stairs, elevators, aisles, and other indoor locations. Users will then be able to search locations easily and explore buildings through a clean and simple map experience.
+The app also lets an organization print a QR code sticker for any room. Someone just scans the sticker and gets directions from right there, no searching needed.
 
-There are already a few companies working on indoor mapping, but many of them mainly focus on specialized or enterprise style systems. Some platforms can also be difficult to set up or less accessible for smaller organizations and regular users. Our goal is to explore a more flexible and user friendly approach where owners can onboard and manage their indoor spaces more easily while customers can quickly navigate and search through those spaces. Even if similar systems already exist, we believe competing in this space makes the project more exciting and gives us the chance to explore new ideas and improvements.
+Our goal is to make this easy for everyone. Building owners should be able to set up their map without needing to be technical. Visitors should be able to find their way without any confusion.
 
-The long term goal of the project is to create a scalable indoor navigation system that can support multi floor buildings, connected campuses, and indoor pathfinding across different industries. We also want to explore AI assisted map generation in the future to help speed up the onboarding process by converting uploaded floor plans or blueprints into editable digital maps.
+## What's in the app
+
+The app has three main parts.
+
+### 1. Viewer — for visitors
+
+This is the public part anyone can use, no account needed.
+
+- A home page to search for a building.
+- A page listing every building, with a search box.
+- Pick a building, then pick a floor, then see the map.
+- Search for a room inside the map and get walking directions to it.
+- A step-free/accessible route option, for people who can't use stairs.
+- Scan a room's QR code sticker to jump straight to directions from that room.
+
+### 2. Organization — for building owners
+
+This is the public marketing side, aimed at organizations who want to add their own building.
+
+- A page explaining what Wayfinder can do for them.
+- A page listing the main features: managing buildings, printing QR codes, and inviting a team.
+- A sign-up page to create a free organization account.
+
+### 3. Dashboard — for signed-in teams
+
+This is the private part, only visible after signing in.
+
+- An overview page for the organization.
+- Add and manage buildings and their floors.
+- A drag-and-drop floor editor: draw rooms, walls, doors, stairs, elevators, escalators, and more.
+- Generate and print QR code stickers for any room.
+- A team page: invite people by email, give them a role (owner, manager, or member), and control what buildings they can access.
+- Block or remove a team member if needed.
+- Organization settings, like the name and logo.
+- A profile page to update your own name, photo, and password.
