@@ -97,7 +97,7 @@ flowchart LR
     publicRoutes --> discoveryFeature
     publicRoutes --> organizationFeature
     publicRoutes --> mapViewerFeature
-    organizationFeature -.->|visitor handoff to /venues| discoveryFeature
+    organizationFeature -.->|visitor handoff to /buildings| discoveryFeature
     mapViewerFeature --> navigationFeature
     authRoutes --> authFeature
     privateRoutes --> dashboardFeature
@@ -278,8 +278,8 @@ Next.js Server Component
 
 The floor editor uses `getFloorEditorData` through `floor.ports.ts`. The public
 map viewer uses `getMapViewerData`. Both the viewer homepage and the searchable
-`/venues` directory use `getPublicLandingData`, which groups
-published floors by building before rendering venue-level choices.
+`/buildings` directory use `getPublicLandingData`, which groups
+published floors by building before rendering building-level choices.
 
 The current dashboard loader calls the Payload Local API directly for its
 server-rendered read (organization lookup), and also calls the buildings
@@ -732,14 +732,31 @@ This document diagrams the architecture that exists today, including a few
 places that do not fully follow the preferred convention:
 
 - the dashboard server-rendered loader uses Payload directly instead of a read
-  port;
+  port (it does correctly pass `overrideAccess: false` with the real user, so
+  this is a structural/naming deviation, not an access-control gap);
 - the viewer-directory and map-viewer loaders are server-only functions that use
   the Payload Local API directly;
-- the `/editor` floor-list page currently queries Payload directly from its
-  route;
-- map-loading queries currently use fixed limits rather than retrieving every
-  pagination page.
+- map-loading queries (objects/nodes/edges in the map editor) currently use a
+  fixed `limit: 1000` rather than retrieving every pagination page.
+
+**A more serious open item, not just a style deviation**: the map editor's
+own core write/read path — `src/features/map-editor/core/services/server/
+{floor,object,node,edge}-pl.adapter.ts` — bypasses Payload's collection
+access control entirely. `floor-pl.adapter.ts` passes `overrideAccess: true`
+explicitly; `object-pl.adapter.ts`, `node-pl.adapter.ts`, and
+`edge-pl.adapter.ts` omit `overrideAccess`, which Payload's Local API
+defaults to `true` — same effect. None of the paired server actions
+(`floor-actions.ts`, `object-actions.ts`, `node-actions.ts`,
+`edge-actions.ts`) check that the record being read/written belongs to the
+caller's organization first. This means any authenticated user from any
+organization can currently view and edit/delete another organization's
+floor/object/node/edge data through the real `/editor/{floorId}` page — see
+`docs/security/SecurityPlan.md` (T1/F1) for the full writeup and remediation
+plan. This is the single highest-priority item in this list, well above the
+naming/convention notes above it.
 
 These notes matter because a diagram should show the real application, not only
 the desired architecture. Future refactoring can move the direct route or loader
-calls behind dedicated server services without changing the feature UI.
+calls behind dedicated server services without changing the feature UI; the
+map-editor access-control item above needs an actual code fix, not just a
+naming cleanup.
