@@ -84,14 +84,19 @@ vertical slice. Use these sub-folders — and only these — as needed:
 - **No component ever imports the Payload SDK, `getPayload`, or a service
   directly.** Always through an `actions/` file (client or server).
 
-Not every feature needs every folder — only `auth`, `dashboard`, and
-`map-editor/core` have mutations, so only they have `actions/server/` +
-`services/server/`. Only `map-editor/floor-links` has client-triggered reads, so
-it's the only feature with `actions/client/` + `services/client/` (it has no
-mutations of its own, so no `server/` side at all). `email`/`viewer`/
-`map-viewer` have neither — just plain server-only functions called directly from
-Server Components. What must stay consistent across all features is the **naming**
-of whichever folders they do have.
+Not every feature needs every folder. `actions/server/` + `services/server/`
+(mutations) exist in `auth`, `buildings`, `invitations`,
+`organization-settings`, `profile`, `user-management`, and `map-editor/core`.
+Only `map-editor/floor-links` has client-triggered reads, so it's the only
+feature with `actions/client/` + `services/client/` (it has no mutations of
+its own, so no `server/` side at all). `dashboard`, `map-viewer`, and
+`qr-codes` have `services/server/` only — reads with no mutations, so no
+`actions/` folder at all. `email` and `viewer` currently deviate from the
+convention: they have neither an `actions/` folder nor a `services/server/`
+split, just plain functions directly under a flat `services/` — worth
+aligning to `services/server/` the next time either is touched, but not
+urgent on its own. What must stay consistent across all features is the
+**naming** of whichever folders they do have.
 
 ## Splitting files: the rule
 

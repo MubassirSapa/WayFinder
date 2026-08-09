@@ -36,10 +36,14 @@ all three params optional and independent. Full reasoning for this shape
 
 ## What changes
 
-1. **`src/app/(frontend)/(public)/(viewers)/map/[floorId]/page.tsx`** — start
-   accepting the `searchParams` prop (currently unused), read `startObject`,
-   `destObject`, and `accessible`, pass all three down:
-   `<MapViewerShell data={{ ...data, initialFloorId: floorId, startObjectId: searchParams.startObject ?? null, destObjectId: searchParams.destObject ?? null, sharedAccessibleOnly: searchParams.accessible === "1" }} />`.
+1. **`src/app/(frontend)/(public)/(viewers)/map/[floorId]/page.tsx`** — reads
+   `startObject`, `destObject`, and `accessible` from `searchParams` and
+   passes all three down as their own props, **not** merged into `data`:
+   `<MapViewerShell data={{ ...data, initialFloorId: floorId }} startObjectId={startObject ?? null} destObjectId={destObject ?? null} sharedAccessibleOnly={accessible === "1"} />`.
+   These are deliberately kept separate from `data` — `MapViewerShellProps`
+   has an explicit comment explaining why: `data`'s type (`MapViewerData`)
+   is shared with `useRoute`/connectors and represents loaded building
+   data, not a per-visit apply instruction.
 
 2. **`MapViewerShell.tsx`** — currently has a `useEffect` that calls
    `resetNavigation()` whenever `data.initialFloorId` changes (a real floor
@@ -48,7 +52,7 @@ all three params optional and independent. Full reasoning for this shape
    second effect with `initialFloorId` in its dependency array so it always
    reruns together with the reset on a fresh page load:
    - Resolve `startObjectId`/`destObjectId` → node via
-     `findNodeIdForObject(nodes, objectId)` — note this needs the *whole
+     `findNodeIdForObject(objectId, nodes)` — note this needs the *whole
      building's* nodes (`allNodes`), not just the active floor's, since a
      shared route's destination is very often on a different floor than
      where the link lands.

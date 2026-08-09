@@ -78,7 +78,7 @@ Unit tests target pure logic with no network or database access. These are the f
 | U5 | Store: `createObjectSlice` | Removing an object unlinks its nodes instead of orphaning them |
 | U6 | Store: `createEdgeSlice` | Adding/updating an edge marks it dirty; removing a selected edge clears the selection |
 | U7 | `lib/objectDefaults.ts` | Each toolbox object type produces valid default dimensions and labels |
-| U8 | Auth helpers (when built) | Input validation: empty email, invalid email format, short passwords are rejected |
+| U8 | Auth validation schemas (`src/features/auth/validations/`) | Input validation: empty email, invalid email format, short passwords are rejected |
 
 ### 3. Integration Testing (Vitest)
 
@@ -155,6 +155,4 @@ Flow: `feature branch` → `dev` → `prev` → `main`. Each promotion happens t
 
 ## CI/CD Workflow (GitHub Actions)
 
-Our CI pipeline lives in `/.github/workflows/` and runs automatically on every push and every Pull Request targeting `main`, `prev`, or `dev`. It checks out the repository, installs dependencies, and runs ESLint:
-
-![GitHub Actions lint workflow](images/ci-lint-workflow.png)
+Our CI pipeline lives in `/.github/workflows/` and runs automatically on every push and every Pull Request targeting `main`, `prev`, or `dev`. It consists of two workflows: `lint.yml`, which checks out the repository, installs dependencies, and runs ESLint; and `test.yml`, which runs the Vitest unit test suite (`npm test -- --run`).

@@ -243,32 +243,27 @@ code change needed:
   upload. Local static assets (e.g. `WayfinderBrand`'s icon) are
   unaffected and stay optimized, since they don't set `unoptimized`.
 
-## Follow-up: trim what gets fetched when a logo/avatar loads
+## Resolved: logos/avatars don't populate `Media` at all
 
-We already ran into this exact issue with `Organizations`, `Buildings`, and
-`Floors` — see `docs/technical/QUERY_OPTIMIZATION.md`. When one record
-points at another (e.g. a building points at its logo), Payload by default
-pulls the *entire* linked record, not just the parts we actually use.
+The original concern here was real: when one record points at another
+(e.g. a building points at its logo), Payload by default pulls the *entire*
+linked record, not just the `url` a page actually needs — and restricting a
+populated `media` doc to just `{ url: true }` silently returns `url: null`,
+since Payload computes `url` at read time from the doc's other upload
+fields.
 
-`Media` doesn't have this trimming set up yet, because logos/avatars didn't
-exist when that earlier pass was done. Once uploads are wired up, every
-place that shows a building's logo (or a user's avatar) will be pulling
-back the full `media` record — filename, mime type, file size, alt text,
-timestamps — when really the page almost always only needs the `url`.
-
-Fix (small, do it alongside this work, not urgent but easy to forget):
-add a `defaultPopulate` to `Media.ts` that only includes `url` (and `alt`
-where it's actually shown), the same way `Organizations.ts`/`Buildings.ts`/
-`Floors.ts` already do.
-
-**One catch, confirmed by testing it live**: restricting a populated media
-doc to just `{ url: true }` (via a per-query `populate` override) silently
-returns `url: null` instead of the real URL. Payload computes `url` at read
-time from the doc's other upload fields (at least `filename`), so trimming
-those away breaks the very field we wanted to keep. Whatever field set ends
-up in `Media`'s `defaultPopulate` needs to include enough for that
-computation to still work — verify it against a real record before trusting
-it, the same way this note itself was confirmed rather than assumed.
+Rather than trimming a populated `Media` doc, the fix that shipped avoids
+populating it at all: `Organizations.logoUrl`, `Buildings.logoUrl`, and
+`Users.avatarUrl` are plain string fields, denormalized from the `logo`/
+`avatar` relation by `createSyncMediaUrlHook`
+(`src/collections/hooks/syncMediaUrl.ts`) on `beforeValidate` every time the
+relation changes. Every logo/avatar read site reads that string field
+directly — no `depth`/`populate` override into `media` is needed, and the
+`url: null` populate-restriction trap above never comes up for these
+fields. `Media.ts` itself still has no `defaultPopulate` — that's
+deliberate now, not an open TODO, since nothing needs it to populate
+`media` anymore. See `docs/technical/QUERY_OPTIMIZATION.md` and
+`docs/project/SCHEMA.md` for the full field-by-field picture.
 
 ## How picking a file works: stage locally, upload on Save
 

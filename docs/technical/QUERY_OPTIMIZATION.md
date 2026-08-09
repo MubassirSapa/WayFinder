@@ -112,14 +112,20 @@ reads:
 
 ```ts
 // collections/Organizations.ts
-defaultPopulate: { name: true, type: true }
+defaultPopulate: { name: true, type: true, logoUrl: true }
 
 // collections/Buildings.ts
-defaultPopulate: { name: true, organization: true }
+defaultPopulate: { name: true, organization: true, logoUrl: true }
 
 // collections/map/Floors.ts
 defaultPopulate: { name: true, level: true }
 ```
+
+(`logoUrl` was added to `Organizations`/`Buildings` in a later pass, once
+logos shipped — denormalized from the `logo` relation by
+`createSyncMediaUrlHook`, see `docs/technical/MEDIA_STORAGE.md`'s
+"Resolved" section — so it rides along in this same trimmed shape rather
+than needing a separate populate into `media`.)
 
 Because `Building.defaultPopulate` includes `organization`, and
 `Organization` has its own `defaultPopulate`, the trimming applies
@@ -130,7 +136,8 @@ recursively — a `depth: 2` floor query now returns:
   "building": {
     "id": 6,
     "name": "Harbourfront Galleria",
-    "organization": { "id": 6, "name": "Harbourfront Galleria", "type": "mall" }
+    "logoUrl": "https://cdn.umbrellacorp.cc/prod/buildings/....png",
+    "organization": { "id": 6, "name": "Harbourfront Galleria", "type": "mall", "logoUrl": "https://cdn.umbrellacorp.cc/prod/organizations/....png" }
   }
 }
 ```
@@ -188,8 +195,7 @@ await payload.delete({ collection: "path-edges", where: {...} });
 
 `payload.delete()` (like `payload.update()`) accepts a `where` instead of an
 `id` and deletes every matching document in one call — the same bulk pattern
-already used by `seed-demo.ts`'s `clearBuilding` and the buildings-migration
-script.
+already used by `seed-demo.ts`'s `clearBuilding`.
 
 **2. `map-viewer/services/server/getMapViewerData.ts` — 3 queries per floor
 instead of 3 total.** Loading a building's map data queried `map-objects`,

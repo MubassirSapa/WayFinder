@@ -390,9 +390,15 @@ The floor stores its coordinate-space size in `width` and `height`.
 `metersPerPixel` converts map-coordinate distance into real-world metres.
 
 A floor can reference an uploaded `media` record through `backgroundImage`.
-`backgroundImageUrl` remains available as a text-based image source. Rotation,
-scale, opacity, visibility, lock state, offsets, and fit are stored alongside
-the floor.
+`backgroundImageUrl` remains available as a text-based image source. Unlike
+`Organization.logoUrl`, `Building.logoUrl`, and `User.avatarUrl` — which are
+all `readOnly`/`hidden` denormalized copies maintained only by
+`createSyncMediaUrlHook` — `backgroundImageUrl` is a plain, directly editable
+text field with no sync hook wired to it and no `readOnly`/`hidden` admin
+flags. It is not kept in sync with `backgroundImage` automatically; treat it
+as an independent, manually-set field rather than a denormalized cache of the
+upload. Rotation, scale, opacity, visibility, lock state, offsets, and fit
+are stored alongside the floor.
 
 `building` is a required relationship to the `buildings` collection. Every
 floor belongs to exactly one building; a building can have many floors.

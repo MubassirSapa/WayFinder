@@ -138,8 +138,10 @@ floor's page at once.
      published floor must also revalidate the public pages.
 2. **Also** add the same calls to `afterChange`/`afterDelete` hooks on the
    `floors`, `buildings`, and `organizations` Payload collections
-   themselves (`src/collections/map/Floors.ts`, `Buildings.ts`,
-   `Organizations.ts`). Reason: edits made directly through `/admin` (the
+   themselves (`src/collections/map/Floors.ts`, `src/collections/
+   Buildings.ts`, `src/collections/Organizations.ts` — note the latter two
+   live at the root of `src/collections/`, not under `map/`). Reason: edits
+   made directly through `/admin` (the
    Payload admin UI) go through the Local API too, but **skip** the
    dashboard server actions above entirely — hook-level revalidation is the
    only way to cover both entry points. No collection currently does this

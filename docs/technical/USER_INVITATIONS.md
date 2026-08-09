@@ -202,8 +202,9 @@ be `manager`/`member`) — same shape as `userCreate`, just against the
 Do **not** add a new `emailVerifiedAt` field — `users._verified` already
 exists (Payload's built-in auth field, confirmed in `src/payload-types.ts`
 and already used by the current signup + `VerifyEmail` flow). At acceptance,
-set `_verified: true` directly via `payload.update()` when creating the
-user, rather than going through Payload's own `verifyEmail()` operation.
+set `_verified: true` directly as part of the single `payload.create()` call
+that creates the user, rather than going through Payload's own
+`verifyEmail()` operation.
 
 This is a deliberate divergence from Payload's normal verify flow, confirmed
 by reading `payload@3.85.1`'s actual source
@@ -264,8 +265,9 @@ src/features/invitations/              # new feature — spans both the dashboar
   lib/invite-token.ts                  # generate/hash the raw token, 7-day expiry
   types/invitation.types.ts
   services/server/
-    invitation.ports.ts                # create/resend/revoke/list/preview/accept + invite-history lookup
-    invitation-pl.adapter.ts
+    invitation.ports.ts                 # create/resend/revoke/list/preview/accept + invite-history lookup
+    invitation-manage-pl.adapter.ts     # dashboard-facing: create/resend/revoke/list/invite-history
+    invitation-accept-pl.adapter.ts     # public accept flow: preview/accept
   actions/server/
     invite-user.ts                     # owner/manager sends an invite (dashboard mutation)
     resend-invitation.ts

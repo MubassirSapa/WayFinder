@@ -45,15 +45,19 @@ the public site at all — candidates to **add**, not just reword:
 ## 3. Viewer section — page by page
 
 ### Home (`/`)
-- H1 + sub: fine as-is, pending venue/building call.
-- "Filter by organization" / "Browse venues" / "Recently added": all
-  reference "venue(s)" — rename together if we switch the word.
-- Bottom CTA ("Manage a venue? ... Get started"): same.
+- H1 + sub: fine as-is.
+- **Venue → building rename: done.** "Browse buildings"
+  (`LandingExplorer.tsx`), "Manage a building? ... Get started"
+  (`OrganizationPromotion.tsx`) — no more "venue" wording on this page.
+  "Filter by organization" and "Recently added" were never venue-specific
+  and are unchanged.
 
-### Venues directory (`/venues`)
-- H1 "Venue directory", sub "Search by building name..." — **already
-  inconsistent within itself** (venue in the title, building in the
-  subtext). First thing to fix regardless of which word wins.
+### Buildings directory (`/buildings`)
+- **Done.** H1/sub now consistently say "building" ("Browse buildings" /
+  "Search by building name, then choose the floor you need." —
+  `VenueDirectory.tsx`) — the self-inconsistency this section used to flag
+  no longer exists. The route itself is also `/buildings` now, not
+  `/venues` (the old path 301-redirects).
 - Empty state copy is accurate, no change needed.
 
 ### About (`/about`)
@@ -83,9 +87,9 @@ the public site at all — candidates to **add**, not just reword:
 
 ## 5. Suggested order of work
 
-1. Decide venue vs. building (§1).
-2. Fix the venue/building self-inconsistency on the venues directory page.
-3. Fix the org-about page's visitor-voiced tagline.
-4. Add 1-2 real capabilities (QR codes, roles/invitations) to the org
+1. **Done.** Decide venue vs. building (§1).
+2. **Done.** Fix the venue/building self-inconsistency on the buildings directory page.
+3. **Done.** Fix the org-about page's visitor-voiced tagline.
+4. **Done.** Add 1-2 real capabilities (QR codes, roles/invitations) to the org
    landing page's capabilities section.
 5. Everything else is a straight reword pass once §1 is decided.

@@ -27,6 +27,7 @@ Example from this project:
 import { IBM_Plex_Sans, Montserrat } from "next/font/google";
 import React from "react";
 
+import { ThemeProvider } from "@/components/theme-provider";
 import "./global.css";
 
 const fontSans = Montserrat({
@@ -44,14 +45,24 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   const { children } = props;
 
   return (
-    <html lang="en">
-      <body className={`${fontSans.variable} ${fontHeading.variable} antialiased dark`}>
-        <main>{children}</main>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${fontSans.variable} ${fontHeading.variable} antialiased`}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
 }
 ```
+
+Note: the font-variable wiring above (`fontSans`/`fontHeading` → `className`)
+is this doc's actual subject and is unchanged from when this was written.
+What *has* changed since: the app no longer hardcodes a `dark` class — theme
+(light/dark/system) is handled separately by `next-themes`' `ThemeProvider`,
+unrelated to font loading. The real `layout.tsx` also wires up
+`NextTopLoader`, a `Toaster`, and page metadata, trimmed from this snippet
+since they're outside what this doc covers.
 
 ### What this does
 
@@ -78,7 +89,7 @@ Example:
 
 In this project, that lives in:
 
-- [src/app/(frontend)/global.css](/Users/mohammedhasan/Desktop/capstone/indoor-map/indoor_map/src/app/(frontend)/global.css:1)
+- `src/app/(frontend)/global.css`
 
 ## 3. Apply the fonts where they should be used
 
@@ -186,8 +197,8 @@ When adding fonts in a Next.js + shadcn project, verify all of these:
 
 Current files:
 
-- [src/app/(frontend)/layout.tsx](/Users/mohammedhasan/Desktop/capstone/indoor-map/indoor_map/src/app/(frontend)/layout.tsx:1)
-- [src/app/(frontend)/global.css](/Users/mohammedhasan/Desktop/capstone/indoor-map/indoor_map/src/app/(frontend)/global.css:1)
+- `src/app/(frontend)/layout.tsx`
+- `src/app/(frontend)/global.css`
 
 Current setup:
 

@@ -142,10 +142,10 @@ tap Share.
 
 ### Generating the image
 
-No QR library exists in this repo yet (`package.json` has none — confirmed).
-Needs one new dependency: **`qrcode`** (isomorphic, but only the browser API
-is used here — `QRCode.toDataURL(url)`, entirely client-side, no server
-action).
+No route-sharing UI exists yet, but the **`qrcode`** dependency this would
+need is already installed — it was added for the room-sticker generator (see
+below). Same usage pattern would apply: `QRCode.toDataURL(url)`, entirely
+client-side, no server action.
 
 Tapping Share opens a small shadcn `Dialog` (same primitive already used
 elsewhere, e.g. `AddTeamMemberDialog`) showing the generated QR image plus
@@ -224,10 +224,11 @@ user can download or print directly").
 
 ### Generating the image
 
-No QR library exists in this repo yet (`package.json` has none — confirmed).
-Needs one new dependency: **`qrcode`** (isomorphic — same API works in the
-browser or on the server, so it isn't locked into one rendering path if a
-bulk/server-rendered flow gets built later).
+**`qrcode`** (`package.json`) is the dependency this uses, generated
+client-side via `QRCode.toDataURL(...)` in
+`src/features/qr-codes/components/QrCodeDialog.tsx` (isomorphic — same API
+would also work server-side if a bulk/server-rendered flow gets built
+later).
 
 Nothing about this needs a server round trip: the dialog already has the
 object's own `id` in memory (`ObjectInspector` already holds `objectId`),
