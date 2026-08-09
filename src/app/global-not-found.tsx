@@ -1,5 +1,6 @@
 import { IBM_Plex_Sans, Montserrat } from "next/font/google";
 
+import { ThemeProvider } from "@/components/theme-provider";
 import { NotFoundPage } from "@/features/viewer/pages/not-found/NotFoundPage";
 import "./(frontend)/global.css";
 
@@ -21,9 +22,11 @@ export const metadata = {
 
 export default function GlobalNotFound() {
   return (
-    <html lang="en">
-      <body className={`${fontSans.variable} ${fontHeading.variable} antialiased dark`}>
-        <NotFoundPage />
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${fontSans.variable} ${fontHeading.variable} antialiased`}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <NotFoundPage />
+        </ThemeProvider>
       </body>
     </html>
   );
