@@ -18,10 +18,10 @@ const IsometricPlate = ({ children, className, dimmed = false, label }: TProps) 
   return (
     <div
       className={cn(
-        "absolute rounded-md border shadow-lg ring-1",
+        "absolute rounded-md border-2 bg-card ring-1",
         dimmed
-          ? "border-foreground/15 bg-card/70 opacity-70 ring-foreground/10"
-          : "border-primary/40 bg-card ring-primary/20",
+          ? "border-foreground/30 opacity-80 ring-foreground/15"
+          : "border-primary/70 shadow-[0_0_28px_-8px_var(--primary)] ring-primary/25",
         className,
       )}
     >
@@ -44,7 +44,7 @@ export const PlateRooms = ({ animate = false, revealCount = PLATE_ROOM_LAYOUTS.l
       {PLATE_ROOM_LAYOUTS.map((roomClassName, index) => (
         <span
           className={cn(
-            "absolute rounded-sm border border-border bg-muted/80",
+            "absolute rounded-sm border border-foreground/25 bg-background",
             index >= revealCount && "opacity-0",
             animate && index < revealCount && "animate-in fade-in zoom-in-95 fill-mode-both",
             roomClassName,
