@@ -46,9 +46,11 @@ const AuthHeroVisual = ({
             </defs>
             <circle cx="18" cy="61" fill="currentColor" r="2.1" stroke="var(--card)" strokeWidth="0.8" />
             <path
+              className="animate-[wf-route-flow_1.4s_linear_infinite]"
               d="M20 61H32V45H50"
               markerEnd="url(#auth-hero-route-arrow)"
               stroke="currentColor"
+              strokeDasharray="8 5"
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="2.2"

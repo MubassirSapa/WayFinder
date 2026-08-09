@@ -29,9 +29,11 @@ const ResetPasswordIllustration = () => {
               </marker>
             </defs>
             <path
+              className="animate-[wf-route-flow_1.4s_linear_infinite]"
               d="M34 50V61H50"
               markerEnd="url(#reset-password-route-arrow)"
               stroke="currentColor"
+              strokeDasharray="8 5"
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="2.2"

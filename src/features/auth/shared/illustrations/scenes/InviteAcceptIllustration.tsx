@@ -19,15 +19,19 @@ const InviteAcceptIllustration = () => {
             <circle cx="14" cy="40" fill="currentColor" r="2" stroke="var(--card)" strokeWidth="0.8" />
             <circle cx="86" cy="40" fill="currentColor" r="2" stroke="var(--card)" strokeWidth="0.8" />
             <path
+              className="animate-[wf-route-flow_1.4s_linear_infinite]"
               d="M16 40H44"
               stroke="currentColor"
+              strokeDasharray="8 5"
               strokeLinecap="round"
               strokeWidth="2.2"
               vectorEffect="non-scaling-stroke"
             />
             <path
+              className="animate-[wf-route-flow_1.4s_linear_infinite]"
               d="M84 40H50"
               stroke="currentColor"
+              strokeDasharray="8 5"
               strokeLinecap="round"
               strokeWidth="2.2"
               vectorEffect="non-scaling-stroke"

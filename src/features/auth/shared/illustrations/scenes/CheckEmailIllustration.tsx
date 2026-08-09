@@ -14,8 +14,10 @@ const CheckEmailIllustration = () => {
           <svg className="absolute inset-0 size-full overflow-visible text-primary drop-shadow-[0_0_8px_var(--primary)]" fill="none" viewBox="0 0 100 75">
             <circle cx="35" cy="55" fill="currentColor" r="2.1" stroke="var(--card)" strokeWidth="0.8" />
             <path
+              className="animate-[wf-route-flow_1.4s_linear_infinite]"
               d="M37 55H62"
               stroke="currentColor"
+              strokeDasharray="8 5"
               strokeLinecap="round"
               strokeWidth="2.2"
               vectorEffect="non-scaling-stroke"

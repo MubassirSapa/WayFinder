@@ -16,7 +16,7 @@ const AuthSplitFrame = ({ children, illustration, illustrationHeadline, illustra
           illustrationSide === "right" && "lg:order-2",
         )}
       >
-        <div className="flex w-full max-w-md flex-col items-center gap-8 px-10">
+        <div className="flex w-full max-w-xl flex-col items-center gap-8 px-8">
           {illustration}
           {illustrationHeadline && (
             <p className="max-w-xs text-center text-lg font-medium leading-snug text-foreground/80">
