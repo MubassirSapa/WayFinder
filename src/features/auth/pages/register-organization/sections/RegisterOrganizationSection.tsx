@@ -1,21 +1,12 @@
-import { Building2 } from "lucide-react";
-
 import AuthSplitFrame from "@/features/auth/shared/AuthSplitFrame";
-import AuthHeroVisual from "@/features/auth/shared/illustrations/AuthHeroVisual";
+import RegisterOrganizationIllustration from "@/features/auth/shared/illustrations/scenes/RegisterOrganizationIllustration";
 
 import RegisterOrganizationForm from "../forms/RegisterOrganizationForm";
 
 const RegisterOrganizationSection = () => {
   return (
     <AuthSplitFrame
-      illustration={
-        <AuthHeroVisual
-          badgeLabel="New organization"
-          destinationLabel="Head office"
-          floorLabel="Building - Overview"
-          markerIcon={Building2}
-        />
-      }
+      illustration={<RegisterOrganizationIllustration />}
       illustrationHeadline="One account, every building you manage."
       illustrationSide="left"
     >

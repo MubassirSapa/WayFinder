@@ -1,10 +1,9 @@
 import Link from "next/link";
-import { UsersRound } from "lucide-react";
 
 import FormCard from "@/components/shared/form/FormCard";
 import { Button } from "@/components/ui/button";
 import AuthSplitFrame from "@/features/auth/shared/AuthSplitFrame";
-import AuthHeroVisual from "@/features/auth/shared/illustrations/AuthHeroVisual";
+import InviteAcceptIllustration from "@/features/auth/shared/illustrations/scenes/InviteAcceptIllustration";
 
 import { INVITATIONS_CLIENT as CLIENT } from "../../constants/invitations.constants";
 import type { InvitationPreview } from "../../types/invitation.types";
@@ -15,14 +14,7 @@ type TProps = {
   preview: InvitationPreview | null;
 };
 
-const inviteIllustration = (
-  <AuthHeroVisual
-    badgeLabel="Welcome"
-    destinationLabel="Team space"
-    floorLabel="Ground - Entrance"
-    markerIcon={UsersRound}
-  />
-);
+const inviteIllustration = <InviteAcceptIllustration />;
 
 const InviteAcceptSection = ({ token, preview }: TProps) => {
   if (!token || !preview) {

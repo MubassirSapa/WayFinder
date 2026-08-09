@@ -1,21 +1,12 @@
-import { KeyRound } from "lucide-react";
-
 import AuthSplitFrame from "@/features/auth/shared/AuthSplitFrame";
-import AuthHeroVisual from "@/features/auth/shared/illustrations/AuthHeroVisual";
+import ResetPasswordIllustration from "@/features/auth/shared/illustrations/scenes/ResetPasswordIllustration";
 
 import ResetPasswordForm from "../forms/ResetPasswordForm";
 
 const ResetPasswordSection = ({ token }: TProps) => {
   return (
     <AuthSplitFrame
-      illustration={
-        <AuthHeroVisual
-          badgeLabel="Unlocked"
-          destinationLabel="Reception"
-          floorLabel="Ground - Entrance"
-          markerIcon={KeyRound}
-        />
-      }
+      illustration={<ResetPasswordIllustration />}
       illustrationHeadline="Set a new path forward."
       illustrationSide="left"
     >

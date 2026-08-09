@@ -1,24 +1,16 @@
 import Link from "next/link";
-import { BadgeCheck } from "lucide-react";
 
 import FormCard from "@/components/shared/form/FormCard";
 import { Button } from "@/components/ui/button";
 import { VERIFY_EMAIL_CLIENT as CLIENT } from "@/features/auth/constants/verify-email";
 import AuthSplitFrame from "@/features/auth/shared/AuthSplitFrame";
-import AuthHeroVisual from "@/features/auth/shared/illustrations/AuthHeroVisual";
+import VerifyEmailIllustration from "@/features/auth/shared/illustrations/scenes/VerifyEmailIllustration";
 import { PUBLIC_ROUTES } from "@/constants/routes";
 
 const VerifyEmailSection = ({ isVerified }: TProps) => {
   return (
     <AuthSplitFrame
-      illustration={
-        <AuthHeroVisual
-          badgeLabel="Confirmed"
-          destinationLabel="Reception"
-          floorLabel="Ground - Entrance"
-          markerIcon={BadgeCheck}
-        />
-      }
+      illustration={<VerifyEmailIllustration />}
       illustrationHeadline="One click and you're confirmed."
       illustrationSide="left"
     >

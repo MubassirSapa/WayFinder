@@ -2,13 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Mail } from "lucide-react";
 
 import FormCard from "@/components/shared/form/FormCard";
 import { Button } from "@/components/ui/button";
 import { CHECK_EMAIL_CLIENT as CLIENT } from "@/features/auth/constants/check-email";
 import AuthSplitFrame from "@/features/auth/shared/AuthSplitFrame";
-import AuthHeroVisual from "@/features/auth/shared/illustrations/AuthHeroVisual";
+import CheckEmailIllustration from "@/features/auth/shared/illustrations/scenes/CheckEmailIllustration";
 import { PUBLIC_ROUTES } from "@/constants/routes";
 
 const CheckEmailSection = () => {
@@ -31,14 +30,7 @@ const CheckEmailSection = () => {
 
   return (
     <AuthSplitFrame
-      illustration={
-        <AuthHeroVisual
-          badgeLabel="Message sent"
-          destinationLabel="Inbox"
-          floorLabel="Ground - Entrance"
-          markerIcon={Mail}
-        />
-      }
+      illustration={<CheckEmailIllustration />}
       illustrationHeadline="Your link is on its way."
       illustrationSide="right"
     >

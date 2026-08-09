@@ -1,7 +1,26 @@
 # Auth Pages Redesign Plan — Split-Screen Illustration Layout
 
-Status: **planned, not yet implemented.** This document describes the target
-design and the steps to get there. Nothing in this doc has been built yet.
+Status: **implemented.** All 8 pages ship the split-screen layout described
+below, verified against the running app via screenshots, not just read
+through. Kept as a historical planning record rather than rewritten to
+match the final code exactly — see the note immediately below for where
+the two diverge.
+
+**Where the shipped version differs from this plan**: the "Illustration
+design system" section further down describes four flat primitives
+(`IllustrationPin`, `IllustrationFloorPlate`, `IllustrationNode`,
+`IllustrationRoute`) composed on a flat, untilted canvas. That first attempt
+shipped, was reviewed against real screenshots, and looked bad — sparse,
+disproportionate, a broken arrowhead marker, and a layout that floated as a
+small centered card instead of filling the viewport. It was scrapped
+entirely. What actually shipped instead reuses the public home page's
+proven 3D-tilted floor-plate technique (`IsometricScene`/`IsometricPlate`/
+`PlateRooms`, `src/features/auth/shared/illustrations/`), and every page
+after signin got a genuinely different composition (no shared route, two
+stacked plates, a route that dead-ends, a route that leaves the frame
+entirely, etc.) rather than one component reused with swapped labels. The
+per-page concept table further down is still accurate; the "how it's built"
+sections above it describe the abandoned approach.
 
 ## Goal
 

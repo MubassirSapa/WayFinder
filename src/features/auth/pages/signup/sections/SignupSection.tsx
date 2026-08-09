@@ -1,21 +1,12 @@
-import { Sparkles } from "lucide-react";
-
 import AuthSplitFrame from "@/features/auth/shared/AuthSplitFrame";
-import AuthHeroVisual from "@/features/auth/shared/illustrations/AuthHeroVisual";
+import SignupIllustration from "@/features/auth/shared/illustrations/scenes/SignupIllustration";
 
 import SignupForm from "../forms/SignupForm";
 
 const SignupSection = () => {
   return (
     <AuthSplitFrame
-      illustration={
-        <AuthHeroVisual
-          badgeLabel="Getting started"
-          destinationLabel="First floor"
-          floorLabel="Draft - Unsaved"
-          markerIcon={Sparkles}
-        />
-      }
+      illustration={<SignupIllustration />}
       illustrationHeadline="Build your first floor, one room at a time."
       illustrationSide="right"
     >
