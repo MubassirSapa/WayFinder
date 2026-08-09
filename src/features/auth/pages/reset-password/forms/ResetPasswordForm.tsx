@@ -3,8 +3,6 @@
 import { useState, useTransition } from "react";
 import { useForm } from "@tanstack/react-form";
 import Link from "next/link";
-import { KeyRoundIcon, ShieldCheckIcon, TriangleAlertIcon } from "lucide-react";
-
 import FormAlert from "@/components/shared/form/FormAlert";
 import FormCard from "@/components/shared/form/FormCard";
 import FormSubmitButton from "@/components/shared/form/FormSubmitButton";
@@ -60,7 +58,7 @@ const ResetPasswordForm = ({ token }: TProps) => {
         title={CLIENT.FORM_TITLE}
         description={CLIENT.VALIDATION_TOKEN_ERROR}
         align="center"
-        icon={<TriangleAlertIcon className="size-7 text-destructive" strokeWidth={1.8} />}
+        plain
         footer={
           <Button
             nativeButton={false}
@@ -81,7 +79,7 @@ const ResetPasswordForm = ({ token }: TProps) => {
         title={CLIENT.SUCCESS_TITLE}
         description={CLIENT.SUCCESS_DESC}
         align="center"
-        icon={<ShieldCheckIcon className="size-7 text-primary" strokeWidth={1.8} />}
+        plain
         footer={
           <Button
             nativeButton={false}
@@ -100,7 +98,7 @@ const ResetPasswordForm = ({ token }: TProps) => {
     <FormCard
       title={CLIENT.FORM_TITLE}
       description={CLIENT.FORM_DESC}
-      icon={<KeyRoundIcon className="size-7 text-primary" strokeWidth={1.8} />}
+      plain
       content={
         <form
           id={RESET_PASSWORD_CONST.FORM_ID}

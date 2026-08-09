@@ -2,8 +2,6 @@
 
 import { useState, useTransition } from "react";
 import { useForm } from "@tanstack/react-form";
-import { MailCheckIcon, MailIcon } from "lucide-react";
-
 import FormAlert from "@/components/shared/form/FormAlert";
 import FormCard from "@/components/shared/form/FormCard";
 import FormCTA from "@/components/shared/form/FormCTA";
@@ -51,7 +49,7 @@ const ForgotPasswordForm = () => {
         title={CLIENT.SUCCESS_TITLE}
         description={CLIENT.SUCCESS_DESC}
         align="center"
-        icon={<MailCheckIcon className="size-7 text-primary" strokeWidth={1.8} />}
+        plain
         footer={
           <FormFooterContainer>
             <FormCTA
@@ -69,7 +67,7 @@ const ForgotPasswordForm = () => {
     <FormCard
       title={CLIENT.FORM_TITLE}
       description={CLIENT.FORM_DESC}
-      icon={<MailIcon className="size-7 text-primary" strokeWidth={1.8} />}
+      plain
       content={
         <form
           id={FORGOT_PASSWORD_CONST.FORM_ID}

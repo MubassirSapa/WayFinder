@@ -46,6 +46,7 @@ const RegisterOrganizationForm = () => {
     <FormCard
       title={CLIENT.FORM_TITLE}
       description={CLIENT.FORM_DESC}
+      plain
       content={
         <form
           id={FORM_ID}

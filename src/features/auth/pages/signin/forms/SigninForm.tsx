@@ -2,7 +2,6 @@
 
 import { useState, useTransition } from "react";
 import { useForm } from "@tanstack/react-form";
-import { LogInIcon } from "lucide-react";
 
 import FormAlert from "@/components/shared/form/FormAlert";
 import FormCard from "@/components/shared/form/FormCard";
@@ -45,7 +44,7 @@ const SigninForm = () => {
     <FormCard
       title={CLIENT.FORM_TITLE}
       description={CLIENT.FORM_DESC}
-      icon={<LogInIcon className="size-7 text-primary" strokeWidth={1.8} />}
+      plain
       content={
         <form
           id={SIGNIN_CONST.FORM_ID}

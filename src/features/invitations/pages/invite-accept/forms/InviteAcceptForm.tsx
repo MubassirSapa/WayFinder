@@ -10,7 +10,6 @@ import FormFooterContainer from "@/components/shared/form/containers/FormFooterC
 import PasswordField from "@/components/shared/form/fields/PasswordField";
 import TextField from "@/components/shared/form/fields/TextField";
 import { FieldGroup } from "@/components/ui/field";
-import { UsersRoundIcon } from "lucide-react";
 
 import { INVITATIONS_CLIENT as CLIENT, INVITATIONS_CONST } from "../../../constants/invitations.constants";
 import { acceptInvitationAction } from "../../../actions/server/accept-invitation";
@@ -58,7 +57,7 @@ const InviteAcceptForm = ({ token, preview }: TProps) => {
       title={CLIENT.ACCEPT_FORM_TITLE}
       description={CLIENT.ACCEPT_FORM_DESC}
       showBack={false}
-      icon={<UsersRoundIcon className="size-7 text-primary" strokeWidth={1.8} />}
+      plain
       content={
         <form
           id={INVITATIONS_CONST.ACCEPT_FORM_ID}

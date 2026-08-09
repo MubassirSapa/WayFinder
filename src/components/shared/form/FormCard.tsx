@@ -11,46 +11,61 @@ const FormCard = ({
   footer,
   align = "start",
   eyebrow,
+  plain = false,
 }: TProps) => {
-  return (
-    <Card className="w-full gap-0 overflow-hidden rounded-lg border border-border bg-card py-0 text-card-foreground shadow-sm">
-      <div className="px-5 pt-5 sm:px-6 sm:pt-6">
-        <div className="mb-7">
-          <BrandHeader />
-        </div>
+  const header = (
+    <div className={cn(!plain && "px-5 pt-5 sm:px-6 sm:pt-6")}>
+      <div className="mb-7">
+        <BrandHeader />
+      </div>
+
+      <div
+        className={cn(
+          "flex gap-3",
+          icon && align !== "center" ? "items-start" : "flex-col",
+          align === "center" && "items-center",
+        )}
+      >
+        {icon && (
+          <div className="grid size-10 shrink-0 place-content-center rounded-md border border-primary/15 bg-primary/10 text-primary">
+            {icon}
+          </div>
+        )}
 
         <div
           className={cn(
-            "flex gap-3",
-            icon && align !== "center" ? "items-start" : "flex-col",
-            align === "center" && "items-center",
+            "space-y-2",
+            align === "center" ? "text-center" : "text-start",
+            footer || content || children ? "mb-6" : "mb-2",
           )}
         >
-          {icon && (
-            <div className="grid size-10 shrink-0 place-content-center rounded-md border border-primary/15 bg-primary/10 text-primary">
-              {icon}
-            </div>
+          {eyebrow && (
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+              {eyebrow}
+            </p>
           )}
-
-          <div
-            className={cn(
-              "space-y-2",
-              align === "center" ? "text-center" : "text-start",
-              footer || content || children ? "mb-6" : "mb-2",
-            )}
-          >
-            {eyebrow && (
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-                {eyebrow}
-              </p>
-            )}
-            <h1 className="font-heading text-2xl font-semibold leading-tight tracking-normal text-foreground">
-              {title}
-            </h1>
-            <p className="text-sm leading-6 text-muted-foreground">{description}</p>
-          </div>
+          <h1 className="font-heading text-2xl font-semibold leading-tight tracking-normal text-foreground">
+            {title}
+          </h1>
+          <p className="text-sm leading-6 text-muted-foreground">{description}</p>
         </div>
       </div>
+    </div>
+  );
+
+  if (plain) {
+    return (
+      <div className="w-full">
+        {header}
+        {(content ?? children) && <div className="pb-2">{content ?? children}</div>}
+        {footer && <div className="flex flex-col gap-4 pt-3">{footer}</div>}
+      </div>
+    );
+  }
+
+  return (
+    <Card className="w-full gap-0 overflow-hidden rounded-lg border border-border bg-card py-0 text-card-foreground shadow-sm">
+      {header}
 
       {(content ?? children) && (
         <CardContent className="px-5 pb-2 sm:px-6">{content ?? children}</CardContent>
@@ -77,4 +92,6 @@ type TProps = {
   footer?: React.ReactNode;
   align?: "start" | "center";
   eyebrow?: string;
+  /** Drops the bordered/shadowed Card shell — content sits directly on the page background. */
+  plain?: boolean;
 };
