@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { MEDIA_RESOURCE_FOLDER } from "@/constants/media";
+import { MEDIA_MAX_FILE_SIZE_BYTES, MEDIA_RESOURCE_FOLDER } from "@/constants/media";
 import { useStagedMediaUpload } from "@/hooks/use-staged-media-upload";
 
 import { updateProfileAction } from "../actions/server/update-profile";
@@ -45,6 +45,12 @@ export function ProfileForm({ profile }: ProfileFormProps) {
 
     if (!file.type.startsWith("image/")) {
       setError(PROFILE_CLIENT.ERROR_AVATAR_TYPE);
+      avatar.rejectInvalidFile();
+      return;
+    }
+
+    if (file.size > MEDIA_MAX_FILE_SIZE_BYTES) {
+      setError(PROFILE_CLIENT.ERROR_AVATAR_SIZE);
       avatar.rejectInvalidFile();
       return;
     }

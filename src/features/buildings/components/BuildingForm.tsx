@@ -9,7 +9,7 @@ import FormAlert from "@/components/shared/form/FormAlert";
 import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { MEDIA_RESOURCE_FOLDER } from "@/constants/media";
+import { MEDIA_MAX_FILE_SIZE_BYTES, MEDIA_RESOURCE_FOLDER } from "@/constants/media";
 import { useStagedMediaUpload } from "@/hooks/use-staged-media-upload";
 
 import { BUILDINGS_CLIENT } from "../constants/buildings.constants";
@@ -44,6 +44,12 @@ export function BuildingForm({ building }: BuildingFormProps) {
 
     if (!file.type.startsWith("image/")) {
       setError(BUILDINGS_CLIENT.ERROR_LOGO_TYPE);
+      logo.rejectInvalidFile();
+      return;
+    }
+
+    if (file.size > MEDIA_MAX_FILE_SIZE_BYTES) {
+      setError(BUILDINGS_CLIENT.ERROR_LOGO_SIZE);
       logo.rejectInvalidFile();
       return;
     }

@@ -31,6 +31,7 @@ export const PROFILE_CLIENT = {
   ERROR_UPDATE_FAILED: "Could not save your profile. Please try again.",
   ERROR_LOAD_FAILED: "Could not load your profile.",
   ERROR_AVATAR_TYPE: "Please choose an image file.",
+  ERROR_AVATAR_SIZE: "That image is too large. Please choose a file under 5MB.",
 
   VALIDATION_NAME_SHORT: "Your name is too short.",
   VALIDATION_NAME_LONG: "Your name is too long.",

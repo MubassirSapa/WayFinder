@@ -79,6 +79,7 @@ export const USER_MANAGEMENT_CLIENT = {
   REPLACE_PHOTO: "Replace",
   REMOVE_PHOTO: "Remove",
   ERROR_AVATAR_TYPE: "Please choose an image file.",
+  ERROR_AVATAR_SIZE: "That image is too large. Please choose a file under 5MB.",
   VALIDATION_NAME_SHORT: "The name is too short.",
   VALIDATION_NAME_LONG: "The name is too long.",
   SAVE: "Save changes",

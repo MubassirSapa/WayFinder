@@ -9,7 +9,7 @@ import FormAlert from "@/components/shared/form/FormAlert";
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { MEDIA_RESOURCE_FOLDER } from "@/constants/media";
+import { MEDIA_MAX_FILE_SIZE_BYTES, MEDIA_RESOURCE_FOLDER } from "@/constants/media";
 import { useStagedMediaUpload } from "@/hooks/use-staged-media-upload";
 
 import { updateOrgUserInfoAction } from "../actions/server/update-org-user";
@@ -43,6 +43,12 @@ export function UserInfoEditForm({ user, onCancel, onSaved }: UserInfoEditFormPr
 
     if (!file.type.startsWith("image/")) {
       setError(USER_MANAGEMENT_CLIENT.ERROR_AVATAR_TYPE);
+      avatar.rejectInvalidFile();
+      return;
+    }
+
+    if (file.size > MEDIA_MAX_FILE_SIZE_BYTES) {
+      setError(USER_MANAGEMENT_CLIENT.ERROR_AVATAR_SIZE);
       avatar.rejectInvalidFile();
       return;
     }

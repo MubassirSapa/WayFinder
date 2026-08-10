@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MEDIA_RESOURCE_FOLDER } from "@/constants/media";
+import { MEDIA_MAX_FILE_SIZE_BYTES, MEDIA_RESOURCE_FOLDER } from "@/constants/media";
 import { ORGANIZATION_TYPES } from "@/features/auth/constants/register-organization";
 import { OrganizationInfoCard } from "@/features/dashboard/components/OrganizationInfoCard";
 import { useStagedMediaUpload } from "@/hooks/use-staged-media-upload";
@@ -41,6 +41,12 @@ export function OrganizationForm({ organization }: OrganizationFormProps) {
 
     if (!file.type.startsWith("image/")) {
       setError(ORGANIZATION_SETTINGS_CLIENT.ERROR_LOGO_TYPE);
+      logo.rejectInvalidFile();
+      return;
+    }
+
+    if (file.size > MEDIA_MAX_FILE_SIZE_BYTES) {
+      setError(ORGANIZATION_SETTINGS_CLIENT.ERROR_LOGO_SIZE);
       logo.rejectInvalidFile();
       return;
     }

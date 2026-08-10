@@ -19,5 +19,12 @@ export const Media: CollectionConfig = {
       required: true,
     },
   ],
-  upload: true,
+  upload: {
+    // No image/svg+xml: SVGs can carry embedded scripts and are rendered at
+    // a public, unauthenticated URL - out of scope for this allowlist.
+    // image/jpg alongside image/jpeg: some clients report the non-standard
+    // 'image/jpg' for .jpg files, and Payload's mimeTypes check is a strict
+    // startsWith match, not extension-aware, so both are needed.
+    mimeTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/avif'],
+  },
 }

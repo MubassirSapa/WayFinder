@@ -27,6 +27,7 @@ export const ORGANIZATION_SETTINGS_CLIENT = {
   ERROR_UPDATE_FAILED: "Could not save organization info. Please try again.",
   ERROR_LOAD_FAILED: "Could not load organization info.",
   ERROR_LOGO_TYPE: "Please choose an image file.",
+  ERROR_LOGO_SIZE: "That image is too large. Please choose a file under 5MB.",
 
   VALIDATION_NAME_SHORT: "The organization name is too short.",
   VALIDATION_NAME_LONG: "The organization name is too long.",

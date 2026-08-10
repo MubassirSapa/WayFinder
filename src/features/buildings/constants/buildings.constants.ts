@@ -121,6 +121,7 @@ export const BUILDINGS_CLIENT = {
   ERROR_CREATE_FAILED: "Could not create the building. Please try again.",
   ERROR_UPDATE_FAILED: "Could not save building info. Please try again.",
   ERROR_LOGO_TYPE: "Please choose an image file.",
+  ERROR_LOGO_SIZE: "That image is too large. Please choose a file under 5MB.",
 
   VALIDATION_NAME_SHORT: "The building name is too short.",
   VALIDATION_NAME_LONG: "The building name is too long.",
