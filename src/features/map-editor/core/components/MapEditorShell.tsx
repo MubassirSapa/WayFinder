@@ -3,6 +3,7 @@
 import React from 'react';
 import type { FloorEditorData } from "../types/editor.types";
 import { EDITOR_UI_TEXT } from '../../constants/editorUi.constants';
+import { useCanvasViewport } from '../hooks/useCanvasViewport';
 import { useFloorEditorData } from '../hooks/useFloorEditorData';
 import { EditorToolbar } from './EditorToolbar';
 import { EditorSidePanel, type EditorSidePanelTab } from './EditorSidePanel';
@@ -12,6 +13,7 @@ import { EditorDesktopOnlyNotice } from './EditorDesktopOnlyNotice';
 import { Button } from '@/components/ui/button';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Loader2, AlertCircle } from 'lucide-react';
+import { useAppStore } from '@/store';
 
 interface MapEditorShellProps {
   initialData: FloorEditorData | null;
@@ -25,6 +27,23 @@ export function MapEditorShell({
   leftPanelTabs,
 }: MapEditorShellProps) {
   const { isLoading, error } = useFloorEditorData(initialData, initialError);
+  const floor = useAppStore((state) => state.floor);
+  const {
+    changeZoom,
+    consumeSuppressedClick,
+    handlePointerDown,
+    handlePointerMove,
+    handlePointerUp,
+    isPanning,
+    pan,
+    resetView,
+    wrapperRef,
+    zoom,
+  } = useCanvasViewport({
+    floorHeight: floor?.height ?? 0,
+    floorId: floor?.id ?? null,
+    floorWidth: floor?.width ?? 0,
+  });
 
   if (isLoading) {
     return (
@@ -61,7 +80,7 @@ export function MapEditorShell({
       <TooltipProvider>
         <div className="hidden h-screen w-screen flex-col overflow-hidden bg-editor-background font-sans text-editor-foreground lg:flex">
           {/* Top toolbar */}
-          <EditorToolbar />
+          <EditorToolbar onResetView={resetView} onZoomChange={changeZoom} zoom={zoom} />
 
           {/* Workspace body */}
           <div className="flex flex-1 overflow-hidden min-h-0">
@@ -70,7 +89,16 @@ export function MapEditorShell({
 
             {/* Map canvas */}
             <div className="flex-1 h-full min-w-0">
-              <MapCanvas />
+              <MapCanvas
+                consumeSuppressedClick={consumeSuppressedClick}
+                isPanning={isPanning}
+                onPointerDown={handlePointerDown}
+                onPointerMove={handlePointerMove}
+                onPointerUp={handlePointerUp}
+                pan={pan}
+                wrapperRef={wrapperRef}
+                zoom={zoom}
+              />
             </div>
 
             {/* Right Inspector */}

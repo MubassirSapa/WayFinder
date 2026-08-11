@@ -19,6 +19,7 @@ export function useObjectDrag() {
         startY: number;
         startClientX: number;
         startClientY: number;
+        zoom: number;
       }
     | {
         type: 'rotate';
@@ -34,6 +35,7 @@ export function useObjectDrag() {
         startHeight: number;
         startClientX: number;
         startClientY: number;
+        zoom: number;
       }
     | null
   >(null);
@@ -54,6 +56,7 @@ export function useObjectDrag() {
       startY: initialY,
       startClientX: e.clientX,
       startClientY: e.clientY,
+      zoom: useAppStore.getState().editorViewportZoom,
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -80,6 +83,7 @@ export function useObjectDrag() {
       startHeight: height,
       startClientX: e.clientX,
       startClientY: e.clientY,
+      zoom: useAppStore.getState().editorViewportZoom,
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -120,10 +124,13 @@ export function useObjectDrag() {
     if (!dragInfo.current) return;
 
     if (dragInfo.current.type === 'move') {
-      const { objectId, startX, startY, startClientX, startClientY } = dragInfo.current;
+      const { objectId, startX, startY, startClientX, startClientY, zoom } = dragInfo.current;
 
-      const dx = e.clientX - startClientX;
-      const dy = e.clientY - startClientY;
+      // Client-pixel deltas live in screen space; the stored x/y are floor
+      // (world) coordinates, so a delta has to be un-scaled by the canvas
+      // zoom before it means the same distance in that space.
+      const dx = (e.clientX - startClientX) / zoom;
+      const dy = (e.clientY - startClientY) / zoom;
 
       const newX = snapToGrid(startX + dx);
       const newY = snapToGrid(startY + dy);
@@ -139,10 +146,11 @@ export function useObjectDrag() {
         startHeight,
         startClientX,
         startClientY,
+        zoom,
       } = dragInfo.current;
 
-      const dx = e.clientX - startClientX;
-      const dy = e.clientY - startClientY;
+      const dx = (e.clientX - startClientX) / zoom;
+      const dy = (e.clientY - startClientY) / zoom;
 
       const width = Math.max(MIN_OBJECT_SIZE, snapToGrid(startWidth + dx));
       const height = Math.max(MIN_OBJECT_SIZE, snapToGrid(startHeight + dy));

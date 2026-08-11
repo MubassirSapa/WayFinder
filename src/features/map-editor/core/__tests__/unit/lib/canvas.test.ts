@@ -1,7 +1,45 @@
 import { describe, it, expect } from 'vitest'
-import { snapToGrid, GRID_SIZE, toObjectLocalPoint } from '../../../lib/canvas'
+import { getFloorContentBounds, snapToGrid, GRID_SIZE, toObjectLocalPoint } from '../../../lib/canvas'
+import type { EditorMapNode, EditorMapObject } from '../../../types/map.types'
 
 // canvasPointFromEvent/clientPointToSvg require a live SVGSVGElement (browser CTM) — covered by E2E tests
+
+function makeObject(overrides: Partial<EditorMapObject>): EditorMapObject {
+  return {
+    id: 'o1',
+    floorId: 'f1',
+    buildingId: 'b1',
+    parentObjectId: null,
+    type: 'room',
+    name: 'Room',
+    label: '',
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    rotation: 0,
+    shape: 'rectangle',
+    isSearchable: true,
+    isAccessible: true,
+    ...overrides,
+  }
+}
+
+function makeNode(overrides: Partial<EditorMapNode>): EditorMapNode {
+  return {
+    id: 'n1',
+    floorId: 'f1',
+    buildingId: 'b1',
+    objectId: null,
+    role: 'hallway_point',
+    label: '',
+    x: 0,
+    y: 0,
+    geometryType: 'icon',
+    isAccessible: true,
+    ...overrides,
+  }
+}
 
 describe('GRID_SIZE', () => {
   it('is 20', () => {
@@ -119,5 +157,31 @@ describe('toObjectLocalPoint', () => {
     const recovered = toObjectLocalPoint(screenPoint, objectX, objectY, rotationDeg, cx, cy)
     expect(recovered.x).toBeCloseTo(localPoint.x)
     expect(recovered.y).toBeCloseTo(localPoint.y)
+  })
+})
+
+describe('getFloorContentBounds', () => {
+  it('returns 0x0 for an empty floor', () => {
+    expect(getFloorContentBounds([], [])).toEqual({ width: 0, height: 0 })
+  })
+
+  it('bounds a single object by its far corner', () => {
+    const objects = [makeObject({ x: 100, y: 50, width: 80, height: 40 })]
+    expect(getFloorContentBounds(objects, [])).toEqual({ width: 180, height: 90 })
+  })
+
+  it('bounds a single node by its point', () => {
+    const nodes = [makeNode({ x: 300, y: 120 })]
+    expect(getFloorContentBounds([], nodes)).toEqual({ width: 300, height: 120 })
+  })
+
+  it('takes the max extent across every object and node', () => {
+    const objects = [
+      makeObject({ x: 0, y: 0, width: 100, height: 100 }),
+      makeObject({ x: 500, y: 10, width: 50, height: 20 }),
+    ]
+    const nodes = [makeNode({ x: 200, y: 900 })]
+
+    expect(getFloorContentBounds(objects, nodes)).toEqual({ width: 550, height: 900 })
   })
 })

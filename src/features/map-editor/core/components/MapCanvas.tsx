@@ -1,34 +1,42 @@
 'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
+import type { RefObject } from 'react';
 import { useAppStore } from "@/store";
-import { useCanvasPan } from '../hooks/useCanvasPan';
 import { useCanvasPointer } from '../hooks/useCanvasPointer';
 import { useBackgroundImageDrag } from '../hooks/useBackgroundImageDrag';
+import { buildCanvasViewportTransform, type Point } from '../lib/canvasViewport';
 import { BACKGROUND_IMAGE_CLIP_PATH_ID, computeBackgroundImageFit } from '../lib/backgroundImageFit';
+import { FloorResizeHandle } from './FloorResizeHandle';
 import { MapGrid } from './MapGrid';
 import { MapNodeLayer } from './MapNodeLayer';
 import { MapObjectLayer } from './MapObjectLayer';
 import { PathEdgeLayer } from './PathEdgeLayer';
 
+interface MapCanvasProps {
+  consumeSuppressedClick: () => boolean;
+  isPanning: boolean;
+  onPointerDown: (e: React.PointerEvent<HTMLDivElement>) => void;
+  onPointerMove: (e: React.PointerEvent<HTMLDivElement>) => void;
+  onPointerUp: (e: React.PointerEvent<HTMLDivElement>) => void;
+  pan: Point;
+  wrapperRef: RefObject<HTMLDivElement | null>;
+  zoom: number;
+}
 
-export function MapCanvas() {
+export function MapCanvas({
+  consumeSuppressedClick,
+  isPanning,
+  onPointerDown,
+  onPointerMove,
+  onPointerUp,
+  pan,
+  wrapperRef,
+  zoom,
+}: MapCanvasProps) {
   const canvasRef = useRef<SVGSVGElement | null>(null);
-  const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const { floor, mode, pendingPathNodeId, nodes } = useAppStore();
+  const { floor, mode, pendingPathNodeId, nodes, objects, edges } = useAppStore();
   const { handleCanvasClick, handleCanvasDoubleClick } = useCanvasPointer(canvasRef);
-  const {
-    consumeSuppressedClick,
-    handlePointerDown: handlePanPointerDown,
-    handlePointerMove: handlePanPointerMove,
-    handlePointerUp: handlePanPointerUp,
-    isPanning,
-    pan,
-  } = useCanvasPan({
-    floorHeight: floor?.height ?? 0,
-    floorWidth: floor?.width ?? 0,
-    wrapperRef,
-  });
   const { handleMouseDown: handleBackgroundImageMouseDown } = useBackgroundImageDrag();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
@@ -76,6 +84,9 @@ export function MapCanvas() {
 
   // Find source node coordinates for drawing path preview line
   const sourceNode = pendingPathNodeId ? nodes[pendingPathNodeId] : null;
+  const isFloorEmpty = Object.keys(objects).length === 0
+    && Object.keys(nodes).length === 0
+    && Object.keys(edges).length === 0;
 
   const backgroundImageFit = computeBackgroundImageFit({
     floorWidth: floor.width,
@@ -92,19 +103,20 @@ export function MapCanvas() {
 
   return (
     <div
-      className={`relative h-full w-full touch-none overflow-hidden bg-editor-background p-6 flex items-start justify-start select-none ${isPanning ? 'cursor-grabbing' : 'cursor-grab'}`}
-      onPointerCancel={handlePanPointerUp}
-      onPointerDown={handlePanPointerDown}
-      onPointerLeave={handlePanPointerUp}
-      onPointerMove={handlePanPointerMove}
-      onPointerUp={handlePanPointerUp}
+      className={`relative h-full w-full touch-none overflow-hidden bg-editor-background select-none ${isPanning ? 'cursor-grabbing' : 'cursor-grab'}`}
+      onPointerCancel={onPointerUp}
+      onPointerDown={onPointerDown}
+      onPointerLeave={onPointerUp}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
       ref={wrapperRef}
     >
       <div
-        className="relative overflow-hidden rounded-xl border border-editor-border bg-editor-panel shadow-2xl"
+        className="absolute left-0 top-0 overflow-hidden rounded-xl border border-editor-border bg-editor-panel shadow-2xl"
         style={{
           height: floor.height,
-          transform: `translate(${pan.x}px, ${pan.y}px)`,
+          transform: buildCanvasViewportTransform(pan, zoom),
+          transformOrigin: '0 0',
           width: floor.width,
         }}
       >
@@ -145,6 +157,14 @@ export function MapCanvas() {
                 }}
                 transform={backgroundImageTransform}
                 onMouseDown={handleBackgroundImageMouseDown}
+                // Without this, a drag that starts on the (unlocked) image
+                // moves the image via its own mousedown/mousemove listeners
+                // *and* pans the canvas via the wrapper's pointerdown/
+                // pointermove listeners at the same time - stopPropagation()
+                // inside handleBackgroundImageMouseDown only stops the
+                // mousedown from bubbling, not the separately-dispatched
+                // pointerdown the pan logic listens for.
+                onPointerDown={(e) => e.stopPropagation()}
               />
             </>
           )}
@@ -176,6 +196,14 @@ export function MapCanvas() {
           <MapNodeLayer />
         </svg>
       </div>
+
+      <FloorResizeHandle
+        floorHeight={floor.height}
+        floorWidth={floor.width}
+        isFloorEmpty={isFloorEmpty}
+        pan={pan}
+        zoom={zoom}
+      />
     </div>
   );
 }

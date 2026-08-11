@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { createSignupFlowSlice } from "@/features/auth/store/createSignupFlowSlice";
 import { createEdgeSlice } from "@/features/map-editor/core/store/createEdgeSlice";
 import { createEditorSlice } from "@/features/map-editor/core/store/createEditorSlice";
+import { createEditorViewportSlice } from "@/features/map-editor/core/store/createEditorViewportSlice";
 import { createNodeSlice } from "@/features/map-editor/core/store/createNodeSlice";
 import { createObjectSlice } from "@/features/map-editor/core/store/createObjectSlice";
 import { createSmartBuilderSlice } from "@/features/map-editor/smart-builder/store/createSmartBuilderSlice";
@@ -18,6 +19,7 @@ import { createQrViewerViewportSlice } from "../../../store/createQrViewerViewpo
 export function makeStore() {
   return create<AppStore>()((...args) => ({
     ...createEditorSlice(...args),
+    ...createEditorViewportSlice(...args),
     ...createObjectSlice(...args),
     ...createNodeSlice(...args),
     ...createEdgeSlice(...args),

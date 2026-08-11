@@ -55,5 +55,8 @@ export const createEditorSlice: StateCreator<AppStore, [], [], EditorSlice> = (s
       nodes: {},
       edges: {},
       pendingPathNodeId: null,
+      editorViewportPan: { x: 0, y: 0 },
+      editorViewportZoom: 1,
+      isResizingFloor: false,
     }),
 });

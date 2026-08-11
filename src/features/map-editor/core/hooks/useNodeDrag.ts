@@ -13,6 +13,7 @@ export function useNodeDrag() {
     startClientX: number;
     startClientY: number;
     pointerId: number;
+    zoom: number;
   } | null>(null);
 
   const handlePointerDown = (
@@ -36,6 +37,10 @@ export function useNodeDrag() {
       startClientX: e.clientX,
       startClientY: e.clientY,
       pointerId: e.pointerId,
+      // Captured once at drag start, not read live - the canvas can be
+      // zoomed while a drag is in flight, and the delta below has to stay
+      // consistent with whatever scale was in effect when the drag began.
+      zoom: useAppStore.getState().editorViewportZoom,
     };
 
     document.addEventListener('pointermove', handlePointerMove);
@@ -47,10 +52,13 @@ export function useNodeDrag() {
     if (!dragInfo.current) return;
     if (e.pointerId !== dragInfo.current.pointerId) return;
 
-    const { nodeId, startX, startY, startClientX, startClientY } = dragInfo.current;
+    const { nodeId, startX, startY, startClientX, startClientY, zoom } = dragInfo.current;
 
-    const dx = e.clientX - startClientX;
-    const dy = e.clientY - startClientY;
+    // Client-pixel deltas live in screen space; the stored x/y are floor
+    // (world) coordinates, so a delta has to be un-scaled by the canvas
+    // zoom before it means the same distance in that space.
+    const dx = (e.clientX - startClientX) / zoom;
+    const dy = (e.clientY - startClientY) / zoom;
 
     moveNode(nodeId, snapToGrid(startX + dx), snapToGrid(startY + dy));
   };

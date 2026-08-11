@@ -11,6 +11,11 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { EDITOR_UI_TEXT } from '../../constants/editorUi.constants';
+import {
+  EDITOR_IMAGE_MAX_ZOOM_PERCENT,
+  EDITOR_IMAGE_MIN_ZOOM_PERCENT,
+  EDITOR_IMAGE_ZOOM_STEP_PERCENT,
+} from '../constants/referenceImage.constants';
 import { MEDIA_RESOURCE_FOLDER } from '@/constants/media';
 import { uploadMediaClientSide } from '@/lib/uploads/uploadMediaClientSide';
 import { useAppStore } from '@/store';
@@ -26,7 +31,7 @@ const FIT_OPTIONS = [
 ] as const;
 
 export function FloorReferencePanel() {
-  const { floor, updateFloor } = useAppStore();
+  const { floor, objects, nodes, edges, updateFloor } = useAppStore();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [stagedPreviewUrl, setStagedPreviewUrl] = useState<string | null>(null);
@@ -37,6 +42,12 @@ export function FloorReferencePanel() {
   const isLocked = floor?.backgroundImageLocked ?? false;
   const isVisible = floor?.backgroundImageVisible ?? true;
   const previewUrl = stagedPreviewUrl ?? floor?.backgroundImageUrl ?? null;
+  // Nothing placed yet on this floor - safe to resize the canvas to match an
+  // uploaded image's own dimensions, since no object/node x/y would end up
+  // stranded outside the new bounds.
+  const isFloorEmpty = Object.keys(objects).length === 0
+    && Object.keys(nodes).length === 0
+    && Object.keys(edges).length === 0;
 
   // Revoke a staged blob preview whenever it's replaced or the panel unmounts.
   useEffect(() => {
@@ -85,6 +96,10 @@ export function FloorReferencePanel() {
           backgroundImageOffsetX: 0,
           backgroundImageOffsetY: 0,
           backgroundImageFit: 'fill',
+          backgroundImageVisible: true,
+          ...(isFloorEmpty && uploadedImage.width && uploadedImage.height
+            ? { width: uploadedImage.width, height: uploadedImage.height }
+            : {}),
         });
 
         clearStagedFile();
@@ -158,9 +173,9 @@ export function FloorReferencePanel() {
             </p>
             <Button
               type="button"
-              variant="ghost"
+              variant="destructive"
               size="sm"
-              className="self-start text-editor-muted-foreground hover:bg-editor-panel hover:text-editor-foreground sm:self-auto"
+              className="self-start sm:self-auto"
               disabled={isUploading}
               onClick={clearStagedFile}
             >
@@ -180,9 +195,9 @@ export function FloorReferencePanel() {
             </div>
             <Button
               type="button"
-              variant="ghost"
+              variant="destructive"
               size="sm"
-              className="self-start text-editor-muted-foreground hover:bg-editor-panel hover:text-editor-foreground sm:self-auto"
+              className="self-start sm:self-auto"
               disabled={isLocked}
               onClick={handleRemove}
             >
@@ -212,6 +227,7 @@ export function FloorReferencePanel() {
                 <Switch
                   id="floor-reference-visible"
                   checked={isVisible}
+                  className="data-unchecked:bg-editor-disabled-foreground dark:data-unchecked:bg-editor-disabled-foreground"
                   onCheckedChange={(checked) => updateFloor({ backgroundImageVisible: checked })}
                 />
               </div>
@@ -222,6 +238,7 @@ export function FloorReferencePanel() {
                 <Switch
                   id="floor-reference-lock"
                   checked={isLocked}
+                  className="data-unchecked:bg-editor-disabled-foreground dark:data-unchecked:bg-editor-disabled-foreground"
                   onCheckedChange={(checked) => updateFloor({ backgroundImageLocked: checked })}
                 />
               </div>
@@ -334,15 +351,18 @@ export function FloorReferencePanel() {
               <div className="flex items-center gap-1">
                 <Input
                   type="number"
-                  min={50}
-                  max={300}
-                  step={5}
+                  min={EDITOR_IMAGE_MIN_ZOOM_PERCENT}
+                  max={EDITOR_IMAGE_MAX_ZOOM_PERCENT}
+                  step={EDITOR_IMAGE_ZOOM_STEP_PERCENT}
                   disabled={isLocked}
                   value={Math.round((floor.backgroundImageScale ?? 1) * 100)}
                   onChange={(event) => {
                     const value = Number(event.target.value);
                     if (Number.isNaN(value)) return;
-                    updateFloor({ backgroundImageScale: clamp(value, 50, 300) / 100 });
+                    updateFloor({
+                      backgroundImageScale:
+                        clamp(value, EDITOR_IMAGE_MIN_ZOOM_PERCENT, EDITOR_IMAGE_MAX_ZOOM_PERCENT) / 100,
+                    });
                   }}
                   className="h-6 w-14 px-1.5 text-right text-[10px]"
                 />
@@ -351,9 +371,9 @@ export function FloorReferencePanel() {
             </div>
             <Slider
               disabled={isLocked}
-              min={50}
-              max={300}
-              step={5}
+              min={EDITOR_IMAGE_MIN_ZOOM_PERCENT}
+              max={EDITOR_IMAGE_MAX_ZOOM_PERCENT}
+              step={EDITOR_IMAGE_ZOOM_STEP_PERCENT}
               value={[(floor.backgroundImageScale ?? 1) * 100]}
               onValueChange={(next) => {
                 const value = Array.isArray(next) ? next[0] : next;
@@ -452,9 +472,6 @@ export function FloorReferencePanel() {
               setError(null);
             }}
           />
-          <p className="text-[10px] text-editor-subtle-foreground">
-            {EDITOR_UI_TEXT.referencePanel.fileHint}
-          </p>
         </div>
 
         <div className="space-y-1.5">
@@ -482,11 +499,17 @@ export function FloorReferencePanel() {
           </p>
         ) : null}
 
+        {isFloorEmpty ? (
+          <p className="rounded-xl border border-editor-border bg-editor-background/50 px-3 py-2 text-[10px] leading-relaxed text-editor-subtle-foreground">
+            {EDITOR_UI_TEXT.referencePanel.autoFitHint}
+          </p>
+        ) : null}
+
         <Button
           type="button"
-          variant="outline"
+          variant="default"
           size="sm"
-          className="h-auto w-full justify-start rounded-xl border-editor-border bg-editor-background/50 px-3 py-3 text-left text-editor-foreground hover:bg-editor-panel"
+          className="h-auto w-full justify-start rounded-xl px-3 py-3 text-left"
           disabled={!floor || !selectedFile || isUploading || isLocked}
           onClick={handleUpload}
         >

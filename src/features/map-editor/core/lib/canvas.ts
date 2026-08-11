@@ -1,5 +1,6 @@
 import { RefObject } from 'react';
 import { Point } from './distance';
+import type { EditorMapNode, EditorMapObject } from '../types/map.types';
 
 export const GRID_SIZE = 20;
 
@@ -71,6 +72,32 @@ export function clientPointToSvg(
 // back through the inverse of that same transform to know where it landed
 // in the object's local space — otherwise dragging a point on a rotated
 // object would move it in the wrong direction.
+// The smallest floor width/height that still contains every placed object
+// and node, so a resize can be clamped from cutting existing content off.
+// Uses each object's unrotated x/y/width/height (its bounding box before
+// rotation is applied) rather than a true rotated bounding box - simpler,
+// and only under-protects a corner of a heavily rotated object, which is an
+// acceptable trade for a "safety" floor rather than an exact guarantee.
+export function getFloorContentBounds(
+  objects: EditorMapObject[],
+  nodes: EditorMapNode[],
+): { width: number; height: number } {
+  let maxX = 0;
+  let maxY = 0;
+
+  for (const object of objects) {
+    maxX = Math.max(maxX, object.x + object.width);
+    maxY = Math.max(maxY, object.y + object.height);
+  }
+
+  for (const node of nodes) {
+    maxX = Math.max(maxX, node.x);
+    maxY = Math.max(maxY, node.y);
+  }
+
+  return { width: maxX, height: maxY };
+}
+
 export function toObjectLocalPoint(
   svgPoint: Point,
   objectX: number,

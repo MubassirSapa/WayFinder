@@ -2,9 +2,10 @@ import { useRef } from 'react';
 import { useAppStore } from "@/store";
 
 // Drags the reference image's position (backgroundImageOffsetX/Y), mirroring
-// useObjectDrag's "move" case: raw client-pixel deltas added directly to the
-// stored offset, same coordinate assumption the rest of the canvas already
-// relies on for dragging objects/nodes.
+// useObjectDrag's "move" case: client-pixel deltas, un-scaled by the current
+// canvas zoom (captured once at drag start), added to the stored offset -
+// same coordinate assumption the rest of the canvas relies on for dragging
+// objects/nodes.
 export function useBackgroundImageDrag() {
   const { mode, floor, updateFloor } = useAppStore();
   const dragInfo = useRef<{
@@ -12,14 +13,15 @@ export function useBackgroundImageDrag() {
     startOffsetY: number;
     startClientX: number;
     startClientY: number;
+    zoom: number;
   } | null>(null);
 
   const handleMouseMove = (e: MouseEvent) => {
     if (!dragInfo.current) return;
-    const { startOffsetX, startOffsetY, startClientX, startClientY } = dragInfo.current;
+    const { startOffsetX, startOffsetY, startClientX, startClientY, zoom } = dragInfo.current;
     updateFloor({
-      backgroundImageOffsetX: startOffsetX + (e.clientX - startClientX),
-      backgroundImageOffsetY: startOffsetY + (e.clientY - startClientY),
+      backgroundImageOffsetX: startOffsetX + (e.clientX - startClientX) / zoom,
+      backgroundImageOffsetY: startOffsetY + (e.clientY - startClientY) / zoom,
     });
   };
 
@@ -40,6 +42,7 @@ export function useBackgroundImageDrag() {
       startOffsetY: floor.backgroundImageOffsetY ?? 0,
       startClientX: e.clientX,
       startClientY: e.clientY,
+      zoom: useAppStore.getState().editorViewportZoom,
     };
 
     document.addEventListener('mousemove', handleMouseMove);

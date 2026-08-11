@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { createEditorSlice } from '../../../store/createEditorSlice'
+import { createEditorViewportSlice } from '../../../store/createEditorViewportSlice'
 import { createNodeSlice } from '../../../store/createNodeSlice'
 import { createObjectSlice } from '../../../store/createObjectSlice'
 import { createEdgeSlice } from '../../../store/createEdgeSlice'
@@ -9,6 +10,7 @@ import type { AppStore } from '@/store/types'
 export function makeStore() {
   return create<AppStore>()((...args) => ({
     ...createEditorSlice(...args),
+    ...createEditorViewportSlice(...args),
     ...createObjectSlice(...args),
     ...createNodeSlice(...args),
     ...createEdgeSlice(...args),
