@@ -71,6 +71,20 @@ export function PathEdgeLayer() {
               }}
             />
 
+            {/* Casing - a wider background-colored line behind the visual one,
+                so the edge stays legible crossing over an object's own fill
+                (e.g. Hallway) instead of blending into whatever's underneath. */}
+            <line
+              x1={fromNode.x}
+              y1={fromNode.y}
+              x2={toNode.x}
+              y2={toNode.y}
+              stroke="var(--editor-background)"
+              strokeWidth={isSelected ? '6.5' : '5.5'}
+              strokeDasharray={edge.type === 'stairs' ? '3 3' : undefined}
+              className="pointer-events-none"
+            />
+
             {/* Visual Line */}
             <line
               x1={fromNode.x}

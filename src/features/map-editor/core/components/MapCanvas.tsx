@@ -10,6 +10,7 @@ import { BACKGROUND_IMAGE_CLIP_PATH_ID, computeBackgroundImageFit } from '../lib
 import { FloorResizeHandle } from './FloorResizeHandle';
 import { MapGrid } from './MapGrid';
 import { MapNodeLayer } from './MapNodeLayer';
+import { MapObjectLabelLayer } from './MapObjectLabelLayer';
 import { MapObjectLayer } from './MapObjectLayer';
 import { PathEdgeLayer } from './PathEdgeLayer';
 
@@ -172,6 +173,11 @@ export function MapCanvas({
           {/* Canvas grid background */}
           <MapGrid width={floor.width} height={floor.height} />
 
+          {/* Render Map Objects - behind edges/nodes, so an object's own
+              fill (e.g. Hallway) never paints over and dims a path edge or
+              node that crosses it. */}
+          <MapObjectLayer />
+
           {/* Render Path Edges */}
           <PathEdgeLayer />
 
@@ -189,11 +195,12 @@ export function MapCanvas({
             />
           )}
 
-          {/* Render Map Objects */}
-          <MapObjectLayer />
-
           {/* Render Navigation Nodes */}
           <MapNodeLayer />
+
+          {/* Render Object Labels - always on top, so they stay legible
+              over any edge/node that crosses their object. */}
+          <MapObjectLabelLayer />
         </svg>
       </div>
 

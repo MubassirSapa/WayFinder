@@ -91,17 +91,9 @@ export function MapObjectView({ object }: MapObjectViewProps) {
         />
       )}
 
-      {/* Label/Name centered */}
-      <text
-        x={cx}
-        y={cy}
-        textAnchor="middle"
-        dominantBaseline="central"
-        fill="var(--editor-canvas-label)"
-        className="text-[10px] font-sans font-medium pointer-events-none select-none tracking-wide"
-      >
-        {object.label || object.name}
-      </text>
+      {/* Label/Name centered - rendered separately in MapObjectLabelLayer,
+          stacked above edges/nodes so it stays legible over anything that
+          crosses this object. */}
 
       {/* Selection outline */}
       {isSelected && (
