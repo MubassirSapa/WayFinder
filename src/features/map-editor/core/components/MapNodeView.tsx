@@ -86,7 +86,7 @@ export function MapNodeView({ node }: MapNodeViewProps) {
       <circle
         r={isPendingSource || isSelected ? '6' : '5.5'}
         fill={fillColor}
-        stroke="var(--editor-background)"
+        stroke="var(--editor-border-strong)"
         strokeWidth="1.5"
         className="transition-transform duration-150 group-hover:scale-110 shadow-lg"
       />
