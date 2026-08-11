@@ -15,6 +15,9 @@
 - The editor canvas's trackpad gestures were both routed through zoom - a two-finger pan was misread as a zoom because the wheel handler never checked `event.ctrlKey`, the browser's own signal that a wheel event is actually a pinch (versus a plain two-finger scroll). Plain scroll now pans (matching Figma/Miro), Ctrl+scroll or pinch still zooms. This also changes a bare mouse wheel from "scroll to zoom" to "scroll to pan," since browsers give no reliable way to tell a mouse wheel apart from a two-finger trackpad scroll.
 - A path node's outline in the map editor was set to `var(--editor-background)` - literally the same color as the canvas, so it was invisible by design against a plain floor. Switched to `--editor-border-strong`, the token already used elsewhere for a visible outline that inverts correctly per theme.
 
+### Added
+- Objects are now locked automatically when a floor loads with existing objects on it (`useFloorEditorData`) - safer default than opening with everything free to drag, since a stray click on existing work is far more likely than on a still-empty floor. A newly created empty floor still opens unlocked, since there's nothing yet to protect.
+
 ### Changed
 - Tapping/clicking an object in the public map viewer no longer recenters (pans) the viewport to it - selecting still works and still sets the initial route origin on the first click, it just no longer moves the view out from under you. Removed `focusWorldPoint`, left with no other callers once this was gone.
 - Replaced the browser-native `confirm()`/`alert()` dialogs used when deleting an object, node, or path edge in the map editor with a proper shadcn `AlertDialog` (new shared `DeleteEntityAlertDialog`), matching the confirm-dialog styling used elsewhere in the app (e.g. block/remove user). Delete failures now show a toast instead of a browser `alert()`, consistent with Save/link feedback added earlier.
