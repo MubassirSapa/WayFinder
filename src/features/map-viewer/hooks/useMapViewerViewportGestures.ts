@@ -230,6 +230,30 @@ export function useMapViewerViewportGestures({
       event.preventDefault();
 
       const live = getLiveView();
+
+      // Two-finger trackpad scroll and pinch-to-zoom both fire as native
+      // wheel events - ctrlKey is the browser's own signal that this one is
+      // a pinch (or an explicit Ctrl+scroll), so that's the only reliable
+      // way to tell them apart. Everything else (plain scroll, on a
+      // trackpad or a mouse wheel) pans instead, matching Figma/Miro and
+      // the map editor's canvas (useCanvasViewport).
+      if (!event.ctrlKey) {
+        if (!activeFloor) {
+          return;
+        }
+
+        const nextPan = clampPanToViewport(
+          { x: live.pan.x - event.deltaX, y: live.pan.y - event.deltaY },
+          activeFloor,
+          viewportSize,
+          live.zoom,
+        );
+
+        applyTransform(nextPan, live.zoom);
+        scheduleCommit(nextPan, live.zoom);
+        return;
+      }
+
       const rawFitZoom = activeFloor ? getRawFitZoom(activeFloor, viewportSize) : undefined;
       const nextZoom = clampZoom(
         event.deltaY > 0 ? live.zoom / 1.08 : live.zoom * 1.08,

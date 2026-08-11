@@ -264,7 +264,7 @@ describe("useMapViewerViewportGestures", () => {
     expect(result.current.consumeSuppressedClick()).toBe(false);
   });
 
-  it("wheel-zooms around the cursor position, applying the transform immediately", () => {
+  it("wheel-zooms around the cursor position when ctrlKey is set (pinch-to-zoom), applying the transform immediately", () => {
     const result = setup();
     void result;
 
@@ -272,6 +272,7 @@ describe("useMapViewerViewportGestures", () => {
       cancelable: true,
       clientX: 100,
       clientY: 100,
+      ctrlKey: true,
       deltaY: -100,
     });
 
@@ -280,5 +281,40 @@ describe("useMapViewerViewportGestures", () => {
     });
 
     expect(contentEl.style.transform).toBe("translate(-8px, -8px) scale(1.08)");
+  });
+
+  it("pans instead of zooming on a plain two-finger scroll (no ctrlKey)", () => {
+    const result = setup();
+    void result;
+
+    const wheelEvent = new WheelEvent("wheel", {
+      cancelable: true,
+      deltaX: 20,
+      deltaY: 15,
+    });
+
+    act(() => {
+      viewportEl.dispatchEvent(wheelEvent);
+    });
+
+    expect(contentEl.style.transform).toBe("translate(-20px, -15px) scale(1)");
+  });
+
+  it("does not pan on wheel when there is no active floor to clamp against", () => {
+    const viewportRef = { current: viewportEl };
+    const { result } = renderHook(() =>
+      useMapViewerViewportGestures({ activeFloor: null, viewportRef, viewportSize }),
+    );
+    act(() => {
+      result.current.contentRef.current = contentEl;
+    });
+
+    const wheelEvent = new WheelEvent("wheel", { cancelable: true, deltaX: 20, deltaY: 15 });
+
+    act(() => {
+      viewportEl.dispatchEvent(wheelEvent);
+    });
+
+    expect(useAppStore.getState().viewportPan).toEqual({ x: 0, y: 0 });
   });
 });
