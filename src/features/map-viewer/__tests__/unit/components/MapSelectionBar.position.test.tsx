@@ -10,11 +10,15 @@ describe("MapSelectionBar positioning", () => {
     render(
       <MapSelectionBar
         floors={[]}
+        graph={new Map()}
+        isDestination={false}
+        isOrigin={false}
         label="Room 101"
-        nodeId={null}
         nodes={[]}
         onClose={() => undefined}
+        routeNodeId={null}
         searchableObjects={[]}
+        startNodeId={null}
       />,
     );
 

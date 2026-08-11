@@ -23,6 +23,7 @@ import { RouteSearchFields } from "./RouteSearchFields";
 import { useAppStore } from "@/store";
 import type {
   RouteFloorSegment,
+  RouteGraphAdjacency,
   ShortestPathResult,
 } from "../types/navigation.types";
 
@@ -30,6 +31,7 @@ interface RoutePanelProps {
   activeSegmentIndex: number;
   effectiveOriginId: string | null;
   floors: ViewerFloor[];
+  graph: RouteGraphAdjacency;
   nodes: ViewerMapNode[];
   onJumpToSegment: (index: number) => void;
   route: ShortestPathResult | null;
@@ -49,6 +51,7 @@ export function RoutePanel({
   activeSegmentIndex,
   effectiveOriginId,
   floors,
+  graph,
   nodes,
   onJumpToSegment,
   route,
@@ -96,7 +99,7 @@ export function RoutePanel({
       </div>
 
       <div className="mt-3">
-        <RouteSearchFields floors={floors} nodes={nodes} searchableObjects={searchableObjects} />
+        <RouteSearchFields floors={floors} graph={graph} nodes={nodes} searchableObjects={searchableObjects} />
       </div>
 
       <label className="mt-3 flex items-center justify-between gap-3 text-sm">

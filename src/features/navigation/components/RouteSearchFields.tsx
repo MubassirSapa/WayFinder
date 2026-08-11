@@ -8,10 +8,12 @@ import { useAppStore } from "@/store";
 import type { ViewerFloor, ViewerMapNode, ViewerMapObject } from "@/features/map-viewer/types/map-viewer.types";
 
 import { filterRouteCandidates } from "../lib/filterRouteCandidates";
-import { findNodeIdForObject } from "../lib/findNodeForObject";
+import { findBestNodeIdForObject } from "../lib/findNodeForObject";
+import type { RouteGraphAdjacency } from "../types/navigation.types";
 
 interface RouteSearchFieldsProps {
   floors: ViewerFloor[];
+  graph: RouteGraphAdjacency;
   nodes: ViewerMapNode[];
   searchableObjects: ViewerMapObject[];
 }
@@ -44,7 +46,7 @@ function findFloorNameForObject(
 // The from/to search inputs + autocomplete dropdowns - shared by the
 // sidebar's "Get directions" panel (RoutePanel) and MapSelectionBar's
 // bottom drawer, so this search/candidate logic only exists in one place.
-export function RouteSearchFields({ floors, nodes, searchableObjects }: RouteSearchFieldsProps) {
+export function RouteSearchFields({ floors, graph, nodes, searchableObjects }: RouteSearchFieldsProps) {
   const originNodeId = useAppStore((state) => state.originNodeId);
   const destinationNodeId = useAppStore((state) => state.destinationNodeId);
   const setOrigin = useAppStore((state) => state.setOrigin);
@@ -83,7 +85,7 @@ export function RouteSearchFields({ floors, nodes, searchableObjects }: RouteSea
   };
 
   const pickOrigin = (object: ViewerMapObject) => {
-    const nodeId = findNodeIdForObject(object.id, nodes);
+    const nodeId = findBestNodeIdForObject(object.id, nodes, graph, destinationNodeId, "origin");
     if (nodeId) {
       setOrigin(nodeId);
     }
@@ -91,7 +93,7 @@ export function RouteSearchFields({ floors, nodes, searchableObjects }: RouteSea
   };
 
   const pickDestination = (object: ViewerMapObject) => {
-    const nodeId = findNodeIdForObject(object.id, nodes);
+    const nodeId = findBestNodeIdForObject(object.id, nodes, graph, originNodeId, "destination");
     if (nodeId) {
       setDestination(nodeId);
     }

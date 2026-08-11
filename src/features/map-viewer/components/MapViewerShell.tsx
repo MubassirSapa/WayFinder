@@ -10,7 +10,7 @@ import { RouteStatusIndicator } from "@/features/navigation/components/RouteStat
 import { useApplyRouteFromUrl } from "@/features/navigation/hooks/useApplyRouteFromUrl";
 import { useRoute } from "@/features/navigation/hooks/useRoute";
 import { getRouteSegmentBounds } from "@/features/navigation/lib/routeBounds";
-import { findNodeIdForObject } from "@/features/navigation/lib/findNodeForObject";
+import { findBestNodeIdForObject, findNodeIdsForObject } from "@/features/navigation/lib/findNodeForObject";
 import { useAppStore } from "@/store";
 
 import { MAP_VIEWER_FLOOR_CONTENT_PADDING } from "../constants/mapViewer.constants";
@@ -103,6 +103,13 @@ export function MapViewerShell({
     [activeFloor, data.nodesByFloorId],
   );
   const edges = activeFloor ? data.edgesByFloorId[activeFloor.id] ?? [] : [];
+  // Cross-floor edges are only stored under their origin floor's bucket, so
+  // resolving a connector's target (or, below, a route across floors)
+  // requires searching every floor's edges, not just the active floor's.
+  const allEdges = useMemo(
+    () => Object.values(data.edgesByFloorId).flat(),
+    [data.edgesByFloorId],
+  );
   const {
     changeZoom,
     consumeSuppressedClick,
@@ -126,7 +133,8 @@ export function MapViewerShell({
     activeSegment,
     activeSegmentIndex,
     allNodes,
-    // effectiveOriginId: only read by the commented-out RoutePanel below.
+    effectiveOriginId,
+    graph,
     nodesById,
     route,
     routePoints,
@@ -142,6 +150,7 @@ export function MapViewerShell({
   useApplyRouteFromUrl({
     accessibleOnly: sharedAccessibleOnly,
     destObjectId,
+    edges: allEdges,
     initialFloorId: data.initialFloorId,
     nodes: allNodes,
     onOriginObjectResolved: setSelectedObjectId,
@@ -220,14 +229,6 @@ export function MapViewerShell({
   const allSearchableObjects = Object.values(data.objectsByFloorId)
     .flat()
     .filter((object) => object.isSearchable);
-
-  // Cross-floor edges are only stored under their origin floor's bucket, so
-  // resolving a connector's target requires searching every floor's edges,
-  // not just the active floor's.
-  const allEdges = useMemo(
-    () => Object.values(data.edgesByFloorId).flat(),
-    [data.edgesByFloorId],
-  );
 
   const connectorTargetsByNodeId = useMemo(() => {
     const map: Record<string, ConnectorTargetInfo[]> = {};
@@ -339,6 +340,26 @@ export function MapViewerShell({
   }, [segments, setActiveSegmentIndex, setActiveFloorId, nodesById, focusWorldBounds]);
 
   const selectedObject = objects.find((object) => object.id === selectedObjectId) ?? null;
+  // Separate candidates for "Start here" vs "Route here", not one shared
+  // node id: the best entrance depends on which direction it's being routed
+  // against (the current destination for "Start here", the current
+  // effective origin for "Route here") - an object with multiple entrances
+  // can easily have a different best pick for each button.
+  const selectedObjectStartNodeId = selectedObject
+    ? findBestNodeIdForObject(selectedObject.id, allNodes, graph, destinationNodeId, "origin")
+    : null;
+  const selectedObjectRouteNodeId = selectedObject
+    ? findBestNodeIdForObject(selectedObject.id, allNodes, graph, effectiveOriginId, "destination")
+    : null;
+  // isOrigin/isDestination check membership across *all* of the selected
+  // object's nodes, not equality with one specific resolved id above - the
+  // currently-set origin/destination may be a different one of this
+  // object's entrances than whichever the resolver would pick right now.
+  const selectedObjectNodeIds = selectedObject
+    ? findNodeIdsForObject(selectedObject.id, allNodes)
+    : [];
+  const isSelectedObjectOrigin = originNodeId !== null && selectedObjectNodeIds.includes(originNodeId);
+  const isSelectedObjectDestination = destinationNodeId !== null && selectedObjectNodeIds.includes(destinationNodeId);
   // searchableObjects (floor-scoped, filtered by the sidebar's search box)
   // and the deferredSearch value above it: only ever fed to MapViewerSidebar,
   // commented out alongside it below rather than deleted.
@@ -370,7 +391,13 @@ export function MapViewerShell({
     // requiring an explicit "Start here" tap for the common first click.
     // Once an origin exists, further clicks just select/inspect as normal.
     if (!originNodeId) {
-      const nodeId = findNodeIdForObject(object.id, allNodes);
+      // No destination is normally set yet either at this point (this is the
+      // very first click), so there's nothing to optimize the entrance pick
+      // against - findBestNodeIdForObject falls back to the object's first
+      // node in that case, same as before. Passing destinationNodeId still
+      // handles the rare case where a destination was already set (e.g. via
+      // search) before the first map click established an origin.
+      const nodeId = findBestNodeIdForObject(object.id, allNodes, graph, destinationNodeId, "origin");
       if (nodeId) {
         setOrigin(nodeId);
       }
@@ -436,6 +463,7 @@ export function MapViewerShell({
                 activeSegmentIndex={activeSegmentIndex}
                 effectiveOriginId={effectiveOriginId}
                 floors={floors}
+                graph={graph}
                 nodes={allNodes}
                 onJumpToSegment={handleJumpToSegment}
                 route={route}
@@ -501,11 +529,15 @@ export function MapViewerShell({
             />
             <MapSelectionBar
               floors={floors}
+              graph={graph}
+              isDestination={isSelectedObjectDestination}
+              isOrigin={isSelectedObjectOrigin}
               label={selectedObject ? selectedObject.label || selectedObject.name : null}
-              nodeId={selectedObject ? findNodeIdForObject(selectedObject.id, allNodes) : null}
               nodes={allNodes}
               onClose={() => setSelectedObjectId(null)}
+              routeNodeId={selectedObjectRouteNodeId}
               searchableObjects={allSearchableObjects}
+              startNodeId={selectedObjectStartNodeId}
             />
             {nextSegment && nextFloor ? (
               <FloorHopIndicator

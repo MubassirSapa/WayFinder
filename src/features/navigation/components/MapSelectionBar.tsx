@@ -9,15 +9,20 @@ import { cn } from "@/lib/utils";
 import type { ViewerFloor, ViewerMapNode, ViewerMapObject } from "@/features/map-viewer/types/map-viewer.types";
 
 import { useAppStore } from "@/store";
+import type { RouteGraphAdjacency } from "../types/navigation.types";
 import { RouteSearchFields } from "./RouteSearchFields";
 
 interface MapSelectionBarProps {
   floors: ViewerFloor[];
+  graph: RouteGraphAdjacency;
+  isDestination: boolean;
+  isOrigin: boolean;
   label: string | null;
-  nodeId: string | null;
   nodes: ViewerMapNode[];
   onClose: () => void;
+  routeNodeId: string | null;
   searchableObjects: ViewerMapObject[];
+  startNodeId: string | null;
 }
 
 // Shared shell for every drawer hinging off the bar's bottom edge - only the
@@ -68,11 +73,15 @@ function MapSelectionDrawer({ children, isOpen }: { children: ReactNode; isOpen:
 // it reads as one continuous shape growing out of the bar.
 export function MapSelectionBar({
   floors,
+  graph,
+  isDestination,
+  isOrigin,
   label,
-  nodeId,
   nodes,
   onClose,
+  routeNodeId,
   searchableObjects,
+  startNodeId,
 }: MapSelectionBarProps) {
   const originNodeId = useAppStore((state) => state.originNodeId);
   const destinationNodeId = useAppStore((state) => state.destinationNodeId);
@@ -88,8 +97,6 @@ export function MapSelectionBar({
   const isSearchOpen = useAppStore((state) => state.isRouteSearchOpen);
   const setRouteSearchOpen = useAppStore((state) => state.setRouteSearchOpen);
 
-  const isOrigin = nodeId !== null && originNodeId === nodeId;
-  const isDestination = nodeId !== null && destinationNodeId === nodeId;
   const hasSelection = label !== null;
   // A route can exist with nothing selected on the map at all - set purely
   // through the search drawer's own fields. hasSelection alone used to gate
@@ -185,7 +192,7 @@ export function MapSelectionBar({
                   would if those buttons happen to be short. */}
               <span className="min-w-0 flex-1 truncate px-1 text-sm font-medium sm:px-2">{label}</span>
 
-              {!nodeId ? (
+              {!startNodeId && !routeNodeId ? (
                 <span className="min-w-0 truncate px-1 text-xs text-muted-foreground">
                   Not available for routing yet
                 </span>
@@ -203,32 +210,36 @@ export function MapSelectionBar({
         <div
           className={cn(
             "grid shrink-0 transition-[grid-template-columns] duration-300 ease-out",
-            hasSelection && nodeId ? "grid-cols-[1fr]" : "grid-cols-[0fr]",
+            hasSelection && (startNodeId || routeNodeId) ? "grid-cols-[1fr]" : "grid-cols-[0fr]",
           )}
         >
           <div className="flex min-w-0 items-center gap-1 overflow-hidden py-1.5 sm:py-2">
-            {nodeId ? (
+            {startNodeId || routeNodeId ? (
               <>
-                <Button
-                  aria-label={isOrigin ? "Currently your starting point" : "Set as starting point"}
-                  className="shrink-0 sm:px-3"
-                  disabled={isOrigin}
-                  onClick={() => setOrigin(nodeId)}
-                  size="sm"
-                  variant={isOrigin ? "default" : "outline"}
-                >
-                  {isOrigin ? "Started" : "Start"}
-                </Button>
-                <Button
-                  aria-label={isDestination ? "Currently your destination" : "Set as destination"}
-                  className="shrink-0 sm:px-3"
-                  disabled={isDestination}
-                  onClick={() => setDestination(nodeId)}
-                  size="sm"
-                  variant={isDestination ? "default" : "outline"}
-                >
-                  {isDestination ? "Routed" : "Route"}
-                </Button>
+                {startNodeId ? (
+                  <Button
+                    aria-label={isOrigin ? "Currently your starting point" : "Set as starting point"}
+                    className="shrink-0 sm:px-3"
+                    disabled={isOrigin}
+                    onClick={() => setOrigin(startNodeId)}
+                    size="sm"
+                    variant={isOrigin ? "default" : "outline"}
+                  >
+                    {isOrigin ? "Started" : "Start"}
+                  </Button>
+                ) : null}
+                {routeNodeId ? (
+                  <Button
+                    aria-label={isDestination ? "Currently your destination" : "Set as destination"}
+                    className="shrink-0 sm:px-3"
+                    disabled={isDestination}
+                    onClick={() => setDestination(routeNodeId)}
+                    size="sm"
+                    variant={isDestination ? "default" : "outline"}
+                  >
+                    {isDestination ? "Routed" : "Route"}
+                  </Button>
+                ) : null}
               </>
             ) : null}
           </div>
@@ -258,7 +269,7 @@ export function MapSelectionBar({
         ) : null}
 
         <MapSelectionDrawer isOpen={isSearchOpen}>
-          <RouteSearchFields floors={floors} nodes={nodes} searchableObjects={searchableObjects} />
+          <RouteSearchFields floors={floors} graph={graph} nodes={nodes} searchableObjects={searchableObjects} />
           <label className="mt-3 flex items-center justify-between gap-3 text-sm">
             <span className="text-muted-foreground">Accessible route only</span>
             <Switch

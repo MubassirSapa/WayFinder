@@ -2,7 +2,7 @@ import { renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useApplyRouteFromUrl } from "@/features/navigation/hooks/useApplyRouteFromUrl";
-import type { ViewerMapNode } from "@/features/map-viewer/types/map-viewer.types";
+import type { ViewerMapNode, ViewerPathEdge } from "@/features/map-viewer/types/map-viewer.types";
 import { useAppStore } from "@/store";
 
 const router = vi.hoisted(() => ({ replace: vi.fn() }));
@@ -62,6 +62,7 @@ describe("useApplyRouteFromUrl", () => {
     renderHook(() => useApplyRouteFromUrl({
       accessibleOnly: false,
       destObjectId: "object-dest",
+      edges: [],
       initialFloorId: "floor-a",
       nodes,
       onOriginObjectResolved,
@@ -81,6 +82,7 @@ describe("useApplyRouteFromUrl", () => {
     renderHook(() => useApplyRouteFromUrl({
       accessibleOnly: false,
       destObjectId: null,
+      edges: [],
       initialFloorId: "floor-a",
       nodes,
       onOriginObjectResolved,
@@ -97,6 +99,7 @@ describe("useApplyRouteFromUrl", () => {
     renderHook(() => useApplyRouteFromUrl({
       accessibleOnly: false,
       destObjectId: null,
+      edges: [],
       initialFloorId: "floor-a",
       nodes,
       startObjectId: "object-unmapped",
@@ -111,6 +114,7 @@ describe("useApplyRouteFromUrl", () => {
     renderHook(() => useApplyRouteFromUrl({
       accessibleOnly: true,
       destObjectId: "object-dest",
+      edges: [],
       initialFloorId: "floor-a",
       nodes,
       startObjectId: null,
@@ -119,10 +123,37 @@ describe("useApplyRouteFromUrl", () => {
     expect(useAppStore.getState().accessibleOnly).toBe(true);
   });
 
+  it("jointly resolves the closer entrance when the start object has more than one node", () => {
+    // object-start has two entrances: entryFar is listed first but is much
+    // farther from object-dest's node than entryNear - the old .find()-based
+    // resolution always picked whichever came first regardless of distance.
+    const entryFar: ViewerMapNode = { ...startNode, id: "entry-far", objectId: "object-start" };
+    const entryNear: ViewerMapNode = { ...startNode, id: "entry-near", objectId: "object-start" };
+    const multiNodes = [entryFar, entryNear, destNode];
+    const edges: ViewerPathEdge[] = [
+      { bidirectional: true, buildingId: "building-1", distanceMeters: 20, floorId: "floor-a", fromNodeId: "entry-far", id: "e-far", isAccessible: true, toNodeId: "node-dest", type: "walkway" },
+      { bidirectional: true, buildingId: "building-1", distanceMeters: 2, floorId: "floor-a", fromNodeId: "entry-near", id: "e-near", isAccessible: true, toNodeId: "node-dest", type: "walkway" },
+    ];
+
+    renderHook(() => useApplyRouteFromUrl({
+      accessibleOnly: false,
+      destObjectId: "object-dest",
+      edges,
+      initialFloorId: "floor-a",
+      nodes: multiNodes,
+      startObjectId: "object-start",
+    }));
+
+    expect(useAppStore.getState().originNodeId).toBe("entry-near");
+    expect(useAppStore.getState().destinationNodeId).toBe("node-dest");
+    expect(toastError).not.toHaveBeenCalled();
+  });
+
   it("does nothing when neither startObject nor destObject is present", () => {
     renderHook(() => useApplyRouteFromUrl({
       accessibleOnly: true,
       destObjectId: null,
+      edges: [],
       initialFloorId: "floor-a",
       nodes,
       startObjectId: null,

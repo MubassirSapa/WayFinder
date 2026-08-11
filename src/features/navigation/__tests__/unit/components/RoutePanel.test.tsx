@@ -39,6 +39,7 @@ describe("RoutePanel", () => {
         activeSegmentIndex={0}
         effectiveOriginId="start-node"
         floors={[floor]}
+        graph={new Map()}
         nodes={nodes}
         onJumpToSegment={vi.fn()}
         route={{ edgeIds: ["edge-1"], nodeIds: ["start-node", "end-node"], totalDistanceMeters: 12 }}

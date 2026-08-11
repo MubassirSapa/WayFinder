@@ -95,6 +95,7 @@ export function useRoute(data: MapViewerData) {
     allNodes,
     edgesById,
     effectiveOriginId,
+    graph,
     nodesById,
     route,
     routePoints,
