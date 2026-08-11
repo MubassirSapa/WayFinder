@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 
 import { useAppStore } from "@/store";
 
-import { snapToGrid } from '../lib/canvas';
+import { DRAG_THRESHOLD, snapToGrid } from '../lib/canvas';
 
 export function useNodeDrag() {
   const { mode, selectEntity, moveNode } = useAppStore();
@@ -14,6 +14,7 @@ export function useNodeDrag() {
     startClientY: number;
     pointerId: number;
     zoom: number;
+    didMove: boolean;
   } | null>(null);
 
   const handlePointerDown = (
@@ -41,6 +42,7 @@ export function useNodeDrag() {
       // zoomed while a drag is in flight, and the delta below has to stay
       // consistent with whatever scale was in effect when the drag began.
       zoom: useAppStore.getState().editorViewportZoom,
+      didMove: false,
     };
 
     document.addEventListener('pointermove', handlePointerMove);
@@ -52,13 +54,27 @@ export function useNodeDrag() {
     if (!dragInfo.current) return;
     if (e.pointerId !== dragInfo.current.pointerId) return;
 
-    const { nodeId, startX, startY, startClientX, startClientY, zoom } = dragInfo.current;
+    const dragState = dragInfo.current;
+    const { nodeId, startX, startY, startClientX, startClientY, zoom } = dragState;
+
+    const screenDx = e.clientX - startClientX;
+    const screenDy = e.clientY - startClientY;
+
+    // A plain click to re-select a node still fires a mousedown/mouseup with
+    // a pointerId, and real pointing hardware almost never reports exactly
+    // zero movement between them - without this guard, that incidental
+    // jitter alone would snap the node to the nearest grid line and re-dirty
+    // it, discarding whatever value was just set (e.g. from the inspector).
+    if (!dragState.didMove && Math.hypot(screenDx, screenDy) <= DRAG_THRESHOLD) {
+      return;
+    }
+    dragState.didMove = true;
 
     // Client-pixel deltas live in screen space; the stored x/y are floor
     // (world) coordinates, so a delta has to be un-scaled by the canvas
     // zoom before it means the same distance in that space.
-    const dx = (e.clientX - startClientX) / zoom;
-    const dy = (e.clientY - startClientY) / zoom;
+    const dx = screenDx / zoom;
+    const dy = screenDy / zoom;
 
     moveNode(nodeId, snapToGrid(startX + dx), snapToGrid(startY + dy));
   };

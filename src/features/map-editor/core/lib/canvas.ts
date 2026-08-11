@@ -4,6 +4,14 @@ import type { EditorMapNode, EditorMapObject } from '../types/map.types';
 
 export const GRID_SIZE = 20;
 
+// Minimum pointer movement, in screen pixels, before a mousedown-then-move
+// on an object/node counts as an intentional drag rather than incidental
+// jitter during a click. Without this, moveObject/moveNode fire on literally
+// any nonzero dx/dy - a plain click to re-select silently snaps the entity
+// to the nearest grid line and re-dirties it, discarding a precise value
+// just typed into the inspector.
+export const DRAG_THRESHOLD = 6;
+
 export function snapToGrid(value: number, gridSize: number = GRID_SIZE): number {
   return Math.round(value / gridSize) * gridSize;
 }

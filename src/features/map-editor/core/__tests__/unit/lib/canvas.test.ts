@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getFloorContentBounds, snapToGrid, GRID_SIZE, toObjectLocalPoint } from '../../../lib/canvas'
+import { DRAG_THRESHOLD, getFloorContentBounds, snapToGrid, GRID_SIZE, toObjectLocalPoint } from '../../../lib/canvas'
 import type { EditorMapNode, EditorMapObject } from '../../../types/map.types'
 
 // canvasPointFromEvent/clientPointToSvg require a live SVGSVGElement (browser CTM) — covered by E2E tests
@@ -44,6 +44,12 @@ function makeNode(overrides: Partial<EditorMapNode>): EditorMapNode {
 describe('GRID_SIZE', () => {
   it('is 20', () => {
     expect(GRID_SIZE).toBe(20)
+  })
+})
+
+describe('DRAG_THRESHOLD', () => {
+  it('is 6', () => {
+    expect(DRAG_THRESHOLD).toBe(6)
   })
 })
 

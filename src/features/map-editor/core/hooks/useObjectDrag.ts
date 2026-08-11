@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useAppStore } from "@/store";
-import { clientPointToSvg, snapToGrid } from '../lib/canvas';
+import { clientPointToSvg, snapToGrid, DRAG_THRESHOLD } from '../lib/canvas';
 
 const MIN_OBJECT_SIZE = 20;
 
@@ -20,6 +20,7 @@ export function useObjectDrag() {
         startClientX: number;
         startClientY: number;
         zoom: number;
+        didMove: boolean;
       }
     | {
         type: 'rotate';
@@ -36,6 +37,7 @@ export function useObjectDrag() {
         startClientX: number;
         startClientY: number;
         zoom: number;
+        didMove: boolean;
       }
     | null
   >(null);
@@ -57,6 +59,7 @@ export function useObjectDrag() {
       startClientX: e.clientX,
       startClientY: e.clientY,
       zoom: useAppStore.getState().editorViewportZoom,
+      didMove: false,
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -84,6 +87,7 @@ export function useObjectDrag() {
       startClientX: e.clientX,
       startClientY: e.clientY,
       zoom: useAppStore.getState().editorViewportZoom,
+      didMove: false,
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -124,13 +128,27 @@ export function useObjectDrag() {
     if (!dragInfo.current) return;
 
     if (dragInfo.current.type === 'move') {
-      const { objectId, startX, startY, startClientX, startClientY, zoom } = dragInfo.current;
+      const dragState = dragInfo.current;
+      const { objectId, startX, startY, startClientX, startClientY, zoom } = dragState;
+
+      const screenDx = e.clientX - startClientX;
+      const screenDy = e.clientY - startClientY;
+
+      // A plain click to re-select an object still fires a mousedown/mouseup
+      // pair, and real pointing hardware almost never reports exactly zero
+      // movement between them - without this guard, that incidental jitter
+      // alone would snap the object to the nearest grid line and re-dirty
+      // it, discarding whatever value was just set (e.g. from the inspector).
+      if (!dragState.didMove && Math.hypot(screenDx, screenDy) <= DRAG_THRESHOLD) {
+        return;
+      }
+      dragState.didMove = true;
 
       // Client-pixel deltas live in screen space; the stored x/y are floor
       // (world) coordinates, so a delta has to be un-scaled by the canvas
       // zoom before it means the same distance in that space.
-      const dx = (e.clientX - startClientX) / zoom;
-      const dy = (e.clientY - startClientY) / zoom;
+      const dx = screenDx / zoom;
+      const dy = screenDy / zoom;
 
       const newX = snapToGrid(startX + dx);
       const newY = snapToGrid(startY + dy);
@@ -140,6 +158,7 @@ export function useObjectDrag() {
     }
 
     if (dragInfo.current.type === 'resize') {
+      const dragState = dragInfo.current;
       const {
         objectId,
         startWidth,
@@ -147,10 +166,18 @@ export function useObjectDrag() {
         startClientX,
         startClientY,
         zoom,
-      } = dragInfo.current;
+      } = dragState;
 
-      const dx = (e.clientX - startClientX) / zoom;
-      const dy = (e.clientY - startClientY) / zoom;
+      const screenDx = e.clientX - startClientX;
+      const screenDy = e.clientY - startClientY;
+
+      if (!dragState.didMove && Math.hypot(screenDx, screenDy) <= DRAG_THRESHOLD) {
+        return;
+      }
+      dragState.didMove = true;
+
+      const dx = screenDx / zoom;
+      const dy = screenDy / zoom;
 
       const width = Math.max(MIN_OBJECT_SIZE, snapToGrid(startWidth + dx));
       const height = Math.max(MIN_OBJECT_SIZE, snapToGrid(startHeight + dy));

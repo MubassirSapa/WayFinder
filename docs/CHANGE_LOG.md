@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Fixed
+- Fixed object/node dragging in the map editor committing a move on any pointer movement at all, with no minimum-drag-distance threshold - a plain click to re-select an object or node (mousedown+mouseup with only incidental pixel jitter, which real pointing hardware almost always produces) was enough to snap it to the nearest grid line and re-dirty it, silently discarding a precise value just set from the inspector. `useObjectDrag`'s move/resize cases and `useNodeDrag` now require `DRAG_THRESHOLD` (6px, matching the canvas-pan/floor-resize hooks that already had this guard) of real movement before committing anything.
+
 ### Changed
 - Tapping/clicking an object in the public map viewer no longer recenters (pans) the viewport to it - selecting still works and still sets the initial route origin on the first click, it just no longer moves the view out from under you. Removed `focusWorldPoint`, left with no other callers once this was gone.
 - Replaced the browser-native `confirm()`/`alert()` dialogs used when deleting an object, node, or path edge in the map editor with a proper shadcn `AlertDialog` (new shared `DeleteEntityAlertDialog`), matching the confirm-dialog styling used elsewhere in the app (e.g. block/remove user). Delete failures now show a toast instead of a browser `alert()`, consistent with Save/link feedback added earlier.
