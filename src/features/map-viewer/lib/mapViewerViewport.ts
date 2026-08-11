@@ -41,17 +41,26 @@ export function formatObjectTypeLabel(type: string) {
   return type === "poi" ? "POI" : type.charAt(0).toUpperCase() + type.slice(1);
 }
 
-export function getZoomProfile(viewportWidth: number) {
+// floorFitZoom, when passed, is the current floor's own fit-to-view zoom
+// (getRawFitZoom) - the profile widens (never narrows) to always include it,
+// so a floor much larger or smaller than the fixed desktop/mobile range was
+// tuned for can still reach a genuine "fit" view. Without this, an oversized
+// floor's fit zoom gets clamped up to the fixed minimum, so "fit" silently
+// doesn't fit and the rest of the floor is only reachable by panning - not
+// obvious it's even there.
+export function getZoomProfile(viewportWidth: number, floorFitZoom?: number) {
   const isMobile = viewportWidth < MAP_VIEWER_MOBILE_BREAKPOINT;
+  const baseMaxZoom = isMobile ? MAP_VIEWER_MOBILE_MAX_ZOOM : MAP_VIEWER_DESKTOP_MAX_ZOOM;
+  const baseMinZoom = isMobile ? MAP_VIEWER_MOBILE_MIN_ZOOM : MAP_VIEWER_DESKTOP_MIN_ZOOM;
 
   return {
-    maxZoom: isMobile ? MAP_VIEWER_MOBILE_MAX_ZOOM : MAP_VIEWER_DESKTOP_MAX_ZOOM,
-    minZoom: isMobile ? MAP_VIEWER_MOBILE_MIN_ZOOM : MAP_VIEWER_DESKTOP_MIN_ZOOM,
+    maxZoom: floorFitZoom === undefined ? baseMaxZoom : Math.max(baseMaxZoom, floorFitZoom),
+    minZoom: floorFitZoom === undefined ? baseMinZoom : Math.min(baseMinZoom, floorFitZoom),
   };
 }
 
-export function clampZoom(value: number, viewportWidth: number) {
-  const zoomProfile = getZoomProfile(viewportWidth);
+export function clampZoom(value: number, viewportWidth: number, floorFitZoom?: number) {
+  const zoomProfile = getZoomProfile(viewportWidth, floorFitZoom);
   return Math.min(Math.max(value, zoomProfile.minZoom), zoomProfile.maxZoom);
 }
 
@@ -62,16 +71,21 @@ export function getRenderedFloorSize(floor: ViewerFloor) {
   };
 }
 
-export function getFitZoom(floor: ViewerFloor, viewport: Point) {
+// The zoom that exactly fits the floor in the viewport, before the fixed
+// desktop/mobile min/max profile is applied - feed this back into
+// clampZoom's floorFitZoom parameter so that profile widens to include it.
+export function getRawFitZoom(floor: ViewerFloor, viewport: Point) {
   const renderedSize = getRenderedFloorSize(floor);
 
-  return clampZoom(
-    Math.min(
-      (viewport.x - MAP_VIEWER_FIT_VIEW_PADDING) / renderedSize.width,
-      (viewport.y - MAP_VIEWER_FIT_VIEW_PADDING) / renderedSize.height,
-    ),
-    viewport.x,
+  return Math.min(
+    (viewport.x - MAP_VIEWER_FIT_VIEW_PADDING) / renderedSize.width,
+    (viewport.y - MAP_VIEWER_FIT_VIEW_PADDING) / renderedSize.height,
   );
+}
+
+export function getFitZoom(floor: ViewerFloor, viewport: Point) {
+  const rawFitZoom = getRawFitZoom(floor, viewport);
+  return clampZoom(rawFitZoom, viewport.x, rawFitZoom);
 }
 
 export function getFitBoundsView(
@@ -82,13 +96,11 @@ export function getFitBoundsView(
   const boundsWidth = Math.max(bounds.maxX - bounds.minX, 1);
   const boundsHeight = Math.max(bounds.maxY - bounds.minY, 1);
 
-  const zoom = clampZoom(
-    Math.min(
-      (viewport.x - padding) / boundsWidth,
-      (viewport.y - padding) / boundsHeight,
-    ),
-    viewport.x,
+  const rawZoom = Math.min(
+    (viewport.x - padding) / boundsWidth,
+    (viewport.y - padding) / boundsHeight,
   );
+  const zoom = clampZoom(rawZoom, viewport.x, rawZoom);
 
   const centerX = (bounds.minX + bounds.maxX) / 2;
   const centerY = (bounds.minY + bounds.maxY) / 2;

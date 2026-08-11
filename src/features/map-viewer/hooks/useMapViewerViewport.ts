@@ -5,6 +5,7 @@ import {
   clampZoom,
   getDefaultViewState,
   getFitBoundsView,
+  getRawFitZoom,
   resolveFloorViewOnResize,
   type Point,
   type WorldBounds,
@@ -111,7 +112,8 @@ export function useMapViewerViewport({
   // reason, even though activeFloor/viewportSize didn't actually change.
   const changeZoom = useCallback((direction: "in" | "out") => {
     const { pan: viewportPan, zoom: viewportZoom } = viewportBinding.getViewportView();
-    const nextZoom = clampZoom(direction === "in" ? viewportZoom * 1.15 : viewportZoom / 1.15, viewportSize.x);
+    const rawFitZoom = activeFloor ? getRawFitZoom(activeFloor, viewportSize) : undefined;
+    const nextZoom = clampZoom(direction === "in" ? viewportZoom * 1.15 : viewportZoom / 1.15, viewportSize.x, rawFitZoom);
 
     if (!activeFloor) {
       viewportBinding.setViewportView({ pan: viewportPan, zoom: nextZoom });

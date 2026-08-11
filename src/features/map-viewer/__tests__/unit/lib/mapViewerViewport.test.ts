@@ -83,6 +83,25 @@ describe('getZoomProfile', () => {
       minZoom: MAP_VIEWER_MOBILE_MIN_ZOOM,
     })
   })
+
+  it('widens the minimum to include a floorFitZoom below the base range', () => {
+    const profile = getZoomProfile(1200, 0.4)
+    expect(profile.minZoom).toBe(0.4)
+    expect(profile.maxZoom).toBe(MAP_VIEWER_DESKTOP_MAX_ZOOM)
+  })
+
+  it('widens the maximum to include a floorFitZoom above the base range', () => {
+    const profile = getZoomProfile(1200, 5)
+    expect(profile.maxZoom).toBe(5)
+    expect(profile.minZoom).toBe(MAP_VIEWER_DESKTOP_MIN_ZOOM)
+  })
+
+  it('never narrows the range for a floorFitZoom already inside it', () => {
+    expect(getZoomProfile(1200, 1)).toEqual({
+      maxZoom: MAP_VIEWER_DESKTOP_MAX_ZOOM,
+      minZoom: MAP_VIEWER_DESKTOP_MIN_ZOOM,
+    })
+  })
 })
 
 describe('clampZoom', () => {
@@ -101,6 +120,14 @@ describe('clampZoom', () => {
   it('uses the mobile range when the viewport is narrow', () => {
     expect(clampZoom(10, 400)).toBe(MAP_VIEWER_MOBILE_MAX_ZOOM)
     expect(clampZoom(0.1, 400)).toBe(MAP_VIEWER_MOBILE_MIN_ZOOM)
+  })
+
+  it('lets a value below the base minimum through once a lower floorFitZoom is passed', () => {
+    expect(clampZoom(0.1, 1200, 0.2)).toBe(0.2)
+  })
+
+  it('lets a value above the base maximum through once a higher floorFitZoom is passed', () => {
+    expect(clampZoom(10, 1200, 5)).toBe(5)
   })
 })
 
@@ -161,6 +188,35 @@ describe('clampPanToViewport', () => {
     const scaledHeight = (floor.height + 40) * zoom
     expect(panNegative.x).toBeGreaterThanOrEqual(viewport.x - scaledWidth - 88)
     expect(panNegative.y).toBeGreaterThanOrEqual(viewport.y - scaledHeight - 88)
+  })
+})
+
+describe('getFitZoom', () => {
+  it('falls within the base desktop range for an ordinary floor', () => {
+    const viewport = { x: 1200, y: 900 }
+    const zoom = getFitZoom(floor, viewport)
+    expect(zoom).toBeGreaterThanOrEqual(MAP_VIEWER_DESKTOP_MIN_ZOOM)
+    expect(zoom).toBeLessThanOrEqual(MAP_VIEWER_DESKTOP_MAX_ZOOM)
+  })
+
+  it('is not clamped up to the base minimum for a floor much larger than the viewport', () => {
+    // A floor far larger than any realistic viewport - its true fit zoom is
+    // well under MAP_VIEWER_DESKTOP_MIN_ZOOM, so before floorFitZoom
+    // widening this would have been clamped to the minimum and no longer
+    // actually fit on screen.
+    const hugeFloor: ViewerFloor = { ...floor, width: 20000, height: 15000 }
+    const viewport = { x: 1200, y: 900 }
+    const zoom = getFitZoom(hugeFloor, viewport)
+    expect(zoom).toBeLessThan(MAP_VIEWER_DESKTOP_MIN_ZOOM)
+    expect(zoom * (hugeFloor.width + 40)).toBeLessThanOrEqual(viewport.x)
+    expect(zoom * (hugeFloor.height + 40)).toBeLessThanOrEqual(viewport.y)
+  })
+
+  it('is not clamped down to the base maximum for a floor much smaller than the viewport', () => {
+    const tinyFloor: ViewerFloor = { ...floor, width: 40, height: 30 }
+    const viewport = { x: 1200, y: 900 }
+    const zoom = getFitZoom(tinyFloor, viewport)
+    expect(zoom).toBeGreaterThan(MAP_VIEWER_DESKTOP_MAX_ZOOM)
   })
 })
 

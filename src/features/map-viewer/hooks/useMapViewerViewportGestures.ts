@@ -8,6 +8,7 @@ import {
   clampZoom,
   getDistance,
   getMidpoint,
+  getRawFitZoom,
   type Point,
 } from "../lib/mapViewerViewport";
 import { defaultMapViewerViewportBinding, type MapViewerViewportBinding } from "../store/mapViewerViewportBinding";
@@ -229,9 +230,11 @@ export function useMapViewerViewportGestures({
       event.preventDefault();
 
       const live = getLiveView();
+      const rawFitZoom = activeFloor ? getRawFitZoom(activeFloor, viewportSize) : undefined;
       const nextZoom = clampZoom(
         event.deltaY > 0 ? live.zoom / 1.08 : live.zoom * 1.08,
         viewportSize.x,
+        rawFitZoom,
       );
       const viewportRect = element.getBoundingClientRect();
 
@@ -324,6 +327,7 @@ export function useMapViewerViewportGestures({
         const nextZoom = clampZoom(
           pinchState.initialZoom * (currentDistance / pinchState.initialDistance),
           viewportSize.x,
+          getRawFitZoom(activeFloor, viewportSize),
         );
         const nextPan = clampPanToViewport(
           {
