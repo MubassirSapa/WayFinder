@@ -52,6 +52,8 @@ export const createEditorSlice: StateCreator<AppStore, [], [], EditorSlice> = (s
       isLoading: false,
       isSaving: false,
       objects: {},
+      areObjectsLocked: false,
+      lockedObjectIds: [],
       nodes: {},
       edges: {},
       pendingPathNodeId: null,

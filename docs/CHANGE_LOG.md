@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Added
+- Added a "Lock objects" toggle to the map editor toolbar (`LockObjectsToggle`): freezes every object against move/resize/rotate drags (still selectable/inspectable) by snapshotting which object ids exist the moment it's turned on - anything added afterward stays freely movable until the lock is toggled off and back on, which re-snapshots. A small dot on the toggle (plus its tooltip) shows when some objects are unlocked while locking is active, so it's clear not everything is frozen.
+
 ### Fixed
 - Fixed object/node dragging in the map editor committing a move on any pointer movement at all, with no minimum-drag-distance threshold - a plain click to re-select an object or node (mousedown+mouseup with only incidental pixel jitter, which real pointing hardware almost always produces) was enough to snap it to the nearest grid line and re-dirty it, silently discarding a precise value just set from the inspector. `useObjectDrag`'s move/resize cases and `useNodeDrag` now require `DRAG_THRESHOLD` (6px, matching the canvas-pan/floor-resize hooks that already had this guard) of real movement before committing anything.
 

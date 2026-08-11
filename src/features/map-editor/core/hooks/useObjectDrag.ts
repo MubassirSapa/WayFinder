@@ -10,7 +10,8 @@ function normalizeRotation(rotation: number): number {
 }
 
 export function useObjectDrag() {
-  const { mode, selectEntity, moveObject, rotateObject, updateObject } = useAppStore();
+  const { mode, areObjectsLocked, lockedObjectIds, selectEntity, moveObject, rotateObject, updateObject } = useAppStore();
+  const isObjectLocked = (objectId: string) => areObjectsLocked && lockedObjectIds.includes(objectId);
   const dragInfo = useRef<
     | {
         type: 'move';
@@ -51,6 +52,10 @@ export function useObjectDrag() {
     // Select the dragged object
     selectEntity({ kind: 'object', id: objectId });
 
+    // Still selectable/inspectable while locked - only the drag itself is
+    // blocked, so no drag state gets set up at all.
+    if (isObjectLocked(objectId)) return;
+
     dragInfo.current = {
       type: 'move',
       objectId,
@@ -78,6 +83,8 @@ export function useObjectDrag() {
     e.preventDefault();
 
     selectEntity({ kind: 'object', id: objectId });
+
+    if (isObjectLocked(objectId)) return;
 
     dragInfo.current = {
       type: 'resize',
@@ -111,6 +118,8 @@ export function useObjectDrag() {
     e.preventDefault();
 
     selectEntity({ kind: 'object', id: objectId });
+
+    if (isObjectLocked(objectId)) return;
 
     dragInfo.current = {
       type: 'rotate',

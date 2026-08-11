@@ -28,12 +28,19 @@ export interface EditorSlice {
 
 export interface ObjectSlice {
   objects: Record<string, EditorMapObject>;
+  // A snapshot of object ids taken the moment locking was turned on - not a
+  // per-object persisted field. Anything added afterward isn't in this list,
+  // so it stays freely movable until the lock is toggled off and back on
+  // (which re-snapshots everything present at that later point).
+  areObjectsLocked: boolean;
+  lockedObjectIds: string[];
   setObjects: (objects: EditorMapObject[]) => void;
   addObject: (object: EditorMapObject) => void;
   updateObject: (id: string, updates: Partial<EditorMapObject>) => void;
   removeObject: (id: string) => void;
   moveObject: (id: string, x: number, y: number) => void;
   rotateObject: (id: string, rotation: number) => void;
+  setAreObjectsLocked: (locked: boolean) => void;
 }
 
 export interface NodeSlice {

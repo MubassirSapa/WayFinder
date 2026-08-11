@@ -52,4 +52,37 @@ describe('ObjectSlice', () => {
     expect(store.getState().objects).not.toHaveProperty('temp_obj_1')
     expect(store.getState().objects).toHaveProperty('temp_obj_2')
   })
+
+  describe('setAreObjectsLocked', () => {
+    it('snapshots the objects present at the moment it is turned on', () => {
+      store.getState().addObject(OBJ)
+      store.getState().setAreObjectsLocked(true)
+      expect(store.getState().areObjectsLocked).toBe(true)
+      expect(store.getState().lockedObjectIds).toEqual(['temp_obj_1'])
+    })
+
+    it('does not include an object added after locking', () => {
+      store.getState().addObject(OBJ)
+      store.getState().setAreObjectsLocked(true)
+      store.getState().addObject({ ...OBJ, id: 'temp_obj_2' })
+      expect(store.getState().lockedObjectIds).toEqual(['temp_obj_1'])
+    })
+
+    it('clears the snapshot when turned back off', () => {
+      store.getState().addObject(OBJ)
+      store.getState().setAreObjectsLocked(true)
+      store.getState().setAreObjectsLocked(false)
+      expect(store.getState().areObjectsLocked).toBe(false)
+      expect(store.getState().lockedObjectIds).toEqual([])
+    })
+
+    it('re-triggering after adding an object snapshots it too', () => {
+      store.getState().addObject(OBJ)
+      store.getState().setAreObjectsLocked(true)
+      store.getState().addObject({ ...OBJ, id: 'temp_obj_2' })
+      store.getState().setAreObjectsLocked(false)
+      store.getState().setAreObjectsLocked(true)
+      expect(store.getState().lockedObjectIds.sort()).toEqual(['temp_obj_1', 'temp_obj_2'])
+    })
+  })
 })

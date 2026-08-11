@@ -52,6 +52,8 @@ function updateLinkedNodesForObjectMove(
 
 export const createObjectSlice: StateCreator<AppStore, [], [], ObjectSlice> = (set) => ({
   objects: {},
+  areObjectsLocked: false,
+  lockedObjectIds: [],
 
   setObjects: (objectsList) => {
     const objectsRecord = objectsList.reduce((acc, obj) => {
@@ -158,5 +160,12 @@ export const createObjectSlice: StateCreator<AppStore, [], [], ObjectSlice> = (s
         isDirty: true,
       };
     });
+  },
+
+  setAreObjectsLocked: (locked) => {
+    set((state) => ({
+      areObjectsLocked: locked,
+      lockedObjectIds: locked ? Object.keys(state.objects) : [],
+    }));
   },
 });
