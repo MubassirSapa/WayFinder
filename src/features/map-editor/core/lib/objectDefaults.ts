@@ -61,7 +61,7 @@ export const OBJECT_CONFIGS: Record<ToolboxObjectType, ObjectConfig> = {
     defaultHeight: 60,
     color: 'var(--editor-object-hallway)', // slate-400
     fill: 'color-mix(in oklch, var(--editor-object-hallway) 80%, transparent)',
-    stroke: 'var(--editor-object-hallway-stroke)',
+    stroke: 'none',
     icon: Route,
   },
   stairs: {

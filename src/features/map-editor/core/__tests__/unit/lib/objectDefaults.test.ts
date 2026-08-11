@@ -59,6 +59,10 @@ describe('getObjectColor', () => {
       expect(color.length).toBeGreaterThan(0)
     }
   })
+
+  it('hallway has no stroke - a colored outline kept landing at nearly the same composited lightness as the fill in one theme or the other', () => {
+    expect(getObjectColor('hallway').stroke).toBe('none')
+  })
 })
 
 describe('OBJECT_CATEGORIES', () => {
