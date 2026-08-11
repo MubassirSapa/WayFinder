@@ -69,7 +69,12 @@ export function useCanvasPointer(canvasRef: RefObject<SVGSVGElement | null>) {
   };
 
   const handleCanvasClick = (e: React.MouseEvent<SVGSVGElement>) => {
-    if (!isCanvasTarget(e)) return;
+    // "Add Path Nodes" mode places a node wherever you click, including on
+    // top of an object - unlike select/path mode, which use isCanvasTarget
+    // to ignore clicks that landed on an existing node/edge/object instead
+    // of empty canvas. An existing node/edge still wins here since their
+    // own click handlers stop propagation before this ever fires.
+    if (mode !== 'node' && !isCanvasTarget(e)) return;
 
     if (!floor) return;
 

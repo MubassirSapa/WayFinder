@@ -41,6 +41,11 @@ export function MapObjectView({ object }: MapObjectViewProps) {
   const handlePointerDown = (e: React.MouseEvent) => {
     if (canDragObject) {
       handleMouseDown(object.id, object.x, object.y, e);
+    } else if (mode === 'node') {
+      // "Add Path Nodes" mode should place a node wherever you click,
+      // including on top of an object - don't select the object or stop
+      // the click from reaching the canvas's own node-placement handler.
+      return;
     } else {
       // If click-to-select in other mode
       e.stopPropagation();
