@@ -6,7 +6,6 @@ import { OBJECT_CATEGORIES, OBJECT_CONFIGS } from '../lib/objectDefaults';
 import { ToolboxObjectType } from '../types/editor.types';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
 export function CreateObjectsPanel() {
@@ -45,39 +44,33 @@ export function CreateObjectsPanel() {
                   const isSelected = selectedToolboxType === type;
 
                   return (
-                    <Tooltip key={type}>
-                      <TooltipTrigger
-                        render={
-                          <Button
-                            onClick={() => handleSelectType(type)}
-                            type="button"
-                            variant="ghost"
-                            className={cn(
-                              "h-auto w-full items-center justify-start gap-3 px-3.5 py-3 rounded-xl text-left text-xs font-medium transition-all",
-                              "hover:bg-editor-surface/80 hover:text-editor-foreground dark:hover:bg-editor-surface/80",
-                              isSelected
-                                ? "bg-primary/20 text-primary border border-primary/35 shadow-[0_0_14px_rgba(59,130,246,0.16)]"
-                                : "bg-editor-background/35 text-editor-muted-foreground border border-editor-border/80"
-                            )}
-                          >
-                            <div
-                              className="p-2 rounded-lg flex items-center justify-center shrink-0 border"
-                              style={{
-                                backgroundColor: isSelected ? 'var(--editor-selection-fill)' : 'color-mix(in oklch, var(--editor-foreground) 3%, transparent)',
-                                borderColor: isSelected ? 'var(--editor-selection-border)' : 'color-mix(in oklch, var(--editor-foreground) 6%, transparent)',
-                                color: isSelected ? 'var(--editor-selection)' : config.color,
-                              }}
-                            >
-                              <Icon className="h-4 w-4" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <span className="block truncate text-editor-foreground">{config.label}</span>
-                            </div>
-                          </Button>
-                        }
-                      />
-                      <TooltipContent>{EDITOR_UI_TEXT.objectToolbox.itemHint(config.label)}</TooltipContent>
-                    </Tooltip>
+                    <Button
+                      key={type}
+                      onClick={() => handleSelectType(type)}
+                      type="button"
+                      variant="ghost"
+                      className={cn(
+                        "h-auto w-full items-center justify-start gap-3 px-3.5 py-3 rounded-xl text-left text-xs font-medium transition-all",
+                        "hover:bg-editor-surface/80 hover:text-editor-foreground dark:hover:bg-editor-surface/80",
+                        isSelected
+                          ? "bg-primary/20 text-primary border border-primary/35 shadow-[0_0_14px_rgba(59,130,246,0.16)]"
+                          : "bg-editor-background/35 text-editor-muted-foreground border border-editor-border/80"
+                      )}
+                    >
+                      <div
+                        className="p-2 rounded-lg flex items-center justify-center shrink-0 border"
+                        style={{
+                          backgroundColor: isSelected ? 'var(--editor-selection-fill)' : 'color-mix(in oklch, var(--editor-foreground) 3%, transparent)',
+                          borderColor: isSelected ? 'var(--editor-selection-border)' : 'color-mix(in oklch, var(--editor-foreground) 6%, transparent)',
+                          color: isSelected ? 'var(--editor-selection)' : config.color,
+                        }}
+                      >
+                        <Icon className="h-4 w-4" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <span className="block truncate text-editor-foreground">{config.label}</span>
+                      </div>
+                    </Button>
                   );
                 })}
               </div>

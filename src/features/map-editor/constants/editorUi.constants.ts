@@ -28,7 +28,6 @@ export const EDITOR_UI_TEXT = {
   objectToolbox: {
     title: "Add to Map",
     description: "Choose an item, then double-click the map to place it.",
-    itemHint: (label: string) => `${label}: select, then double-click the map to place.`,
   },
   referencePanel: {
     imageNameFieldLabel: "Image Name",
