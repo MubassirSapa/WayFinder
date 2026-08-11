@@ -154,23 +154,6 @@ export function useMapViewerViewport({
     viewportBinding.setViewportView(getDefaultViewState(activeFloor, nextViewport));
   }, [activeFloor, viewportBinding, viewportSize]);
 
-  const focusWorldPoint = (worldPoint: Point) => {
-    if (!activeFloor) {
-      return;
-    }
-
-    const { zoom: viewportZoom } = viewportBinding.getViewportView();
-    const nextPan = {
-      x: viewportSize.x / 2 - worldPoint.x * viewportZoom,
-      y: viewportSize.y / 2 - worldPoint.y * viewportZoom,
-    };
-
-    viewportBinding.setViewportView({
-      pan: clampPanToViewport(nextPan, activeFloor, viewportSize, viewportZoom),
-      zoom: viewportZoom,
-    });
-  };
-
   const focusWorldBounds = useCallback((bounds: WorldBounds) => {
     if (viewportSize.x === 0 || viewportSize.y === 0) {
       return;
@@ -185,7 +168,6 @@ export function useMapViewerViewport({
     consumeSuppressedClick,
     contentRef,
     focusWorldBounds,
-    focusWorldPoint,
     resetView,
     viewportRef,
     handleSvgPointerDown,

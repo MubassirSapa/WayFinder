@@ -108,7 +108,6 @@ export function MapViewerShell({
     consumeSuppressedClick,
     contentRef,
     focusWorldBounds,
-    focusWorldPoint,
     resetView,
     viewportRef,
     handleSvgPointerDown,
@@ -359,14 +358,12 @@ export function MapViewerShell({
   //   })
   //   .slice(0, 14);
 
-  const focusObject = (object: ViewerMapObject, options: { recenter?: boolean } = {}) => {
+  // Deliberately does not recenter/pan the viewport on selection - it used
+  // to (via focusWorldPoint), but snapping the view to whatever you tap
+  // felt like an unwanted zoom/jump rather than a helpful one. Selecting
+  // still marks the object and can still set the initial origin below.
+  const focusObject = (object: ViewerMapObject) => {
     setSelectedObjectId(object.id);
-    if (options.recenter !== false) {
-      focusWorldPoint({
-        x: MAP_VIEWER_FLOOR_CONTENT_PADDING + object.x + object.width / 2,
-        y: MAP_VIEWER_FLOOR_CONTENT_PADDING + object.y + object.height / 2,
-      });
-    }
 
     // No starting point chosen yet — treat the first thing you click (on
     // the map or in the Places list) as "that's where I am", instead of
@@ -397,13 +394,7 @@ export function MapViewerShell({
       return;
     }
 
-    // Connectors are visible right where the user just clicked, and a
-    // double-click needs the second tap to land on the same screen spot as
-    // the first — recentering the viewport on selection (as other objects
-    // do) would shift the connector out from under the cursor between the
-    // two taps of that gesture.
-    const isConnectorObject = object.type === "stairs" || object.type === "elevator" || object.type === "escalator";
-    focusObject(object, { recenter: !isConnectorObject });
+    focusObject(object);
   };
 
   return (

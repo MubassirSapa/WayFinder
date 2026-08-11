@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Changed
+- Tapping/clicking an object in the public map viewer no longer recenters (pans) the viewport to it - selecting still works and still sets the initial route origin on the first click, it just no longer moves the view out from under you. Removed `focusWorldPoint`, left with no other callers once this was gone.
+
 ### Fixed
 - Fixed the public map viewer's zoom range being fixed absolute numbers (0.75x-2.1x desktop) regardless of the floor's actual size: a floor much larger than the viewport could have a true fit-to-view zoom below that minimum, silently clamped up so "fit" didn't actually fit and part of the floor was reachable only by panning, with no indication it was there. `getZoomProfile`/`clampZoom` now take an optional `floorFitZoom` and widen (never narrow) the range to include it, applied everywhere zoom changes (wheel, pinch, toolbar +/-, fit-to-bounds).
 
