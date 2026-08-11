@@ -11,10 +11,8 @@ import {
   Waypoints,
   Save,
   Loader2,
-  AlertTriangle,
   type LucideIcon,
 } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/shared/theme/ModeToggle';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -22,6 +20,7 @@ import { cn } from '@/lib/utils';
 import { PRIVATE_ROUTES } from '@/constants/routes';
 import { EditorMode } from '../types/editor.types';
 import { EditorZoomControls } from './EditorZoomControls';
+import { LockObjectsToggle } from './LockObjectsToggle';
 
 interface EditorToolbarProps {
   onResetView: () => void;
@@ -97,40 +96,36 @@ export function EditorToolbar({ onResetView, onZoomChange, zoom }: EditorToolbar
       <div className="flex items-center gap-4">
         <EditorZoomControls onResetView={onResetView} onZoomChange={onZoomChange} zoom={zoom} />
         <ModeToggle />
-        {/* Dirty indicator */}
-        {isDirty && (
-          <Badge
-            variant="outline"
-            className="gap-1 border-warning/30 bg-warning/10 py-1 uppercase tracking-wider text-warning"
-          >
-            <AlertTriangle className="h-3 w-3 animate-pulse" />
-            {EDITOR_UI_TEXT.toolbar.unsaved}
-          </Badge>
-        )}
+        <LockObjectsToggle />
 
-        <Button
-          onClick={saveChanges}
-          disabled={isSaving || !isDirty}
-          size="sm"
-          className={cn(
-            "h-9 px-4 text-xs font-semibold gap-2 shadow",
-            isDirty && !isSaving
-              ? "bg-primary hover:bg-primary text-primary-foreground"
-              : "bg-editor-surface border border-editor-border-strong text-editor-muted-foreground hover:bg-editor-surface cursor-not-allowed"
-          )}
-        >
-          {isSaving ? (
-            <>
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              <span>{EDITOR_UI_TEXT.toolbar.saving}</span>
-            </>
-          ) : (
-            <>
-              <Save className="h-3.5 w-3.5" />
-              <span>{EDITOR_UI_TEXT.toolbar.save}</span>
-            </>
-          )}
-        </Button>
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <Button
+                aria-label={isSaving ? EDITOR_UI_TEXT.toolbar.saving : EDITOR_UI_TEXT.toolbar.save}
+                onClick={saveChanges}
+                disabled={isSaving || !isDirty}
+                size="icon"
+                className={cn(
+                  "relative h-9 w-9 shadow",
+                  isDirty && !isSaving
+                    ? "bg-primary hover:bg-primary text-primary-foreground"
+                    : "bg-editor-surface border border-editor-border-strong text-editor-muted-foreground hover:bg-editor-surface cursor-not-allowed"
+                )}
+              >
+                {isSaving ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Save className="h-4 w-4" />
+                )}
+                {isDirty && !isSaving ? (
+                  <span className="absolute -right-1 -top-1 size-2.5 rounded-full bg-editor-status-dot ring-2 ring-editor-panel" />
+                ) : null}
+              </Button>
+            }
+          />
+          <TooltipContent>{isSaving ? EDITOR_UI_TEXT.toolbar.saving : EDITOR_UI_TEXT.toolbar.save}</TooltipContent>
+        </Tooltip>
       </div>
     </div>
   );

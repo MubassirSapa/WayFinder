@@ -105,6 +105,5 @@ export const EDITOR_UI_TEXT = {
     },
     save: "Save Changes",
     saving: "Saving...",
-    unsaved: "Unsaved Changes",
   },
 } as const;
