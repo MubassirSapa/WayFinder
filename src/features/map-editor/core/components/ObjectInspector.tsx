@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { toast } from 'sonner';
 import { useAppStore } from "@/store";
 import { deleteMapObject } from "../actions/server/object-actions";
 import { assertSuccess } from "@/lib/responses";
@@ -20,6 +21,7 @@ import { ToolboxObjectType } from '../types/editor.types';
 import { EditorMapObject } from '../types/map.types';
 import { isConnectorNodeRole } from '@/features/map-editor/floor-links/lib/crossFloorConnect';
 import { FloorLinkPanel } from '@/features/map-editor/floor-links/components/FloorLinkPanel';
+import { DeleteEntityAlertDialog } from './DeleteEntityAlertDialog';
 
 const CONNECTOR_OBJECT_TYPES: ToolboxObjectType[] = ['stairs', 'elevator', 'escalator'];
 
@@ -36,6 +38,7 @@ interface ObjectInspectorProps {
 export function ObjectInspector({ objectId }: ObjectInspectorProps) {
   const { objects, nodes, updateObject, removeObject } = useAppStore();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const object = objects[objectId];
 
   if (!object) return null;
@@ -48,19 +51,18 @@ export function ObjectInspector({ objectId }: ObjectInspectorProps) {
   };
 
   const handleDelete = async () => {
-    if (confirm('Are you sure you want to delete this map object?')) {
-      try {
-        setIsDeleting(true);
-        if (!objectId.startsWith('temp_')) {
-          assertSuccess(await deleteMapObject(objectId));
-        }
-        removeObject(objectId);
-      } catch (err) {
-        console.error('Error deleting map object:', err);
-        alert('Failed to delete map object from database.');
-      } finally {
-        setIsDeleting(false);
+    try {
+      setIsDeleting(true);
+      if (!objectId.startsWith('temp_')) {
+        assertSuccess(await deleteMapObject(objectId));
       }
+      removeObject(objectId);
+      setIsDeleteDialogOpen(false);
+    } catch (err) {
+      console.error('Error deleting map object:', err);
+      toast.error('Failed to delete map object from database.');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -238,13 +240,23 @@ export function ObjectInspector({ objectId }: ObjectInspectorProps) {
       <div className="pt-4 border-t border-editor-border flex gap-2">
         <Button
           variant="destructive"
-          onClick={handleDelete}
+          onClick={() => setIsDeleteDialogOpen(true)}
           disabled={isDeleting}
           className="w-full text-xs"
         >
           {isDeleting ? 'Deleting...' : 'Delete Object'}
         </Button>
       </div>
+
+      <DeleteEntityAlertDialog
+        confirmLabel="Delete"
+        description="This will permanently delete this map object. This can't be undone."
+        isDeleting={isDeleting}
+        onConfirm={handleDelete}
+        onOpenChange={setIsDeleteDialogOpen}
+        open={isDeleteDialogOpen}
+        title="Delete this object?"
+      />
     </div>
   );
 }

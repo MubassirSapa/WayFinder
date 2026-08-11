@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { toast } from 'sonner';
 import { useAppStore } from "@/store";
 import { deleteMapNode } from "../actions/server/node-actions";
 import { assertSuccess } from "@/lib/responses";
@@ -19,6 +20,7 @@ import {
 } from '@/components/ui/select';
 import { isConnectorNodeRole } from '@/features/map-editor/floor-links/lib/crossFloorConnect';
 import { FloorLinkPanel } from '@/features/map-editor/floor-links/components/FloorLinkPanel';
+import { DeleteEntityAlertDialog } from './DeleteEntityAlertDialog';
 
 interface NodeInspectorProps {
   nodeId: string;
@@ -27,6 +29,7 @@ interface NodeInspectorProps {
 export function NodeInspector({ nodeId }: NodeInspectorProps) {
   const { nodes, objects, updateNode, removeNode } = useAppStore();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const node = nodes[nodeId];
   const objectsList = Object.values(objects);
 
@@ -37,19 +40,18 @@ export function NodeInspector({ nodeId }: NodeInspectorProps) {
   };
 
   const handleDelete = async () => {
-    if (confirm('Are you sure you want to delete this navigation node? This will also delete all connected path edges.')) {
-      try {
-        setIsDeleting(true);
-        if (!nodeId.startsWith('temp_')) {
-          assertSuccess(await deleteMapNode(nodeId));
-        }
-        removeNode(nodeId);
-      } catch (err) {
-        console.error('Error deleting map node:', err);
-        alert('Failed to delete map node.');
-      } finally {
-        setIsDeleting(false);
+    try {
+      setIsDeleting(true);
+      if (!nodeId.startsWith('temp_')) {
+        assertSuccess(await deleteMapNode(nodeId));
       }
+      removeNode(nodeId);
+      setIsDeleteDialogOpen(false);
+    } catch (err) {
+      console.error('Error deleting map node:', err);
+      toast.error('Failed to delete map node.');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -74,7 +76,7 @@ export function NodeInspector({ nodeId }: NodeInspectorProps) {
           value={node.role}
           onValueChange={(val) => handleFieldChange('role', val)}
         >
-          <SelectTrigger id="node-role" className="bg-editor-surface border-editor-border-strong text-editor-foreground">
+          <SelectTrigger id="node-role" className="w-full bg-editor-surface border-editor-border-strong text-editor-foreground">
             <SelectValue />
           </SelectTrigger>
           <SelectContent className="bg-editor-surface border-editor-border text-editor-foreground">
@@ -93,7 +95,7 @@ export function NodeInspector({ nodeId }: NodeInspectorProps) {
           value={node.objectId || 'none'}
           onValueChange={(val) => handleFieldChange('objectId', val === 'none' ? null : val)}
         >
-          <SelectTrigger id="node-object" className="bg-editor-surface border-editor-border-strong text-editor-foreground">
+          <SelectTrigger id="node-object" className="w-full bg-editor-surface border-editor-border-strong text-editor-foreground">
             <SelectValue />
           </SelectTrigger>
           <SelectContent className="bg-editor-surface border-editor-border text-editor-foreground">
@@ -154,13 +156,23 @@ export function NodeInspector({ nodeId }: NodeInspectorProps) {
       <div className="pt-4 border-t border-editor-border flex gap-2">
         <Button
           variant="destructive"
-          onClick={handleDelete}
+          onClick={() => setIsDeleteDialogOpen(true)}
           disabled={isDeleting}
           className="w-full text-xs"
         >
           {isDeleting ? 'Deleting...' : 'Delete Node'}
         </Button>
       </div>
+
+      <DeleteEntityAlertDialog
+        confirmLabel="Delete"
+        description="This will also delete all connected path edges. This can't be undone."
+        isDeleting={isDeleting}
+        onConfirm={handleDelete}
+        onOpenChange={setIsDeleteDialogOpen}
+        open={isDeleteDialogOpen}
+        title="Delete this navigation node?"
+      />
     </div>
   );
 }

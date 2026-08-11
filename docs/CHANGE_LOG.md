@@ -4,8 +4,11 @@
 
 ### Changed
 - Tapping/clicking an object in the public map viewer no longer recenters (pans) the viewport to it - selecting still works and still sets the initial route origin on the first click, it just no longer moves the view out from under you. Removed `focusWorldPoint`, left with no other callers once this was gone.
+- Replaced the browser-native `confirm()`/`alert()` dialogs used when deleting an object, node, or path edge in the map editor with a proper shadcn `AlertDialog` (new shared `DeleteEntityAlertDialog`), matching the confirm-dialog styling used elsewhere in the app (e.g. block/remove user). Delete failures now show a toast instead of a browser `alert()`, consistent with Save/link feedback added earlier.
+- Removed the per-item hover tooltip on the "Create" panel's object buttons (added a few commits ago) - found annoying in practice.
 
 ### Fixed
+- Fixed the "Role / Type" and "Linked Map Object" selects in the node inspector, and "Type" in the edge inspector, shrinking to fit their shortest option instead of filling the panel width - the shared `SelectTrigger` defaults to `w-fit`, and these three usages never overrode it (same root cause already fixed on the object inspector's own "Type" select).
 - Fixed the public map viewer's zoom range being fixed absolute numbers (0.75x-2.1x desktop) regardless of the floor's actual size: a floor much larger than the viewport could have a true fit-to-view zoom below that minimum, silently clamped up so "fit" didn't actually fit and part of the floor was reachable only by panning, with no indication it was there. `getZoomProfile`/`clampZoom` now take an optional `floorFitZoom` and widen (never narrow) the range to include it, applied everywhere zoom changes (wheel, pinch, toolbar +/-, fit-to-bounds).
 
 ### Added

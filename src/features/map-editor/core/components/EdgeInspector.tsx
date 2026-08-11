@@ -1,6 +1,7 @@
 'use client';
 
 import  { useState } from 'react';
+import { toast } from 'sonner';
 import { useAppStore } from "@/store";
 import { deletePathEdge } from "../actions/server/edge-actions";
 import { assertSuccess } from "@/lib/responses";
@@ -17,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { DeleteEntityAlertDialog } from './DeleteEntityAlertDialog';
 
 interface EdgeInspectorProps {
   edgeId: string;
@@ -25,6 +27,7 @@ interface EdgeInspectorProps {
 export function EdgeInspector({ edgeId }: EdgeInspectorProps) {
   const { edges, nodes, updateEdge, removeEdge } = useAppStore();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const edge = edges[edgeId];
 
   if (!edge) return null;
@@ -37,19 +40,18 @@ export function EdgeInspector({ edgeId }: EdgeInspectorProps) {
   };
 
   const handleDelete = async () => {
-    if (confirm('Are you sure you want to delete this path edge?')) {
-      try {
-        setIsDeleting(true);
-        if (!edgeId.startsWith('temp_')) {
-          assertSuccess(await deletePathEdge(edgeId));
-        }
-        removeEdge(edgeId);
-      } catch (err) {
-        console.error('Error deleting path edge:', err);
-        alert('Failed to delete path edge.');
-      } finally {
-        setIsDeleting(false);
+    try {
+      setIsDeleting(true);
+      if (!edgeId.startsWith('temp_')) {
+        assertSuccess(await deletePathEdge(edgeId));
       }
+      removeEdge(edgeId);
+      setIsDeleteDialogOpen(false);
+    } catch (err) {
+      console.error('Error deleting path edge:', err);
+      toast.error('Failed to delete path edge.');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -72,7 +74,7 @@ export function EdgeInspector({ edgeId }: EdgeInspectorProps) {
           value={edge.type}
           onValueChange={(val) => handleFieldChange('type', val)}
         >
-          <SelectTrigger id="edge-type" className="bg-editor-surface border-editor-border-strong text-editor-foreground">
+          <SelectTrigger id="edge-type" className="w-full bg-editor-surface border-editor-border-strong text-editor-foreground">
             <SelectValue />
           </SelectTrigger>
           <SelectContent className="bg-editor-surface border-editor-border text-editor-foreground">
@@ -128,13 +130,23 @@ export function EdgeInspector({ edgeId }: EdgeInspectorProps) {
       <div className="pt-4 border-t border-editor-border flex gap-2">
         <Button
           variant="destructive"
-          onClick={handleDelete}
+          onClick={() => setIsDeleteDialogOpen(true)}
           disabled={isDeleting}
           className="w-full text-xs"
         >
           {isDeleting ? 'Deleting...' : 'Delete Edge'}
         </Button>
       </div>
+
+      <DeleteEntityAlertDialog
+        confirmLabel="Delete"
+        description="This will permanently delete this path connection. This can't be undone."
+        isDeleting={isDeleting}
+        onConfirm={handleDelete}
+        onOpenChange={setIsDeleteDialogOpen}
+        open={isDeleteDialogOpen}
+        title="Delete this path edge?"
+      />
     </div>
   );
 }
