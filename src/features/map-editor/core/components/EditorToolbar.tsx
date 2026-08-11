@@ -12,16 +12,24 @@ import {
   Save,
   Loader2,
   AlertTriangle,
-  LayoutGrid,
   type LucideIcon,
 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/shared/theme/ModeToggle';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import { PRIVATE_ROUTES } from '@/constants/routes';
 import { EditorMode } from '../types/editor.types';
+import { EditorZoomControls } from './EditorZoomControls';
 
-export function EditorToolbar() {
+interface EditorToolbarProps {
+  onResetView: () => void;
+  onZoomChange: (direction: 'in' | 'out') => void;
+  zoom: number;
+}
+
+export function EditorToolbar({ onResetView, onZoomChange, zoom }: EditorToolbarProps) {
   const { mode, floor, isDirty, isSaving, setMode } = useAppStore();
   const { saveChanges } = useSaveEditorChanges();
 
@@ -37,7 +45,7 @@ export function EditorToolbar() {
       <div className="flex items-center gap-3">
         <Button
           nativeButton={false}
-          render={<Link href="/dashboard" />}
+          render={<Link href={floor ? `${PRIVATE_ROUTES.BUILDINGS}/${floor.buildingId}` : PRIVATE_ROUTES.BUILDINGS} />}
           size="sm"
           variant="outline"
           className="h-9 gap-2 border-editor-border-strong bg-editor-background px-3 text-editor-foreground hover:bg-editor-surface hover:text-editor-foreground"
@@ -45,9 +53,6 @@ export function EditorToolbar() {
           <ArrowLeft className="h-3.5 w-3.5" />
           <span>{EDITOR_UI_TEXT.toolbar.backToDashboard}</span>
         </Button>
-        <div className="bg-editor-surface p-2 rounded-lg border border-editor-border-strong">
-          <LayoutGrid className="h-5 w-5 text-primary" />
-        </div>
         <div>
           <h1 className="text-sm font-bold text-editor-foreground">{floor?.name || EDITOR_UI_TEXT.loading.floor}</h1>
           <p className="text-[10px] text-editor-muted-foreground mt-0.5">
@@ -90,13 +95,17 @@ export function EditorToolbar() {
 
       {/* Action Buttons */}
       <div className="flex items-center gap-4">
+        <EditorZoomControls onResetView={onResetView} onZoomChange={onZoomChange} zoom={zoom} />
         <ModeToggle />
         {/* Dirty indicator */}
         {isDirty && (
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-warning/10 border border-warning/25 text-warning">
+          <Badge
+            variant="outline"
+            className="gap-1 border-warning/30 bg-warning/10 py-1 uppercase tracking-wider text-warning"
+          >
             <AlertTriangle className="h-3 w-3 animate-pulse" />
-            <span className="text-[9px] font-bold uppercase tracking-wider">{EDITOR_UI_TEXT.toolbar.unsaved}</span>
-          </div>
+            {EDITOR_UI_TEXT.toolbar.unsaved}
+          </Badge>
         )}
 
         <Button

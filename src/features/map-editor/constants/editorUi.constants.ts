@@ -27,20 +27,19 @@ export const EDITOR_UI_TEXT = {
   },
   objectToolbox: {
     title: "Add to Map",
-    description:
-      "Pick something below, then double-click anywhere on the map to place it. Drag anything already placed to move it.",
+    description: "Choose an item, then double-click the map to place it.",
+    itemHint: (label: string) => `${label}: select, then double-click the map to place.`,
   },
   referencePanel: {
     imageNameFieldLabel: "Image Name",
     attachedStatus: "Attached",
+    autoFitHint: "Canvas will resize to match this image since the floor is empty.",
     currentImageFallback: "Current reference image",
     defaultAlt: (floorName: string) => `${floorName} reference image`,
-    description:
-      "Add an image to line up walls, rooms, and paths while you edit the floor.",
+    description: "Line up walls, rooms, and paths while you edit.",
     emptyStatus: "No image",
     error: "Failed to upload reference image.",
     fileFieldLabel: "Image File",
-    fileHint: "Choose a PNG, JPG, or similar image file.",
     imageTypeLabel: "Floor plan or sketch",
     noAltFallback: "No name provided",
     readyToUploadPrefix: "Ready to upload:",
@@ -52,7 +51,7 @@ export const EDITOR_UI_TEXT = {
     uploading: "Uploading Image",
     adjust: {
       title: "Adjust",
-      moveHint: "Drag the image on the canvas to reposition it, or use the sliders below.",
+      moveHint: "Drag the image on the canvas, or use the sliders below.",
       positionX: "Position X",
       positionY: "Position Y",
       rotation: "Rotation",
@@ -64,22 +63,21 @@ export const EDITOR_UI_TEXT = {
       fitContain: "Contain",
       visible: "Show on canvas",
       lock: "Lock reference image",
-      lockDescription: "Prevents accidental changes to position, zoom, and opacity.",
+      lockDescription: "Locks position and appearance changes.",
     },
   },
   smartBuilder: {
     actions: "Actions",
     autoConnect: {
-      description: "Link object nodes to the nearest hallway point.",
+      description: "Connects object nodes to the nearest hallway point.",
       label: "Auto Connect",
     },
     autoNodes: {
-      description: "Create default object nodes for eligible objects.",
+      description: "Adds default nodes to eligible objects.",
       label: "Auto Nodes",
     },
     clearPath: "Clear Path",
-    enabledDescription:
-      "Manual editing stays the same. This only adds assisted actions.",
+    enabledDescription: "Adds shortcuts on top of manual editing.",
     enabledLabel: "Enable automation",
     finishHallwayPath: "Finish Hallway Path",
     generateNodes: "Generate Nodes",
@@ -87,15 +85,14 @@ export const EDITOR_UI_TEXT = {
     on: "On",
     options: "Options",
     queuedPoints: (count: number) =>
-      `${count} hallway point${count === 1 ? "" : "s"} queued. In path mode, click empty canvas to add more points, then finish the path.`,
-    queuedPointsEmpty:
-      "In path mode, click empty canvas to queue hallway points while automation is enabled.",
+      `${count} point${count === 1 ? "" : "s"} queued. Click empty canvas to add more, or finish the path.`,
+    queuedPointsEmpty: "In Connect Paths mode, click empty canvas to queue hallway points.",
     subtitle: "Assisted tools",
-    summary: "Speed up node creation, connections, and hallway path drawing.",
+    summary: "Speeds up node creation, connections, and hallway paths.",
     title: "Automation",
   },
   toolbar: {
-    backToDashboard: "Back to dashboard",
+    backToDashboard: "Back to building",
     floorPrefix: "Floor",
     modes: {
       node: "Add Path Nodes",

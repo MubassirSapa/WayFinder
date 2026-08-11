@@ -506,24 +506,43 @@ position, scale, rotate, and dim independently of the actual map data.
   purely through **PathEdges** with their own configured `distanceMeters`,
   not through any coordinate transform.
 - **Rendering**: the editor canvas is a plain SVG sized exactly
-  `width={floor.width} height={floor.height}` — one SVG unit equals one
-  floor pixel, no scale transform on the canvas itself (only a pan
-  translate). Pointer→canvas coordinate conversion uses
-  `getScreenCTM().inverse()` (`src/features/map-editor/core/lib/canvas.ts`).
+  `width={floor.width} height={floor.height}` — one SVG unit always equals
+  one floor pixel; the wrapping div carries a `translate(pan) scale(zoom)`
+  CSS transform (`buildCanvasViewportTransform()`,
+  `src/features/map-editor/core/lib/canvasViewport.ts`) so the on-screen
+  size can differ from that pixel size while the underlying coordinate
+  space stays fixed. Pointer→canvas coordinate conversion uses
+  `getScreenCTM().inverse()` (`src/features/map-editor/core/lib/canvas.ts`),
+  which reflects that transform automatically; drag hooks that move stored
+  x/y from raw `clientX`/`clientY` deltas instead (`useNodeDrag.ts`,
+  `useObjectDrag.ts`'s move/resize cases, `useBackgroundImageDrag.ts`)
+  divide the delta by the zoom captured at drag-start, since a screen-pixel
+  delta only equals a floor-pixel delta at zoom 1.
 - **Background reference image**: positioned via a computed fit rectangle
   (`computeBackgroundImageFit()`,
   `src/features/map-editor/core/lib/backgroundImageFit.ts`) driven by
   `backgroundImageFit` (`fill`/`cover`/`contain`, CSS-`object-fit`-style),
   plus stored offset/scale/rotation/opacity fields, entirely independent of
   the map object/node coordinate system layered on top of it.
-- **Pan/zoom**: the editor supports **pan only, no zoom** (custom pointer
-  code, `useCanvasPan.ts`). The **public viewer** has a separate, more
-  elaborate custom implementation supporting pinch-to-zoom, wheel zoom, and
-  drag pan (`useMapViewerViewportGestures.ts`), writing transforms directly
-  to the DOM per-frame for performance. **These two pan/zoom systems are
-  not shared code** — verified no imports exist between the two feature
+- **Pan/zoom**: the editor supports **pan and wheel/button zoom, desktop
+  only** (`useCanvasViewport.ts`, `editorViewportPan`/`editorViewportZoom`
+  in `createEditorViewportSlice.ts`) — drag to pan, mouse wheel to zoom
+  anchored at the cursor, plus explicit zoom-in/zoom-out/fit-to-view
+  buttons (`EditorZoomControls.tsx`) in the toolbar. It fits the floor to
+  the viewport on first load and re-fits whenever the floor's own
+  dimensions change (a floor switch, or the reference-image upload
+  auto-sizing the canvas — see the Floor image/map upload note in Section
+  8). No pinch/touch gesture handling, since the editor is desktop-only
+  already (`EditorDesktopOnlyNotice`). The **public viewer** has a
+  separate, more elaborate custom implementation additionally supporting
+  pinch-to-zoom and a mobile zoom profile
+  (`useMapViewerViewportGestures.ts`), writing transforms directly to the
+  DOM per-frame for performance. **These two pan/zoom systems are not
+  shared code** — verified no imports exist between the two feature
   folders; each is separately hand-rolled (no pan/zoom library like
-  `d3-zoom` or `react-zoom-pan-pinch` is a dependency).
+  `d3-zoom` or `react-zoom-pan-pinch` is a dependency), though the editor's
+  clamp/fit math (`lib/canvasViewport.ts`) mirrors the viewer's
+  (`lib/mapViewerViewport.ts`) formulas rather than reusing them directly.
 - **State persistence**: the editor holds all changes in a Zustand store
   entirely client-side; nothing is written to the database until the
   explicit Save button is pressed (no autosave — Section 8 has the full
@@ -633,10 +652,19 @@ No performance benchmarks exist in the repo — none are claimed here.
 
 1. **Building creation** — dashboard form, name required.
 2. **Floor creation** — name, level; dimensions default to 1200×800px,
-   `metersPerPixel` defaults to 0.05.
+   `metersPerPixel` defaults to 0.05. `width`/`height` can be changed later
+   via the dashboard's floor-settings form, or by dragging the canvas's own
+   bottom-right resize handle in the editor (`FloorResizeHandle`,
+   grid-snapped, select mode only) — neither path rescales already-placed
+   objects/nodes/edges, so both warn (a tooltip, in the handle's case) once
+   the floor has anything on it.
 3. **Floor image/map upload** — `FloorReferencePanel`, direct-to-R2 client
    upload, then position/scale/rotate/opacity/lock/visibility controls, all
-   client-side only until Save.
+   client-side only until Save. If the floor has no objects/nodes/edges
+   placed yet, uploading (or replacing) the image also resizes the floor's
+   own `width`/`height` to match the image's natural pixel size, so `fill`
+   fit shows it undistorted with no manual math — skipped once anything is
+   placed, since resizing never rescales existing entities' `x`/`y`.
 4. **Location placement** — toolbox category → **double-click** empty
    canvas (not drag-and-drop) → object placed at a 20px-grid-snapped
    position with type-specific default size.
@@ -1178,8 +1206,9 @@ both directions.
   a custom wheel-style floor picker for touch, a bottom-hinged drawer for
   the route search UI, responsive grid layouts throughout the dashboard and
   public directory.
-- **Map interaction**: pan everywhere; pinch/wheel zoom in the public
-  viewer only (the editor is pan-only, no zoom — see Section 6).
+- **Map interaction**: pan and zoom everywhere; the public viewer
+  additionally supports pinch-to-zoom and a mobile zoom profile, which the
+  desktop-only editor doesn't need (see Section 6).
 - **Dark/light theme**: yes, `next-themes`, token-driven.
 - **Loading states**: `loading.tsx` Suspense fallbacks per major route
   group, plus a dedicated full-screen loading/error state inside the map
@@ -1621,8 +1650,9 @@ exist in the code, not aspirational.
 8. **The editor's dual coordinate system** — a fixed floor-pixel canvas for
    authoring, plus an independent `metersPerPixel` scale used only for
    real-world distance output, with two entirely separate hand-rolled
-   pan/zoom implementations (editor: pan-only; viewer: full gesture
-   support) deliberately not sharing code.
+   pan/zoom implementations (editor: pan + wheel/button zoom, desktop only;
+   viewer: full gesture support including pinch) deliberately not sharing
+   code.
 9. **Role-based access control implemented as reusable, composable Payload
    access functions** (`accessibleBuildingIds`, `buildingContentRead/
    Create/UpdateDelete`, etc.) rather than duplicated checks scattered
@@ -2321,9 +2351,9 @@ informed the report):
 
 **Map editor**: `src/features/map-editor/core/components/MapCanvas.tsx`,
 `CreateObjectsPanel.tsx`, `hooks/useCanvasPointer.ts`, `useObjectDrag.ts`,
-`useCanvasPan.ts`, `useBackgroundImageDrag.ts`, `useSaveEditorChanges.ts`,
-`lib/canvas.ts`, `lib/backgroundImageFit.ts`, `lib/distance.ts`,
-`lib/objectDefaults.ts`, `types/editor.types.ts`;
+`useCanvasViewport.ts`, `useBackgroundImageDrag.ts`, `useSaveEditorChanges.ts`,
+`lib/canvas.ts`, `lib/canvasViewport.ts`, `lib/backgroundImageFit.ts`,
+`lib/distance.ts`, `lib/objectDefaults.ts`, `types/editor.types.ts`;
 `smart-builder/lib/smartObjectBuilder.ts`, `autoConnect.ts`,
 `pathBuilder.ts`, `objectNodeRules.ts`;
 `floor-links/lib/crossFloorConnect.ts`, `hooks/useLinkableNodes.ts`,

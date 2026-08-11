@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 
-import { Trash2, Waypoints } from "lucide-react";
+import { Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -84,6 +85,9 @@ export function FloorLinkPanel({ node }: FloorLinkPanelProps) {
     if (edge) {
       addEdge(edge);
       setTargetNodeId("");
+      toast.success("Link added. Save changes to keep it.");
+    } else {
+      toast.error("That link already exists.");
     }
   };
 
@@ -92,8 +96,10 @@ export function FloorLinkPanel({ node }: FloorLinkPanelProps) {
     try {
       assertSuccess(await deletePathEdge(edgeId));
       removeLinkLocally(edgeId);
+      toast.success("Link removed.");
     } catch (error) {
       console.error("Error deleting floor link:", error);
+      toast.error("Failed to remove the link.");
     } finally {
       setIsDeleting(null);
     }
@@ -101,18 +107,13 @@ export function FloorLinkPanel({ node }: FloorLinkPanelProps) {
 
   return (
     <div className="space-y-4 rounded-2xl border border-editor-border bg-editor-background/60 p-4">
-      <div className="flex items-center gap-2 text-editor-foreground">
-        <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-info/20 bg-info/10">
-          <Waypoints className="h-4 w-4 text-info" />
-        </div>
-        <div>
-          <h3 className="text-xs font-bold uppercase tracking-[0.22em]">
-            {LINK_TYPE_LABELS[linkType]} Link
-          </h3>
-          <p className="text-[10px] text-editor-subtle-foreground mt-0.5">
-            Connect to another floor · you&apos;re on <span className="text-editor-muted-foreground">{floor.name}</span>
-          </p>
-        </div>
+      <div className="text-editor-foreground">
+        <h3 className="text-xs font-bold uppercase tracking-[0.22em]">
+          {LINK_TYPE_LABELS[linkType]} Link
+        </h3>
+        <p className="text-[10px] text-editor-subtle-foreground mt-0.5">
+          Connect to another floor · you&apos;re on <span className="text-editor-muted-foreground">{floor.name}</span>
+        </p>
       </div>
 
       <div className="space-y-2">
@@ -136,7 +137,12 @@ export function FloorLinkPanel({ node }: FloorLinkPanelProps) {
           <SelectContent className="bg-editor-surface border-editor-border text-editor-foreground">
             {Object.entries(linkableNodesByFloor).map(([floorName, nodes]) => (
               <SelectGroup key={floorName}>
-                <SelectLabel>{floorName}</SelectLabel>
+                <SelectLabel
+                  className="font-semibold uppercase tracking-wide"
+                  style={{ color: 'var(--editor-selection)' }}
+                >
+                  {floorName}
+                </SelectLabel>
                 {nodes.map((candidate) => (
                   <SelectItem key={candidate.id} value={candidate.id} className="focus:bg-editor-hover">
                     {candidate.label || candidate.role}
@@ -152,7 +158,7 @@ export function FloorLinkPanel({ node }: FloorLinkPanelProps) {
           disabled={!targetNodeId}
           onClick={handleCreateLink}
           size="sm"
-          variant="outline"
+          variant="default"
         >
           {`Create ${LINK_TYPE_LABELS[linkType].toLowerCase()} link (${CROSS_FLOOR_DEFAULT_DISTANCE_METERS[linkType]}m default)`}
         </Button>
@@ -180,8 +186,7 @@ export function FloorLinkPanel({ node }: FloorLinkPanelProps) {
                       disabled={isDeleting === link.id}
                       onClick={() => handleDeleteLink(link.id)}
                       size="icon-xs"
-                      variant="ghost"
-                      className="text-editor-subtle-foreground hover:text-destructive"
+                      variant="destructive"
                     >
                       <Trash2 />
                     </Button>

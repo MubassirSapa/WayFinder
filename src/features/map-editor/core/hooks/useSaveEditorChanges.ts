@@ -1,5 +1,7 @@
 'use client';
 
+import { toast } from "sonner";
+
 import { createMapObject, updateMapObject } from "../actions/server/object-actions";
 import { createMapNode, updateMapNode } from "../actions/server/node-actions";
 import { createPathEdge, updatePathEdge } from "../actions/server/edge-actions";
@@ -168,9 +170,11 @@ export function useSaveEditorChanges() {
       } else if (selectedEntity?.kind === 'edge' && edgeIdMap[selectedEntity.id]) {
         selectEntity({ kind: 'edge', id: edgeIdMap[selectedEntity.id] });
       }
+
+      toast.success('Changes saved.');
     } catch (err) {
       console.error('Error saving changes:', err);
-      alert('Failed to save changes. Please review the server console.');
+      toast.error('Failed to save changes. Check the console for details.');
     } finally {
       setSaving(false);
     }

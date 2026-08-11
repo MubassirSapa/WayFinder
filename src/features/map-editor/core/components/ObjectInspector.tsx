@@ -95,7 +95,7 @@ export function ObjectInspector({ objectId }: ObjectInspectorProps) {
           value={object.type}
           onValueChange={(val) => handleFieldChange('type', val as ToolboxObjectType)}
         >
-          <SelectTrigger id="obj-type" className="bg-editor-surface border-editor-border-strong text-editor-foreground">
+          <SelectTrigger id="obj-type" className="w-full bg-editor-surface border-editor-border-strong text-editor-foreground">
             <SelectValue />
           </SelectTrigger>
           <SelectContent className="bg-editor-surface border-editor-border text-editor-foreground">
@@ -229,7 +229,7 @@ export function ObjectInspector({ objectId }: ObjectInspectorProps) {
             <FloorLinkPanel node={linkedNode} />
           ) : (
             <p className="rounded-2xl border border-editor-border bg-editor-panel/45 p-3 text-[11px] leading-relaxed text-editor-subtle-foreground">
-              This {object.type} has no navigation node yet — generate one (Smart Builder → Generate Nodes, or switch to Node mode) before linking it to another floor.
+              This {object.type} has no navigation node yet. Generate one (Smart Builder → Generate Nodes, or switch to Node mode) before linking it to another floor.
             </p>
           )}
         </div>
