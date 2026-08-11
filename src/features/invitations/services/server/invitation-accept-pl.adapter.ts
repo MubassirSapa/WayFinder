@@ -81,6 +81,11 @@ export async function acceptInvitationAdapter(token: string, input: TAcceptInvit
     await payload.create({
       collection: "users",
       overrideAccess: true,
+      // The invite link itself is the verification step - _verified: true
+      // marks the account verified in the DB, but Payload's auto-sent
+      // "verify your email" email is gated by this separate option, not by
+      // _verified, so it has to be turned off explicitly too.
+      disableVerificationEmail: true,
       data: {
         name: input.name.trim(),
         email: invitation.email,
