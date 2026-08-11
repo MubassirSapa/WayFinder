@@ -120,6 +120,28 @@ export function useCanvasViewport({ floorHeight, floorId, floorWidth }: UseCanva
       event.preventDefault();
 
       const current = useAppStore.getState();
+
+      // Two-finger trackpad scroll and pinch-to-zoom both fire as native
+      // wheel events - ctrlKey is the browser's own signal that this one is
+      // a pinch (or an explicit Ctrl+scroll), so that's the only reliable
+      // way to tell them apart. Everything else (plain scroll, on a
+      // trackpad or a mouse wheel) pans instead, matching Figma/Miro.
+      if (!event.ctrlKey) {
+        setEditorViewportView({
+          pan: clampEditorPan(
+            {
+              x: current.editorViewportPan.x - event.deltaX,
+              y: current.editorViewportPan.y - event.deltaY,
+            },
+            { width: floorWidth, height: floorHeight },
+            getViewportSize(),
+            current.editorViewportZoom,
+          ),
+          zoom: current.editorViewportZoom,
+        });
+        return;
+      }
+
       const nextZoom = clampEditorZoom(
         event.deltaY > 0
           ? current.editorViewportZoom / EDITOR_VIEWPORT_WHEEL_ZOOM_FACTOR
