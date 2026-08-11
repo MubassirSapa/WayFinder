@@ -154,7 +154,7 @@
   --editor-object-room: oklch(0.58 0.19 262);
   --editor-object-wall: oklch(0.55 0.03 250);
   --editor-object-door: oklch(0.72 0.15 85);
-  --editor-object-hallway: oklch(0.68 0.025 245);
+  --editor-object-hallway: oklch(0.4 0.015 245);
   --editor-object-stairs: oklch(0.65 0.17 55);
   --editor-object-elevator: oklch(0.58 0.18 300);
   --editor-object-escalator: oklch(0.59 0.14 238);
