@@ -22,7 +22,9 @@ export interface WorldBounds {
   maxY: number;
 }
 
-export function formatOrganizationName(value: string) {
+// Prettifies a raw id (e.g. a building's slug-like id) into a title -
+// last-resort fallback when no real human-entered name is available.
+export function formatIdAsTitle(value: string) {
   return value
     .replace(/[_-]+/g, " ")
     .replace(/\s+/g, " ")

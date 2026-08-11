@@ -6,8 +6,8 @@ import { MapViewerPageHeader } from "@/features/map-viewer/components/MapViewerP
 import * as mapViewerViewportLib from "@/features/map-viewer/lib/mapViewerViewport";
 import type { ViewerFloor } from "@/features/map-viewer/types/map-viewer.types";
 
-// organizationName: null forces the `?? formatOrganizationName(...)` fallback
-// on every render, making that call a reliable proxy for "did this
+// buildingName omitted (optional field) forces the `?? formatIdAsTitle(...)`
+// fallback on every render, making that call a reliable proxy for "did this
 // component's body actually execute again".
 const activeFloor: ViewerFloor = {
   id: "floor-1",
@@ -26,7 +26,7 @@ afterEach(() => {
 
 describe("MapViewerPageHeader memoization", () => {
   it("does not re-render when the parent re-renders with referentially unchanged props", () => {
-    const formatSpy = vi.spyOn(mapViewerViewportLib, "formatOrganizationName");
+    const formatSpy = vi.spyOn(mapViewerViewportLib, "formatIdAsTitle");
     function Harness() {
       const [tick, setTick] = useState(0);
       return (
@@ -54,7 +54,7 @@ describe("MapViewerPageHeader memoization", () => {
   });
 
   it("still re-renders when activeFloor changes, proving memo isn't over-suppressing updates", () => {
-    const formatSpy = vi.spyOn(mapViewerViewportLib, "formatOrganizationName");
+    const formatSpy = vi.spyOn(mapViewerViewportLib, "formatIdAsTitle");
     const otherFloor: ViewerFloor = { ...activeFloor, id: "floor-2", name: "Upper Floor" };
     function Harness() {
       const [floor, setFloor] = useState(activeFloor);
@@ -83,5 +83,28 @@ describe("MapViewerPageHeader memoization", () => {
 
     expect(getByText("Ground Floor")).toBeTruthy();
     expect(queryByRole("combobox")).toBeNull();
+  });
+
+  it("shows the building's name, not the organization's", () => {
+    const floorWithBuildingName: ViewerFloor = {
+      ...activeFloor,
+      buildingName: "West Wing",
+      organizationName: "Acme University",
+    };
+    const { getByText, queryByText } = render(<MapViewerPageHeader activeFloor={floorWithBuildingName} />);
+
+    expect(getByText("West Wing")).toBeTruthy();
+    expect(queryByText("Acme University")).toBeNull();
+  });
+
+  it("falls back to a title-cased building id when the building has no name", () => {
+    const floorWithoutBuildingName: ViewerFloor = {
+      ...activeFloor,
+      buildingId: "west-wing",
+      buildingName: null,
+    };
+    const { getByText } = render(<MapViewerPageHeader activeFloor={floorWithoutBuildingName} />);
+
+    expect(getByText("West Wing")).toBeTruthy();
   });
 });

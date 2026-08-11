@@ -10,7 +10,7 @@ import {
 import { WayfinderBrand } from "@/components/shared/brand/WayfinderBrand";
 import { ModeToggle } from "@/components/shared/theme/ModeToggle";
 
-import { formatOrganizationName } from "../lib/mapViewerViewport";
+import { formatIdAsTitle } from "../lib/mapViewerViewport";
 import type { ViewerFloor } from "../types/map-viewer.types";
 
 interface MapViewerPageHeaderProps {
@@ -34,7 +34,7 @@ export const MapViewerPageHeader = memo(function MapViewerPageHeader({
               <BreadcrumbList className="flex-nowrap">
                 <BreadcrumbItem className="min-w-0">
                   <BreadcrumbPage className="truncate text-sm font-semibold text-foreground sm:text-base">
-                    {activeFloor.organizationName ?? formatOrganizationName(activeFloor.buildingId)}
+                    {activeFloor.buildingName ?? formatIdAsTitle(activeFloor.buildingId)}
                   </BreadcrumbPage>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
