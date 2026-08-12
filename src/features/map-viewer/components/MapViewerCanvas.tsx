@@ -38,11 +38,10 @@ interface MapViewerCanvasProps {
   onConnectorActivate: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
   onObjectSelect: (object: ViewerMapObject) => void;
   onPointerCancel: PointerEventHandler<HTMLDivElement>;
+  onPointerDown: PointerEventHandler<HTMLDivElement>;
   onPointerLeave: PointerEventHandler<HTMLDivElement>;
+  onPointerMove: PointerEventHandler<HTMLDivElement>;
   onPointerUp: PointerEventHandler<HTMLDivElement>;
-  onSvgPointerDown: PointerEventHandler<SVGSVGElement>;
-  onSvgPointerMove: PointerEventHandler<SVGSVGElement>;
-  onSvgPointerUp: PointerEventHandler<SVGSVGElement>;
 }
 
 export function MapViewerCanvas({
@@ -67,11 +66,10 @@ export function MapViewerCanvas({
   onConnectorActivate,
   onObjectSelect,
   onPointerCancel,
+  onPointerDown,
   onPointerLeave,
+  onPointerMove,
   onPointerUp,
-  onSvgPointerDown,
-  onSvgPointerMove,
-  onSvgPointerUp,
 }: MapViewerCanvasProps) {
   // Injected as a hook, not resolved values, so the subscription itself
   // stays scoped to just this component - the rest of the page (sidebar,
@@ -91,7 +89,9 @@ export function MapViewerCanvas({
           isDragging ? "cursor-grabbing select-none" : "cursor-grab",
         ].join(" ")}
         onPointerCancel={onPointerCancel}
+        onPointerDown={onPointerDown}
         onPointerLeave={onPointerLeave}
+        onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         ref={viewportRef}
       >
@@ -125,9 +125,9 @@ export function MapViewerCanvas({
               onBackgroundClick={onBackgroundClick}
               onConnectorActivate={onConnectorActivate}
               onObjectSelect={onObjectSelect}
-              onPointerDown={onSvgPointerDown}
-              onPointerMove={onSvgPointerMove}
-              onPointerUp={onSvgPointerUp}
+              onPointerDown={onPointerDown}
+              onPointerMove={onPointerMove}
+              onPointerUp={onPointerUp}
               originObjectId={originObjectId}
               routeConnectorDirection={routeConnectorDirection}
               routeConnectorNodeId={routeConnectorNodeId}

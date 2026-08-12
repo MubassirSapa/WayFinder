@@ -53,12 +53,11 @@ export function QrFloorViewer({ data }: QrFloorViewerProps) {
   const {
     consumeSuppressedClick,
     contentRef,
-    handleSvgPointerDown,
-    handleSvgPointerMove,
-    handleSvgPointerUp,
+    handlePointerDown,
+    handlePointerMove,
+    handlePointerUp,
     handleViewportPointerCancel,
     handleViewportPointerLeave,
-    handleViewportPointerUp,
     viewportRef,
   } = useMapViewerViewport({
     activeFloor,
@@ -103,11 +102,10 @@ export function QrFloorViewer({ data }: QrFloorViewerProps) {
         onConnectorActivate={() => {}}
         onObjectSelect={handleObjectSelect}
         onPointerCancel={handleViewportPointerCancel}
+        onPointerDown={handlePointerDown}
         onPointerLeave={handleViewportPointerLeave}
-        onPointerUp={handleViewportPointerUp}
-        onSvgPointerDown={handleSvgPointerDown}
-        onSvgPointerMove={handleSvgPointerMove}
-        onSvgPointerUp={handleSvgPointerUp}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
         originObjectId={null}
         routeConnectorDirection={null}
         routeConnectorNodeId={null}

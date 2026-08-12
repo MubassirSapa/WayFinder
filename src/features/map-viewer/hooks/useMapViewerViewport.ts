@@ -42,12 +42,11 @@ export function useMapViewerViewport({
   const {
     consumeSuppressedClick,
     contentRef,
-    handleSvgPointerDown,
-    handleSvgPointerMove,
-    handleSvgPointerUp,
+    handlePointerDown,
+    handlePointerMove,
+    handlePointerUp,
     handleViewportPointerCancel,
     handleViewportPointerLeave,
-    handleViewportPointerUp,
   } = useMapViewerViewportGestures({ activeFloor, viewportBinding, viewportRef, viewportSize });
 
   useEffect(() => {
@@ -170,11 +169,10 @@ export function useMapViewerViewport({
     focusWorldBounds,
     resetView,
     viewportRef,
-    handleSvgPointerDown,
-    handleSvgPointerMove,
-    handleSvgPointerUp,
+    handlePointerDown,
+    handlePointerMove,
+    handlePointerUp,
     handleViewportPointerCancel,
     handleViewportPointerLeave,
-    handleViewportPointerUp,
   };
 }

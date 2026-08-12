@@ -108,12 +108,12 @@ describe("useMapViewerViewportGestures", () => {
     const result = setup();
 
     act(() => {
-      result.current.handleSvgPointerDown(makeEvent(svgEl, { clientX: 100, clientY: 100, pointerId: 1 }));
+      result.current.handlePointerDown(makeEvent(svgEl, { clientX: 100, clientY: 100, pointerId: 1 }));
     });
     expect(useAppStore.getState().isViewportDragging).toBe(true);
 
     act(() => {
-      result.current.handleSvgPointerMove(makeEvent(svgEl, { clientX: 130, clientY: 100, pointerId: 1 }));
+      result.current.handlePointerMove(makeEvent(svgEl, { clientX: 130, clientY: 100, pointerId: 1 }));
     });
 
     expect(contentEl.style.transform).toBe("translate(30px, 0px) scale(1)");
@@ -125,13 +125,13 @@ describe("useMapViewerViewportGestures", () => {
     const result = setup();
 
     act(() => {
-      result.current.handleSvgPointerDown(makeEvent(svgEl, { clientX: 100, clientY: 100, pointerId: 1 }));
+      result.current.handlePointerDown(makeEvent(svgEl, { clientX: 100, clientY: 100, pointerId: 1 }));
     });
     act(() => {
-      result.current.handleSvgPointerMove(makeEvent(svgEl, { clientX: 130, clientY: 100, pointerId: 1 }));
+      result.current.handlePointerMove(makeEvent(svgEl, { clientX: 130, clientY: 100, pointerId: 1 }));
     });
     act(() => {
-      result.current.handleSvgPointerUp(makeEvent(svgEl, { clientX: 130, clientY: 100, pointerId: 1 }));
+      result.current.handlePointerUp(makeEvent(svgEl, { clientX: 130, clientY: 100, pointerId: 1 }));
     });
 
     expect(useAppStore.getState().viewportPan).toEqual({ x: 30, y: 0 });
@@ -142,13 +142,13 @@ describe("useMapViewerViewportGestures", () => {
     const result = setup();
 
     act(() => {
-      result.current.handleSvgPointerDown(makeEvent(svgEl, { clientX: 100, clientY: 100, pointerId: 1 }));
+      result.current.handlePointerDown(makeEvent(svgEl, { clientX: 100, clientY: 100, pointerId: 1 }));
     });
     act(() => {
-      result.current.handleSvgPointerMove(makeEvent(svgEl, { clientX: 103, clientY: 101, pointerId: 1 }));
+      result.current.handlePointerMove(makeEvent(svgEl, { clientX: 103, clientY: 101, pointerId: 1 }));
     });
     act(() => {
-      result.current.handleSvgPointerUp(makeEvent(svgEl, { clientX: 103, clientY: 101, pointerId: 1 }));
+      result.current.handlePointerUp(makeEvent(svgEl, { clientX: 103, clientY: 101, pointerId: 1 }));
     });
 
     expect(result.current.consumeSuppressedClick()).toBe(false);
@@ -158,13 +158,13 @@ describe("useMapViewerViewportGestures", () => {
     const result = setup();
 
     act(() => {
-      result.current.handleSvgPointerDown(makeEvent(svgEl, { clientX: 100, clientY: 100, pointerId: 1 }));
+      result.current.handlePointerDown(makeEvent(svgEl, { clientX: 100, clientY: 100, pointerId: 1 }));
     });
     act(() => {
-      result.current.handleSvgPointerMove(makeEvent(svgEl, { clientX: 130, clientY: 100, pointerId: 1 }));
+      result.current.handlePointerMove(makeEvent(svgEl, { clientX: 130, clientY: 100, pointerId: 1 }));
     });
     act(() => {
-      result.current.handleSvgPointerUp(makeEvent(svgEl, { clientX: 130, clientY: 100, pointerId: 1 }));
+      result.current.handlePointerUp(makeEvent(svgEl, { clientX: 130, clientY: 100, pointerId: 1 }));
     });
 
     expect(result.current.consumeSuppressedClick()).toBe(true);
@@ -176,15 +176,15 @@ describe("useMapViewerViewportGestures", () => {
     const result = setup();
 
     act(() => {
-      result.current.handleSvgPointerDown(makeEvent(svgEl, { clientX: 100, clientY: 100, pointerId: 1 }));
+      result.current.handlePointerDown(makeEvent(svgEl, { clientX: 100, clientY: 100, pointerId: 1 }));
     });
     act(() => {
-      result.current.handleSvgPointerDown(makeEvent(svgEl, { clientX: 200, clientY: 100, pointerId: 2 }));
+      result.current.handlePointerDown(makeEvent(svgEl, { clientX: 200, clientY: 100, pointerId: 2 }));
     });
     expect(useAppStore.getState().isViewportDragging).toBe(false);
 
     act(() => {
-      result.current.handleSvgPointerMove(makeEvent(svgEl, { clientX: 250, clientY: 100, pointerId: 2 }));
+      result.current.handlePointerMove(makeEvent(svgEl, { clientX: 250, clientY: 100, pointerId: 2 }));
     });
 
     // Distance grew from 100 to 150 -> zoom scales by 1.5x; pan recenters on
@@ -207,19 +207,19 @@ describe("useMapViewerViewportGestures", () => {
     const result = setup();
 
     act(() => {
-      result.current.handleSvgPointerDown(makeEvent(svgEl, {
+      result.current.handlePointerDown(makeEvent(svgEl, {
         clientX: 180,
         clientY: 300,
         pointerId: 1,
         pointerType: "touch",
       }));
-      result.current.handleSvgPointerDown(makeEvent(svgEl, {
+      result.current.handlePointerDown(makeEvent(svgEl, {
         clientX: 280,
         clientY: 300,
         pointerId: 2,
         pointerType: "touch",
       }));
-      result.current.handleSvgPointerMove(makeEvent(svgEl, {
+      result.current.handlePointerMove(makeEvent(svgEl, {
         clientX: 330,
         clientY: 300,
         pointerId: 2,
@@ -236,11 +236,11 @@ describe("useMapViewerViewportGestures", () => {
     const result = setup();
 
     act(() => {
-      result.current.handleSvgPointerDown(makeEvent(svgEl, { clientX: 100, clientY: 100, pointerId: 1, pointerType: "touch" }));
-      result.current.handleSvgPointerDown(makeEvent(svgEl, { clientX: 200, clientY: 100, pointerId: 2, pointerType: "touch" }));
-      result.current.handleSvgPointerMove(makeEvent(svgEl, { clientX: 250, clientY: 100, pointerId: 2, pointerType: "touch" }));
-      result.current.handleSvgPointerUp(makeEvent(svgEl, { clientX: 250, clientY: 100, pointerId: 2, pointerType: "touch" }));
-      result.current.handleSvgPointerMove(makeEvent(svgEl, { clientX: 120, clientY: 100, pointerId: 1, pointerType: "touch" }));
+      result.current.handlePointerDown(makeEvent(svgEl, { clientX: 100, clientY: 100, pointerId: 1, pointerType: "touch" }));
+      result.current.handlePointerDown(makeEvent(svgEl, { clientX: 200, clientY: 100, pointerId: 2, pointerType: "touch" }));
+      result.current.handlePointerMove(makeEvent(svgEl, { clientX: 250, clientY: 100, pointerId: 2, pointerType: "touch" }));
+      result.current.handlePointerUp(makeEvent(svgEl, { clientX: 250, clientY: 100, pointerId: 2, pointerType: "touch" }));
+      result.current.handlePointerMove(makeEvent(svgEl, { clientX: 120, clientY: 100, pointerId: 1, pointerType: "touch" }));
     });
 
     expect(contentEl.style.transform).toBe("translate(-30px, -50px) scale(1.5)");
@@ -252,12 +252,12 @@ describe("useMapViewerViewportGestures", () => {
     const result = setup();
 
     act(() => {
-      result.current.handleSvgPointerDown(makeEvent(svgEl, { clientX: 100, clientY: 100, pointerId: 1, pointerType: "touch" }));
-      result.current.handleSvgPointerDown(makeEvent(svgEl, { clientX: 200, clientY: 100, pointerId: 2, pointerType: "touch" }));
-      result.current.handleSvgPointerMove(makeEvent(svgEl, { clientX: 250, clientY: 100, pointerId: 2, pointerType: "touch" }));
-      result.current.handleSvgPointerUp(makeEvent(svgEl, { clientX: 250, clientY: 100, pointerId: 2, pointerType: "touch" }));
+      result.current.handlePointerDown(makeEvent(svgEl, { clientX: 100, clientY: 100, pointerId: 1, pointerType: "touch" }));
+      result.current.handlePointerDown(makeEvent(svgEl, { clientX: 200, clientY: 100, pointerId: 2, pointerType: "touch" }));
+      result.current.handlePointerMove(makeEvent(svgEl, { clientX: 250, clientY: 100, pointerId: 2, pointerType: "touch" }));
+      result.current.handlePointerUp(makeEvent(svgEl, { clientX: 250, clientY: 100, pointerId: 2, pointerType: "touch" }));
       vi.runOnlyPendingTimers();
-      result.current.handleSvgPointerUp(makeEvent(svgEl, { clientX: 100, clientY: 100, pointerId: 1, pointerType: "touch" }));
+      result.current.handlePointerUp(makeEvent(svgEl, { clientX: 100, clientY: 100, pointerId: 1, pointerType: "touch" }));
     });
 
     expect(result.current.consumeSuppressedClick()).toBe(true);
@@ -339,7 +339,7 @@ describe("useMapViewerViewportGestures", () => {
     expect(result.current.consumeSuppressedClick).toBe(firstRender);
   });
 
-  // handleSvgPointerDown/Move/Up are forwarded straight through
+  // handlePointerDown/Move/Up are forwarded straight through
   // MapViewerCanvas as MapViewerSvg's onPointerDown/Move/Up props - any one
   // of them losing referential stability defeats MapViewerSvg's memo() the
   // same way consumeSuppressedClick did, just via a different prop. Covers
@@ -356,11 +356,10 @@ describe("useMapViewerViewportGestures", () => {
     const firstRender = { ...result.current };
     rerender({ activeFloor });
 
-    expect(result.current.handleSvgPointerDown).toBe(firstRender.handleSvgPointerDown);
-    expect(result.current.handleSvgPointerMove).toBe(firstRender.handleSvgPointerMove);
-    expect(result.current.handleSvgPointerUp).toBe(firstRender.handleSvgPointerUp);
+    expect(result.current.handlePointerDown).toBe(firstRender.handlePointerDown);
+    expect(result.current.handlePointerMove).toBe(firstRender.handlePointerMove);
+    expect(result.current.handlePointerUp).toBe(firstRender.handlePointerUp);
     expect(result.current.handleViewportPointerCancel).toBe(firstRender.handleViewportPointerCancel);
     expect(result.current.handleViewportPointerLeave).toBe(firstRender.handleViewportPointerLeave);
-    expect(result.current.handleViewportPointerUp).toBe(firstRender.handleViewportPointerUp);
   });
 });

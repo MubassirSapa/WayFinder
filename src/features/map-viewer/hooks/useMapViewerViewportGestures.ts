@@ -41,7 +41,11 @@ export function useMapViewerViewportGestures({
   viewportSize,
 }: UseMapViewerViewportGesturesArgs) {
   const contentRef = useRef<HTMLDivElement | null>(null);
-  const dragSurfaceRef = useRef<SVGSVGElement | null>(null);
+  // Whatever element actually calls setPointerCapture below - the viewport
+  // container now, not the SVG (see handlePointerDown) - kept as a generic
+  // Element rather than narrowed to one, since capture/release only need the
+  // standard Element pointer-capture methods either way.
+  const dragSurfaceRef = useRef<Element | null>(null);
   const activePointersRef = useRef<Map<number, Point>>(new Map());
   const pinchStateRef = useRef<PinchState | null>(null);
   const suppressClickRef = useRef(false);
@@ -59,7 +63,7 @@ export function useMapViewerViewportGestures({
   // stable refs), so each needs only viewportBinding (and, further down,
   // each other) in its dependency array to stay referentially stable across
   // renders. That stability is why MapViewerSvg's memo() can actually work:
-  // MapViewerCanvas forwards handleSvgPointerDown/Move/Up straight through
+  // MapViewerCanvas forwards handlePointerDown/Move/Up straight through
   // as its onPointerDown/Move/Up props, so if any one of this chain were a
   // plain function (recreated every render), it would defeat the memo the
   // exact same way the unmemoized onBackgroundClick/onObjectSelect/
@@ -117,7 +121,7 @@ export function useMapViewerViewportGestures({
   // coordinates are relative to the browser window. Mixing those spaces
   // makes a pinch anchor jump by the page header/sidebar offset, which is
   // especially visible on phones. Keep every tracked pointer viewport-local.
-  const getViewportPoint = useCallback((event: PointerEvent<SVGSVGElement>): Point => {
+  const getViewportPoint = useCallback((event: PointerEvent<Element>): Point => {
     const rect = viewportRef.current?.getBoundingClientRect();
     return {
       x: event.clientX - (rect?.left ?? 0),
@@ -217,12 +221,6 @@ export function useMapViewerViewportGestures({
     }
   }, [viewportBinding]);
 
-  const handleViewportPointerUp = useCallback((event: PointerEvent<HTMLDivElement>) => {
-    if (dragStateRef.current?.pointerId === event.pointerId) {
-      clearGestureState(event.pointerId);
-    }
-  }, [clearGestureState]);
-
   // Registered as a native, non-passive listener (not a React onWheel prop)
   // deliberately: React attaches wheel listeners at the root as passive by
   // default, which silently blocks event.preventDefault() from working —
@@ -307,7 +305,16 @@ export function useMapViewerViewportGestures({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeFloor, viewportSize]);
 
-  const handleSvgPointerDown = useCallback((event: PointerEvent<SVGSVGElement>) => {
+  // Attached to the viewport container div (not the SVG - see
+  // MapViewerCanvas), so a gesture can start anywhere in the viewport,
+  // including empty space around the rendered floor where there's no SVG
+  // element at all - the SVG only covers the floor's own rendered
+  // dimensions, not the full viewport, so a listener scoped to it alone
+  // could never be reached by a touch starting outside those bounds (the
+  // wheel listener below has always been on the full-size container for
+  // exactly this reason - this just brings touch/pointer gestures in line
+  // with it).
+  const handlePointerDown = useCallback((event: PointerEvent<Element>) => {
     if (
       !activeFloor
       || (event.pointerType === "mouse" && event.button !== 0)
@@ -340,7 +347,7 @@ export function useMapViewerViewportGestures({
     }
   }, [activeFloor, beginPinch, getLiveView, getViewportPoint, viewportBinding]);
 
-  const handleSvgPointerMove = useCallback((event: PointerEvent<SVGSVGElement>) => {
+  const handlePointerMove = useCallback((event: PointerEvent<Element>) => {
     if (!activeFloor) {
       return;
     }
@@ -411,7 +418,7 @@ export function useMapViewerViewportGestures({
     scheduleCommit(nextPan, zoom);
   }, [activeFloor, applyTransform, getLiveView, getViewportPoint, scheduleCommit, viewportSize]);
 
-  const handleSvgPointerUp = useCallback((event: PointerEvent<SVGSVGElement>) => {
+  const handlePointerUp = useCallback((event: PointerEvent<Element>) => {
     const didMove = dragStateRef.current?.didMove;
     activePointersRef.current.delete(event.pointerId);
     pinchStateRef.current = null;
@@ -454,11 +461,10 @@ export function useMapViewerViewportGestures({
   return {
     consumeSuppressedClick,
     contentRef,
-    handleSvgPointerDown,
-    handleSvgPointerMove,
-    handleSvgPointerUp,
+    handlePointerDown,
+    handlePointerMove,
+    handlePointerUp,
     handleViewportPointerCancel,
     handleViewportPointerLeave,
-    handleViewportPointerUp,
   };
 }

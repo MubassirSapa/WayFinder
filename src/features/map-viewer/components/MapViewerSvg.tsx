@@ -44,9 +44,9 @@ interface MapViewerSvgProps {
   onBackgroundClick: () => void;
   onConnectorActivate: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
   onObjectSelect: (object: ViewerMapObject) => void;
-  onPointerDown: PointerEventHandler<SVGSVGElement>;
-  onPointerMove: PointerEventHandler<SVGSVGElement>;
-  onPointerUp: PointerEventHandler<SVGSVGElement>;
+  onPointerDown: PointerEventHandler<Element>;
+  onPointerMove: PointerEventHandler<Element>;
+  onPointerUp: PointerEventHandler<Element>;
 }
 
 // Memoized because MapViewerCanvas re-renders on every committed pan/zoom
@@ -83,9 +83,6 @@ export const MapViewerSvg = memo(function MapViewerSvg({
       className="overflow-visible bg-transparent"
       height={renderedSize.height}
       onClick={onBackgroundClick}
-      onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={onPointerUp}
       width={renderedSize.width}
     >
       <defs>
@@ -200,9 +197,9 @@ function ViewerFloorContent({
   objects: ViewerMapObject[];
   onConnectorActivate: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
   onObjectSelect: (object: ViewerMapObject) => void;
-  onViewportPointerDown: PointerEventHandler<SVGSVGElement>;
-  onViewportPointerMove: PointerEventHandler<SVGSVGElement>;
-  onViewportPointerUp: PointerEventHandler<SVGSVGElement>;
+  onViewportPointerDown: PointerEventHandler<Element>;
+  onViewportPointerMove: PointerEventHandler<Element>;
+  onViewportPointerUp: PointerEventHandler<Element>;
   originObjectId: string | null;
   routeConnectorDirection: ConnectorDirection | null;
   routeConnectorNodeId: string | null;
@@ -362,9 +359,9 @@ function ViewerObjects({
   objects: ViewerMapObject[];
   onConnectorPress: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
   onSelect: (object: ViewerMapObject) => void;
-  onViewportPointerDown: PointerEventHandler<SVGSVGElement>;
-  onViewportPointerMove: PointerEventHandler<SVGSVGElement>;
-  onViewportPointerUp: PointerEventHandler<SVGSVGElement>;
+  onViewportPointerDown: PointerEventHandler<Element>;
+  onViewportPointerMove: PointerEventHandler<Element>;
+  onViewportPointerUp: PointerEventHandler<Element>;
   originObjectId: string | null;
   routeConnectorNodeId: string | null;
   routeHasDestination: boolean;
@@ -437,9 +434,9 @@ function ViewerObjectItem({
   object: ViewerMapObject;
   onConnectorPress: (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => void;
   onSelect: (object: ViewerMapObject) => void;
-  onViewportPointerDown: PointerEventHandler<SVGSVGElement>;
-  onViewportPointerMove: PointerEventHandler<SVGSVGElement>;
-  onViewportPointerUp: PointerEventHandler<SVGSVGElement>;
+  onViewportPointerDown: PointerEventHandler<Element>;
+  onViewportPointerMove: PointerEventHandler<Element>;
+  onViewportPointerUp: PointerEventHandler<Element>;
   showDestinationBadge: boolean;
   showOriginBadge: boolean;
 }) {
@@ -486,7 +483,7 @@ function ViewerObjectItem({
     if (activePointerIdsRef.current.size > 1) {
       hasDraggedRef.current = true;
     }
-    onViewportPointerDown(event as unknown as PointerEvent<SVGSVGElement>);
+    onViewportPointerDown(event);
   };
 
   const handlePointerMove = (event: PointerEvent<SVGGElement>) => {
@@ -500,12 +497,12 @@ function ViewerObjectItem({
       }
     }
 
-    onViewportPointerMove(event as unknown as PointerEvent<SVGSVGElement>);
+    onViewportPointerMove(event);
   };
 
   const handlePointerEnd = (event: PointerEvent<SVGGElement>) => {
     event.stopPropagation();
-    onViewportPointerUp(event as unknown as PointerEvent<SVGSVGElement>);
+    onViewportPointerUp(event);
     activePointerIdsRef.current.delete(event.pointerId);
     if (activePointerIdsRef.current.size === 0) {
       dragStartRef.current = null;

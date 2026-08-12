@@ -117,12 +117,11 @@ export function MapViewerShell({
     focusWorldBounds,
     resetView,
     viewportRef,
-    handleSvgPointerDown,
-    handleSvgPointerMove,
-    handleSvgPointerUp,
+    handlePointerDown,
+    handlePointerMove,
+    handlePointerUp,
     handleViewportPointerCancel,
     handleViewportPointerLeave,
-    handleViewportPointerUp,
   } = useMapViewerViewport({
     activeFloor,
     activeFloorId,
@@ -509,11 +508,10 @@ export function MapViewerShell({
                 onConnectorActivate={handleConnectorJump}
                 onObjectSelect={handleObjectSelect}
                 onPointerCancel={handleViewportPointerCancel}
+                onPointerDown={handlePointerDown}
                 onPointerLeave={handleViewportPointerLeave}
-                onPointerUp={handleViewportPointerUp}
-                onSvgPointerDown={handleSvgPointerDown}
-                onSvgPointerMove={handleSvgPointerMove}
-                onSvgPointerUp={handleSvgPointerUp}
+                onPointerMove={handlePointerMove}
+                onPointerUp={handlePointerUp}
                 originObjectId={originObjectId}
                 routeConnectorDirection={routeConnectorDirection}
                 routeConnectorNodeId={routeConnectorNodeId}
