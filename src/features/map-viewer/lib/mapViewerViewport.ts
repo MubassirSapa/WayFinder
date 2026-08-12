@@ -102,7 +102,14 @@ export function getFitBoundsView(
     (viewport.x - padding) / boundsWidth,
     (viewport.y - padding) / boundsHeight,
   );
-  const zoom = clampZoom(rawZoom, viewport.x, rawZoom);
+  // No floorFitZoom override here (unlike getFitZoom, just above) -
+  // widening the max to always include rawZoom makes sense for "the whole
+  // floor must be visible even if that's an unusual zoom level," but these
+  // bounds are a route segment or a connector-focus radius, which can be
+  // small enough that fitting them exactly would zoom in far past any
+  // normal interactive zoom level. Clamping to the regular profile caps how
+  // far a short segment or a tight connector jump can zoom in.
+  const zoom = clampZoom(rawZoom, viewport.x);
 
   const centerX = (bounds.minX + bounds.maxX) / 2;
   const centerY = (bounds.minY + bounds.maxY) / 2;

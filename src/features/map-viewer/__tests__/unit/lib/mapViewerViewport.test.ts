@@ -67,6 +67,20 @@ describe('getFitBoundsView', () => {
     const { zoom } = getFitBoundsView(bounds, viewport, 0)
     expect(Number.isFinite(zoom)).toBe(true)
   })
+
+  // A short route segment (e.g. two nodes right next to each other, or a
+  // segment collapsing toward a single point) used to zoom in arbitrarily
+  // far to exactly fit its own tiny bounding box - unlike getFitZoom (a
+  // floor must always be fully visible, even past the usual zoom range),
+  // there's no reason a route-segment/connector focus should ever exceed
+  // the normal interactive max zoom.
+  it('caps the zoom at the normal max for a very small bounds box, unlike getFitZoom', () => {
+    const bounds = { maxX: 51, maxY: 51, minX: 50, minY: 50 }
+    const viewport = { x: 800, y: 600 }
+
+    const { zoom } = getFitBoundsView(bounds, viewport, 0)
+    expect(zoom).toBe(MAP_VIEWER_DESKTOP_MAX_ZOOM)
+  })
 })
 
 describe('getZoomProfile', () => {
