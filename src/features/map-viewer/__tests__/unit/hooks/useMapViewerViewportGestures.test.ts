@@ -317,4 +317,50 @@ describe("useMapViewerViewportGestures", () => {
 
     expect(useAppStore.getState().viewportPan).toEqual({ x: 0, y: 0 });
   });
+
+  // MapViewerShell wraps its own onObjectSelect/onBackgroundClick handlers in
+  // useCallback specifically so MapViewerSvg's memo() isn't defeated on
+  // every render - that only works if consumeSuppressedClick (one of their
+  // transitive deps) is itself stable. Before this hook wrapped it in its
+  // own useCallback, a plain function expression got a new identity every
+  // render, cascading through every caller's memoization regardless of how
+  // carefully they wrapped their own callbacks.
+  it("keeps consumeSuppressedClick referentially stable across re-renders with the same inputs", () => {
+    const viewportRef = { current: viewportEl };
+    const { rerender, result } = renderHook(
+      (props: { activeFloor: ViewerFloor | null }) =>
+        useMapViewerViewportGestures({ activeFloor: props.activeFloor, viewportRef, viewportSize }),
+      { initialProps: { activeFloor } },
+    );
+
+    const firstRender = result.current.consumeSuppressedClick;
+    rerender({ activeFloor });
+
+    expect(result.current.consumeSuppressedClick).toBe(firstRender);
+  });
+
+  // handleSvgPointerDown/Move/Up are forwarded straight through
+  // MapViewerCanvas as MapViewerSvg's onPointerDown/Move/Up props - any one
+  // of them losing referential stability defeats MapViewerSvg's memo() the
+  // same way consumeSuppressedClick did, just via a different prop. Covers
+  // every handler this hook returns in one pass, not just the two spot-
+  // checked individually above.
+  it("keeps every returned handler referentially stable across re-renders with the same inputs", () => {
+    const viewportRef = { current: viewportEl };
+    const { rerender, result } = renderHook(
+      (props: { activeFloor: ViewerFloor | null }) =>
+        useMapViewerViewportGestures({ activeFloor: props.activeFloor, viewportRef, viewportSize }),
+      { initialProps: { activeFloor } },
+    );
+
+    const firstRender = { ...result.current };
+    rerender({ activeFloor });
+
+    expect(result.current.handleSvgPointerDown).toBe(firstRender.handleSvgPointerDown);
+    expect(result.current.handleSvgPointerMove).toBe(firstRender.handleSvgPointerMove);
+    expect(result.current.handleSvgPointerUp).toBe(firstRender.handleSvgPointerUp);
+    expect(result.current.handleViewportPointerCancel).toBe(firstRender.handleViewportPointerCancel);
+    expect(result.current.handleViewportPointerLeave).toBe(firstRender.handleViewportPointerLeave);
+    expect(result.current.handleViewportPointerUp).toBe(firstRender.handleViewportPointerUp);
+  });
 });

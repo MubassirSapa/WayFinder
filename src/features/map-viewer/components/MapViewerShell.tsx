@@ -278,7 +278,22 @@ export function MapViewerShell({
     setSearch("");
   }, [goToFloor]);
 
-  const focusConnectorTarget = (target: ConnectorTargetInfo) => {
+  const handleJumpToSegment = useCallback((index: number) => {
+    const segment = segments[index];
+    if (!segment) {
+      return;
+    }
+
+    setActiveSegmentIndex(index);
+    setActiveFloorId(segment.floorId);
+
+    const bounds = getRouteSegmentBounds(segment, nodesById);
+    if (bounds) {
+      focusWorldBounds(bounds);
+    }
+  }, [segments, setActiveSegmentIndex, setActiveFloorId, nodesById, focusWorldBounds]);
+
+  const focusConnectorTarget = useCallback((target: ConnectorTargetInfo) => {
     focusWorldBounds({
       maxX: target.targetNode.x + MAP_VIEWER_FLOOR_CONTENT_PADDING + CONNECTOR_JUMP_FOCUS_RADIUS,
       maxY: target.targetNode.y + MAP_VIEWER_FLOOR_CONTENT_PADDING + CONNECTOR_JUMP_FOCUS_RADIUS,
@@ -286,9 +301,15 @@ export function MapViewerShell({
       minY: target.targetNode.y + MAP_VIEWER_FLOOR_CONTENT_PADDING - CONNECTOR_JUMP_FOCUS_RADIUS,
     });
     goToFloor(target.floorId);
-  };
+  }, [focusWorldBounds, goToFloor]);
 
-  const handleConnectorJump = (node: ViewerMapNode, targets: ConnectorTargetInfo[]) => {
+  // useCallback (like goToFloor/handleJumpToSegment/changeZoom above) so this
+  // stays a stable prop for MapViewerSvg's memo() - passed to it as
+  // onConnectorActivate. Without it, every MapViewerShell render (any store
+  // update, any tap) hands MapViewerSvg a new function identity, defeating
+  // its memo and forcing a full re-render of every object/node/edge in the
+  // SVG - cheap on a small floor, real jank on one with 50+ rooms.
+  const handleConnectorJump = useCallback((node: ViewerMapNode, targets: ConnectorTargetInfo[]) => {
     if (targets.length === 0) {
       return;
     }
@@ -315,7 +336,7 @@ export function MapViewerShell({
     // pointing at one of them — ask instead of guessing which edge to
     // follow.
     setConnectorPicker({ connectorType: getConnectorType(node.role) ?? "elevator", targets });
-  };
+  }, [activeSegmentIndex, destinationNodeId, focusConnectorTarget, handleJumpToSegment, nextSegment]);
 
   const handleConnectorFloorPicked = (floorId: string) => {
     const target = connectorPicker?.targets.find((candidate) => candidate.floorId === floorId);
@@ -323,21 +344,6 @@ export function MapViewerShell({
       focusConnectorTarget(target);
     }
   };
-
-  const handleJumpToSegment = useCallback((index: number) => {
-    const segment = segments[index];
-    if (!segment) {
-      return;
-    }
-
-    setActiveSegmentIndex(index);
-    setActiveFloorId(segment.floorId);
-
-    const bounds = getRouteSegmentBounds(segment, nodesById);
-    if (bounds) {
-      focusWorldBounds(bounds);
-    }
-  }, [segments, setActiveSegmentIndex, setActiveFloorId, nodesById, focusWorldBounds]);
 
   const selectedObject = objects.find((object) => object.id === selectedObjectId) ?? null;
   // Separate candidates for "Start here" vs "Route here", not one shared
@@ -383,7 +389,7 @@ export function MapViewerShell({
   // to (via focusWorldPoint), but snapping the view to whatever you tap
   // felt like an unwanted zoom/jump rather than a helpful one. Selecting
   // still marks the object and can still set the initial origin below.
-  const focusObject = (object: ViewerMapObject) => {
+  const focusObject = useCallback((object: ViewerMapObject) => {
     setSelectedObjectId(object.id);
 
     // No starting point chosen yet — treat the first thing you click (on
@@ -402,9 +408,11 @@ export function MapViewerShell({
         setOrigin(nodeId);
       }
     }
-  };
+  }, [allNodes, destinationNodeId, graph, originNodeId, setOrigin]);
 
-  const handleBackgroundClick = () => {
+  // useCallback for the same memo-preserving reason as handleConnectorJump
+  // above - passed to MapViewerSvg as onBackgroundClick.
+  const handleBackgroundClick = useCallback(() => {
     if (consumeSuppressedClick()) {
       return;
     }
@@ -414,15 +422,17 @@ export function MapViewerShell({
     // unlike tapping an object - which is still part of the same routing
     // workflow and must not close the search drawer out from under it.
     setRouteSearchOpen(false);
-  };
+  }, [consumeSuppressedClick, setRouteSearchOpen]);
 
-  const handleObjectSelect = (object: ViewerMapObject) => {
+  // useCallback for the same memo-preserving reason as handleConnectorJump
+  // above - passed to MapViewerSvg as onObjectSelect.
+  const handleObjectSelect = useCallback((object: ViewerMapObject) => {
     if (consumeSuppressedClick()) {
       return;
     }
 
     focusObject(object);
-  };
+  }, [consumeSuppressedClick, focusObject]);
 
   return (
     <section

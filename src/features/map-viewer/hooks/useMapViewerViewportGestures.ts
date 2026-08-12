@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import type { PointerEvent, RefObject } from "react";
 
 import { MAP_VIEWER_DRAG_THRESHOLD } from "../constants/mapViewer.constants";
@@ -55,13 +55,22 @@ export function useMapViewerViewportGestures({
   const pendingCommitRef = useRef<{ pan: Point; zoom: number } | null>(null);
   const rafIdRef = useRef<number | null>(null);
 
-  const applyTransform = (pan: Point, zoom: number) => {
+  // Ref-only bodies below (contentRef/pendingCommitRef/rafIdRef etc. are all
+  // stable refs), so each needs only viewportBinding (and, further down,
+  // each other) in its dependency array to stay referentially stable across
+  // renders. That stability is why MapViewerSvg's memo() can actually work:
+  // MapViewerCanvas forwards handleSvgPointerDown/Move/Up straight through
+  // as its onPointerDown/Move/Up props, so if any one of this chain were a
+  // plain function (recreated every render), it would defeat the memo the
+  // exact same way the unmemoized onBackgroundClick/onObjectSelect/
+  // onConnectorActivate callbacks in MapViewerShell did.
+  const applyTransform = useCallback((pan: Point, zoom: number) => {
     if (contentRef.current) {
       contentRef.current.style.transform = buildPanZoomTransform(pan, zoom);
     }
-  };
+  }, []);
 
-  const scheduleCommit = (pan: Point, zoom: number) => {
+  const scheduleCommit = useCallback((pan: Point, zoom: number) => {
     pendingCommitRef.current = { pan, zoom };
 
     if (rafIdRef.current !== null) {
@@ -77,9 +86,9 @@ export function useMapViewerViewportGestures({
         viewportBinding.setViewportView(pending);
       }
     });
-  };
+  }, [viewportBinding]);
 
-  const flushCommit = () => {
+  const flushCommit = useCallback(() => {
     if (rafIdRef.current !== null) {
       cancelAnimationFrame(rafIdRef.current);
       rafIdRef.current = null;
@@ -91,32 +100,32 @@ export function useMapViewerViewportGestures({
     if (pending) {
       viewportBinding.setViewportView(pending);
     }
-  };
+  }, [viewportBinding]);
 
   // The value a gesture should build the next frame on top of — the last
   // not-yet-committed value if one is pending (several pointermoves can land
   // within the same animation frame), otherwise the store's committed value.
-  const getLiveView = () => {
+  const getLiveView = useCallback(() => {
     if (pendingCommitRef.current) {
       return pendingCommitRef.current;
     }
 
     return viewportBinding.getViewportView();
-  };
+  }, [viewportBinding]);
 
   // Pan values are relative to the map viewport, while PointerEvent client
   // coordinates are relative to the browser window. Mixing those spaces
   // makes a pinch anchor jump by the page header/sidebar offset, which is
   // especially visible on phones. Keep every tracked pointer viewport-local.
-  const getViewportPoint = (event: PointerEvent<SVGSVGElement>): Point => {
+  const getViewportPoint = useCallback((event: PointerEvent<SVGSVGElement>): Point => {
     const rect = viewportRef.current?.getBoundingClientRect();
     return {
       x: event.clientX - (rect?.left ?? 0),
       y: event.clientY - (rect?.top ?? 0),
     };
-  };
+  }, [viewportRef]);
 
-  const beginPinch = (pointers: Point[]) => {
+  const beginPinch = useCallback((pointers: Point[]) => {
     if (pointers.length < 2) {
       return false;
     }
@@ -141,7 +150,7 @@ export function useMapViewerViewportGestures({
     suppressClickRef.current = true;
     viewportBinding.setIsViewportDragging(false);
     return true;
-  };
+  }, [getLiveView, viewportBinding]);
 
   // Flush only on true unmount, not on every viewportBinding identity change
   // (always stable in practice - the default binding is a module-level
@@ -150,7 +159,7 @@ export function useMapViewerViewportGestures({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => () => flushCommit(), []);
 
-  const clearGestureState = (pointerId?: number) => {
+  const clearGestureState = useCallback((pointerId?: number) => {
     if (
       pointerId !== undefined
       && dragSurfaceRef.current?.hasPointerCapture(pointerId)
@@ -163,18 +172,22 @@ export function useMapViewerViewportGestures({
     dragStateRef.current = null;
     flushCommit();
     viewportBinding.setIsViewportDragging(false);
-  };
+  }, [flushCommit, viewportBinding]);
 
-  const consumeSuppressedClick = () => {
+  // Ref-only body, no reactive deps - useCallback with an empty array keeps
+  // this identity stable forever, which callers passing it through their own
+  // useCallback chains (e.g. MapViewerShell's onObjectSelect/
+  // onBackgroundClick) depend on to actually stay memoized.
+  const consumeSuppressedClick = useCallback(() => {
     if (!suppressClickRef.current) {
       return false;
     }
 
     suppressClickRef.current = false;
     return true;
-  };
+  }, []);
 
-  const handleViewportPointerCancel = () => {
+  const handleViewportPointerCancel = useCallback(() => {
     const didMove = dragStateRef.current?.didMove;
     const pointerId = dragStateRef.current?.pointerId;
     if (pointerId !== undefined) {
@@ -191,9 +204,9 @@ export function useMapViewerViewportGestures({
         suppressClickRef.current = false;
       }, 0);
     }
-  };
+  }, [clearGestureState, flushCommit, viewportBinding]);
 
-  const handleViewportPointerLeave = () => {
+  const handleViewportPointerLeave = useCallback(() => {
     if (!dragSurfaceRef.current || !dragStateRef.current) {
       return;
     }
@@ -202,13 +215,13 @@ export function useMapViewerViewportGestures({
       dragStateRef.current = null;
       viewportBinding.setIsViewportDragging(false);
     }
-  };
+  }, [viewportBinding]);
 
-  const handleViewportPointerUp = (event: PointerEvent<HTMLDivElement>) => {
+  const handleViewportPointerUp = useCallback((event: PointerEvent<HTMLDivElement>) => {
     if (dragStateRef.current?.pointerId === event.pointerId) {
       clearGestureState(event.pointerId);
     }
-  };
+  }, [clearGestureState]);
 
   // Registered as a native, non-passive listener (not a React onWheel prop)
   // deliberately: React attaches wheel listeners at the root as passive by
@@ -294,7 +307,7 @@ export function useMapViewerViewportGestures({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeFloor, viewportSize]);
 
-  const handleSvgPointerDown = (event: PointerEvent<SVGSVGElement>) => {
+  const handleSvgPointerDown = useCallback((event: PointerEvent<SVGSVGElement>) => {
     if (
       !activeFloor
       || (event.pointerType === "mouse" && event.button !== 0)
@@ -325,9 +338,9 @@ export function useMapViewerViewportGestures({
     if (pointers.length === 2) {
       beginPinch(pointers);
     }
-  };
+  }, [activeFloor, beginPinch, getLiveView, getViewportPoint, viewportBinding]);
 
-  const handleSvgPointerMove = (event: PointerEvent<SVGSVGElement>) => {
+  const handleSvgPointerMove = useCallback((event: PointerEvent<SVGSVGElement>) => {
     if (!activeFloor) {
       return;
     }
@@ -396,9 +409,9 @@ export function useMapViewerViewportGestures({
 
     applyTransform(nextPan, zoom);
     scheduleCommit(nextPan, zoom);
-  };
+  }, [activeFloor, applyTransform, getLiveView, getViewportPoint, scheduleCommit, viewportSize]);
 
-  const handleSvgPointerUp = (event: PointerEvent<SVGSVGElement>) => {
+  const handleSvgPointerUp = useCallback((event: PointerEvent<SVGSVGElement>) => {
     const didMove = dragStateRef.current?.didMove;
     activePointersRef.current.delete(event.pointerId);
     pinchStateRef.current = null;
@@ -436,7 +449,7 @@ export function useMapViewerViewportGestures({
         suppressClickRef.current = false;
       }, 0);
     }
-  };
+  }, [beginPinch, flushCommit, getLiveView, viewportBinding]);
 
   return {
     consumeSuppressedClick,
