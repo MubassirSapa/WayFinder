@@ -20,17 +20,12 @@ const authPortsMock = vi.hoisted(() => ({
   signUp: vi.fn(),
   verifyEmail: vi.fn(),
 }));
-const emailPortsMock = vi.hoisted(() => ({
-  sendOwnerWelcomeEmail: vi.fn(),
-}));
 
 vi.mock("next/navigation", () => ({
   redirect: redirectMock,
 }));
 
 vi.mock("@/features/auth/services/server/auth.ports", () => authPortsMock);
-
-vi.mock("@/features/email/services/email.ports", () => emailPortsMock);
 
 const signupPayload = {
   name: "Mubassir Sapa",
@@ -167,20 +162,34 @@ describe("auth server actions", () => {
     });
   });
 
-  it("sends the owner welcome email after verification when a user id is provided", async () => {
+  it("verifies the email token without any further side effects", async () => {
     authPortsMock.verifyEmail.mockResolvedValue({
       data: null,
       isSuccess: true,
       message: VERIFY_EMAIL_CLIENT.SUCCESS_DESC,
     });
 
-    const result = await verifyEmailAction("1234567890abcdef", "42");
+    const result = await verifyEmailAction("1234567890abcdef");
 
     expect(authPortsMock.verifyEmail).toHaveBeenCalledWith("1234567890abcdef");
-    expect(emailPortsMock.sendOwnerWelcomeEmail).toHaveBeenCalledWith("42");
     expect(result).toMatchObject({
       isSuccess: true,
       message: VERIFY_EMAIL_CLIENT.SUCCESS_DESC,
+    });
+  });
+
+  it("returns a generic error when the verification token is invalid", async () => {
+    authPortsMock.verifyEmail.mockResolvedValue({
+      errors: [{ message: "Invalid token" }],
+      isSuccess: false,
+      message: "Invalid token",
+    });
+
+    const result = await verifyEmailAction("1234567890abcdef");
+
+    expect(result).toMatchObject({
+      isSuccess: false,
+      message: VERIFY_EMAIL_CLIENT.ERROR_DESC,
     });
   });
 });

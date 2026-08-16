@@ -10,6 +10,10 @@ export default async function PrivateLayout({ children }: TProps) {
     redirect(PUBLIC_ROUTES.SIGNIN);
   }
 
+  if (!user.data.orgApproved) {
+    redirect(PUBLIC_ROUTES.PENDING_APPROVAL);
+  }
+
   return children;
 }
 

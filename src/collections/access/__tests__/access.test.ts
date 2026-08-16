@@ -11,6 +11,8 @@ import {
   invitationCreate,
   invitationRead,
   isPlatformAdmin,
+  isPlatformAdminField,
+  noOneField,
   organizationUpdate,
   userCreate,
   userDelete,
@@ -18,6 +20,7 @@ import {
   userUpdate,
 } from "../index";
 import { isOwnerOrManager } from "../../constants/roles";
+import { Organizations } from "../../Organizations";
 import { Users } from "../../Users";
 
 describe("collection access", () => {
@@ -75,6 +78,45 @@ describe("collection access", () => {
       expect(canManageOrgUserFields({ req: { user: null } } as never)).toBe(false);
       expect(
         canManageOrgUserFields({ req: { user: { collection: "users", role: "member", id: 1 } } } as never),
+      ).toBe(false);
+    });
+  });
+
+  describe("isPlatformAdminField", () => {
+    it("allows only platform admins", () => {
+      expect(isPlatformAdminField({ req: { user: { collection: "admins" } } } as never)).toBe(true);
+      expect(
+        isPlatformAdminField({ req: { user: { collection: "users", role: "owner" } } } as never),
+      ).toBe(false);
+      expect(isPlatformAdminField({ req: { user: null } } as never)).toBe(false);
+    });
+  });
+
+  describe("noOneField", () => {
+    it("always denies, regardless of caller", () => {
+      expect(noOneField({ req: { user: { collection: "admins" } } } as never)).toBe(false);
+      expect(noOneField({ req: { user: null } } as never)).toBe(false);
+    });
+  });
+
+  describe("organization approval field", () => {
+    it("locks `Organizations.approved` to platform admins only", () => {
+      const field = Organizations.fields.find((candidate) => "name" in candidate && candidate.name === "approved");
+      if (!field || !("access" in field) || !field.access?.update) throw new Error("Missing approved access");
+
+      expect(field.access.update({ req: { user: { collection: "admins" } } } as never)).toBe(true);
+      expect(
+        field.access.update({ req: { user: { collection: "users", role: "owner" } } } as never),
+      ).toBe(false);
+    });
+
+    it("locks `Users.orgApproved` to nobody — only reachable via a hook's overrideAccess", () => {
+      const field = Users.fields.find((candidate) => "name" in candidate && candidate.name === "orgApproved");
+      if (!field || !("access" in field) || !field.access?.update) throw new Error("Missing orgApproved access");
+
+      expect(field.access.update({ req: { user: { collection: "admins" } } } as never)).toBe(false);
+      expect(
+        field.access.update({ req: { user: { collection: "users", role: "owner" } } } as never),
       ).toBe(false);
     });
   });

@@ -9,14 +9,14 @@ export const metadata: Metadata = {
 };
 
 export default async function VerifyEmailPage({ searchParams }: TProps) {
-  const { token, userId } = await searchParams;
+  const { token } = await searchParams;
 
-  const result = token ? await verifyEmailAction(token, userId) : null;
+  const result = token ? await verifyEmailAction(token) : null;
   const isVerified = Boolean(result?.isSuccess);
 
   return <VerifyEmailSection isVerified={isVerified} />;
 }
 
 type TProps = {
-  searchParams: Promise<{ token?: string; userId?: string }>;
+  searchParams: Promise<{ token?: string }>;
 };

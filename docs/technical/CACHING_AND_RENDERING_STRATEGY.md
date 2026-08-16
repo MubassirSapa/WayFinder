@@ -32,6 +32,7 @@ it is how this breaks production.
 | `/about`, `/organization`, `/organization/about`, `/terms`, `/privacy`, `/check-email` | ○ Static | No data fetching at all, already optimal, no action needed |
 | `/signin`, `/signup`, `/forgot-password` | ○ Static | No data fetching, no session read |
 | `/reset-password`, `/verify-email`, `/invite` | ƒ Dynamic | **Inherent** — read a `searchParams` token, and `/verify-email` + `/invite` perform a real lookup/mutation against a single-use token |
+| `/pending-approval` | ƒ Dynamic | **Inherent** — reads the session (`headers()`/`cookies()` via `getCurrentUser()`) to redirect unauthenticated visitors and to look up the signed-in user's organization name |
 | `/dashboard/**`, `/editor/[floorId]`, `/admin/**`, `/api/**` | ƒ Dynamic | Per-user/session data or admin tooling — correctly dynamic, out of scope for this doc |
 
 ## Per-page recommendation
@@ -108,9 +109,9 @@ floor's page at once.
   `docs/technical/QR_WAYFINDING.md`) is that a printed sticker survives the
   room moving to a different floor without reprinting. Caching this means a
   moved room's sticker keeps sending people to the old floor.
-- **`/verify-email`** — calls `verifyEmailAction(token, userId)`, which
-  **mutates** the user's verified status as a side effect of rendering the
-  page. Never cache a route that mutates on GET.
+- **`/verify-email`** — calls `verifyEmailAction(token)`, which **mutates**
+  the user's verified status as a side effect of rendering the page. Never
+  cache a route that mutates on GET.
 - **`/invite`** — calls `getInvitationPreview(token)`, a live lookup against
   a single-use, hashed, expiring token. A cached response could show an
   already-accepted or revoked invite as still valid.
@@ -118,6 +119,8 @@ floor's page at once.
   there's nothing shared to cache.
 - **`/dashboard/**`, `/editor/[floorId]`** — per-user, permission-scoped
   data. Out of scope for public caching entirely.
+- **`/pending-approval`** — reads the caller's own session and organization
+  name; caching would leak one user's organization name to the next visitor.
 - **`/admin/**`, `/api/**`** — Payload's own admin panel and REST/GraphQL
   API. Not part of this strategy.
 

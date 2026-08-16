@@ -10,6 +10,7 @@ import { access } from "./access";
 import { blockLoginHook } from "./hooks/blockLogin";
 import { createCleanupReplacedMediaHook } from "./hooks/cleanupReplacedMedia";
 import { createSyncMediaUrlHook } from "./hooks/syncMediaUrl";
+import { syncUserOrgApprovalHook } from "./hooks/syncUserOrgApproval";
 
 const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
 
@@ -19,9 +20,8 @@ export const Users: CollectionConfig = {
   auth: {
     verify: {
       generateEmailSubject: () => `Verify your email for ${BRAND.NAME}`,
-      generateEmailHTML: async ({ token, user }) => {
-        const userIdParam = user?.id ? `&userId=${user.id}` : "";
-        const verificationUrl = `${serverUrl}/verify-email?token=${token}${userIdParam}`;
+      generateEmailHTML: async ({ token }) => {
+        const verificationUrl = `${serverUrl}/verify-email?token=${token}`;
         return await render(createElement(VerifyEmailTemplate, { verificationUrl }));
       },
     },
@@ -56,6 +56,7 @@ export const Users: CollectionConfig = {
 
   hooks: {
     beforeValidate: [createSyncMediaUrlHook({ relationField: "avatar", urlField: "avatarUrl" })],
+    beforeChange: [syncUserOrgApprovalHook],
     afterChange: [createCleanupReplacedMediaHook({ relationField: "avatar" })],
     beforeLogin: [blockLoginHook],
   },
@@ -91,6 +92,20 @@ export const Users: CollectionConfig = {
       index: true,
       access: {
         update: ({ req }) => req.user?.collection === "admins",
+      },
+    },
+    {
+      name: "orgApproved",
+      type: "checkbox",
+      defaultValue: false,
+      saveToJWT: true,
+      access: {
+        update: access.noOneField,
+      },
+      admin: {
+        readOnly: true,
+        hidden: true,
+        description: "Denormalized from the user's organization `approved` field, kept in sync by hooks and embedded in the JWT for fast dashboard gating.",
       },
     },
     {

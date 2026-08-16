@@ -9,34 +9,32 @@ import { PrimaryButton } from "../components/elements/PrimaryButton";
 import { Layout } from "../components/layout/Layout";
 import { EMAIL_THEME } from "../theme";
 
-type TWelcomeEmailTemplate = {
+type TOrgApprovedEmailTemplate = {
+  organizationName: string;
   signinUrl: string;
-  userName?: string | null;
 };
 
-export function WelcomeEmailTemplate({ signinUrl, userName }: TWelcomeEmailTemplate) {
-  const greeting = userName ? `Welcome, ${userName}` : "Welcome to Wayfinder";
-
+export function OrgApprovedEmailTemplate({ organizationName, signinUrl }: TOrgApprovedEmailTemplate) {
   return (
     <Layout
-      preview="Your Wayfinder workspace is ready."
-      title="Welcome to Wayfinder"
+      preview={`${organizationName} is approved on ${EMAIL_THEME.brand} — you can sign in now.`}
+      title="You're approved"
       footer={
         <EmailFooter>
-          If you need help accessing your workspace, contact us at {EMAIL_THEME.supportEmail}.
+          If you weren&apos;t expecting this, contact us at {EMAIL_THEME.supportEmail}.
         </EmailFooter>
       }
     >
       <BrandLogo />
-      <EmailHeading>{greeting}</EmailHeading>
+      <EmailHeading>{organizationName} is approved</EmailHeading>
       <EmailText>
-        Your email is verified and your organization workspace is ready. Sign in to start managing
-        your indoor maps, floor plans, and team access.
+        We&apos;ve reviewed and approved {organizationName} on {EMAIL_THEME.brand}. Sign in to start
+        managing your indoor maps, floor plans, and team access.
       </EmailText>
       <PrimaryButton href={signinUrl}>Sign In</PrimaryButton>
       <EmailDivider />
       <Text style={{ margin: 0, fontSize: 12, lineHeight: "18px", color: EMAIL_THEME.muted }}>
-        This welcome email was sent after your Wayfinder account was activated.
+        This email was sent after your organization passed review.
       </Text>
     </Layout>
   );

@@ -17,6 +17,7 @@ const PUBLIC_ROUTES = {
 
   CHECK_EMAIL: "/check-email",
   VERIFY_EMAIL: "/verify-email",
+  PENDING_APPROVAL: "/pending-approval",
   TERMS: "/terms",
   PRIVACY: "/privacy",
 } as const;

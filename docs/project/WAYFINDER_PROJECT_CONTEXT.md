@@ -2032,6 +2032,7 @@ files.
 | `/signin`, `/signup` | Login / account+org creation | Maybe (brief) |
 | `/forgot-password`, `/reset-password` | Password recovery | No |
 | `/check-email`, `/verify-email` | Email verification flow | No |
+| `/pending-approval` | Shown after sign-in while a newly signed-up organization awaits platform-admin approval | No |
 | `/invite` | Accept a teammate invitation | Yes (brief, shows the invite loop) |
 | `/register-organization` | (Public-side entry point into signup) | Maybe |
 

@@ -4,6 +4,7 @@ import {
   changeOwnPasswordAdapter,
   forgotPasswordAdapter,
   getCurrentUserAdapter,
+  getCurrentUserOrganizationNameAdapter,
   logoutAdapter,
   resetPasswordAdapter,
   signinAdapter,
@@ -38,6 +39,10 @@ export async function resetPassword(token: string, password: string) {
 
 export async function getCurrentUser() {
   return getCurrentUserAdapter();
+}
+
+export async function getCurrentUserOrganizationName() {
+  return getCurrentUserOrganizationNameAdapter();
 }
 
 export async function changeOwnPassword(user: User, currentPassword: string, newPassword: string) {

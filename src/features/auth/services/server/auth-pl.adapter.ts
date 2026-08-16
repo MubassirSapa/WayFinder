@@ -7,6 +7,7 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 import type { User } from "@/payload-types";
 import { ROLES } from "@/collections/constants/roles";
+import { relationId } from "@/lib/payload-id";
 import { tryCatchResponse } from "@/lib/responses/trycatch-response";
 import { errorResponse, successResponse } from "@/lib/responses/app-response";
 import type { TSignin, TSignup } from "./auth.types";
@@ -247,4 +248,36 @@ export async function getCurrentUserAdapter() {
   }
 
   return successResponse(user satisfies User);
+}
+
+export async function getCurrentUserOrganizationNameAdapter() {
+  const headers = await getHeaders();
+  const payload = await getPayloadClient();
+
+  const { user } = await payload.auth({ headers });
+
+  if (!user || user.collection !== "users") {
+    return errorResponse(
+      [{ message: "You need to be logged in.", status: 401, code: "UNAUTHORIZED" }],
+      "You need to be logged in.",
+    );
+  }
+
+  const organizationId = relationId((user as User).organization);
+  if (organizationId === null) {
+    return errorResponse(
+      [{ message: "No organization found.", status: 404, code: "ORGANIZATION_NOT_FOUND" }],
+      "No organization found.",
+    );
+  }
+
+  const organization = await payload.findByID({
+    collection: "organizations",
+    id: organizationId,
+    depth: 0,
+    select: { name: true },
+    overrideAccess: true,
+  });
+
+  return successResponse(organization.name);
 }

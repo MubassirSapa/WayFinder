@@ -1,6 +1,8 @@
+import { BRAND } from "@/constants/brand";
+
 export const EMAIL_THEME = {
-  brand: "Wayfinder",
-  supportEmail: "support@umbrellacorp.cc",
+  brand: BRAND.NAME,
+  supportEmail: BRAND.SUPPORT_EMAIL,
   primary: "#0f766e",
   primaryDark: "#115e59",
   text: "#0f172a",

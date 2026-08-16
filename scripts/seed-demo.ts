@@ -86,7 +86,7 @@ interface PathEdgeExport extends ExportDocument {
 interface DemoSeed {
   sourceBuildingId: string;
   user: { name: string; email: string };
-  organization: { name: string; type: "hospital" | "mall" };
+  organization: { name: string; type: "hospital" | "mall"; approved: true };
 }
 
 interface SeededFloor {
@@ -113,12 +113,12 @@ const DEMOS: DemoSeed[] = [
   {
     sourceBuildingId: "building-6a6d3e83b738407e8484c9be",
     user: { name: "Hasan", email: "hasan.swe.dev@gmail.com" },
-    organization: { name: "Northstar Medical Centre", type: "hospital" },
+    organization: { name: "Northstar Medical Centre", type: "hospital", approved: true },
   },
   {
     sourceBuildingId: "building-6a6d3dfdb738407e8484c98d",
     user: { name: "Mubassir", email: "mubs4edu@gmail.com" },
-    organization: { name: "Harbourfront Galleria", type: "mall" },
+    organization: { name: "Harbourfront Galleria", type: "mall", approved: true },
   },
 ];
 
@@ -175,11 +175,12 @@ async function upsertOrganization(payload: Payload, demo: DemoSeed) {
   const existingOrganizationId = relationId(existingUser.docs[0]?.organization);
 
   if (existingOrganizationId !== null) {
-    const organization = await payload.findByID({
+    const organization = await payload.update({
       collection: "organizations",
       id: existingOrganizationId,
       depth: 0,
       overrideAccess: true,
+      data: { approved: true },
     });
     return { organization, existingUser: existingUser.docs[0] };
   }

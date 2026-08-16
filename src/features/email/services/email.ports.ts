@@ -1,8 +1,4 @@
-import { sendInviteEmailAdapter, sendOwnerWelcomeEmailAdapter, type SendInviteEmailParams } from "./email-pl.adapter";
-
-export async function sendOwnerWelcomeEmail(userId: string) {
-  return sendOwnerWelcomeEmailAdapter(userId);
-}
+import { sendInviteEmailAdapter, type SendInviteEmailParams } from "./email-pl.adapter";
 
 export async function sendInviteEmail(params: SendInviteEmailParams) {
   return sendInviteEmailAdapter(params);

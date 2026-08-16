@@ -279,6 +279,7 @@ concrete here.
 | Reset password | `/reset-password` | Left | A node's pulse ring resolves into a solid route continuing onward — "unlocked, path continues" |
 | Check email | `/check-email` | Right | A route line travels from a node to a small envelope-shaped marker at the edge of the frame — "sent" |
 | Verify email | `/verify-email` | Left | A node flips from hollow/dashed to solid + a small checkmark accent — "confirmed" |
+| Pending approval | `/pending-approval` | Left | A dimmed, still floor plate with a paused clock badge, no route drawn across it yet — "waiting on a decision from outside the frame" (breaks strict alternation with Verify email on purpose — re-flowing `/invite` to match wasn't worth touching an unrelated, already-shipped page's layout for) |
 | Accept invitation | `/invite` | Right | Two separate small routes merge into one shared node — "joining" |
 
 (Left/right strictly alternates across this list — if a page is added or

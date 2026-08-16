@@ -32,6 +32,16 @@ export const isPlatformAdmin: Access = ({ req: { user } }) => {
   return user?.collection === "admins";
 };
 
+/** Field-level equivalent of {@link isPlatformAdmin}, for fields only a platform admin may set directly. */
+export const isPlatformAdminField: FieldAccess = ({ req: { user } }) => {
+  return user?.collection === "admins";
+};
+
+/** Field-level access for fields no request may set directly — only reachable via a hook's `overrideAccess`. */
+export const noOneField: FieldAccess = () => {
+  return false;
+};
+
 /**
  * Self access
  * Best for the Users collection (user.id === document id).
@@ -278,6 +288,8 @@ export const access = {
 
   isLoggedIn,
   isPlatformAdmin,
+  isPlatformAdminField,
+  noOneField,
 
   isSelf,
 

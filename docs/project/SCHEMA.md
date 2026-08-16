@@ -14,6 +14,7 @@ class Organization {
   enum type
   number logoId
   string logoUrl
+  boolean approved
   datetime createdAt
   datetime updatedAt
 }
@@ -51,6 +52,7 @@ class User {
   number avatarId
   string avatarUrl
   boolean verified
+  boolean orgApproved
   boolean blocked
   datetime createdAt
   datetime updatedAt
@@ -228,6 +230,19 @@ file in R2) — the same cleanup hook is also applied to `Building.logo`,
 `User.avatar`, and `Floor.backgroundImage`, so no upload flow leaks a
 replaced file.
 
+`approved` (default `false`) gates whether a newly signed-up organization can
+actually be used. It is locked to platform admins
+(`isPlatformAdminField` in `src/collections/access/index.ts`) — an
+owner/manager can never approve their own organization. An `afterChange`
+hook (`notifyAdminOfNewOrgHook` in
+`src/collections/hooks/notifyAdminOfNewOrg.ts`) emails `ADMIN_EMAIL` when an
+organization is created, so it can be reviewed in the Payload admin panel.
+Another `afterChange` hook (`syncOrgApprovalHook` in
+`src/collections/hooks/syncOrgApproval.ts`) fires only on the false-to-true
+transition: it bulk-sets `User.orgApproved` on every user already in the
+organization and emails the owner that they can sign in. See the User
+section below for how login/dashboard access is actually gated by this.
+
 ### Building
 
 `organization` is a required relationship — every building belongs to
@@ -294,6 +309,35 @@ prevents that account from signing in (enforced by a `beforeLogin` hook,
 `user.blocked` is true). This is distinct from Payload's own `loginAttempts`/
 `lockUntil` fields, which handle automatic lockout after repeated failed
 password attempts, not an intentional block.
+
+`orgApproved` (default `false`) is a denormalized copy of the user's
+organization's `approved` field, kept in sync by hooks rather than read live
+on every request — it is also `saveToJWT: true`, so it rides along in the
+session token for a fast per-request dashboard check with no extra query. A
+`beforeChange` hook on create (`syncUserOrgApprovalHook` in
+`src/collections/hooks/syncUserOrgApproval.ts`) seeds it from the
+organization's current `approved` value (the owner created at signup starts
+`false`; a teammate invited into an already-approved organization starts
+`true`). Later organization approvals are pushed onto existing users by
+`syncOrgApprovalHook` (see the Organization section above). Field access
+locks it to nobody (`noOneField`) — it is only ever written by these hooks via
+`overrideAccess`, never by a direct API call. Unlike `blocked`, an unapproved
+organization doesn't block login itself — `src/app/(frontend)/(private)/layout.tsx`
+reads `orgApproved` after sign-in and redirects to `/pending-approval`
+instead of the dashboard/editor routes until it's `true`.
+
+**Known limitation**: because `orgApproved` is `saveToJWT: true`, revoking
+approval (unchecking `Organizations.approved` after it was already
+`true`) does **not** immediately lock out that organization's users — the
+gate in `PrivateLayout` reads the value baked into the session token at
+login, not a live database read, so anyone who already signed in keeps
+dashboard/editor access until their token naturally expires
+(`Users.auth.tokenExpiration`, currently 30 days) or they sign out and back
+in. `syncOrgApprovalHook` only pushes fresh `orgApproved` values into
+`Users` on the false-to-true transition — there is no equivalent
+true-to-false revocation path today. If immediate revocation is ever
+needed, this would have to change (e.g. a live DB check instead of
+`saveToJWT`, or force-expiring sessions on revoke).
 
 Field-level access locks `role`, `buildings`, and `blocked` to platform admins
 and to an owner/manager acting on a *different* user in their organization

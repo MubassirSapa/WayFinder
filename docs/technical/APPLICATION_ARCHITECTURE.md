@@ -654,6 +654,7 @@ flowchart LR
     emailPort --> emailAdapter
     emailAdapter --> payloadAuth
     payloadAuth -.-> emailProvider
+    userCollections -.-> emailProvider
 ```
 
 Payload manages sessions and authentication for two separate account types.
@@ -673,11 +674,32 @@ never talks to `payloadAuth` directly. Sign-in itself now also runs a
 user's login before a session is issued — see the User section of
 `docs/project/SCHEMA.md`.
 
+Org approval is a second pipeline that, like Payload's own verify/reset
+emails, bypasses `emailPort`/`emailAdapter` entirely (the
+`userCollections -.-> emailProvider` line above) — its two `Organizations`
+collection hooks (`notifyAdminOfNewOrgHook`, `syncOrgApprovalHook`) render a
+template and call `req.payload.sendEmail` directly from inside the
+collection lifecycle, the same way `Users`' own `auth.verify`/
+`forgotPassword` config does. Signing in no longer implies dashboard access:
+`PrivateLayout` (`src/app/(frontend)/(private)/layout.tsx`) checks the
+signed-in user's `orgApproved` field (denormalized from
+`Organizations.approved`, embedded in the JWT) and redirects to
+`/pending-approval` — a page in the `(auth)` route group, styled like
+`check-email`/`verify-email` (`AuthSplitFrame` + `FormCard`) with its own
+sign-out action — in place of `/dashboard`/`/editor` until an admin
+approves the organization — see the Organization and User sections of
+`docs/project/SCHEMA.md` for the full field/hook breakdown, including a
+known limitation there: because the gate reads `orgApproved` off the JWT,
+*revoking* an already-approved organization doesn't take effect until the
+affected sessions expire or re-authenticate — there's no live-DB check and
+no forced session expiry on revoke today.
+
 ## 7. Module ownership summary
 
 | Module | Owns | Communicates through |
 | --- | --- | --- |
 | Authentication | Accounts, sessions, signup flow, verification, and password recovery | Server actions, auth ports, Payload auth adapter |
+| Org approval | Gating new organizations behind admin review: `Organizations.approved` (platform-admin-only), `Users.orgApproved` (denormalized, JWT-embedded), admin-notification and owner-approved emails, and the `/pending-approval` page `PrivateLayout` redirects to until approval | `Organizations`/`Users` collection hooks calling `req.payload.sendEmail` directly, `PrivateLayout` server-component redirect gate |
 | Dashboard | A role-aware bento overview linking to the user's available work areas; the complete building list lives at `/dashboard/buildings` and is also shown with read-only organization information at `/dashboard/organization`, whose edit form mounts only on demand. The shared responsive shell provides a collapsible/mobile `AppSidebar` with role-aware navigation and Wayfinder branding plus an `AppTopbar` with avatar menu, theme switch, and confirmed logout. | Server loader plus mutation ports and adapters |
 | Organization settings | Editing the current organization's name, type, and logo | Server port, mutation action, Payload adapter |
 | Buildings and floor settings | Listing and creating buildings; editing a building's own record (owner/manager) or viewing it read-only (assigned member); listing floors, creating a floor, toggling publish status, and editing floor metadata (any role with building access, including members) | Server ports, mutation actions, Payload adapter |

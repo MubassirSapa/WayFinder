@@ -4,13 +4,15 @@ import { ORGANIZATION_TYPES } from "@/features/auth/constants/register-organizat
 import { access } from "./access";
 import { createCleanupReplacedMediaHook } from "./hooks/cleanupReplacedMedia";
 import { createSyncMediaUrlHook } from "./hooks/syncMediaUrl";
+import { notifyAdminOfNewOrgHook } from "./hooks/notifyAdminOfNewOrg";
+import { syncOrgApprovalHook } from "./hooks/syncOrgApproval";
 
 export const Organizations: CollectionConfig = {
   slug: "organizations",
 
   admin: {
     useAsTitle: "name",
-    defaultColumns: ["name", "type"],
+    defaultColumns: ["name", "type", "approved"],
   },
 
   // Every relation to `organizations` currently only reads `name`, `type`,
@@ -29,7 +31,11 @@ export const Organizations: CollectionConfig = {
 
   hooks: {
     beforeValidate: [createSyncMediaUrlHook({ relationField: "logo", urlField: "logoUrl" })],
-    afterChange: [createCleanupReplacedMediaHook({ relationField: "logo" })],
+    afterChange: [
+      createCleanupReplacedMediaHook({ relationField: "logo" }),
+      notifyAdminOfNewOrgHook,
+      syncOrgApprovalHook,
+    ],
   },
 
   access: {
@@ -61,6 +67,18 @@ export const Organizations: CollectionConfig = {
       name: "logoUrl",
       type: "text",
       admin: { readOnly: true, hidden: true },
+    },
+    {
+      name: "approved",
+      type: "checkbox",
+      defaultValue: false,
+      access: {
+        update: access.isPlatformAdminField,
+      },
+      admin: {
+        description:
+          "A platform admin reviews newly signed-up organizations and approves them here. Unapproved organizations can sign in but see a read-only pending screen instead of the dashboard.",
+      },
     },
   ],
 };

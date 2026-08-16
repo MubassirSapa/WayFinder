@@ -188,6 +188,10 @@ export interface User {
   role: 'owner' | 'manager' | 'member';
   organization: number | Organization;
   /**
+   * Denormalized from the user's organization `approved` field, kept in sync by hooks and embedded in the JWT for fast dashboard gating.
+   */
+  orgApproved?: boolean | null;
+  /**
    * Buildings this member can access. Owners and managers implicitly access every building in their organization.
    */
   buildings?: (number | Building)[] | null;
@@ -228,6 +232,10 @@ export interface Organization {
   type: 'hospital' | 'university' | 'mall' | 'office' | 'airport' | 'library' | 'other';
   logo?: (number | null) | Media;
   logoUrl?: string | null;
+  /**
+   * A platform admin reviews newly signed-up organizations and approves them here. Unapproved organizations can sign in but see a read-only pending screen instead of the dashboard.
+   */
+  approved?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -555,6 +563,7 @@ export interface UsersSelect<T extends boolean = true> {
   name?: T;
   role?: T;
   organization?: T;
+  orgApproved?: T;
   buildings?: T;
   blocked?: T;
   avatar?: T;
@@ -587,6 +596,7 @@ export interface OrganizationsSelect<T extends boolean = true> {
   type?: T;
   logo?: T;
   logoUrl?: T;
+  approved?: T;
   updatedAt?: T;
   createdAt?: T;
 }
