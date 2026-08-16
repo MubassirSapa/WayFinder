@@ -1,9 +1,10 @@
 import { Accessibility, Layers, ListChecks, MapPinned, Navigation, Search } from "lucide-react";
 import Link from "next/link";
 
+import { VideoPlayer } from "@/components/shared/media/VideoPlayer";
 import { Button } from "@/components/ui/button";
+import { MARKETING_VIDEOS } from "@/constants/videos";
 import { PUBLIC_ROUTES } from "@/constants/routes";
-import { ViewerHeroVisual } from "@/features/viewer/components/ViewerHeroVisual";
 
 const navigationSteps = [
   {
@@ -54,18 +55,10 @@ export function ViewerAboutContent() {
               Wayfinder helps people choose the right building and floor before guiding them
               through the space to their destination.
             </p>
-            <Button
-              className="mt-6 h-12 px-7 text-base"
-              nativeButton={false}
-              render={<Link href={PUBLIC_ROUTES.BUILDINGS} />}
-              size="lg"
-            >
-              Browse buildings
-            </Button>
           </div>
 
           <div>
-            <ViewerHeroVisual showOnMobile />
+            <VideoPlayer src={MARKETING_VIDEOS.DEMO} title="Wayfinder demo" />
           </div>
         </div>
       </section>

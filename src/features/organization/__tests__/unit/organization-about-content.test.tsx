@@ -32,6 +32,16 @@ describe("OrganizationAboutContent", () => {
     expect(screen.getByText("Scan a QR, start right there")).toBeTruthy();
   });
 
+  it("embeds the showcase video", () => {
+    render(<OrganizationAboutContent />);
+
+    const video = document.querySelector("video[aria-label='What is Wayfinder']");
+    expect(video).toBeTruthy();
+    expect(video?.querySelector("source")?.getAttribute("src")).toBe(
+      "https://cdn.umbrellacorp.cc/videos/wayfinder-showcase-1080p.mp4",
+    );
+  });
+
   it("walks through the three real steps in order", () => {
     render(<OrganizationAboutContent />);
 

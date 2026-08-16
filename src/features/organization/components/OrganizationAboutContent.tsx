@@ -1,5 +1,8 @@
 import { Building2, MapPin, QrCode, RefreshCw, Route, Users } from "lucide-react";
 
+import { VideoPlayer } from "@/components/shared/media/VideoPlayer";
+import { MARKETING_VIDEOS } from "@/constants/videos";
+
 const steps = [
   {
     number: "01",
@@ -66,6 +69,17 @@ export function OrganizationAboutContent() {
             A picture of a building shows what it looks like. It can&apos;t tell a visitor how to
             get from where they are to where they need to be. Wayfinder can.
           </p>
+        </div>
+      </section>
+
+      <section className="border-b border-border">
+        <div className="mx-auto max-w-4xl px-5 py-12 sm:px-6 sm:py-14">
+          <h2 className="text-center text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+            What is Wayfinder
+          </h2>
+          <div className="mt-4">
+            <VideoPlayer src={MARKETING_VIDEOS.SHOWCASE} title="What is Wayfinder" />
+          </div>
         </div>
       </section>
 

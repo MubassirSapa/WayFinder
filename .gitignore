@@ -44,4 +44,4 @@ next-env.d.ts
 dev.db
 *.db
 
-media/
+/media/
