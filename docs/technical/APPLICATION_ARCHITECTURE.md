@@ -710,7 +710,7 @@ no forced session expiry on revoke today.
 | Smart Builder | Automated node creation, auto-connect behavior, and hallway path building | Core editor store actions and pure helper functions |
 | Floor links | Cross-floor connector discovery and linking UI | Client actions, Payload REST SDK, core edge store and edge mutation action |
 | Viewer | Searchable published venue directory, public About page, grouped building floors, and popular-map shortcuts | Server-only loader and Payload Local API |
-| Organization | Public organization landing and About pages, shared site chrome, and visitor handoff to the venue directory | Static server components and public route links |
+| Organization | Public organization landing, About, and Contact pages, shared site chrome, and visitor handoff to the venue directory | Static server components and public route links |
 | Map viewer | Normalized published building data, floor switching, viewport, and SVG rendering | Server-only loader, local component state, props |
 | Navigation | Route intent, graph creation, shortest path, floor segments, and route overlay | Navigation store slice, pure functions, `MapViewerShell` bridge |
 | QR codes | Admin read-only floor viewer for browsing rooms (`/dashboard/.../qr-codes`), per-room QR sticker generation (client-side, `qrcode`), and the public `/qr/[objectId]` resolver that redirects a scanned sticker into the navigation extension's URL contract | Isolated viewport store slice, server port/adapter (admin-scoped, no published filter), reused map-viewer rendering components via an injectable viewport binding |

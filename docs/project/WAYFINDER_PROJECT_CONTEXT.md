@@ -282,8 +282,9 @@ type and three organization-level roles. No other roles exist in the code.
   link/QR from an in-progress route) — **not implemented**. Documented in
   `docs/technical/QR_WAYFINDING.md` as the one remaining undone piece of that
   design; no `Share` button exists in `MapSelectionBar` in the current code.
-- **Organization marketing pages** (`/organization`, `/organization/about`)
-  — static, pitches the product to potential organization customers. Fully
+- **Organization marketing pages** (`/organization`, `/organization/about`,
+  `/organization/contact`) — static, pitches the product to potential
+  organization customers and gives them a direct email contact. Fully
   implemented, no data fetching (fully static pages).
 - **About/Terms/Privacy pages** — static informational pages. Fully
   implemented.
@@ -2023,6 +2024,7 @@ files.
 | `/about` | Visitor-facing "how it works" page | Maybe |
 | `/organization` | Marketing page for prospective organizations | Maybe |
 | `/organization/about` | "About Wayfinder" for organizations | No |
+| `/organization/contact` | Direct email contact for prospective/current organizations | No |
 | `/terms`, `/privacy` | Legal pages | No |
 
 ### Authentication

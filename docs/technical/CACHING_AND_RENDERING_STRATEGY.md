@@ -29,7 +29,7 @@ it is how this breaks production.
 | `/map/[floorId]` | ƒ Dynamic | **Inherent** — reads `searchParams` (`startObject`/`destObject`/`accessible`), which Next.js always treats as a dynamic API |
 | `/map` (no floor id) | ○ Static | No data fetch |
 | `/qr/[objectId]` | ƒ Dynamic | Looks up the room's *current* floor and calls `redirect()` — must always be fresh, see below |
-| `/about`, `/organization`, `/organization/about`, `/terms`, `/privacy`, `/check-email` | ○ Static | No data fetching at all, already optimal, no action needed |
+| `/about`, `/organization`, `/organization/about`, `/organization/contact`, `/terms`, `/privacy`, `/check-email` | ○ Static | No data fetching at all, already optimal, no action needed |
 | `/signin`, `/signup`, `/forgot-password` | ○ Static | No data fetching, no session read |
 | `/reset-password`, `/verify-email`, `/invite` | ƒ Dynamic | **Inherent** — read a `searchParams` token, and `/verify-email` + `/invite` perform a real lookup/mutation against a single-use token |
 | `/pending-approval` | ƒ Dynamic | **Inherent** — reads the session (`headers()`/`cookies()` via `getCurrentUser()`) to redirect unauthenticated visitors and to look up the signed-in user's organization name |

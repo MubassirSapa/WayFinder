@@ -17,7 +17,7 @@ type TOrgApprovedEmailTemplate = {
 export function OrgApprovedEmailTemplate({ organizationName, signinUrl }: TOrgApprovedEmailTemplate) {
   return (
     <Layout
-      preview={`${organizationName} is approved on ${EMAIL_THEME.brand} — you can sign in now.`}
+      preview={`${organizationName} is approved on ${EMAIL_THEME.brand}. You can sign in now.`}
       title="You're approved"
       footer={
         <EmailFooter>

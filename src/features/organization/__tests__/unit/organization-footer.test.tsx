@@ -18,6 +18,7 @@ const expectedFooterLinks = [
   ["About", "/about"],
   ["Overview", "/organization"],
   ["About", "/organization/about"],
+  ["Contact", "/organization/contact"],
   ["Get started", "/register-organization"],
   ["Privacy Policy", "/privacy"],
   ["Terms of Service", "/terms"],

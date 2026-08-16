@@ -30,6 +30,7 @@ const defaultFooterGroups = [
     links: [
       { label: "Overview", href: PUBLIC_ROUTES.ORGANIZATION },
       { label: "About", href: PUBLIC_ROUTES.ORGANIZATION_ABOUT },
+      { label: "Contact", href: PUBLIC_ROUTES.ORGANIZATION_CONTACT },
       { label: "Get started", href: PUBLIC_ROUTES.REGISTER_ORGANIZATION },
     ],
   },

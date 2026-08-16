@@ -29,6 +29,9 @@ describe("OrganizationSiteHeader", () => {
     expect(screen.getByRole("link", { name: "About" }).getAttribute("href")).toBe(
       "/organization/about",
     );
+    expect(screen.getByRole("link", { name: "Contact" }).getAttribute("href")).toBe(
+      "/organization/contact",
+    );
     const getStarted = screen.getByRole("link", { name: "Get started" });
 
     expect(getStarted.getAttribute("href")).toBe("/register-organization");

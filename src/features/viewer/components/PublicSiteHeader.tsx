@@ -9,6 +9,7 @@ const publicLinks = [
   { label: "Home", href: PUBLIC_ROUTES.DISCOVER },
   { label: "Buildings", href: PUBLIC_ROUTES.BUILDINGS },
   { label: "About", href: PUBLIC_ROUTES.ABOUT },
+  { label: "Organization", href: PUBLIC_ROUTES.ORGANIZATION },
 ] as const;
 
 export function PublicSiteHeader({ activePage }: PublicSiteHeaderProps) {

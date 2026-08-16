@@ -8,6 +8,7 @@ const PUBLIC_ROUTES = {
   MAP: "/map",
   ORGANIZATION: "/organization",
   ORGANIZATION_ABOUT: "/organization/about",
+  ORGANIZATION_CONTACT: "/organization/contact",
 
   SIGNIN: "/signin",
   SIGNUP: "/signup",

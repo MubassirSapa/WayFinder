@@ -5,7 +5,7 @@ import { OrganizationSiteHeader } from "@/features/organization/components/Organ
 import { OrganizationVisitorHandoff } from "@/features/organization/components/OrganizationVisitorHandoff";
 
 type OrganizationSiteShellProps = {
-  activePage?: "about";
+  activePage?: "about" | "contact";
   children: ReactNode;
   showHeaderRegistrationAction?: boolean;
 };
